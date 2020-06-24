@@ -52,14 +52,15 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
         }
 
         [Test]
-        public void Test_SerializeParams_ThrowsOnNull()
+        public void Test_SerializeParams_ReturnsNullOnNull()
         {
             var serializerMock = new Mock<IRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
-            Action action = () => serializerMock.Object.SerializeParams((string)null);
 
-            action.Should().Throw<ArgumentNullException>();
+            var result = serializerMock.Object.SerializeParams((string)null);
+
+            result.Should().BeNull();
         }
 
         private static IEnumerable BadCases => BadValues.Select(data => new TestCaseData(data));
