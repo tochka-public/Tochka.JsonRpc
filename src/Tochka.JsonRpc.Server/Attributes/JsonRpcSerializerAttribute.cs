@@ -9,11 +9,11 @@ namespace Tochka.JsonRpc.Server.Attributes
     /// </summary>
     [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class RpcSerializerAttribute : Attribute
+    public class JsonRpcSerializerAttribute : Attribute
     {
         public Type SerializerType { get; }
 
-        public RpcSerializerAttribute(Type serializerType)
+        public JsonRpcSerializerAttribute(Type serializerType)
         {
             if (!typeof(IRpcSerializer).IsAssignableFrom(serializerType))
             {
