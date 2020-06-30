@@ -1,25 +1,46 @@
-name: .NET Core
+name: Build and release .net nuget package
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+      - master
+      - beta
+     
   pull_request:
-    branches: [ master ]
+    branches: 
+      - master
+      - beta
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.5.0
-      with:
-        dotnet-version: 2.2
-    - name: Install dependencies
-      run: dotnet restore src/
-    - name: Build
-      run: dotnet build src/ --configuration Release --no-restore
-    - name: Test
-      run: dotnet test src/ --no-restore
+      - uses: actions/checkout@v2
+    
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1.5.0
+        with:
+          dotnet-version: 2.2
+    
+      - name: Install dependencies
+        run: dotnet restore src/
+    
+      - name: Build
+        run: dotnet build src/ --configuration Release --no-restore
+    
+      - name: Test
+        run: dotnet test src/ --no-restore
+    
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      
+      - name: Install semantic-release dependencies
+        run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec
+      
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
