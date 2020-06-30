@@ -12,7 +12,7 @@ on:
       - beta
 
 jobs:
-  test:
+  make-release:
     runs-on: ubuntu-latest
     steps:
       - name: Setup .NET Core
@@ -39,9 +39,6 @@ jobs:
       
       - name: Install semantic-release dependencies
         run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec conventional-changelog-conventionalcommits
-      
-      - name: Checkout
-        uses: actions/checkout@v2
       
       - name: Run semantic-release
         env:
