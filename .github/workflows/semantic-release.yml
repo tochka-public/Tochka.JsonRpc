@@ -1,5 +1,3 @@
-name: Build and release .net nuget package
-
 on:
   push:
     branches: 
@@ -12,7 +10,7 @@ on:
       - beta
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +28,11 @@ jobs:
     
       - name: Test
         run: dotnet test src/ --no-restore
-    
+
+  make-release:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -40,6 +42,7 @@ jobs:
         run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec conventional-changelog-conventionalcommits
       
       - name: Run semantic-release
+      - uses: actions/checkout@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
