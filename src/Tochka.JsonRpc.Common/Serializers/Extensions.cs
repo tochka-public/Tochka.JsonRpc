@@ -11,6 +11,7 @@ namespace Tochka.JsonRpc.Common.Serializers
             {
                 return null;
             }
+
             var serialized = JToken.FromObject(data, serializer.Serializer);
             if (serialized is JContainer serializedParams)
             {
