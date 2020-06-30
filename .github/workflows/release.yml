@@ -27,9 +27,7 @@ jobs:
         run: dotnet restore src/
     
       - name: Build
-        env:
-          VERSION: "0.0.1-test"
-        run: dotnet build src/ --no-restore --configuration Release -p:Version=$VERSION
+        run: dotnet build src/ --no-restore --configuration Debug
     
       - name: Test
         run: dotnet test src/ --no-build
