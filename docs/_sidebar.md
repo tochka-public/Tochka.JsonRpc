@@ -1,14 +1,11 @@
-- Basics
-  - [Overview](basics/overview.md)
-    - [Sub Topic](basics/requirements/sub-topic.md)
-  - [Installation](basics/installation.md)
-- Intermediate
-  - [Topic 1](intermediate/topics-1.md)
-  - [Topic 2](intermediate/topics-2.md)
-  - [Topic 3](intermediate/topics-3.md)
-  - [Topic 4](intermediate/topics-4.md)
-- Advanced
+- [Index](index.md)
+- English
+  - [Overview](overview.md)
+  - [Server](intermediate/topics-1.md)
+    - [](basics/requirements/sub-topic.md)
+  - [Client](intermediate/topics-2.md)
+- Russian
   - [Topic 1](advanced/adv-topic-1.md)
-  - [Topic 2](advanced/adv-topic-2.md)
-- **Project Documentation**
-  - [ReadMe](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
+- **Links**
+  - [Readme](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
+  - [Nuget](https://www.nuget.org/profiles/tochka-public)
