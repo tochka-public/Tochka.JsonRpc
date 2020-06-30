@@ -32,7 +32,7 @@ jobs:
         run: dotnet build src/ --no-restore --configuration Release -p:Version=$VERSION
     
       - name: Test
-        run: dotnet test src/ --no-build --no-restore
+        run: dotnet test src/ --no-build
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
