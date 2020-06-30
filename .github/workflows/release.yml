@@ -3,7 +3,7 @@ name: Release nuget package
 on:
   push:
     branches: 
-      - master
+      - release
       - beta
 
 jobs:
