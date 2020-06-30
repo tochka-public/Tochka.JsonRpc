@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Tochka</Company>
-    <Description>JSON RPC client</Description>
+    <Description>JSON RPC 2.0 client</Description>
     <Copyright>Tochka</Copyright>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

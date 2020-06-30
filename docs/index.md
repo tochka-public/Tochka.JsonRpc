@@ -1,6 +1,6 @@
 # Tochka.JsonRpc
 
-JSON RPC integration into ASP.NET Core
+JSON RPC 2.0 integration into ASP.NET Core
 
 ---
 
