@@ -1,3 +1,5 @@
+name: Prepare semantic release
+
 on:
   push:
     branches: 
@@ -43,7 +45,7 @@ jobs:
         run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec conventional-changelog-conventionalcommits
       
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1  # bug in v2 prevents triggering another workflow (on push tags event not fired)
       
       - name: Run semantic-release
         env:
