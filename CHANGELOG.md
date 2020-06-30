@@ -1,3 +1,10 @@
+### [1.0.4](https://gitlab.tochka-tech.com/tochka-public/Tochka.JsonRpc/compare/v1.0.3...v1.0.4) (2020-06-30)
+
+
+### Bug Fixes
+
+* polishing ci/cd scripts ([c6c1261](https://gitlab.tochka-tech.com/tochka-public/Tochka.JsonRpc/commit/c6c1261da4844c5f583edecee466cad0a878ac58))
+
 ### [1.0.3](https://gitlab.tochka-tech.com/tochka-public/Tochka.JsonRpc/compare/v1.0.2...v1.0.3) (2020-06-30)
 
 
