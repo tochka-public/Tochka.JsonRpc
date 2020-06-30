@@ -25,11 +25,11 @@ namespace Tochka.JsonRpc.Common.Converters
             {
                 case JTokenType.Object:
                     var request = token.ToObject<IResponse>(serializer);
-                    return new SingleResponseWrapper() { Single = request };
+                    return new SingleResponseWrapper() {Single = request};
 
                 case JTokenType.Array:
                     var batch = token.ToObject<List<IResponse>>(serializer);
-                    return new BatchResponseWrapper() { Batch = batch };
+                    return new BatchResponseWrapper() {Batch = batch};
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, "Expected {} or [] as root element");
