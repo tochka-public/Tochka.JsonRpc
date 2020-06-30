@@ -1,4 +1,4 @@
-name: Prepare semantic release
+name: Release nuget package
 
 on:
   push:
@@ -27,15 +27,13 @@ jobs:
         run: dotnet restore src/
     
       - name: Build
-        run: dotnet build src/ --configuration Release --no-restore
+        env:
+          VERSION: "0.0.1-test"
+        run: dotnet build src/ --no-restore --configuration Release -p:Version=$VERSION
     
       - name: Test
-        run: dotnet test src/ --no-restore
+        run: dotnet test src/ --no-build --no-restore
 
-  make-release:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -45,10 +43,22 @@ jobs:
         run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec conventional-changelog-conventionalcommits
       
       - name: Checkout
-        uses: actions/checkout@v1  # bug in v2 prevents triggering another workflow (on push tags event not fired)
+        uses: actions/checkout@v2
       
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+
+      - name: Build with version
+        run: dotnet build src/ --no-restore --configuration Release -p:Version=$(cat VERSION)
+    
+      - name: Pack
+        run: dotnet pack src/ --no-build --no-restore --configuration Release -p:Version=$(cat VERSION)
+        
+      - name: Push
+        env:
+          NUGET_URL: "https://api.nuget.org/v3/index.json"
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        run: dotnet nuget push "src/**/*.nupkg" --source $NUGET_URL --api-key $NUGET_KEY
