@@ -27,63 +27,59 @@ You only need one line in `Startup.cs`, and a different base class for your cont
 
 # Server
 
-## Installation for ASP.Net Core 2.2
+## Quick start
 
-> nuget package
-> ```
-> Tochka.JsonRpc.Server
-> ```
+Install nuget package `Tochka.JsonRpc.Server`.
 
-Register it in Startup and set compatibility version
+Register it in `Startup.cs` and set compatibility version:
 
-> Startup.cs
-> ```cs
->     public void ConfigureServices(IServiceCollection services)
->         {
-> 		    services.AddMvc()
->                 .AddJsonRpcServer()  // <-- add this
->                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
->         }
-> ```
+```cs
+    public void ConfigureServices(IServiceCollection services)
+        {
+		    services.AddMvc()
+                .AddJsonRpcServer()  // <-- add this
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
+        }
+```
 
 Write your controller as usual, but instead of inheriting from `Controller`, inherit `JsonRpcController`
 
-> EchoController.cs
-> ```cs
->     public class EchoController : JsonRpcController
-> 	{
-> 	    public string ToLower(string value)
->         {
->             return value.ToLower();
->         }
-> 	}
-> ```
+```cs
+    public class EchoController : JsonRpcController
+	{
+	    public string ToLower(string value)
+        {
+            return value.ToLower();
+        }
+	}
+```
 
 Start your app and send POST
-> HTTP request (part)
-> ```http
-> POST /api/jsonrpc HTTP/1.1
-> Content-Type: application/json
-> ```
-> ```json
-> {
->     "id": 1,
->     "jsonrpc": "2.0",
->     "method": "to_lower",
->     "params": {
->         "value": "TEST"
->     }
-> }
-> ```
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "to_lower",
+    "params": {
+        "value": "TEST"
+    }
+}
+```
 
-> HTTP response (part)
-> ```json
-> HTTP/1.1 200 OK
-> Content-Type: application/json; charset=utf-8
-> 
-> {
->     "id": 1,
->     "jsonrpc": "2.0",
->     "result": "test"
-> }
-> ```
+Expect response
+
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": "test"
+}
+```
