@@ -12,7 +12,6 @@
     [
       "@semantic-release/release-notes-generator",
       {
-        "host": "https://gitlab.tochka-tech.com",
         "preset": "conventionalcommits"
       }
     ],
