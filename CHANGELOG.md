@@ -1,3 +1,10 @@
+### [1.0.6-beta.2](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.6-beta.1...v1.0.6-beta.2) (2020-06-30)
+
+
+### Features
+
+* add docs template ([41dc8c6](https://github.com/tochka-public/Tochka.JsonRpc/commit/41dc8c67a2d8235305c62fea654f98989bbb6d4a))
+
 ### [1.0.6-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.5...v1.0.6-beta.1) (2020-06-30)
 
 
