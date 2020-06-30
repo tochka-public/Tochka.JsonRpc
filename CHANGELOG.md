@@ -1,3 +1,17 @@
+### [1.0.6](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.5...v1.0.6) (2020-06-30)
+
+
+### Features
+
+* add docs template ([41dc8c6](https://github.com/tochka-public/Tochka.JsonRpc/commit/41dc8c67a2d8235305c62fea654f98989bbb6d4a))
+
+
+### Bug Fixes
+
+* csproj properties, sourcelink support ([4f0b664](https://github.com/tochka-public/Tochka.JsonRpc/commit/4f0b664b6beaa6acc537389bd84fa6752e9aeb83))
+* remove PR trigger ([f0db5fc](https://github.com/tochka-public/Tochka.JsonRpc/commit/f0db5fcacf1c4f7fd8b7ecfcbb06cfe7f8de5f73))
+* rm wrong url in semantic release config ([5d31f94](https://github.com/tochka-public/Tochka.JsonRpc/commit/5d31f94929f181b9fbdea7d46e8db4c69e74aaf4))
+
 ### [1.0.6-beta.2](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.6-beta.1...v1.0.6-beta.2) (2020-06-30)
 
 
