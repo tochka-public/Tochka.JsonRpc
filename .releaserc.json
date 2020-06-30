@@ -1,0 +1,38 @@
+{
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {"release": "patch"}
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "host": "https://gitlab.tochka-tech.com",
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+	[
+      "@semantic-release/git",
+      {
+	    "assets": ["CHANGELOG.md"]
+	  }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "echo ${nextRelease.version}",
+        "successCmd": "echo ${nextRelease.version} > VERSION && echo ${nextRelease.version.replace(/\\.\\d+\\.\\d+$/, '')} > MAJOR_VERSION && echo ${nextRelease.version.replace(/\\.\\d+$/, '')} > MINOR_VERSION"
+      }
+    ]  ]
+}
