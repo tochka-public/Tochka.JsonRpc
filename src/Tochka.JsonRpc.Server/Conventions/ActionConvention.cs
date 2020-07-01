@@ -18,12 +18,12 @@ namespace Tochka.JsonRpc.Server.Conventions
     /// </summary>
     public class ActionConvention : IActionModelConvention
     {
-        private readonly IEnumerable<IRpcSerializer> serializers;
+        private readonly IEnumerable<IJsonRpcSerializer> serializers;
         private readonly IMethodMatcher methodMatcher;
         private readonly ILogger log;
         private readonly JsonRpcMethodOptions defaultMethodOptions;
 
-        public ActionConvention(IOptions<JsonRpcOptions> options, IEnumerable<IRpcSerializer> serializers, IMethodMatcher methodMatcher, ILogger<ActionConvention> log)
+        public ActionConvention(IOptions<JsonRpcOptions> options, IEnumerable<IJsonRpcSerializer> serializers, IMethodMatcher methodMatcher, ILogger<ActionConvention> log)
         {
             this.serializers = serializers;
             this.methodMatcher = methodMatcher;
@@ -83,7 +83,7 @@ namespace Tochka.JsonRpc.Server.Conventions
         {
             var serializerType = Utils.GetAttributeTransitive<JsonRpcSerializerAttribute>(actionModel)?.SerializerType ?? defaultMethodOptions.RequestSerializer;
             var route = Utils.GetAttributeTransitive<RouteAttribute>(actionModel)?.Template ?? defaultMethodOptions.Route;
-            var method = Utils.GetAttributeTransitive<RpcMethodStyleAttribute>(actionModel)?.MethodStyle ?? defaultMethodOptions.MethodStyle;
+            var method = Utils.GetAttributeTransitive<JsonRpcMethodStyleAttribute>(actionModel)?.MethodStyle ?? defaultMethodOptions.MethodStyle;
             log.LogTrace($"{actionModel.DisplayName}: options are [{serializerType.FullName}], [{route}], [{method}]");
             return new JsonRpcMethodOptions()
             {

@@ -17,7 +17,7 @@ namespace Tochka.JsonRpc.Client
         where TImplementation : JsonRpcClientBase, TClient
         {
             services.TryAddSingleton<IJsonRpcIdGenerator, JsonRpcIdGenerator>();
-            services.TryAddSingleton<HeaderRpcSerializer>();
+            services.TryAddSingleton<HeaderJsonRpcSerializer>();
             var builder = services.AddHttpClient<TClient, TImplementation>(configureClient ?? ((s, c) => { }));
             return builder;
         }
@@ -26,7 +26,7 @@ namespace Tochka.JsonRpc.Client
             where TClient : JsonRpcClientBase
         {
             services.TryAddSingleton<IJsonRpcIdGenerator, JsonRpcIdGenerator>();
-            services.TryAddSingleton<HeaderRpcSerializer>();
+            services.TryAddSingleton<HeaderJsonRpcSerializer>();
             var builder = services.AddHttpClient<TClient>(configureClient ?? ((s, c) => { }));
             return builder;
         }

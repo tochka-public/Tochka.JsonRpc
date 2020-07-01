@@ -26,9 +26,9 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         {
             testEnvironment = new TestEnvironment(services =>
             {
-                services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
-                services.TryAddJsonRpcSerializer<SnakeCaseRpcSerializer>();
-                services.TryAddJsonRpcSerializer<CamelCaseRpcSerializer>();
+                services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
+                services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
+                services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
                 services.AddSingleton<ParameterConvention>();
             });
         }
@@ -88,11 +88,11 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             model.BindingInfo.Should().NotBeNull();
         }
 
-        [TestCase(typeof(CamelCaseRpcSerializer))]
-        [TestCase(typeof(SnakeCaseRpcSerializer))]
+        [TestCase(typeof(CamelCaseJsonRpcSerializer))]
+        [TestCase(typeof(SnakeCaseJsonRpcSerializer))]
         public void Test_GetRpcParameterInfo_UsesSerializer(Type serializerType)
         {
-            var serializer = testEnvironment.ServiceProvider.GetRequiredService(serializerType) as IRpcSerializer;
+            var serializer = testEnvironment.ServiceProvider.GetRequiredService(serializerType) as IJsonRpcSerializer;
             var controllerModel = new Mock<ControllerModel>(typeof(JsonRpcTestController).GetTypeInfo(), new List<object>()).Object;
             var actionModel = new Mock<ActionModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)), new List<object>()).Object;
             var model = new Mock<ParameterModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)).GetParameters()[0], new List<object>()).Object;
@@ -112,7 +112,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         [Test]
         public void Test_GetRpcParameterInfo_UsesOptional()
         {
-            var serializerType = typeof(SnakeCaseRpcSerializer);
+            var serializerType = typeof(SnakeCaseJsonRpcSerializer);
             var controllerModel = new Mock<ControllerModel>(typeof(JsonRpcTestController).GetTypeInfo(), new List<object>()).Object;
             var actionModel = new Mock<ActionModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)), new List<object>()).Object;
             var model = new Mock<ParameterModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)).GetParameters()[1], new List<object>()).Object;
@@ -132,7 +132,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         public void Test_GetRpcParameterInfo_UsesAttributes(BindingStyle bindingStyle)
         {
             var attribute = new FromParamsAttribute(bindingStyle);
-            var serializerType = typeof(SnakeCaseRpcSerializer);
+            var serializerType = typeof(SnakeCaseJsonRpcSerializer);
             var controllerModel = new Mock<ControllerModel>(typeof(JsonRpcTestController).GetTypeInfo(), new List<object>()).Object;
             var actionModel = new Mock<ActionModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)), new List<object>()).Object;
             var model = new Mock<ParameterModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)).GetParameters()[0], new List<object> {attribute}).Object;
@@ -222,7 +222,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             parameterConvention.SetBinding(model);
 
             model.BindingInfo.Should().NotBeNull();
-            model.BindingInfo.BinderType.Should().Be<RpcModelBinder>();
+            model.BindingInfo.BinderType.Should().Be<JsonRpcModelBinder>();
             model.BindingInfo.BindingSource.Should().Be(BindingSource.Custom);
         }
 

@@ -6,6 +6,6 @@ namespace Tochka.JsonRpc.Server.Binding
 {
     public interface IParameterBinder
     {
-        Task SetResult(ModelBindingContext context, IParseResult result, string parameterName, RpcBindingContext rpcBindingContext);
+        Task SetResult(ModelBindingContext context, IParseResult result, string parameterName, JsonRpcBindingContext jsonRpcBindingContext);
     }
 }

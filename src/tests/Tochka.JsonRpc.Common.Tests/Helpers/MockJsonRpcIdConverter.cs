@@ -7,7 +7,7 @@ using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Common.Tests.Helpers
 {
-    public class MockRpcIdConverter : RpcIdConverter
+    public class MockJsonRpcIdConverter : JsonRpcIdConverter
     {
         public override void WriteJson(JsonWriter writer, IRpcId value, JsonSerializer serializer)
         {

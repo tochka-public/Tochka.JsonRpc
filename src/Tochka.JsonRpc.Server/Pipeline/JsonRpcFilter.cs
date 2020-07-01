@@ -32,7 +32,7 @@ namespace Tochka.JsonRpc.Server.Pipeline
         {
             log.LogTrace($"{nameof(OnResultExecuting)} Started");
             var methodMetadata = context.ActionDescriptor.GetProperty<MethodMetadata>() ?? throw new ArgumentNullException(nameof(MethodMetadata));
-            var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IRpcSerializer;
+            var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IJsonRpcSerializer;
             context.Result = actionResultConverter.ConvertActionResult(context.Result, methodMetadata, serializer);
             context.HttpContext.Items[JsonRpcConstants.ActionResultTypeItemKey] = context.Result.GetType();
             log.LogTrace($"{nameof(OnResultExecuting)} Completed");

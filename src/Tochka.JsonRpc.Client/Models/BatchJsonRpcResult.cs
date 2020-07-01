@@ -22,11 +22,11 @@ namespace Tochka.JsonRpc.Client.Models
     public class BatchJsonRpcResult : IBatchJsonRpcResult
     {
         private readonly IJsonRpcCallContext context;
-        private readonly HeaderRpcSerializer headerRpcSerializer;
-        private readonly IRpcSerializer serializer;
+        private readonly HeaderJsonRpcSerializer headerJsonRpcSerializer;
+        private readonly IJsonRpcSerializer serializer;
         private readonly Dictionary<IRpcId, IResponse> responses;
 
-        public BatchJsonRpcResult(IJsonRpcCallContext context, HeaderRpcSerializer headerRpcSerializer, IRpcSerializer serializer)
+        public BatchJsonRpcResult(IJsonRpcCallContext context, HeaderJsonRpcSerializer headerJsonRpcSerializer, IJsonRpcSerializer serializer)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             if (context.SingleResponse != null)
@@ -34,7 +34,7 @@ namespace Tochka.JsonRpc.Client.Models
                 throw new ArgumentOutOfRangeException(nameof(context), "Expected batch response");
             }
             this.responses = CreateDictionary(context.BatchResponse);
-            this.headerRpcSerializer = headerRpcSerializer;
+            this.headerJsonRpcSerializer = headerJsonRpcSerializer;
             this.serializer = serializer;
         }
 
@@ -93,7 +93,7 @@ namespace Tochka.JsonRpc.Client.Models
                 if (data.Equals(default(T)))
                 {
                     // if user serializer failed: maybe this is server error, try header serializer
-                    data = error.Data.ToObject<T>(headerRpcSerializer.Serializer);
+                    data = error.Data.ToObject<T>(headerJsonRpcSerializer.Serializer);
                 }
 
                 return new Error<T>()

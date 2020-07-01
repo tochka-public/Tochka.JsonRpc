@@ -5,9 +5,9 @@ using Tochka.JsonRpc.Server.Binding;
 
 namespace Tochka.JsonRpc.Server.Tests.Helpers
 {
-    public class RpcFormatterPublic : RpcFormatter
+    public class JsonRpcFormatterPublic : JsonRpcFormatter
     {
-        public RpcFormatterPublic(HeaderRpcSerializer headerRpcSerializer, ArrayPool<char> charPool) : base(headerRpcSerializer, charPool)
+        public JsonRpcFormatterPublic(HeaderJsonRpcSerializer headerJsonRpcSerializer, ArrayPool<char> charPool) : base(headerJsonRpcSerializer, charPool)
         {
         }
 

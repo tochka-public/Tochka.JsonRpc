@@ -21,6 +21,6 @@ namespace Tochka.JsonRpc.Server.Attributes
         public BindingStyle BindingStyle { get; }
 
         public BindingSource BindingSource => BindingSource.Custom;
-        public Type BinderType => typeof(RpcModelBinder);
+        public Type BinderType => typeof(JsonRpcModelBinder);
     }
 }

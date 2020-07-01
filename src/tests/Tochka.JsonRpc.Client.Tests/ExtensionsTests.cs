@@ -26,7 +26,7 @@ namespace Tochka.JsonRpc.Client.Tests
             var result = services.Select(x => (x.ServiceType, x.Lifetime)).ToList();
             result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(HeaderRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(TestClient), ServiceLifetime.Transient)).Should().BeTrue();
         }
 
@@ -37,7 +37,7 @@ namespace Tochka.JsonRpc.Client.Tests
 
             var mocks = new List<Mock>
             {
-                RegisterMock<HeaderRpcSerializer>(services),
+                RegisterMock<HeaderJsonRpcSerializer>(services),
                 RegisterMock<IJsonRpcIdGenerator>(services),
             };
 
@@ -55,7 +55,7 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             var services = new ServiceCollection();
             var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
-            services.AddSingleton(Mock.Of<IRpcSerializer>());
+            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
             services.Configure<TestOptions>(options =>
             {
                 options.Url = "http://foo.bar/";
@@ -72,7 +72,7 @@ namespace Tochka.JsonRpc.Client.Tests
         public void Test_AddJsonRpcClient_ConfigureNullWorks()
         {
             var services = new ServiceCollection();
-            services.AddSingleton(Mock.Of<IRpcSerializer>());
+            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
             services.Configure<TestOptions>(options =>
             {
                 options.Url = "http://foo.bar/";
@@ -93,7 +93,7 @@ namespace Tochka.JsonRpc.Client.Tests
             var result = services.Select(x => (x.ServiceType, x.Lifetime)).ToList();
             result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(HeaderRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(ITestClient), ServiceLifetime.Transient)).Should().BeTrue();
         }
 
@@ -104,7 +104,7 @@ namespace Tochka.JsonRpc.Client.Tests
 
             var mocks = new List<Mock>
             {
-                RegisterMock<HeaderRpcSerializer>(services),
+                RegisterMock<HeaderJsonRpcSerializer>(services),
                 RegisterMock<IJsonRpcIdGenerator>(services),
             };
 
@@ -122,7 +122,7 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             var services = new ServiceCollection();
             var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
-            services.AddSingleton(Mock.Of<IRpcSerializer>());
+            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
             services.Configure<TestOptions>(options =>
             {
                 options.Url = "http://foo.bar/";
@@ -139,7 +139,7 @@ namespace Tochka.JsonRpc.Client.Tests
         public void Test_AddJsonRpcClientWithInterface_ConfigureNullWorks()
         {
             var services = new ServiceCollection();
-            services.AddSingleton(Mock.Of<IRpcSerializer>());
+            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
             services.Configure<TestOptions>(options =>
             {
                 options.Url = "http://foo.bar/";

@@ -19,14 +19,14 @@ namespace Tochka.JsonRpc.Server.Services
 {
     public class ActionResultConverter : IActionResultConverter
     {
-        protected readonly RpcFormatter rpcFormatter;
+        protected readonly JsonRpcFormatter JsonRpcFormatter;
         protected readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
         protected readonly ILogger log;
         protected readonly JsonRpcOptions options;
 
-        public ActionResultConverter(RpcFormatter rpcFormatter, IJsonRpcErrorFactory jsonRpcErrorFactory, IOptions<JsonRpcOptions> options, ILogger<ActionResultConverter> log)
+        public ActionResultConverter(JsonRpcFormatter jsonRpcFormatter, IJsonRpcErrorFactory jsonRpcErrorFactory, IOptions<JsonRpcOptions> options, ILogger<ActionResultConverter> log)
         {
-            this.rpcFormatter = rpcFormatter;
+            this.JsonRpcFormatter = jsonRpcFormatter;
             this.jsonRpcErrorFactory = jsonRpcErrorFactory;
             this.options = options.Value;
             this.log = log;
@@ -39,7 +39,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <param name="metadata"></param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        public virtual IActionResult ConvertActionResult(IActionResult actionResult, MethodMetadata metadata, IRpcSerializer serializer)
+        public virtual IActionResult ConvertActionResult(IActionResult actionResult, MethodMetadata metadata, IJsonRpcSerializer serializer)
         {
             switch (actionResult)
             {
@@ -81,14 +81,14 @@ namespace Tochka.JsonRpc.Server.Services
             return result;
         }
 
-        protected internal virtual ObjectResult CreateObjectResult(int httpCode, object value, IRpcSerializer serializer)
+        protected internal virtual ObjectResult CreateObjectResult(int httpCode, object value, IJsonRpcSerializer serializer)
         {
             var response = MaybeHttpCodeErrorResponse(httpCode, value, serializer) ?? ResponseFromObject(value, serializer);
             var result = new ObjectResult(response)
             {
                 StatusCode = 200,
             };
-            result.Formatters.Add(rpcFormatter);
+            result.Formatters.Add(JsonRpcFormatter);
             result.ContentTypes.Add(JsonRpcConstants.ContentType);
             return result;
         }
@@ -100,7 +100,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <param name="value"></param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        protected internal virtual IResponse MaybeHttpCodeErrorResponse(int code, object value, IRpcSerializer serializer)
+        protected internal virtual IResponse MaybeHttpCodeErrorResponse(int code, object value, IJsonRpcSerializer serializer)
         {
             if (Utils.IsGoodHttpCode(code))
             {
@@ -127,7 +127,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <param name="value"></param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        protected internal virtual IResponse ResponseFromObject(object value, IRpcSerializer serializer)
+        protected internal virtual IResponse ResponseFromObject(object value, IJsonRpcSerializer serializer)
         {
             switch (value)
             {
@@ -144,7 +144,7 @@ namespace Tochka.JsonRpc.Server.Services
             }
         }
 
-        protected internal virtual UntypedErrorResponse GetErrorResponse(IError error, IRpcSerializer serializer)
+        protected internal virtual UntypedErrorResponse GetErrorResponse(IError error, IJsonRpcSerializer serializer)
         {
             return new UntypedErrorResponse
             {
@@ -157,7 +157,7 @@ namespace Tochka.JsonRpc.Server.Services
             };
         }
 
-        protected internal virtual JToken SerializeContent(object value, IRpcSerializer serializer)
+        protected internal virtual JToken SerializeContent(object value, IJsonRpcSerializer serializer)
         {
             if (value == null)
             {

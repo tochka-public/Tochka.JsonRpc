@@ -180,6 +180,6 @@ namespace Tochka.JsonRpc.Client
         /// <summary>
         /// Serializer used to process JSON Rpc params. Does not affect JSON Rpc root object
         /// </summary>
-        IRpcSerializer Serializer { get; }
+        IJsonRpcSerializer Serializer { get; }
     }
 }

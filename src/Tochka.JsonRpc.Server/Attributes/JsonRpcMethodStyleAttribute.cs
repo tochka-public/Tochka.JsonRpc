@@ -9,11 +9,11 @@ namespace Tochka.JsonRpc.Server.Attributes
     /// </summary>
     [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class RpcMethodStyleAttribute : Attribute
+    public class JsonRpcMethodStyleAttribute : Attribute
     {
         public MethodStyle MethodStyle { get; }
 
-        public RpcMethodStyleAttribute(MethodStyle methodStyle)
+        public JsonRpcMethodStyleAttribute(MethodStyle methodStyle)
         {
             MethodStyle = methodStyle;
         }

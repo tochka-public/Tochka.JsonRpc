@@ -40,7 +40,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [TestCase("Test_Test", "test_Test")]
         public void Test_GetJsonName_CamelCase(string original, string json)
         {
-            var serializer = new CamelCaseRpcSerializer();
+            var serializer = new CamelCaseJsonRpcSerializer();
 
             var result = serializer.GetJsonName(original);
 
@@ -57,7 +57,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [TestCase("Test_Test", "test_test")]
         public void Test_GetJsonName_SnakeCase(string original, string json)
         {
-            var serializer = new SnakeCaseRpcSerializer();
+            var serializer = new SnakeCaseJsonRpcSerializer();
 
             var result = serializer.GetJsonName(original);
 
@@ -68,7 +68,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [Test]
         public void Test_GetJsonName_ThrowsOnWrongResolver()
         {
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer()
                 {
@@ -97,8 +97,8 @@ namespace Tochka.JsonRpc.Server.Tests
             result.Remove((typeof(ActionConvention), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(ParameterConvention), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(IStartupFilter), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(RpcFormatter), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(RpcModelBinder), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(JsonRpcFormatter), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(JsonRpcModelBinder), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(JsonRpcFilter), ServiceLifetime.Scoped)).Should().BeTrue();
             result.Remove((typeof(IParameterBinder), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(IRequestHandler), ServiceLifetime.Singleton)).Should().BeTrue();
@@ -109,10 +109,10 @@ namespace Tochka.JsonRpc.Server.Tests
             result.Remove((typeof(IParamsParser), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(IActionResultConverter), ServiceLifetime.Scoped)).Should().BeTrue();
             result.Remove((typeof(INestedContextFactory), ServiceLifetime.Transient)).Should().BeTrue();
-            result.Remove((typeof(IRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue("first serializer");
-            result.Remove((typeof(IRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue("second serializer");
-            result.Remove((typeof(HeaderRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(SnakeCaseRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(IJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue("first serializer");
+            result.Remove((typeof(IJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue("second serializer");
+            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(SnakeCaseJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
 
             // remove noise
             result.Remove((typeof(IOptions<>), ServiceLifetime.Singleton));
@@ -178,8 +178,8 @@ namespace Tochka.JsonRpc.Server.Tests
                 RegisterMock<ActionConvention>(services, optionsMock.Object, null, null, null),
                 RegisterMock<ParameterConvention>(services, null, null),
                 RegisterMock<IStartupFilter>(services),
-                RegisterMock<RpcFormatter>(services, new HeaderRpcSerializer(), Mock.Of<ArrayPool<char>>()),
-                RegisterMock<RpcModelBinder>(services),
+                RegisterMock<JsonRpcFormatter>(services, new HeaderJsonRpcSerializer(), Mock.Of<ArrayPool<char>>()),
+                RegisterMock<JsonRpcModelBinder>(services),
                 RegisterMock<JsonRpcFilter>(services, null, null),
                 RegisterMock<IParameterBinder>(services),
                 RegisterMock<IRequestHandler>(services),
@@ -208,11 +208,11 @@ namespace Tochka.JsonRpc.Server.Tests
         {
             var services = new ServiceCollection();
 
-            services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
+            services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
 
             var result = services.Select(x => (x.ServiceType, x.Lifetime)).ToList();
-            result.Remove((typeof(IRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(HeaderRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(IJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Should().BeEmpty("no other services are expected");
         }
 
@@ -221,16 +221,16 @@ namespace Tochka.JsonRpc.Server.Tests
         {
             var services = new ServiceCollection();
 
-            services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
-            services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
-            services.TryAddJsonRpcSerializer<SnakeCaseRpcSerializer>();
-            services.TryAddJsonRpcSerializer<SnakeCaseRpcSerializer>();
+            services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
+            services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
+            services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
+            services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
 
             var result = services.Select(x => (x.ServiceType, x.Lifetime)).ToList();
-            result.Remove((typeof(IRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(IRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(HeaderRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(SnakeCaseRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(IJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(IJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(SnakeCaseJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Should().BeEmpty("no other services are expected");
         }
 
@@ -328,7 +328,7 @@ namespace Tochka.JsonRpc.Server.Tests
                 Code = 0,
             };
 
-            var result = errorFactory.ConvertErrorToResponse(error, new HeaderRpcSerializer());
+            var result = errorFactory.ConvertErrorToResponse(error, new HeaderJsonRpcSerializer());
             result["error"].Should().NotBeNull();
             result["error"]["code"].Should().NotBeNull();
             result["error"]["message"].Should().NotBeNull();
@@ -349,7 +349,7 @@ namespace Tochka.JsonRpc.Server.Tests
             });
             var exception = new Exception();
 
-            var result = errorFactoryMock.Object.ConvertExceptionToResponse(exception, new HeaderRpcSerializer());
+            var result = errorFactoryMock.Object.ConvertExceptionToResponse(exception, new HeaderJsonRpcSerializer());
 
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<Exception>()), Times.Once);
             errorFactoryMock.VerifyNoOtherCalls();

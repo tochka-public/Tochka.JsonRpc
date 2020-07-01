@@ -10,7 +10,7 @@ using Tochka.JsonRpc.Server.Models.Binding;
 
 namespace Tochka.JsonRpc.Server.Binding
 {
-    public class RpcModelBinder : IModelBinder
+    public class JsonRpcModelBinder : IModelBinder
     {
         public Task BindModelAsync(ModelBindingContext context)
         {
@@ -22,7 +22,7 @@ namespace Tochka.JsonRpc.Server.Binding
             return parameterBinder.SetResult(context, result, parameterName, rpcBindingContext);
         }
 
-        internal RpcBindingContext GetRpcBindingContext(ModelBindingContext context, string parameterName)
+        internal JsonRpcBindingContext GetRpcBindingContext(ModelBindingContext context, string parameterName)
         {
             var call = context.HttpContext.GetJsonRpcCall();
             
@@ -39,10 +39,10 @@ namespace Tochka.JsonRpc.Server.Binding
             }
 
             // DI requires to register binder provider which is global and we dont want it, so resolve manually
-            var serializers = context.HttpContext.RequestServices.GetServices<IRpcSerializer>();
+            var serializers = context.HttpContext.RequestServices.GetServices<IJsonRpcSerializer>();
             var serializer = Utils.GetSerializer(serializers, methodMetadata.MethodOptions.RequestSerializer);
 
-            return new RpcBindingContext
+            return new JsonRpcBindingContext
             {
                 Call = call,
                 ParameterMetadata = parameterMetadata,

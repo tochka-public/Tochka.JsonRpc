@@ -32,7 +32,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         private TestEnvironment testEnvironment;
         private Mock<RequestHandler> requestHandlerMock;
         private Mock<IJsonRpcErrorFactory> errorFactoryMock;
-        private Mock<HeaderRpcSerializer> serializerMock;
+        private Mock<HeaderJsonRpcSerializer> serializerMock;
         private Mock<INestedContextFactory> contextFactoryMock;
         private Mock<IResponseReader> responseReaderMock;
         private Mock<IOptions<JsonRpcOptions>> optionsMock;
@@ -53,7 +53,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                 .Returns(new Error<object>());
             errorFactoryMock.Setup(x => x.InvalidRequest(It.IsAny<Exception>()))
                 .Returns(new Error<object>());
-            serializerMock = new Mock<HeaderRpcSerializer>();
+            serializerMock = new Mock<HeaderJsonRpcSerializer>();
             responseReaderMock = new Mock<IResponseReader>();
             optionsMock = new Mock<IOptions<JsonRpcOptions>>();
             optionsMock.SetupGet(x => x.Value)
@@ -411,7 +411,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             await requestHandlerMock.Object.HandleException(handlingContext, exception);
 
             handlingContext.WriteResponse.Should().BeTrue();
-            responseMock.Verify(x => x.Write(It.IsAny<HandlingContext>(), It.IsAny<HeaderRpcSerializer>()));
+            responseMock.Verify(x => x.Write(It.IsAny<HandlingContext>(), It.IsAny<HeaderJsonRpcSerializer>()));
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<DivideByZeroException>()));
             requestHandlerMock.Verify(x => x.HandleException(It.IsAny<HandlingContext>(), It.IsAny<Exception>()));
         }
@@ -587,7 +587,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
 
             await requestHandlerMock.Object.HandleRequest(httpContext, request, encoding, next);
 
-            responseMock.Verify(x => x.Write(It.IsAny<HandlingContext>(), It.IsAny<HeaderRpcSerializer>()));
+            responseMock.Verify(x => x.Write(It.IsAny<HandlingContext>(), It.IsAny<HeaderJsonRpcSerializer>()));
             requestHandlerMock.Verify(x => x.HandleRequestWrapper(It.IsAny<IRequestWrapper>(), It.IsAny<HandlingContext>()));
             requestHandlerMock.Verify(x => x.HandleRequest(It.IsAny<HttpContext>(), It.IsAny<IRequestWrapper>(), It.IsAny<Encoding>(), It.IsAny<RequestDelegate>()));
         }

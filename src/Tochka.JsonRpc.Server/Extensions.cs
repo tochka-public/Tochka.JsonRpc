@@ -36,8 +36,8 @@ namespace Tochka.JsonRpc.Server
             services.TryAddConvention<ActionConvention>();
             services.TryAddConvention<ParameterConvention>();
             services.AddSingleton<IStartupFilter, JsonRpcStartupFilter>();
-            services.TryAddSingleton<RpcFormatter>();
-            services.TryAddSingleton<RpcModelBinder>();
+            services.TryAddSingleton<JsonRpcFormatter>();
+            services.TryAddSingleton<JsonRpcModelBinder>();
             services.TryAddScoped<JsonRpcFilter>();
 
             // required user-overridable services
@@ -52,17 +52,17 @@ namespace Tochka.JsonRpc.Server
             services.TryAddTransient<INestedContextFactory, NestedContextFactory>();
             
             // required non-overridable services
-            services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
-            services.TryAddJsonRpcSerializer<SnakeCaseRpcSerializer>();
+            services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
+            services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
 
             return mvcBuilder;
         }
 
         public static IServiceCollection TryAddJsonRpcSerializer<T>(this IServiceCollection services)
-        where T: class, IRpcSerializer
+        where T: class, IJsonRpcSerializer
         {
             // this is wrong because resolves two different instances, but we don't care, they are true singletons under the hood
-            services.TryAddEnumerable(new ServiceDescriptor(typeof(IRpcSerializer), typeof(T), ServiceLifetime.Singleton));
+            services.TryAddEnumerable(new ServiceDescriptor(typeof(IJsonRpcSerializer), typeof(T), ServiceLifetime.Singleton));
             services.TryAddSingleton<T>();
             return services;
         }
@@ -75,7 +75,7 @@ namespace Tochka.JsonRpc.Server
         /// <param name="serializer"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static JsonName GetJsonName(this IRpcSerializer serializer, string name)
+        public static JsonName GetJsonName(this IJsonRpcSerializer serializer, string name)
         {
             if (!(serializer.Serializer.ContractResolver is DefaultContractResolver resolver))
             {
@@ -91,11 +91,11 @@ namespace Tochka.JsonRpc.Server
         /// </summary>
         /// <param name="errorFactory"></param>
         /// <param name="e"></param>
-        /// <param name="headerRpcSerializer"></param>
+        /// <param name="headerJsonRpcSerializer"></param>
         /// <returns></returns>
-        public static JToken ConvertExceptionToResponse(this IJsonRpcErrorFactory errorFactory, Exception e, HeaderRpcSerializer headerRpcSerializer)
+        public static JToken ConvertExceptionToResponse(this IJsonRpcErrorFactory errorFactory, Exception e, HeaderJsonRpcSerializer headerJsonRpcSerializer)
         {
-            return errorFactory.ConvertErrorToResponse(errorFactory.Exception(e), headerRpcSerializer);
+            return errorFactory.ConvertErrorToResponse(errorFactory.Exception(e), headerJsonRpcSerializer);
         }
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace Tochka.JsonRpc.Server
         /// </summary>
         /// <param name="errorFactory"></param>
         /// <param name="value"></param>
-        /// <param name="headerRpcSerializer"></param>
+        /// <param name="headerJsonRpcSerializer"></param>
         /// <returns></returns>
-        public static JToken ConvertErrorToResponse(this IJsonRpcErrorFactory errorFactory, IError value, HeaderRpcSerializer headerRpcSerializer)
+        public static JToken ConvertErrorToResponse(this IJsonRpcErrorFactory errorFactory, IError value, HeaderJsonRpcSerializer headerJsonRpcSerializer)
         {
             var error = new ErrorResponse<object>
             {
@@ -116,7 +116,7 @@ namespace Tochka.JsonRpc.Server
                     Data = value.GetData()
                 }
             };
-            return JToken.FromObject(error, headerRpcSerializer.Serializer);
+            return JToken.FromObject(error, headerJsonRpcSerializer.Serializer);
         }
 
         internal static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)

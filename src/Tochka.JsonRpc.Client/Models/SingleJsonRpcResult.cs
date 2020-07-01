@@ -19,11 +19,11 @@ namespace Tochka.JsonRpc.Client.Models
     public class SingleJsonRpcResult : ISingleJsonRpcResult
     {
         private readonly IJsonRpcCallContext context;
-        private readonly HeaderRpcSerializer headerRpcSerializer;
-        private readonly IRpcSerializer serializer;
+        private readonly HeaderJsonRpcSerializer headerJsonRpcSerializer;
+        private readonly IJsonRpcSerializer serializer;
         private readonly IResponse response;
 
-        public SingleJsonRpcResult(IJsonRpcCallContext context, HeaderRpcSerializer headerRpcSerializer, IRpcSerializer serializer)
+        public SingleJsonRpcResult(IJsonRpcCallContext context, HeaderJsonRpcSerializer headerJsonRpcSerializer, IJsonRpcSerializer serializer)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             if (context.BatchResponse != null)
@@ -32,7 +32,7 @@ namespace Tochka.JsonRpc.Client.Models
             }
 
             this.response = context.SingleResponse;
-            this.headerRpcSerializer = headerRpcSerializer;
+            this.headerJsonRpcSerializer = headerJsonRpcSerializer;
             this.serializer = serializer;
         }
 
@@ -83,7 +83,7 @@ namespace Tochka.JsonRpc.Client.Models
                 if (data.Equals(default(T)))
                 {
                     // if user serializer failed: maybe this is server error, try header serializer
-                    data = error.Data.ToObject<T>(headerRpcSerializer.Serializer);
+                    data = error.Data.ToObject<T>(headerJsonRpcSerializer.Serializer);
                 }
 
                 return new Error<T>()

@@ -18,12 +18,12 @@ namespace Tochka.JsonRpc.Server.Services
 {
     public class RequestReader : IRequestReader
     {
-        private readonly HeaderRpcSerializer headerRpcSerializer;
+        private readonly HeaderJsonRpcSerializer headerJsonRpcSerializer;
         private readonly ILogger log;
 
-        public RequestReader(HeaderRpcSerializer headerRpcSerializer, ILogger<RequestReader> log)
+        public RequestReader(HeaderJsonRpcSerializer headerJsonRpcSerializer, ILogger<RequestReader> log)
         {
-            this.headerRpcSerializer = headerRpcSerializer;
+            this.headerJsonRpcSerializer = headerJsonRpcSerializer;
             this.log = log;
         }
 
@@ -83,7 +83,7 @@ namespace Tochka.JsonRpc.Server.Services
                 {
                     log.LogTrace($"Reading request body");
                     var json = await JToken.ReadFromAsync(jsonReader, context.RequestAborted);
-                    var result = json.ToObject<IRequestWrapper>(headerRpcSerializer.Serializer);
+                    var result = json.ToObject<IRequestWrapper>(headerJsonRpcSerializer.Serializer);
                     body.Position = 0;
                     return result;
                 }

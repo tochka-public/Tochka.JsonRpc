@@ -8,7 +8,7 @@ namespace Tochka.JsonRpc.Client.Tests
 {
     public class TestClient : JsonRpcClientBase, ITestClient
     {
-        public TestClient(HttpClient client, IRpcSerializer serializer, HeaderRpcSerializer headerRpcSerializer, IOptions<TestOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log) : base(client, serializer, headerRpcSerializer, options.Value, jsonRpcIdGenerator, log)
+        public TestClient(HttpClient client, IJsonRpcSerializer serializer, HeaderJsonRpcSerializer headerJsonRpcSerializer, IOptions<TestOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log) : base(client, serializer, headerJsonRpcSerializer, options.Value, jsonRpcIdGenerator, log)
         {
         }
     }

@@ -32,7 +32,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             {
             });
 
-            var serializer = new HeaderRpcSerializer();
+            var serializer = new HeaderJsonRpcSerializer();
             var log = testEnvironment.ServiceProvider.GetRequiredService<ILogger<RequestReader>>();
             requestReaderMock = new Mock<RequestReader>(serializer, log)
             {

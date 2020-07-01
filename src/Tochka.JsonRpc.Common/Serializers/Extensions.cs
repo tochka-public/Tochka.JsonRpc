@@ -5,7 +5,7 @@ namespace Tochka.JsonRpc.Common.Serializers
 {
     public static class Extensions
     {
-        public static JContainer SerializeParams<T>(this IRpcSerializer serializer, T data)
+        public static JContainer SerializeParams<T>(this IJsonRpcSerializer serializer, T data)
         {
             if (data == null)
             {

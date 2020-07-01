@@ -10,7 +10,7 @@ namespace Tochka.JsonRpc.Common.Converters
     /// <summary>
     /// Handle dumb rule of Id as string/number/null for requests
     /// </summary>
-    public class RpcIdConverter : JsonConverter<IRpcId>
+    public class JsonRpcIdConverter : JsonConverter<IRpcId>
     {
         public override void WriteJson(JsonWriter writer, IRpcId value, JsonSerializer serializer)
         {

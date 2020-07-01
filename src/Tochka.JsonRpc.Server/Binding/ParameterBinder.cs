@@ -17,18 +17,18 @@ namespace Tochka.JsonRpc.Server.Binding
             this.log = log;
         }
 
-        public virtual Task SetResult(ModelBindingContext context, IParseResult result, string parameterName, RpcBindingContext rpcBindingContext)
+        public virtual Task SetResult(ModelBindingContext context, IParseResult result, string parameterName, JsonRpcBindingContext jsonRpcBindingContext)
         {
             log.LogTrace($"Binding parameter [{parameterName}]");
             switch (result)
             {
                 case SuccessParseResult successBindResult:
-                    return SetResultSafe(context, parameterName, successBindResult, rpcBindingContext.Serializer.Serializer);
+                    return SetResultSafe(context, parameterName, successBindResult, jsonRpcBindingContext.Serializer.Serializer);
 
                 case ErrorParseResult errorBindResult:
                     return SetError(context, parameterName, errorBindResult);
 
-                case NoParseResult noParseResult when rpcBindingContext.ParameterMetadata.IsOptional:
+                case NoParseResult noParseResult when jsonRpcBindingContext.ParameterMetadata.IsOptional:
                     // key was not in json but is optional parameter
                     return SetNoResult(context, parameterName, noParseResult);
 

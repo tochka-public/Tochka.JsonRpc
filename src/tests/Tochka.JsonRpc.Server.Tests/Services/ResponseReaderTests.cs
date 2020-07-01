@@ -29,7 +29,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
     {
         private TestEnvironment testEnvironment;
         private Mock<IJsonRpcErrorFactory> errorFactoryMock;
-        private HeaderRpcSerializer serializer;
+        private HeaderJsonRpcSerializer serializer;
         private Mock<ResponseReader> responseReaderMock;
 
         [SetUp]
@@ -40,7 +40,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             });
 
             errorFactoryMock = new Mock<IJsonRpcErrorFactory>();
-            serializer = new HeaderRpcSerializer();
+            serializer = new HeaderJsonRpcSerializer();
 
             var log = testEnvironment.ServiceProvider.GetRequiredService<ILogger<ResponseReader>>();
             responseReaderMock = new Mock<ResponseReader>(errorFactoryMock.Object, serializer, log)

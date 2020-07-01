@@ -14,7 +14,7 @@ namespace Tochka.JsonRpc.Server.Tests.Settings
             var options = new JsonRpcMethodOptions();
             options.Route.Value.Should().Be(JsonRpcConstants.DefaultRoute);
             options.MethodStyle.Should().Be(MethodStyle.ControllerAndAction);
-            options.RequestSerializer.Should().Be<SnakeCaseRpcSerializer>();
+            options.RequestSerializer.Should().Be<SnakeCaseJsonRpcSerializer>();
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace Tochka.JsonRpc.Server.Tests.Settings
             options.DetailedResponseExceptions.Should().Be(false);
             options.DefaultMethodOptions.Should().NotBeNull();
             options.BatchHandling.Should().Be(BatchHandling.Sequential);
-            options.HeaderSerializer.Should().Be<HeaderRpcSerializer>();
+            options.HeaderSerializer.Should().Be<HeaderJsonRpcSerializer>();
         }
     }
 }

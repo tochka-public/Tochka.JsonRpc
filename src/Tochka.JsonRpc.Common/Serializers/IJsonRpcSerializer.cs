@@ -2,7 +2,7 @@
 
 namespace Tochka.JsonRpc.Common.Serializers
 {
-    public interface IRpcSerializer
+    public interface IJsonRpcSerializer
     {
         JsonSerializerSettings Settings { get; }
         JsonSerializer Serializer { get; }

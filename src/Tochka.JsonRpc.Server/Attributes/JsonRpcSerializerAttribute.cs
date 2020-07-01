@@ -15,9 +15,9 @@ namespace Tochka.JsonRpc.Server.Attributes
 
         public JsonRpcSerializerAttribute(Type serializerType)
         {
-            if (!typeof(IRpcSerializer).IsAssignableFrom(serializerType))
+            if (!typeof(IJsonRpcSerializer).IsAssignableFrom(serializerType))
             {
-                throw new ArgumentException($"Expected implementation of {nameof(IRpcSerializer)}", nameof(serializerType));
+                throw new ArgumentException($"Expected implementation of {nameof(IJsonRpcSerializer)}", nameof(serializerType));
             }
 
             SerializerType = serializerType;

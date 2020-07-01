@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Tochka.JsonRpc.Common.Converters;
 
 namespace Tochka.JsonRpc.Common.Serializers
 {
     [ExcludeFromCodeCoverage]
-    public class HeaderRpcSerializer : IRpcSerializer
+    public class CamelCaseJsonRpcSerializer : IJsonRpcSerializer
     {
         public JsonSerializerSettings Settings => SettingsInstance;
         public JsonSerializer Serializer => SerializerInstance;
@@ -16,18 +17,11 @@ namespace Tochka.JsonRpc.Common.Serializers
         {
             ContractResolver = new DefaultContractResolver
             {
-                NamingStrategy = new SnakeCaseNamingStrategy(),
+                NamingStrategy = new CamelCaseNamingStrategy()
             },
-            Converters = new List<JsonConverter>
+            Converters = new List<JsonConverter>()
             {
-                // requests
-                new RequestWrapperConverter(),
-                new CallConverter(),
-                new RpcIdConverter(),
-
-                // responses
-                new ResponseWrapperConverter(),
-                new ResponseConverter(),
+                new StringEnumConverter(typeof(CamelCaseNamingStrategy)),
             },
             Formatting = Formatting.Indented,
         };

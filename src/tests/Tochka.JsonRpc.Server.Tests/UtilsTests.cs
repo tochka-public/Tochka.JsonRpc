@@ -190,10 +190,10 @@ namespace Tochka.JsonRpc.Server.Tests
         [Test]
         public void Test_GetSerializer_ReturnsValue()
         {
-            var expected = new CamelCaseRpcSerializer();
-            var serializers = new List<IRpcSerializer>
+            var expected = new CamelCaseJsonRpcSerializer();
+            var serializers = new List<IJsonRpcSerializer>
             {
-                new SnakeCaseRpcSerializer(),
+                new SnakeCaseJsonRpcSerializer(),
                 expected
             };
 
@@ -203,12 +203,12 @@ namespace Tochka.JsonRpc.Server.Tests
         [Test]
         public void Test_GetSerializer_ThrowsOnNotFound()
         {
-            var serializers = new List<IRpcSerializer>
+            var serializers = new List<IJsonRpcSerializer>
             {
-                new SnakeCaseRpcSerializer()
+                new SnakeCaseJsonRpcSerializer()
             };
 
-            Action action = () => Utils.GetSerializer(serializers, typeof(CamelCaseRpcSerializer));
+            Action action = () => Utils.GetSerializer(serializers, typeof(CamelCaseJsonRpcSerializer));
             action.Should().Throw<InvalidOperationException>();
         }
 

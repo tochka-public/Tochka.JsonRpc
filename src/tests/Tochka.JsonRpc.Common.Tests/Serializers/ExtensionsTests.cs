@@ -18,7 +18,7 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
         [Test]
         public void Test_SerializeParams_WorksForObject()
         {
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
 
@@ -30,7 +30,7 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
         [Test]
         public void Test_SerializeParams_WorksForArray()
         {
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
 
@@ -43,7 +43,7 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
         [TestCaseSource(typeof(ExtensionsTests), nameof(BadCases))]
         public void Test_SerializeParams_ThrowsOnOtherTypes(object value)
         {
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             Action action = () => serializerMock.Object.SerializeParams(value);
@@ -54,7 +54,7 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
         [Test]
         public void Test_SerializeParams_ReturnsNullOnNull()
         {
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
 

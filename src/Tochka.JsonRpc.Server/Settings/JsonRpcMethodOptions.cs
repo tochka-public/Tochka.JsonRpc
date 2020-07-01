@@ -9,7 +9,7 @@ namespace Tochka.JsonRpc.Server.Settings
     {
         public JsonRpcMethodOptions()
         {
-            RequestSerializer = typeof(SnakeCaseRpcSerializer);
+            RequestSerializer = typeof(SnakeCaseJsonRpcSerializer);
             Route = JsonRpcConstants.DefaultRoute;
             MethodStyle = MethodStyle.ControllerAndAction;
         }

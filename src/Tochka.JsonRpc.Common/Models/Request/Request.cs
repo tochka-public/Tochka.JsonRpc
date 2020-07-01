@@ -16,7 +16,7 @@ namespace Tochka.JsonRpc.Common.Models.Request
 
         public TParams Params { get; set; }
 
-        public IUntypedCall WithSerializedParams(IRpcSerializer serializer)
+        public IUntypedCall WithSerializedParams(IJsonRpcSerializer serializer)
         {
             var serializedParams = serializer.SerializeParams(Params);
             return new UntypedRequest()

@@ -10,13 +10,13 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
 {
     public class SerializationTests
     {
-        private readonly HeaderRpcSerializer headerRpcSerializer = new HeaderRpcSerializer();
+        private readonly HeaderJsonRpcSerializer headerJsonRpcSerializer = new HeaderJsonRpcSerializer();
 
         [TestCaseSource(typeof(JsonRequests), nameof(JsonRequests.Cases))]
         public void Test_Deserialize_Request(string requestString, object expected)
         {
             var jToken = JToken.Parse(requestString);
-            var result = jToken.ToObject(expected.GetType(), headerRpcSerializer.Serializer);
+            var result = jToken.ToObject(expected.GetType(), headerJsonRpcSerializer.Serializer);
             result.Should().BeOfType(expected.GetType());
             result.Should().BeEquivalentTo(expected, options => 
                 options

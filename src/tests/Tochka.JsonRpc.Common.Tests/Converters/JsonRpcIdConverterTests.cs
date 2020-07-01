@@ -13,20 +13,20 @@ using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Common.Tests.Converters
 {
-    public class RpcIdConverterTests
+    public class JsonRpcIdConverterTests
     {
-        private RpcIdConverter rpcIdConverter;
+        private JsonRpcIdConverter jsonRpcIdConverter;
 
         [SetUp]
         public void Setup()
         {
-            rpcIdConverter = new RpcIdConverter();
+            jsonRpcIdConverter = new JsonRpcIdConverter();
         }
 
         [Test]
         public void Test_WriteJson_Throws()
         {
-            Action action = () => rpcIdConverter.WriteJson(Mock.Of<JsonWriter>(), Mock.Of<IRpcId>(), Mock.Of<JsonSerializer>());
+            Action action = () => jsonRpcIdConverter.WriteJson(Mock.Of<JsonWriter>(), Mock.Of<IRpcId>(), Mock.Of<JsonSerializer>());
 
             action.Should().Throw<InvalidOperationException>();
         }
@@ -37,7 +37,7 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
         {
             var json = $@"""{value}""";
 
-            var result = rpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
 
             result.Should().BeOfType<StringRpcId>()
                 .Subject.String.Should().Be(value);
@@ -51,7 +51,7 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
         {
             var json = new JValue(value).ToString();
 
-            var result = rpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
 
             result.Should().BeOfType<NumberRpcId>()
                 .Subject.Number.Should().Be(value);
@@ -65,7 +65,7 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
         {
             var json = new JValue(value).ToString();
 
-            var result = rpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
 
             result.Should().BeOfType<NumberRpcId>()
                 .Subject.Number.Should().Be(value);
@@ -76,16 +76,16 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
         {
             var json = "null";
 
-            var result = rpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
 
             result.Should().BeNull();
         }
 
-        [TestCaseSource(typeof(RpcIdConverterTests), nameof(BadJsonIdCases))]
+        [TestCaseSource(typeof(JsonRpcIdConverterTests), nameof(BadJsonIdCases))]
         public void Test_ReadJson_ThrowsOnBadIdProperty(string json)
         {
             var jsonSerializer = JsonSerializer.Create();
-            Action action = () => rpcIdConverter.ReadJson(CreateJsonReader(json), typeof(IRpcId), null, jsonSerializer);
+            Action action = () => jsonRpcIdConverter.ReadJson(CreateJsonReader(json), typeof(IRpcId), null, jsonSerializer);
 
             action.Should().Throw<ArgumentOutOfRangeException>();
         }

@@ -33,7 +33,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
             testEnvironment = new TestEnvironment(services =>
             {
                 services.AddSingleton(converterMock.Object);
-                services.AddSingleton<SnakeCaseRpcSerializer>();
+                services.AddSingleton<SnakeCaseJsonRpcSerializer>();
                 services.AddSingleton<JsonRpcFilter>();
             });
 
@@ -184,7 +184,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
         {
             var methodMetadata = new MethodMetadata(new JsonRpcMethodOptions()
             {
-                RequestSerializer = typeof(CamelCaseRpcSerializer)
+                RequestSerializer = typeof(CamelCaseJsonRpcSerializer)
             }, new JsonName("test", "test"), new JsonName("test", "test"));
             var properties = new Dictionary<object, object>
             {
@@ -219,7 +219,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
         public void Test_OnResultExecuting_UsesConverterAndSetsResult()
         {
             var expectedResult = Mock.Of<IActionResult>(MockBehavior.Strict);
-            converterMock.Setup(x => x.ConvertActionResult(It.IsAny<IActionResult>(), It.IsAny<MethodMetadata>(), It.IsAny<IRpcSerializer>()))
+            converterMock.Setup(x => x.ConvertActionResult(It.IsAny<IActionResult>(), It.IsAny<MethodMetadata>(), It.IsAny<IJsonRpcSerializer>()))
                 .Returns(expectedResult).Verifiable();
             var methodMetadata = new MethodMetadata(new JsonRpcMethodOptions(), new JsonName("test", "test"), new JsonName("test", "test"));
             var properties = new Dictionary<object, object>

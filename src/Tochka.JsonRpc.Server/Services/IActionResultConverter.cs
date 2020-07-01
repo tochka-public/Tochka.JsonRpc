@@ -14,7 +14,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <param name="metadata"></param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        IActionResult ConvertActionResult(IActionResult actionResult, MethodMetadata metadata, IRpcSerializer serializer);
+        IActionResult ConvertActionResult(IActionResult actionResult, MethodMetadata metadata, IJsonRpcSerializer serializer);
 
         IActionResult GetFailedBindingResult(ModelStateDictionary modelState);
     }

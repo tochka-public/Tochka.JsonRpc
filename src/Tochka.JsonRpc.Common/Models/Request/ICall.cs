@@ -9,7 +9,7 @@ namespace Tochka.JsonRpc.Common.Models.Request
 
         string Method { get; set; }
 
-        IUntypedCall WithSerializedParams(IRpcSerializer serializer);
+        IUntypedCall WithSerializedParams(IJsonRpcSerializer serializer);
     }
 
     public interface ICall<TParams> : ICall

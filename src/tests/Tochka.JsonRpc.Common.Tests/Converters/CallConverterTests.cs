@@ -87,7 +87,7 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
             {
                 Converters = new List<JsonConverter>()
                 {
-                    new MockRpcIdConverter()
+                    new MockJsonRpcIdConverter()
                 }
             });
             var result = callConverter.ReadJson(CreateJsonReader(json), typeof(UntypedRequest), null, jsonSerializer);
@@ -111,7 +111,7 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
             {
                 Converters = new List<JsonConverter>()
                 {
-                    new MockRpcIdConverter()
+                    new MockJsonRpcIdConverter()
                 }
             });
             Action action = () => callConverter.ReadJson(CreateJsonReader(json), typeof(UntypedRequest), null, jsonSerializer);

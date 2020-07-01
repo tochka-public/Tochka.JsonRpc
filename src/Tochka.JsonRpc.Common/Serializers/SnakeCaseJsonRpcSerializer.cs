@@ -8,7 +8,7 @@ using Tochka.JsonRpc.Common.Converters;
 namespace Tochka.JsonRpc.Common.Serializers
 {
     [ExcludeFromCodeCoverage]
-    public class SnakeCaseRpcSerializer : IRpcSerializer
+    public class SnakeCaseJsonRpcSerializer : IJsonRpcSerializer
     {
         public JsonSerializerSettings Settings => SettingsInstance;
         public JsonSerializer Serializer => SerializerInstance;

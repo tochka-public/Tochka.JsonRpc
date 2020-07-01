@@ -19,9 +19,9 @@ namespace Tochka.JsonRpc.Server.Models.Response
         /// Copy code, headers and body from nested response
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="headerRpcSerializer"></param>
+        /// <param name="headerJsonRpcSerializer"></param>
         /// <returns></returns>
-        public async Task Write(HandlingContext context, HeaderRpcSerializer headerRpcSerializer)
+        public async Task Write(HandlingContext context, HeaderJsonRpcSerializer headerJsonRpcSerializer)
         {
             var sink = context.OriginalHttpContext.Response;
             sink.StatusCode = Source.StatusCode;

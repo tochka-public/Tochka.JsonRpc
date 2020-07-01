@@ -32,7 +32,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
     {
         private TestEnvironment testEnvironment;
         private JsonRpcOptions jsonRpcOptions;
-        private static readonly Mock<RpcFormatter> FormatterMock = new Mock<RpcFormatter>(new HeaderRpcSerializer(), Mock.Of<ArrayPool<char>>());
+        private static readonly Mock<JsonRpcFormatter> FormatterMock = new Mock<JsonRpcFormatter>(new HeaderJsonRpcSerializer(), Mock.Of<ArrayPool<char>>());
 
         [SetUp]
         public void Setup()
@@ -54,10 +54,10 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             var converter = GetConverterMock();
 
-            var result = converter.Object.SerializeContent(null, Mock.Of<IRpcSerializer>());
+            var result = converter.Object.SerializeContent(null, Mock.Of<IJsonRpcSerializer>());
 
             Assert.AreEqual(JValue.CreateNull(), result);
-            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
             converter.VerifyNoOtherCalls();
         }
 
@@ -65,14 +65,14 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         public void Test_SerializeContent_ReturnsJson()
         {
             var converter = GetConverterMock();
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
 
             var result = converter.Object.SerializeContent("test", serializerMock.Object);
 
             Assert.AreEqual(JValue.CreateString("test"), result);
-            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
             converter.VerifyNoOtherCalls();
         }
 
@@ -81,17 +81,17 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             var expected = JValue.CreateString("test");
             var converter = GetConverterMock();
-            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()))
+            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()))
                 .Returns(expected);
 
-            var result = converter.Object.ResponseFromObject(Mock.Of<IError>(), Mock.Of<IRpcSerializer>());
+            var result = converter.Object.ResponseFromObject(Mock.Of<IError>(), Mock.Of<IJsonRpcSerializer>());
 
             result.Should().BeOfType<UntypedErrorResponse>();
             var response = result as UntypedErrorResponse;
             response.Error.GetData().Should().Be(expected);
-            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
-            converter.Verify(x => x.ResponseFromObject(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
-            converter.Verify(x => x.GetErrorResponse(It.IsAny<IError>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
+            converter.Verify(x => x.ResponseFromObject(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
+            converter.Verify(x => x.GetErrorResponse(It.IsAny<IError>(), It.IsAny<IJsonRpcSerializer>()));
             converter.VerifyNoOtherCalls();
         }
 
@@ -100,15 +100,15 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             var expected = JValue.CreateString("test");
             var converter = GetConverterMock();
-            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()))
+            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()))
                 .Returns(expected);
 
-            var result = converter.Object.ResponseFromObject("test", Mock.Of<IRpcSerializer>());
+            var result = converter.Object.ResponseFromObject("test", Mock.Of<IJsonRpcSerializer>());
 
             result.Should().BeOfType<UntypedResponse>();
             Assert.AreEqual(expected, (result as UntypedResponse).Result);
-            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
-            converter.Verify(x => x.ResponseFromObject(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
+            converter.Verify(x => x.ResponseFromObject(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
             converter.VerifyNoOtherCalls();
         }
 
@@ -117,10 +117,10 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             var converter = GetConverterMock();
 
-            var result = converter.Object.MaybeHttpCodeErrorResponse(200, "test", Mock.Of<IRpcSerializer>());
+            var result = converter.Object.MaybeHttpCodeErrorResponse(200, "test", Mock.Of<IJsonRpcSerializer>());
 
             result.Should().BeNull();
-            converter.Verify(x => x.MaybeHttpCodeErrorResponse(It.IsAny<int>(), It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.MaybeHttpCodeErrorResponse(It.IsAny<int>(), It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
             converter.VerifyNoOtherCalls();
         }
 
@@ -129,16 +129,16 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             var expected = JValue.CreateString("test");
             var converter = GetConverterMock();
-            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()))
+            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()))
                 .Returns(expected);
 
-            var result = converter.Object.MaybeHttpCodeErrorResponse(500, "test", Mock.Of<IRpcSerializer>());
+            var result = converter.Object.MaybeHttpCodeErrorResponse(500, "test", Mock.Of<IJsonRpcSerializer>());
 
             result.Should().BeOfType<UntypedErrorResponse>();
             var response = result as UntypedErrorResponse;
             response.Error.GetData().Should().Be(expected);
-            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
-            converter.Verify(x => x.MaybeHttpCodeErrorResponse(It.IsAny<int>(), It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
+            converter.Verify(x => x.MaybeHttpCodeErrorResponse(It.IsAny<int>(), It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
             converter.VerifyNoOtherCalls();
         }
 
@@ -148,18 +148,18 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             var jValue = JValue.CreateString("test");
             var converter = GetConverterMock();
-            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()))
+            converter.Setup(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()))
                 .Returns(jValue);
 
-            var result = converter.Object.CreateObjectResult(httpCode, "test", Mock.Of<IRpcSerializer>());
+            var result = converter.Object.CreateObjectResult(httpCode, "test", Mock.Of<IJsonRpcSerializer>());
 
             result.StatusCode.Should().Be(200);
             result.Formatters.Should().HaveCount(1);
-            result.Formatters.Should().HaveElementAt(0, testEnvironment.ServiceProvider.GetRequiredService<RpcFormatter>());
+            result.Formatters.Should().HaveElementAt(0, testEnvironment.ServiceProvider.GetRequiredService<JsonRpcFormatter>());
             result.ContentTypes.Should().HaveCount(1);
             result.ContentTypes.Should().HaveElementAt(0, JsonRpcConstants.ContentType);
             result.Value.Should().BeAssignableTo<IResponse>();
-            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IRpcSerializer>()));
+            converter.Verify(x => x.SerializeContent(It.IsAny<object>(), It.IsAny<IJsonRpcSerializer>()));
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             jsonRpcOptions.AllowRawResponses = true;
             var converter = GetConverterMock();
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             var metadata = new MethodMetadata(new JsonRpcMethodOptions(), new JsonName("", ""), new JsonName("", ""));
@@ -208,7 +208,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         {
             jsonRpcOptions.AllowRawResponses = false;
             var converter = GetConverterMock();
-            var serializerMock = new Mock<IRpcSerializer>();
+            var serializerMock = new Mock<IJsonRpcSerializer>();
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             var metadata = new MethodMetadata(new JsonRpcMethodOptions(), new JsonName("", ""), new JsonName("", ""));
@@ -333,7 +333,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
 
         private Mock<ActionResultConverter> GetConverterMock()
         {
-            return new Mock<ActionResultConverter>(testEnvironment.ServiceProvider.GetRequiredService<RpcFormatter>(), testEnvironment.ServiceProvider.GetRequiredService<IJsonRpcErrorFactory>(), testEnvironment.ServiceProvider.GetRequiredService<IOptions<JsonRpcOptions>>(), testEnvironment.ServiceProvider.GetRequiredService<ILogger<ActionResultConverter>>())
+            return new Mock<ActionResultConverter>(testEnvironment.ServiceProvider.GetRequiredService<JsonRpcFormatter>(), testEnvironment.ServiceProvider.GetRequiredService<IJsonRpcErrorFactory>(), testEnvironment.ServiceProvider.GetRequiredService<IOptions<JsonRpcOptions>>(), testEnvironment.ServiceProvider.GetRequiredService<ILogger<ActionResultConverter>>())
             {
                 CallBase = true
             };

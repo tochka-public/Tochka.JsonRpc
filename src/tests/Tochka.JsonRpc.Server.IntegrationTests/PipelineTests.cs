@@ -29,8 +29,8 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
     {
         private WebApplicationFactory<Startup> factory;
         private HttpClient client;
-        private readonly IRpcSerializer requestSerializer = new SnakeCaseRpcSerializer();
-        private readonly IRpcSerializer headerSerializer = new HeaderRpcSerializer();
+        private readonly IJsonRpcSerializer requestSerializer = new SnakeCaseJsonRpcSerializer();
+        private readonly IJsonRpcSerializer headerSerializer = new HeaderJsonRpcSerializer();
 
         // TODO make it one-time, but preserve logs of LoggingHandler! They are ignored if this is one-time setup
         [OneTimeSetUp]

@@ -42,7 +42,7 @@ namespace Tochka.JsonRpc.Server.Models.Response
         /// Set code 200, set content-type, add headers if not null, write json body if not null
         /// </summary>
         /// <returns></returns>
-        public async Task Write(HandlingContext context, HeaderRpcSerializer headerRpcSerializer)
+        public async Task Write(HandlingContext context, HeaderJsonRpcSerializer headerJsonRpcSerializer)
         {
             var sink = context.OriginalHttpContext.Response;
             if (Headers != null)
@@ -69,7 +69,7 @@ namespace Tochka.JsonRpc.Server.Models.Response
             {
                 using (var jsonWriter = new JsonTextWriter(writer))
                 {
-                    jsonWriter.Formatting = headerRpcSerializer.Settings.Formatting;
+                    jsonWriter.Formatting = headerJsonRpcSerializer.Settings.Formatting;
                     await Value.WriteToAsync(jsonWriter, context.OriginalHttpContext.RequestAborted);
                 }
             }

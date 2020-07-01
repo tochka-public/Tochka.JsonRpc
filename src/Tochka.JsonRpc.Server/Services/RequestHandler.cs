@@ -23,16 +23,16 @@ namespace Tochka.JsonRpc.Server.Services
     public class RequestHandler : IRequestHandler
     {
         private readonly IJsonRpcErrorFactory errorFactory;
-        private readonly HeaderRpcSerializer headerRpcSerializer;
+        private readonly HeaderJsonRpcSerializer headerJsonRpcSerializer;
         private readonly INestedContextFactory nestedContextFactory;
         private readonly IResponseReader responseReader;
         private readonly ILogger log;
         private readonly JsonRpcOptions options;
 
-        public RequestHandler(IJsonRpcErrorFactory errorFactory, HeaderRpcSerializer headerRpcSerializer, INestedContextFactory nestedContextFactory, IResponseReader responseReader, IOptions<JsonRpcOptions> options, ILogger<RequestHandler> log)
+        public RequestHandler(IJsonRpcErrorFactory errorFactory, HeaderJsonRpcSerializer headerJsonRpcSerializer, INestedContextFactory nestedContextFactory, IResponseReader responseReader, IOptions<JsonRpcOptions> options, ILogger<RequestHandler> log)
         {
             this.errorFactory = errorFactory;
-            this.headerRpcSerializer = headerRpcSerializer;
+            this.headerJsonRpcSerializer = headerJsonRpcSerializer;
             this.nestedContextFactory = nestedContextFactory;
             this.responseReader = responseReader;
             this.log = log;
@@ -46,7 +46,7 @@ namespace Tochka.JsonRpc.Server.Services
             {
                 log.LogTrace($"RequestWrapper is {requestWrapper?.GetType().Name}, encoding is {requestEncoding.EncodingName}");
                 var responseWrapper = await HandleRequestWrapper(requestWrapper, context);
-                await responseWrapper.Write(context, headerRpcSerializer);
+                await responseWrapper.Write(context, headerJsonRpcSerializer);
             }
             catch (Exception e)
             {
@@ -78,7 +78,7 @@ namespace Tochka.JsonRpc.Server.Services
                 // i think even if we failed parsing and don't know if this is a notification, this is right
                 context.WriteResponse = true;
                 log.LogWarning(e, $"{nameof(HandleRequestWrapper)} failed, set writeResponse [{context.WriteResponse}], convert exception to error response");
-                var response = errorFactory.ConvertExceptionToResponse(e, headerRpcSerializer);
+                var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
                 return GetResponseWrapper(response);
             }
         }
@@ -97,7 +97,7 @@ namespace Tochka.JsonRpc.Server.Services
                     Data = error.GetData()
                 }
             };
-            var value = JToken.FromObject(errorResponse, headerRpcSerializer.Serializer);
+            var value = JToken.FromObject(errorResponse, headerJsonRpcSerializer.Serializer);
             return new JsonServerResponseWrapper(value, null, null);
             // TODO any cases when need to pass through?
             // TODO it can break protocol because we can not distinguish between bad rpc request and absense of rpc route/action, for example
@@ -151,9 +151,9 @@ namespace Tochka.JsonRpc.Server.Services
         {
             context.WriteResponse = true;
             log.LogTrace($"{nameof(HandleException)}: set writeResponse [{context.WriteResponse}]");
-            var response = errorFactory.ConvertExceptionToResponse(e, headerRpcSerializer);
+            var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
             var wrapper = GetResponseWrapper(response);
-            await wrapper.Write(context, headerRpcSerializer);
+            await wrapper.Write(context, headerJsonRpcSerializer);
         }
 
         protected internal virtual IServerResponseWrapper GetResponseWrapper(JToken response)
@@ -203,7 +203,7 @@ namespace Tochka.JsonRpc.Server.Services
             catch (Exception e)
             {
                 log.LogWarning(e, $"{nameof(GetResponseSafeInBatch)} failed: converting exception to json response");
-                return errorFactory.ConvertExceptionToResponse(e, headerRpcSerializer);
+                return errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Tochka.JsonRpc.Server.Services
             catch (Exception e)
             {
                 log.LogWarning(e, $"{nameof(SafeNext)} failed: converting exception to json response");
-                var response = errorFactory.ConvertExceptionToResponse(e, headerRpcSerializer);
+                var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
                 return new JsonServerResponseWrapper(response, call, nestedHeaders);
             }
         }

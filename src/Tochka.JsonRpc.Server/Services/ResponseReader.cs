@@ -23,13 +23,13 @@ namespace Tochka.JsonRpc.Server.Services
     public class ResponseReader : IResponseReader
     {
         private readonly IJsonRpcErrorFactory errorFactory;
-        private readonly HeaderRpcSerializer headerRpcSerializer;
+        private readonly HeaderJsonRpcSerializer headerJsonRpcSerializer;
         private readonly ILogger log;
 
-        public ResponseReader(IJsonRpcErrorFactory errorFactory, HeaderRpcSerializer headerRpcSerializer, ILogger<ResponseReader> log)
+        public ResponseReader(IJsonRpcErrorFactory errorFactory, HeaderJsonRpcSerializer headerJsonRpcSerializer, ILogger<ResponseReader> log)
         {
             this.errorFactory = errorFactory;
-            this.headerRpcSerializer = headerRpcSerializer;
+            this.headerJsonRpcSerializer = headerJsonRpcSerializer;
             this.log = log;
         }
 
@@ -152,9 +152,9 @@ namespace Tochka.JsonRpc.Server.Services
             switch (response.StatusCode)
             {
                 case 404:
-                    return errorFactory.ConvertErrorToResponse(errorFactory.MethodNotFound(rawBody), headerRpcSerializer);
+                    return errorFactory.ConvertErrorToResponse(errorFactory.MethodNotFound(rawBody), headerJsonRpcSerializer);
                 default:
-                    return errorFactory.ConvertErrorToResponse(errorFactory.InternalError(rawBody), headerRpcSerializer);
+                    return errorFactory.ConvertErrorToResponse(errorFactory.InternalError(rawBody), headerJsonRpcSerializer);
             }
         }
     }

@@ -17,10 +17,10 @@ namespace Tochka.JsonRpc.Server.Conventions
     /// </summary>
     public class ParameterConvention : IParameterModelConvention
     {
-        private readonly IEnumerable<IRpcSerializer> serializers;
+        private readonly IEnumerable<IJsonRpcSerializer> serializers;
         private readonly ILogger log;
 
-        public ParameterConvention(IEnumerable<IRpcSerializer> serializers, ILogger<ParameterConvention> log)
+        public ParameterConvention(IEnumerable<IJsonRpcSerializer> serializers, ILogger<ParameterConvention> log)
         {
             this.serializers = serializers;
             this.log = log;
@@ -63,11 +63,11 @@ namespace Tochka.JsonRpc.Server.Conventions
             {
                 parameterModel.BindingInfo = new BindingInfo()
                 {
-                    BinderType = typeof(RpcModelBinder),
+                    BinderType = typeof(JsonRpcModelBinder),
                     BindingSource = BindingSource.Custom
                 };
             }
-            log.LogTrace($"{parameterModel.DisplayName}: applied {nameof(RpcModelBinder)}");
+            log.LogTrace($"{parameterModel.DisplayName}: applied {nameof(JsonRpcModelBinder)}");
         }
 
         internal void ValidateParameter(ParameterModel parameterModel, BindingStyle bindingStyle)

@@ -62,7 +62,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             var value = new JObject();
             var wrapper = new JsonServerResponseWrapper(value, notification, null);
 
-            await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             resposneMock.VerifySet(x => x.StatusCode = 200);
             resposneMock.VerifySet(x => x.ContentLength = null);
@@ -95,7 +95,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             };
             var wrapper = new JsonServerResponseWrapper(value, notification, headers);
 
-            await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             resposneMock.VerifyGet(x => x.Headers);
             responseHeaders.Should().HaveCount(2);
@@ -123,7 +123,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             var value = new JObject();
             var wrapper = new JsonServerResponseWrapper(value, notification, null);
 
-            await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             ms.Length.Should().BePositive();
         }
@@ -148,7 +148,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             var notification = new UntypedNotification();
             var value = new JObject();
             var wrapper = new JsonServerResponseWrapper(value, notification, null);
-            Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             await action.Should().ThrowAsync<TaskCanceledException>();
         }

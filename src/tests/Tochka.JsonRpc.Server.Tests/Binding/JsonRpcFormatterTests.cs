@@ -9,7 +9,7 @@ using Tochka.JsonRpc.Server.Tests.Helpers;
 
 namespace Tochka.JsonRpc.Server.Tests.Binding
 {
-    public class RpcFormatterTests
+    public class JsonRpcFormatterTests
     {
         private TestEnvironment testEnvironment;
 
@@ -18,17 +18,17 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             testEnvironment = new TestEnvironment(services =>
             {
-                services.AddSingleton<HeaderRpcSerializer>();
+                services.AddSingleton<HeaderJsonRpcSerializer>();
                 services.AddSingleton(Mock.Of<ArrayPool<char>>());
-                services.AddSingleton<RpcFormatter, RpcFormatterPublic>();
+                services.AddSingleton<JsonRpcFormatter, JsonRpcFormatterPublic>();
             });
         }
 
         [Test]
         public void Test_CreateJsonSerializer_ReturnsHeaderSerializer()
         {
-            var serializer = testEnvironment.ServiceProvider.GetRequiredService<HeaderRpcSerializer>();
-            var formatter = testEnvironment.ServiceProvider.GetRequiredService<RpcFormatter>() as RpcFormatterPublic;
+            var serializer = testEnvironment.ServiceProvider.GetRequiredService<HeaderJsonRpcSerializer>();
+            var formatter = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcFormatter>() as JsonRpcFormatterPublic;
 
             formatter.CreateJsonSerializerPublic().Should().Be(serializer.Serializer);
         }

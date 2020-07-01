@@ -33,9 +33,9 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         {
             testEnvironment = new TestEnvironment(services =>
             {
-                services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
-                services.TryAddJsonRpcSerializer<SnakeCaseRpcSerializer>();
-                services.TryAddJsonRpcSerializer<CamelCaseRpcSerializer>();
+                services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
+                services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
+                services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
                 var matcher = Mock.Of<IMethodMatcher>(x => x.GetActionName(It.IsAny<MethodMetadata>()) == string.Empty);
                 services.AddSingleton(matcher);
                 services.AddSingleton<ActionConvention>();
@@ -95,7 +95,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
                 {
                     MethodStyle = MethodStyle.ActionOnly,
                     Route = new PathString("/test"),
-                    RequestSerializer = typeof(CamelCaseRpcSerializer)
+                    RequestSerializer = typeof(CamelCaseJsonRpcSerializer)
                 }
             };
             var actionConvention = GetActionConvention(options);
@@ -108,14 +108,14 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         [Test]
         public void Test_MakeOptions_UsesActionAttributes()
         {
-            var serializerType = typeof(CamelCaseRpcSerializer);
+            var serializerType = typeof(CamelCaseJsonRpcSerializer);
             var route = new PathString("/test");
             var methodStyle = MethodStyle.ActionOnly;
             var attributes = new List<object>
             {
                 new Mock<JsonRpcSerializerAttribute>(serializerType).Object,
                 new Mock<RouteAttribute>(route.Value).Object,
-                new Mock<RpcMethodStyleAttribute>(methodStyle).Object,
+                new Mock<JsonRpcMethodStyleAttribute>(methodStyle).Object,
             };
             var controllerModel = new Mock<ControllerModel>(typeof(JsonRpcTestController).GetTypeInfo(), new List<object>()).Object;
             var model = new Mock<ActionModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)), attributes).Object;
@@ -134,14 +134,14 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         [Test]
         public void Test_MakeOptions_UsesControllerAttributes()
         {
-            var serializerType = typeof(CamelCaseRpcSerializer);
+            var serializerType = typeof(CamelCaseJsonRpcSerializer);
             var route = new PathString("/test");
             var methodStyle = MethodStyle.ActionOnly;
             var attributes = new List<object>
             {
                 new Mock<JsonRpcSerializerAttribute>(serializerType).Object,
                 new Mock<RouteAttribute>(route.Value).Object,
-                new Mock<RpcMethodStyleAttribute>(methodStyle).Object,
+                new Mock<JsonRpcMethodStyleAttribute>(methodStyle).Object,
             };
             var controllerModel = new Mock<ControllerModel>(typeof(JsonRpcTestController).GetTypeInfo(), attributes).Object;
             var model = new Mock<ActionModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)), new List<object>()).Object;
@@ -157,13 +157,13 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             result.RequestSerializer.Should().Be(serializerType);
         }
 
-        [TestCase(typeof(CamelCaseRpcSerializer))]
-        [TestCase(typeof(SnakeCaseRpcSerializer))]
+        [TestCase(typeof(CamelCaseJsonRpcSerializer))]
+        [TestCase(typeof(SnakeCaseJsonRpcSerializer))]
         public void Test_GetMethodMetadata_UsesSerializerAndMethodOptions(Type serializerType)
         {
             var actionName = "actionName";
             var controllerName = "controllerName";
-            var serializer = testEnvironment.ServiceProvider.GetRequiredService(serializerType) as IRpcSerializer;
+            var serializer = testEnvironment.ServiceProvider.GetRequiredService(serializerType) as IJsonRpcSerializer;
             var controllerModel = new Mock<ControllerModel>(typeof(JsonRpcTestController).GetTypeInfo(), new List<object> { }).Object;
             var model = new Mock<ActionModel>(typeof(JsonRpcTestController).GetMethod(nameof(JsonRpcTestController.VoidAction)), new List<object>()).Object;
             model.Controller = controllerModel;

@@ -32,7 +32,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
                 .Returns(201);
             var wrapper = new RawServerResponseWrapper(sourceMock.Object);
 
-            await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             resposneMock.VerifySet(x => x.StatusCode = 201);
             resposneMock.VerifySet(x => x.ContentLength = null);
@@ -67,7 +67,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
                 .Returns(headers);
             var wrapper = new RawServerResponseWrapper(sourceMock.Object);
 
-            await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             resposneMock.VerifyGet(x => x.Headers);
             responseHeaders.Should().HaveCount(2);
@@ -99,7 +99,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
                 .Returns(sourceResponse);
             var wrapper = new RawServerResponseWrapper(sourceMock.Object);
 
-            await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             ms.Length.Should().BePositive();
         }
@@ -129,7 +129,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
                 .Returns(sourceResponse);
             var wrapper = new RawServerResponseWrapper(sourceMock.Object);
 
-            Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             await action.Should().ThrowAsync<JsonRpcInternalException>();
         }
@@ -160,7 +160,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
                 .Returns(sourceResponse);
             var wrapper = new RawServerResponseWrapper(sourceMock.Object);
 
-            Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderRpcSerializer());
+            Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             await action.Should().ThrowAsync<TaskCanceledException>();
         }

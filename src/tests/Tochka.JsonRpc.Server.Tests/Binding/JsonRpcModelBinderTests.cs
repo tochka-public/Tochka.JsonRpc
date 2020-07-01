@@ -22,7 +22,7 @@ using Tochka.JsonRpc.Server.Tests.Helpers;
 
 namespace Tochka.JsonRpc.Server.Tests.Binding
 {
-    public class RpcModelBinderTests
+    public class JsonRpcModelBinderTests
     {
         private TestEnvironment testEnvironment;
 
@@ -31,11 +31,11 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             testEnvironment = new TestEnvironment(services =>
             {
-                services.TryAddJsonRpcSerializer<HeaderRpcSerializer>();
-                services.TryAddJsonRpcSerializer<SnakeCaseRpcSerializer>();
+                services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
+                services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
                 services.AddSingleton(Mock.Of<IParamsParser>());
                 services.AddSingleton(Mock.Of<IParameterBinder>());
-                services.AddSingleton<RpcModelBinder>();
+                services.AddSingleton<JsonRpcModelBinder>();
             });
         }
 
@@ -43,7 +43,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_GetRpcBindingContext_ThrowsOnNoCall()
         {
             var bindingContextMock = MockContext(false);
-            var binder = testEnvironment.ServiceProvider.GetRequiredService<RpcModelBinder>();
+            var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
             Action action = () => binder.GetRpcBindingContext(bindingContextMock.Object, "test");
 
@@ -55,7 +55,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_GetRpcBindingContext_ThrowsOnNoMetadata()
         {
             var bindingContextMock = MockContext();
-            var binder = testEnvironment.ServiceProvider.GetRequiredService<RpcModelBinder>();
+            var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
             Action action = () => binder.GetRpcBindingContext(bindingContextMock.Object, "test");
 
@@ -69,7 +69,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var methodMetadata = new MethodMetadata(new JsonRpcMethodOptions(), new JsonName("test", "test"), new JsonName("test", "test"));
             var bindingContextMock = MockContext(methodMetadata: methodMetadata);
-            var binder = testEnvironment.ServiceProvider.GetRequiredService<RpcModelBinder>();
+            var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
             Action action = () => binder.GetRpcBindingContext(bindingContextMock.Object, "test");
 
@@ -83,12 +83,12 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var jsonRpcMethodOptions = new JsonRpcMethodOptions()
             {
-                RequestSerializer = typeof(CamelCaseRpcSerializer)
+                RequestSerializer = typeof(CamelCaseJsonRpcSerializer)
             };
             var methodMetadata = new MethodMetadata(jsonRpcMethodOptions, new JsonName("test", "test"), new JsonName("test", "test"));
             methodMetadata.Add(new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false));
             var bindingContextMock = MockContext(methodMetadata: methodMetadata);
-            var binder = testEnvironment.ServiceProvider.GetRequiredService<RpcModelBinder>();
+            var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
             Action action = () => binder.GetRpcBindingContext(bindingContextMock.Object, "test");
 
@@ -106,7 +106,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
             methodMetadata.Add(parameterMetadata);
             var bindingContextMock = MockContext(methodMetadata: methodMetadata);
-            var binder = testEnvironment.ServiceProvider.GetRequiredService<RpcModelBinder>();
+            var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
             var result = binder.GetRpcBindingContext(bindingContextMock.Object, "test");
 
@@ -128,14 +128,14 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             methodMetadata.Add(parameterMetadata);
             var name = "test";
             var bindingContextMock = MockContext(methodMetadata: methodMetadata, name:name);
-            var binder = testEnvironment.ServiceProvider.GetRequiredService<RpcModelBinder>();
+            var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
             binder.BindModelAsync(bindingContextMock.Object).GetAwaiter().GetResult();
 
             Mock.Get(testEnvironment.ServiceProvider.GetService<IParamsParser>())
                 .Verify(x => x.ParseParams(It.IsAny<JToken>(), parameterMetadata), Times.Once);
             Mock.Get(testEnvironment.ServiceProvider.GetService<IParameterBinder>())
-                .Verify(x => x.SetResult(bindingContextMock.Object, It.IsAny<IParseResult>(), name, It.IsAny<RpcBindingContext>()), Times.Once);
+                .Verify(x => x.SetResult(bindingContextMock.Object, It.IsAny<IParseResult>(), name, It.IsAny<JsonRpcBindingContext>()), Times.Once);
         }
 
         private Mock<ModelBindingContext> MockContext(bool withItem = true, MethodMetadata methodMetadata = null, string name=null)

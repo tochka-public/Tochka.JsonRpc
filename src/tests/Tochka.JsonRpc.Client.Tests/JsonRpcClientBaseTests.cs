@@ -31,7 +31,7 @@ namespace Tochka.JsonRpc.Client.Tests
     {
         private Mock<JsonRpcClientBase> clientMock;
         private TestEnvironment testEnvironment;
-        private Mock<IRpcSerializer> serializerMock;
+        private Mock<IJsonRpcSerializer> serializerMock;
         private Mock<IJsonRpcIdGenerator> generatorMock;
         private Mock<JsonRpcClientOptionsBase> optionsMock;
         private MockHttpMessageHandler handlerMock;
@@ -40,7 +40,7 @@ namespace Tochka.JsonRpc.Client.Tests
         public void Setup()
         {
             handlerMock = new MockHttpMessageHandler();
-            serializerMock = new Mock<IRpcSerializer>();
+            serializerMock = new Mock<IJsonRpcSerializer>();
             optionsMock = new Mock<JsonRpcClientOptionsBase>()
             {
                 CallBase = true
@@ -48,7 +48,7 @@ namespace Tochka.JsonRpc.Client.Tests
             optionsMock.Object.Url = "http://foo.bar/";
             generatorMock = new Mock<IJsonRpcIdGenerator>();
             testEnvironment = new TestEnvironment();
-            clientMock = new Mock<JsonRpcClientBase>(handlerMock.ToHttpClient(), serializerMock.Object, new HeaderRpcSerializer(), optionsMock.Object, generatorMock.Object, testEnvironment.ServiceProvider.GetRequiredService<ILogger<JsonRpcClientBase>>())
+            clientMock = new Mock<JsonRpcClientBase>(handlerMock.ToHttpClient(), serializerMock.Object, new HeaderJsonRpcSerializer(), optionsMock.Object, generatorMock.Object, testEnvironment.ServiceProvider.GetRequiredService<ILogger<JsonRpcClientBase>>())
             {
                 CallBase = true
             };

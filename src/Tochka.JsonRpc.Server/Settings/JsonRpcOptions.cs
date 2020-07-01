@@ -7,7 +7,7 @@ namespace Tochka.JsonRpc.Server.Settings
     {
         public JsonRpcOptions()
         {
-            HeaderSerializer = typeof(HeaderRpcSerializer);
+            HeaderSerializer = typeof(HeaderJsonRpcSerializer);
             AllowRawResponses = false;
             DetailedResponseExceptions = false;
             DefaultMethodOptions = new JsonRpcMethodOptions();

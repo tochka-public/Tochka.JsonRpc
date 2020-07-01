@@ -25,7 +25,7 @@ namespace Tochka.JsonRpc.Client
     /// </summary>
     public abstract class JsonRpcClientBase : IJsonRpcClient
     {
-        protected readonly HeaderRpcSerializer HeaderRpcSerializer;
+        protected readonly HeaderJsonRpcSerializer HeaderJsonRpcSerializer;
 
         protected readonly ILogger log;
 
@@ -42,11 +42,11 @@ namespace Tochka.JsonRpc.Client
         /// </summary>
         public virtual string UserAgent => typeof(JsonRpcClientBase).Namespace;
 
-        protected internal JsonRpcClientBase(HttpClient client, IRpcSerializer serializer, HeaderRpcSerializer headerRpcSerializer, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
+        protected internal JsonRpcClientBase(HttpClient client, IJsonRpcSerializer serializer, HeaderJsonRpcSerializer headerJsonRpcSerializer, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
         {
             Client = client;
             Serializer = serializer;
-            HeaderRpcSerializer = headerRpcSerializer;
+            HeaderJsonRpcSerializer = headerJsonRpcSerializer;
             Options = options;
             this.JsonRpcIdGenerator = jsonRpcIdGenerator;
             this.log = log;
@@ -110,7 +110,7 @@ namespace Tochka.JsonRpc.Client
                 case SingleResponseWrapper singleResponseWrapper:
                     context.WithSingleResponse(singleResponseWrapper.Single);
                     log.LogTrace($"Request id [{request.Id}]: success");
-                    return new SingleJsonRpcResult(context, HeaderRpcSerializer, Serializer);
+                    return new SingleJsonRpcResult(context, HeaderJsonRpcSerializer, Serializer);
                 default:
                     var message = $"Expected single response, got [{responseWrapper}]";
                     log.LogTrace($"Request id [{request.Id}] failed: {message}");
@@ -186,7 +186,7 @@ namespace Tochka.JsonRpc.Client
                 case BatchResponseWrapper batchResponseWrapper:
                     context.WithBatchResponse(batchResponseWrapper.Batch);
                     log.LogTrace($"Batch count [{data.Count}] success: response count {batchResponseWrapper.Batch.Count}");
-                    return new BatchJsonRpcResult(context, HeaderRpcSerializer, Serializer);
+                    return new BatchJsonRpcResult(context, HeaderJsonRpcSerializer, Serializer);
                 case SingleResponseWrapper singleResponseWrapper:
                     // "If the batch rpc call itself fails to be recognized as an valid JSON or as an Array with at least one value,
                     // the response from the Server MUST be a single Response object."
@@ -222,7 +222,7 @@ namespace Tochka.JsonRpc.Client
         }
 
         /// <inheritdoc />
-        public IRpcSerializer Serializer { get; }
+        public IJsonRpcSerializer Serializer { get; }
 
         /// <summary>
         /// Set client properties from base options
@@ -254,7 +254,7 @@ namespace Tochka.JsonRpc.Client
         /// <returns></returns>
         protected internal virtual HttpContent CreateHttpContent(object data)
         {
-            var body = JsonConvert.SerializeObject(data, HeaderRpcSerializer.Settings);
+            var body = JsonConvert.SerializeObject(data, HeaderJsonRpcSerializer.Settings);
             return new StringContent(body, Encoding, JsonRpcConstants.ContentType);
         }
 
@@ -274,7 +274,7 @@ namespace Tochka.JsonRpc.Client
                     {
                         log.LogTrace($"Parsing HTTP response body: {httpResponseMessage.Content.Headers.ContentLength} bytes");
                         var json = await JToken.ReadFromAsync(jsonReader, cancellationToken);
-                        return json.ToObject<IResponseWrapper>(HeaderRpcSerializer.Serializer);
+                        return json.ToObject<IResponseWrapper>(HeaderJsonRpcSerializer.Serializer);
                     }
                 }
             }

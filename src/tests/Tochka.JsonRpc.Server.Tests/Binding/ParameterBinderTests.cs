@@ -78,7 +78,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_SetDeserializedResult_SetsSuccess()
         {
             var jToken = JValue.CreateString("value");
-            var serializer = new SnakeCaseRpcSerializer();
+            var serializer = new SnakeCaseJsonRpcSerializer();
             var modelMetadataIdentity = ModelMetadataIdentity.ForProperty(typeof(string), "null_name", typeof(object));
             var modelMetadataMock = new Mock<ModelMetadata>(MockBehavior.Strict, modelMetadataIdentity);
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
@@ -142,21 +142,21 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             var jToken = JValue.CreateString("value");
             var resultMock = new Mock<SuccessParseResult>(MockBehavior.Strict, jToken, "test");
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
-            var serializerMock = new Mock<IRpcSerializer>(MockBehavior.Strict);
+            var serializerMock = new Mock<IJsonRpcSerializer>(MockBehavior.Strict);
             serializerMock.SetupGet(x => x.Serializer).Returns(Mock.Of<JsonSerializer>(MockBehavior.Strict));
-            var rpcContext = new RpcBindingContext()
+            var rpcContext = new JsonRpcBindingContext()
             {
                 Serializer = serializerMock.Object
             };
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetResultSafe(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<SuccessParseResult>(), It.IsAny<JsonSerializer>()))
                 .Returns((Task) null);
-            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()))
+            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()))
                 .CallBase();
 
             binderMock.Object.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
-            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()));
+            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()));
             binderMock.Verify(x => x.SetResultSafe(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<SuccessParseResult>(), It.IsAny<JsonSerializer>()));
             binderMock.VerifyNoOtherCalls();
             serializerMock.Verify();
@@ -168,16 +168,16 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var resultMock = new Mock<ErrorParseResult>(MockBehavior.Strict, "test", "test");
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
-            var rpcContext = new RpcBindingContext();
+            var rpcContext = new JsonRpcBindingContext();
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()))
                 .Returns((Task) null);
-            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()))
+            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()))
                 .CallBase();
 
             binderMock.Object.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
-            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()));
+            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()));
             binderMock.Verify(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()));
             binderMock.VerifyNoOtherCalls();
             bindingContextMock.Verify();
@@ -188,19 +188,19 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var resultMock = new Mock<NoParseResult>(MockBehavior.Strict, "test");
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
-            var rpcContext = new RpcBindingContext
+            var rpcContext = new JsonRpcBindingContext
             {
                 ParameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, true)
             };
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetNoResult(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<NoParseResult>()))
                 .Returns((Task) null);
-            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()))
+            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()))
                 .CallBase();
 
             binderMock.Object.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
-            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()));
+            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()));
             binderMock.Verify(x => x.SetNoResult(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<NoParseResult>()));
             binderMock.VerifyNoOtherCalls();
             bindingContextMock.Verify();
@@ -211,7 +211,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var resultMock = new Mock<NoParseResult>(MockBehavior.Strict, "test");
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
-            var rpcContext = new RpcBindingContext
+            var rpcContext = new JsonRpcBindingContext
             {
                 ParameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false)
             };
@@ -219,12 +219,12 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             binderMock.Setup(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()))
                 .Returns((Task) null)
                 .Verifiable();
-            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()))
+            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()))
                 .CallBase();
 
             binderMock.Object.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
-            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()));
+            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()));
             binderMock.Verify(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()));
             binderMock.VerifyNoOtherCalls();
             bindingContextMock.Verify();
@@ -238,17 +238,17 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             var modelMetadataMock = new Mock<ModelMetadata>(MockBehavior.Strict, modelMetadataIdentity);
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
             bindingContextMock.SetupGet(x => x.ModelMetadata).Returns(modelMetadataMock.Object);
-            var rpcContext = new RpcBindingContext();
+            var rpcContext = new JsonRpcBindingContext();
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetNullResult(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<NullParseResult>()))
                 .Returns((Task) null)
                 .Verifiable();
-            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()))
+            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()))
                 .CallBase();
 
             binderMock.Object.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
-            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()));
+            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()));
             binderMock.Verify(x => x.SetNullResult(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<NullParseResult>()));
             binderMock.VerifyNoOtherCalls();
             bindingContextMock.Verify();
@@ -262,17 +262,17 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             var modelMetadataMock = new Mock<ModelMetadata>(MockBehavior.Strict, modelMetadataIdentity);
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
             bindingContextMock.SetupGet(x => x.ModelMetadata).Returns(modelMetadataMock.Object);
-            var rpcContext = new RpcBindingContext();
+            var rpcContext = new JsonRpcBindingContext();
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()))
                 .Returns((Task) null)
                 .Verifiable();
-            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()))
+            binderMock.Setup(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()))
                 .CallBase();
 
             binderMock.Object.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
-            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<RpcBindingContext>()));
+            binderMock.Verify(x => x.SetResult(It.IsAny<ModelBindingContext>(), It.IsAny<IParseResult>(), It.IsAny<string>(), It.IsAny<JsonRpcBindingContext>()));
             binderMock.Verify(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()));
             binderMock.VerifyNoOtherCalls();
             bindingContextMock.Verify();
@@ -283,7 +283,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var resultMock = new Mock<IParseResult>(MockBehavior.Strict);
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
-            var rpcContext = new RpcBindingContext();
+            var rpcContext = new JsonRpcBindingContext();
             Action action = () => parameterBinder.SetResult(bindingContextMock.Object, resultMock.Object, "test", rpcContext);
 
             action.Should().Throw<ArgumentOutOfRangeException>();
@@ -295,7 +295,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_SetResult_ThrowsOnNull()
         {
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
-            var rpcContext = new RpcBindingContext();
+            var rpcContext = new JsonRpcBindingContext();
             Action action = () => parameterBinder.SetResult(bindingContextMock.Object, null, "test", rpcContext);
 
             action.Should().Throw<ArgumentOutOfRangeException>();

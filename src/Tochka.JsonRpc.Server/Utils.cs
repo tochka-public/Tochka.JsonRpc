@@ -54,7 +54,7 @@ namespace Tochka.JsonRpc.Server
             return 200 <= code && code <= 299;
         }
 
-        public static IRpcSerializer GetSerializer(IEnumerable<IRpcSerializer> serializers, Type type)
+        public static IJsonRpcSerializer GetSerializer(IEnumerable<IJsonRpcSerializer> serializers, Type type)
         {
             return serializers.First(x => x.GetType() == type);
         }
