@@ -1,11 +1,17 @@
 - [Index](index.md)
 - English
-  - [Overview](overview.md)
-  - [Server](intermediate/topics-1.md)
-    - [](basics/requirements/sub-topic.md)
-  - [Client](intermediate/topics-2.md)
-- Russian
-  - [Topic 1](advanced/adv-topic-1.md)
+  - [Overview](en/overview.md)
+  - Server
+    - [Quickstart](en/server/quickstart.md)
+    - [Configuration](en/server/configuration.md)
+    - [Binding](en/server/binding.md)
+    - [Serialization](en/server/serialization.md)
+    - [Batches](en/server/batches.md)
+    - [Errors](en/server/errors.md)
+    - [Utils](en/server/utils.md)
+  - Client (writing in progress)
+- Russian (в процессе написания)
 - **Links**
   - [Readme](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
   - [Nuget](https://www.nuget.org/profiles/tochka-public)
+  - [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
