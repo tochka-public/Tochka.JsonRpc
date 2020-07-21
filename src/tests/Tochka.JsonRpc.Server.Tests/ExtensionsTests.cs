@@ -113,6 +113,7 @@ namespace Tochka.JsonRpc.Server.Tests
             result.Remove((typeof(IJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue("second serializer");
             result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(SnakeCaseJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
+            result.Remove((typeof(IJsonRpcRoutes), ServiceLifetime.Singleton)).Should().BeTrue();
 
             // remove noise
             result.Remove((typeof(IOptions<>), ServiceLifetime.Singleton));
@@ -175,7 +176,7 @@ namespace Tochka.JsonRpc.Server.Tests
             var mocks = new List<Mock>
             {
                 RegisterMock<ControllerConvention>(services, null),
-                RegisterMock<ActionConvention>(services, optionsMock.Object, null, null, null),
+                RegisterMock<ActionConvention>(services, optionsMock.Object, null, null, null, null),
                 RegisterMock<ParameterConvention>(services, null, null),
                 RegisterMock<IStartupFilter>(services),
                 RegisterMock<JsonRpcFormatter>(services, new HeaderJsonRpcSerializer(), Mock.Of<ArrayPool<char>>()),
@@ -190,6 +191,7 @@ namespace Tochka.JsonRpc.Server.Tests
                 RegisterMock<IParamsParser>(services),
                 RegisterMock<IActionResultConverter>(services),
                 RegisterMock<INestedContextFactory>(services),
+                RegisterMock<IJsonRpcRoutes>(services),
             };
 
             mvcBuilder.Object.AddJsonRpcServer();
