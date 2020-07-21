@@ -1,3 +1,10 @@
+### [1.0.10](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.9...v1.0.10) (2020-07-21)
+
+
+### Bug Fixes
+
+* trim slash at url end for proper validation ([3d90df9](https://github.com/tochka-public/Tochka.JsonRpc/commit/3d90df930fc9d1b899c0e12f02a454b1b8a90d04))
+
 ### [1.0.9](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.8...v1.0.9) (2020-07-21)
 
 
