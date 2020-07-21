@@ -1,3 +1,10 @@
+### [1.0.7-beta.2](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.7-beta.1...v1.0.7-beta.2) (2020-07-21)
+
+
+### Bug Fixes
+
+* forgotten changes to use route checks ([dca88be](https://github.com/tochka-public/Tochka.JsonRpc/commit/dca88beb72d545b31a3d9451eeea670ddd5a679f))
+
 ### [1.0.7-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.6...v1.0.7-beta.1) (2020-07-21)
 
 
