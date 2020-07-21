@@ -19,14 +19,20 @@ namespace Tochka.JsonRpc.Server.Pipeline
             this.log = log;
         }
 
-        public async Task Invoke(HttpContext context, IRequestHandler requestHandler)
+        public async Task Invoke(HttpContext context, IRequestHandler requestHandler, IJsonRpcRoutes jsonRpcRoutes)
         {
             log.LogTrace($"Started");
             var contentType = context.Request.GetTypedHeaders().ContentType;
             if (!Utils.ProbablyIsJsonRpc(context.Request, contentType))
             {
                 log.LogTrace($"Request is not recognized as JSON Rpc");
-                // skip if there is no jsonrpc request
+                await next(context);
+                return;
+            }
+
+            if (!jsonRpcRoutes.IsJsonRpcRoute(context.Request.Path))
+            {
+                log.LogTrace($"Request path is not registered as JSON Rpc");
                 await next(context);
                 return;
             }

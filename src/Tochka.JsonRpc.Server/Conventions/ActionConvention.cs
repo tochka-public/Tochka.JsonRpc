@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Logging;
@@ -20,13 +21,15 @@ namespace Tochka.JsonRpc.Server.Conventions
     {
         private readonly IEnumerable<IJsonRpcSerializer> serializers;
         private readonly IMethodMatcher methodMatcher;
+        private readonly IJsonRpcRoutes jsonRpcRoutes;
         private readonly ILogger log;
         private readonly JsonRpcMethodOptions defaultMethodOptions;
 
-        public ActionConvention(IOptions<JsonRpcOptions> options, IEnumerable<IJsonRpcSerializer> serializers, IMethodMatcher methodMatcher, ILogger<ActionConvention> log)
+        public ActionConvention(IOptions<JsonRpcOptions> options, IEnumerable<IJsonRpcSerializer> serializers, IMethodMatcher methodMatcher, IJsonRpcRoutes jsonRpcRoutes, ILogger<ActionConvention> log)
         {
             this.serializers = serializers;
             this.methodMatcher = methodMatcher;
+            this.jsonRpcRoutes = jsonRpcRoutes;
             this.log = log;
             defaultMethodOptions = options.Value.DefaultMethodOptions;
         }
@@ -43,6 +46,7 @@ namespace Tochka.JsonRpc.Server.Conventions
             var methodMetadata = GetMethodMetadata(actionModel, methodOptions);
             SetAttributes(actionModel, methodOptions);
             ValidateRouting(methodMetadata);
+            jsonRpcRoutes.Register(methodMetadata.MethodOptions.Route);
 
             // store metadata to help bind JSON Rpc params later
             actionModel.Properties[typeof(MethodMetadata)] = methodMetadata;
@@ -100,7 +104,7 @@ namespace Tochka.JsonRpc.Server.Conventions
         {
             var actionName = methodMatcher.GetActionName(methodMetadata);
             var key = $"{methodMetadata.MethodOptions.Route}?{actionName}";
-            if (RegisteredRoutes.TryGetValue(key, out var metadata))
+            if (KnownRoutes.TryGetValue(key, out var metadata))
             {
                 throw new InvalidOperationException($"Route [{methodMetadata.MethodOptions.Route}], method [{methodMetadata}] conflicts with already mapped [{metadata}]");
             }
@@ -110,10 +114,9 @@ namespace Tochka.JsonRpc.Server.Conventions
                 throw new InvalidOperationException($"Route [{methodMetadata.MethodOptions.Route}], method [{methodMetadata}] starts with reserved prefix [{JsonRpcConstants.ReservedMethodPrefix}]");
             }
 
-            RegisteredRoutes.Add(key, methodMetadata);
-            log.LogTrace($"Registered route key [{key}]");
+            KnownRoutes.Add(key, methodMetadata);
         }
 
-        internal readonly Dictionary<string, MethodMetadata> RegisteredRoutes = new Dictionary<string, MethodMetadata>(StringComparer.InvariantCultureIgnoreCase);
+        internal readonly Dictionary<string, MethodMetadata> KnownRoutes = new Dictionary<string, MethodMetadata>(StringComparer.InvariantCultureIgnoreCase);
     }
 }

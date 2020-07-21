@@ -47,6 +47,7 @@ namespace Tochka.JsonRpc.Server
             services.TryAddSingleton<IResponseReader, ResponseReader>();
             services.TryAddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
             services.TryAddSingleton<IMethodMatcher, MethodMatcher>();
+            services.TryAddSingleton<IJsonRpcRoutes, JsonRpcRoutes>();
             services.TryAddSingleton<IParamsParser, ParamsParser>();
             services.TryAddScoped<IActionResultConverter, ActionResultConverter>();
             services.TryAddTransient<INestedContextFactory, NestedContextFactory>();

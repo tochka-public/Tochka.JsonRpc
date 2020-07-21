@@ -31,6 +31,10 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         [SetUp]
         public void Setup()
         {
+            var routesMock = new Mock<IJsonRpcRoutes>();
+            routesMock.Setup(x => x.IsJsonRpcRoute(It.IsAny<string>()))
+                .Returns(true);
+
             testEnvironment = new TestEnvironment(services =>
             {
                 services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
@@ -39,6 +43,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
                 var matcher = Mock.Of<IMethodMatcher>(x => x.GetActionName(It.IsAny<MethodMetadata>()) == string.Empty);
                 services.AddSingleton(matcher);
                 services.AddSingleton<ActionConvention>();
+                services.AddSingleton(routesMock.Object);
             });
             someFilter = new AuthorizeFilter();
         }
@@ -193,7 +198,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             matcherMock.Setup(x => x.GetActionName(It.IsAny<MethodMetadata>())).Returns<MethodMetadata>(x => x.Action.Json);
             var actionConvention = GetActionConvention(options, matcherMock.Object);
 
-            actionConvention.RegisteredRoutes.Should().HaveCount(0);
+            actionConvention.KnownRoutes.Should().HaveCount(0);
 
             Action addDiffertentRoutes = () =>
             {
@@ -202,7 +207,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             };
 
             addDiffertentRoutes.Should().NotThrow();
-            actionConvention.RegisteredRoutes.Should().HaveCount(2);
+            actionConvention.KnownRoutes.Should().HaveCount(2);
 
             Action addDuplicate1 = () => actionConvention.ValidateRouting(data1);
             addDuplicate1.Should().Throw<InvalidOperationException>();
@@ -210,7 +215,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             Action addDuplicate2 = () => actionConvention.ValidateRouting(data2);
             addDuplicate2.Should().Throw<InvalidOperationException>();
 
-            actionConvention.RegisteredRoutes.Should().HaveCount(2);
+            actionConvention.KnownRoutes.Should().HaveCount(2);
         }
 
         [Test]
@@ -224,12 +229,12 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             matcherMock.Setup(x => x.GetActionName(It.IsAny<MethodMetadata>())).Returns<MethodMetadata>(x => x.Action.Json);
             var actionConvention = GetActionConvention(options, matcherMock.Object);
 
-            actionConvention.RegisteredRoutes.Should().HaveCount(0);
+            actionConvention.KnownRoutes.Should().HaveCount(0);
 
             Action addDuplicate1 = () => actionConvention.ValidateRouting(data);
             addDuplicate1.Should().Throw<InvalidOperationException>();
 
-            actionConvention.RegisteredRoutes.Should().HaveCount(0);
+            actionConvention.KnownRoutes.Should().HaveCount(0);
         }
 
         [Test]
@@ -241,7 +246,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             var options = new JsonRpcOptions();
             var actionConvention = GetActionConvention(options);
 
-            actionConvention.RegisteredRoutes.Should().HaveCount(0);
+            actionConvention.KnownRoutes.Should().HaveCount(0);
             model.Properties.Should().HaveCount(0);
 
             actionConvention.Apply(model);
@@ -249,7 +254,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             model.Properties.Should().HaveCount(1);
             model.Properties.First().Key.Should().Be(typeof(MethodMetadata));
             model.Properties.First().Value.Should().BeOfType<MethodMetadata>();
-            actionConvention.RegisteredRoutes.Should().HaveCount(1);
+            actionConvention.KnownRoutes.Should().HaveCount(1);
         }
 
         /// <summary>
