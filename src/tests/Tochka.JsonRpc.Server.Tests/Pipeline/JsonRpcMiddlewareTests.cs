@@ -17,6 +17,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
         private TestEnvironment testEnvironment;
         private Mock<IRequestReader> readerMock;
         private Mock<RequestDelegate> nextMock;
+        private Mock<IJsonRpcRoutes> routesMock;
 
         [SetUp]
         public void Setup()
@@ -25,6 +26,9 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
             {
                 readerMock = new Mock<IRequestReader>();
                 nextMock = new Mock<RequestDelegate>();
+                routesMock = new Mock<IJsonRpcRoutes>();
+                routesMock.Setup(x => x.IsJsonRpcRoute(It.IsAny<string>()))
+                    .Returns(true);
                 services.AddSingleton(readerMock.Object);
                 services.AddSingleton(nextMock.Object);
                 services.AddSingleton<JsonRpcMiddleware>();
@@ -44,7 +48,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
                 .Returns(requestMock.Object);
             var handlerMock = new Mock<IRequestHandler>();
 
-            await middleware.Invoke(httpContextMock.Object, handlerMock.Object);
+            await middleware.Invoke(httpContextMock.Object, handlerMock.Object, routesMock.Object);
 
             nextMock.Verify(x => x(httpContextMock.Object));
             nextMock.VerifyNoOtherCalls();
@@ -70,7 +74,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
                 .Returns(requestMock.Object);
             var handlerMock = new Mock<IRequestHandler>();
 
-            await middleware.Invoke(httpContextMock.Object, handlerMock.Object);
+            await middleware.Invoke(httpContextMock.Object, handlerMock.Object, routesMock.Object);
 
             nextMock.VerifyNoOtherCalls();
             readerMock.Verify(x => x.GetRequestWrapper(httpContextMock.Object, It.IsAny<Encoding>()));
