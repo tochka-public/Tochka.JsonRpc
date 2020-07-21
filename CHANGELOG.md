@@ -1,5 +1,10 @@
+### [1.0.7-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.6...v1.0.7-beta.1) (2020-07-21)
 
 
+### Features
+
+* middleware now checks routes instead of verb/content-type heuristics ([3ce2177](https://github.com/tochka-public/Tochka.JsonRpc/commit/3ce217764770fe15f4569447b231331ec7842308))
+* rename rpc to jsonrpc ([5d87982](https://github.com/tochka-public/Tochka.JsonRpc/commit/5d8798222e1c449aff5da4d757a35626d29b005c))
 
 ### [1.0.6-beta.3](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.6-beta.2...v1.0.6-beta.3) (2020-06-30)
 
