@@ -1,3 +1,14 @@
+
+
+
+### [1.0.6-beta.3](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.6-beta.2...v1.0.6-beta.3) (2020-06-30)
+
+
+### Bug Fixes
+
+* remove PR trigger ([f0db5fc](https://github.com/tochka-public/Tochka.JsonRpc/commit/f0db5fcacf1c4f7fd8b7ecfcbb06cfe7f8de5f73))
+
+
 ### [1.0.6](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.5...v1.0.6) (2020-06-30)
 
 
