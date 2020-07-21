@@ -19,10 +19,10 @@ namespace Tochka.JsonRpc.Server.Services
 
         public void Register(string route)
         {
-            routes.Add(route);
+            routes.Add(route.TrimEnd('/'));
             log.LogTrace($"Registered route [{route}]");
         }
 
-        public bool IsJsonRpcRoute(string route) => routes.Contains(route);
+        public bool IsJsonRpcRoute(string route) => routes.Contains(route.TrimEnd('/'));
     }
 }
