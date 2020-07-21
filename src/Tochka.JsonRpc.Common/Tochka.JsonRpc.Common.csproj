@@ -11,6 +11,8 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://tochka-public.github.io/Tochka.JsonRpc</PackageProjectUrl>
+    <Authors>Tochka</Authors>
+    <Product>Tochka.JsonRpc</Product>
   </PropertyGroup>
 
   <ItemGroup>
