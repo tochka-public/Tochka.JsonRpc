@@ -1,3 +1,10 @@
+### [1.0.11](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.10...v1.0.11) (2020-07-30)
+
+
+### Bug Fixes
+
+* **client:** proper compare ids when null ([022619c](https://github.com/tochka-public/Tochka.JsonRpc/commit/022619c53de71b6d913c7b50ea4846f91236da51))
+
 ### [1.0.10](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.9...v1.0.10) (2020-07-21)
 
 
