@@ -110,7 +110,9 @@ namespace Tochka.JsonRpc.Client.Models
                 throw new JsonRpcException($"Received response but call was not request or batch", this);
             }
 
-            if (!singleResponse.Id.Equals(request.Id))
+            var idsAreNull = singleResponse.Id == null && request.Id == null;
+            var idsAreEqual = singleResponse.Id?.Equals(request.Id) ?? false;
+            if (!idsAreNull && !idsAreEqual)
             {
                 throw new JsonRpcException($"JSON Rpc response id is invalid: [{singleResponse.Id}], expected [{request.Id}]", this);
             }
