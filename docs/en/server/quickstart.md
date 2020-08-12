@@ -46,7 +46,7 @@ Start your app and send POST (extra headers omitted)
         </td>
     </tr>
 <tr>
-<td>
+<td valign="top">
 
 ```http
 POST /api/jsonrpc HTTP/1.1
@@ -64,7 +64,7 @@ Content-Type: application/json
 ```
 
 </td>
-<td>
+<td valign="top">
 
 ```HTTP
 HTTP/1.1 200 OK
