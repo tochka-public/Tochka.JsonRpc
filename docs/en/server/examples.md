@@ -3,6 +3,8 @@
 Here are examples for different scenarios. Common things like HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
 
 ## Basic example with default configuration
+<details>
+<summary>Expand</summary>
 
 > `Startup.cs`
 ```cs
@@ -178,3 +180,4 @@ Content-Type: application/json
 
 
 </table>
+</details>
