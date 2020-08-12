@@ -2,13 +2,13 @@
 - English
   - [Overview](en/overview.md)
   - Server
-    - [Quickstart](en/server/quickstart.md)
-    - [Configuration](en/server/configuration.md)
-    - [Binding](en/server/binding.md)
-    - [Serialization](en/server/serialization.md)
-    - [Batches](en/server/batches.md)
-    - [Errors](en/server/errors.md)
-    - [Utils](en/server/utils.md)
+    - [Quickstart](/docs/en/server/quickstart.md)
+    - [Configuration](/docs/en/server/configuration.md)
+    - [Binding](/docs/en/server/binding.md)
+    - [Serialization](/docs/en/server/serialization.md)
+    - [Batches](/docs/en/server/batches.md)
+    - [Errors](/docs/en/server/errors.md)
+    - [Utils](/docs/en/server/utils.md)
   - Client (writing in progress)
 - Russian (в процессе написания)
 - **Links**
