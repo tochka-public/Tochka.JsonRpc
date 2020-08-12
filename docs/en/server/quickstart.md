@@ -56,7 +56,7 @@ Content-Type: application/json
 {
     "id": 1,
     "jsonrpc": "2.0",
-    "method": "to_lower",
+    "method": "echo.to_lower",
     "params": {
         "value": "TEST"
     }
