@@ -24,6 +24,17 @@ Here are examples for different scenarios. Common things like HTTP headers, call
 .AddJsonRpcServer()
 ```
 
+`EchoController.cs`
+```cs
+public class EchoController : JsonRpcController
+{
+	public string ToLower(string value)
+	{
+		return value.ToLower();
+	}
+}
+```
+
 </td>
 <td valign="top">
 
