@@ -3,6 +3,7 @@
   - [Overview](/docs/en/overview.md)
   - Server
     - [Quickstart](/docs/en/server/quickstart.md)
+    - [Examples](/docs/en/server/examples.md)
     - [Configuration](/docs/en/server/configuration.md)
     - [Binding](/docs/en/server/binding.md)
     - [Serialization](/docs/en/server/serialization.md)

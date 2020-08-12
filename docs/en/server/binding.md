@@ -33,8 +33,8 @@ You may want to bind whole `params` into one model, if you have a lot of propert
 
 ```cs
 public class MyData{
-	public int Bar {get; set;}
-	public string Baz {get; set;}
+    public int Bar {get; set;}
+    public string Baz {get; set;}
 }
 
 public void Foo(MyData data){}
@@ -56,8 +56,8 @@ Another scenario: you may want to bind JSON array from `params` to a collection 
     "method": "foo",
     "params": [
         "a",
-		"b",
-		"c"
+        "b",
+        "c"
     ]
 }
 ```
