@@ -4,21 +4,6 @@ Here are examples for different scenarios. Common things like HTTP headers, call
 
 ## Basic example (from quickstart)
 
-<table>
-    <tr>
-        <td>
-            Code
-        </td>
-        <td>
-            Request
-        </td>
-        <td>
-            Response
-        </td>
-    </tr>
-<tr>
-<td valign="top">
-
 `Startup.cs`
 ```cs
 .AddJsonRpcServer()
@@ -35,7 +20,17 @@ public class EchoController : JsonRpcController
 }
 ```
 
-</td>
+<table>
+    <tr>
+        <td>
+            Request
+        </td>
+        <td>
+            Response
+        </td>
+    </tr>
+<tr>
+
 <td valign="top">
 
 ```http
