@@ -9,10 +9,10 @@ There are two ways to configure library behavior: `Startup` options lambda and a
 
 ```cs
     services.AddMvc()
-		.AddJsonRpcServer(options => {
-			options.AllowRawResponses = true;
-			options.DefaultMethodOptions.Route = "/api/test";
-		});
+        .AddJsonRpcServer(options => {
+            options.AllowRawResponses = true;
+            options.DefaultMethodOptions.Route = "/api/test";
+        });
 ```
 
 ### JsonRpcOptions

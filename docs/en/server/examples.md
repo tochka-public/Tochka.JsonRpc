@@ -28,10 +28,10 @@ Here are examples for different scenarios. Common things like HTTP headers, call
 ```cs
 public class EchoController : JsonRpcController
 {
-	public string ToLower(string value)
-	{
-		return value.ToLower();
-	}
+    public string ToLower(string value)
+    {
+        return value.ToLower();
+    }
 }
 ```
 
