@@ -1,6 +1,6 @@
-- [Index](index.md)
+- [Index](/docs/index.md)
 - English
-  - [Overview](en/overview.md)
+  - [Overview](/docs/en/overview.md)
   - Server
     - [Quickstart](/docs/en/server/quickstart.md)
     - [Configuration](/docs/en/server/configuration.md)

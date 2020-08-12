@@ -22,7 +22,7 @@ Exceptions thrown by action or filter are wrapped into JSON Rpc error responses 
 ## Early pipeline exceptions
 
 Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON Rpc error responses, but serialized differently,
-because there it is not known yet which serializer to use. See [Serialization](en/server/serialization.md).
+because there it is not known yet which serializer to use. See [Serialization](/docs/en/server/serialization.md).
 
 ## Exceptions thrown by middleware before `JsonRpcMiddleware`
 

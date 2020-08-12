@@ -24,7 +24,7 @@ public void Foo(int bar, string baz){}
 
 Params are deserialized using `RequestSerializer` from global options or from `JsonRpcSerializerAttribute` if specified.
 You can write regular C# *camelCase* argument names and they will be populated from *snake_case* request `params`.
-If your request params are *camelCase*/*PascalCase* or have objects which require special handling, see [Serialization](en/server/serialization.md).
+If your request params are *camelCase*/*PascalCase* or have objects which require special handling, see [Serialization](/docs/en/server/serialization.md).
 
 
 ## Advanced scenarios
