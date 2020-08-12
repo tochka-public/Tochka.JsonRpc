@@ -1,9 +1,14 @@
 # Server/Examples
 
-TODO
+Here are examples for different scenarios. Common things like HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
+
+## Basic example (from quickstart)
 
 <table>
     <tr>
+        <td>
+            ConfigureServices
+        </td>
         <td>
             Request
         </td>
@@ -14,6 +19,13 @@ TODO
 <tr>
 <td valign="top">
 
+```cs
+.AddJsonRpcServer()
+```
+
+</td>
+<td valign="top">
+
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json
@@ -22,7 +34,7 @@ Content-Type: application/json
 {
     "id": 1,
     "jsonrpc": "2.0",
-    "method": "to_lower",
+    "method": "echo.to_lower",
     "params": {
         "value": "TEST"
     }
