@@ -45,41 +45,41 @@ Start your app and send POST (extra headers omitted)
             Response
         </td>
     </tr>
-    <tr>
-        <td>
+<tr>
+<td>
 
-            ```http
-            POST /api/jsonrpc HTTP/1.1
-            Content-Type: application/json
-            ```
-            ```json
-            {
-                "id": 1,
-                "jsonrpc": "2.0",
-                "method": "to_lower",
-                "params": {
-                    "value": "TEST"
-                }
-            }
-            ```
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+	"id": 1,
+	"jsonrpc": "2.0",
+	"method": "to_lower",
+	"params": {
+		"value": "TEST"
+	}
+}
+```
 
-        </td>
-        <td>
+</td>
+<td>
 
-            ```HTTP
-            HTTP/1.1 200 OK
-            Content-Type: application/json; charset=utf-8
-            ```
-            ```json
-            {
-                "id": 1,
-                "jsonrpc": "2.0",
-                "result": "test"
-            }
-            ```
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+	"id": 1,
+	"jsonrpc": "2.0",
+	"result": "test"
+}
+```
 
-        </td>
-    </tr>
+</td>
+</tr>
 </table>
 
 That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like normal.
