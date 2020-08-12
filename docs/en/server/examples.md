@@ -1,6 +1,6 @@
 # Server/Examples
 
-Here are examples for different scenarios. Common things like HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
+Here are examples for different scenarios. Common things like default HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
 
 ## Request, Notification, Batch with default configuration
 <details>
@@ -182,6 +182,7 @@ Content-Type: application/json
 </table>
 </details>
 
+
 ## AllowRawResponses
 <details>
 <summary>Expand</summary>
@@ -336,6 +337,211 @@ Content-Type: application/json
                 "type": "Tochka.JsonRpc.Server.Exceptions.JsonRpcInternalException"
             }
         }
+    }
+]
+```
+
+</td>
+</tr>
+
+
+</table>
+</details>
+
+
+## DetailedResponseExceptions
+<details>
+<summary>Expand</summary>
+
+> `Startup.cs`
+```cs
+.AddJsonRpcServer(options => {
+    options.DetailedResponseExceptions = /*true or false*/;
+});
+```
+
+> `ErrorController.cs`
+```cs
+public class ErrorController : JsonRpcController
+{
+    public string Fail()
+    {
+        throw new NotImplementedException("not ready yet, come here later!");
+    }
+}
+```
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Response
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "error.fail",
+    "params": null
+}
+```
+
+</td>
+<td valign="top">
+
+No details when `DetailedResponseExceptions` is **false**
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32000,
+        "message": "Server error",
+        "data": {
+            "internal_http_code": null,
+            "message": "not ready yet, come here later!",
+            "details": null,
+            "type": "System.NotImplementedException"
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "error.fail",
+    "params": null
+}
+```
+
+</td>
+<td valign="top">
+
+`ExceptionInfo` object when `DetailedResponseExceptions` is **true**
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32000,
+        "message": "Server error",
+        "data": {
+            "internal_http_code": null,
+            "message": "not ready yet, come here later!",
+            "details": "System.NotImplementedException: not ready yet, come here later!\r\n   at WebApplication1.Controllers.ErrorController.Fail() in C:\\Users\\rast\\source\\repos\\WebApplication1\\WebApplication1\\Controllers\\ValuesController.cs:line 73\r\n   at lambda_method(Closure , Object , Object[] )\r\n   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()\r\n   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()\r\n   at Microsoft.AspNetCore.Routing.EndpointMiddleware.Invoke(HttpContext httpContext)\r\n   at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.Invoke(HttpContext httpContext)\r\n   at Tochka.JsonRpc.Server.Services.RequestHandler.SafeNext(IUntypedCall call, HandlingContext context, Boolean allowRawResponses)",
+            "type": "System.NotImplementedException"
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+JSON Rpc Batch
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json
+```
+```json
+[
+    {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "echo.to_lower",
+        "params": {
+            "value": "REQUEST WITH ID AS NUMBER"
+        }
+    },
+    {
+        "id": "abc",
+        "jsonrpc": "2.0",
+        "method": "echo.to_lower",
+        "params": {
+            "value": "REQUEST WITH ID AS STRING"
+        }
+    },
+    {
+        "id": null,
+        "jsonrpc": "2.0",
+        "method": "echo.to_lower",
+        "params": {
+            "value": "REQUEST WITH NULL ID"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "echo.to_lower",
+        "params": {
+            "value": "NOTIFICATION, NO RESPONSE EXPECTED"
+        }
+    }
+]
+```
+
+</td>
+<td valign="top">
+
+Responses for all items, except for notifications
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+```json
+[
+    {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "result": "request with id as number"
+    },
+    {
+        "id": "abc",
+        "jsonrpc": "2.0",
+        "result": "request with id as string"
+    },
+    {
+        "id": null,
+        "jsonrpc": "2.0",
+        "result": "request with null id"
     }
 ]
 ```
