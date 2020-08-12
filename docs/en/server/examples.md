@@ -2,7 +2,7 @@
 
 Here are examples for different scenarios. Common things like HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
 
-## Basic example (from quickstart)
+## Basic example with default configuration
 
 > `Startup.cs`
 ```cs
@@ -91,6 +91,7 @@ Content-Type: application/json
 </td>
 <td valign="top">
 
+Normal response
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -128,6 +129,7 @@ Content-Type: application/json
 </td>
 <td valign="top">
 
+No response content by specification
 ```HTTP
 HTTP/1.1 200 OK
 Content-Length: 0
@@ -184,6 +186,7 @@ Content-Type: application/json
 </td>
 <td valign="top">
 
+Responses for all items, except for notifications
 ```HTTP
 HTTP/1.1 200 OK
 Content-Type: application/json
