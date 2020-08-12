@@ -7,29 +7,29 @@ Install nuget package `Tochka.JsonRpc.Server`.
 Register it in `Startup.cs` and set compatibility version. Note that `.AddJsonRpcServer()` is an extension of `IMvcBuilder`, not `IServiceCollection`.
 
 ```cs
-    public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc()
-                .AddJsonRpcServer()  // <-- add this
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
-        }
+public void ConfigureServices(IServiceCollection services)
+{
+	services.AddMvc()
+		.AddJsonRpcServer()  // <-- add this
+		.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
+}
 
-    public void Configure(IApplicationBuilder app)
-        {
-            app.UseMvc();  // <-- this is required obviously because we work on top of MVC
-        }
+public void Configure(IApplicationBuilder app)
+{
+	app.UseMvc();  // <-- this is required obviously because we work on top of MVC
+}
 ```
 
 Write your API controller as usual, but instead of inheriting from `Controller`, inherit from `JsonRpcController`. To make it work, you don't need any attributes, special naming or constructors.
 
 ```cs
-    public class EchoController : JsonRpcController
-    {
-        public string ToLower(string value)
-        {
-            return value.ToLower();
-        }
-    }
+public class EchoController : JsonRpcController
+{
+	public string ToLower(string value)
+	{
+		return value.ToLower();
+	}
+}
 ```
 
 ## Make a request
