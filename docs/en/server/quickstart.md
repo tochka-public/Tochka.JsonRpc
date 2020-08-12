@@ -54,12 +54,12 @@ Content-Type: application/json
 ```
 ```json
 {
-	"id": 1,
-	"jsonrpc": "2.0",
-	"method": "to_lower",
-	"params": {
-		"value": "TEST"
-	}
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "to_lower",
+    "params": {
+        "value": "TEST"
+    }
 }
 ```
 
@@ -72,9 +72,9 @@ Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
-	"id": 1,
-	"jsonrpc": "2.0",
-	"result": "test"
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": "test"
 }
 ```
 
