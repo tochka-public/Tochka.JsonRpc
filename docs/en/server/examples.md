@@ -4,12 +4,12 @@ Here are examples for different scenarios. Common things like HTTP headers, call
 
 ## Basic example (from quickstart)
 
-`Startup.cs`
+> `Startup.cs`
 ```cs
 .AddJsonRpcServer()
 ```
 
-`EchoController.cs`
+> `EchoController.cs`
 ```cs
 public class EchoController : JsonRpcController
 {
