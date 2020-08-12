@@ -7,7 +7,7 @@ Here are examples for different scenarios. Common things like HTTP headers, call
 <table>
     <tr>
         <td>
-            ConfigureServices
+            Code
         </td>
         <td>
             Request
@@ -19,6 +19,7 @@ Here are examples for different scenarios. Common things like HTTP headers, call
 <tr>
 <td valign="top">
 
+`Startup.cs`
 ```cs
 .AddJsonRpcServer()
 ```
