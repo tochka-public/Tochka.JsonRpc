@@ -8,7 +8,7 @@ You only need one line in `Startup.cs`, and a different base class for your cont
 
 ## Getting started
 
-[Server Quickstart](/docs/en/server/quickstart.md)
+[Server Quickstart](server/quickstart.md)
 
 Client Quickstart (writing in progress)
 
