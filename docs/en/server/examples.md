@@ -786,9 +786,9 @@ Note how changing serialization affects `params` and `method`.
 ```cs
 .AddJsonRpcServer(options => {
     options.DefaultMethodOptions.RequestSerializer = typeof(CamelCaseJsonRpcSerializer);
+});
 
 services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
-});
 ```
 
 > `SimpleCalcController.cs`
@@ -914,6 +914,72 @@ Content-Type: application/json; charset=utf-8
         "first_plus_second": 80
     }
 }
+```
+
+</td>
+</tr>
+
+
+</table>
+</details>
+
+
+## Binding
+
+Change how `params` are bound to method arguments. See [Binding](binding.md) for details.
+<details>
+<summary>Expand</summary>
+
+TODO
+> `Startup.cs`
+```cs
+.AddJsonRpcServer(options => {
+    TODO options.DefaultMethodOptions.RequestSerializer = typeof(CamelCaseJsonRpcSerializer);
+});
+```
+
+> `TODO.cs`
+```cs
+
+```
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Action method
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request with two properties
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": {
+        "bar": 1
+        "baz": "test"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+`params` are bound to method arguments by names
+```cs
+public void Foo(int bar, string baz){}
 ```
 
 </td>
