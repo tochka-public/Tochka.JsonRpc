@@ -5,6 +5,8 @@ Here are examples for different scenarios. Common things like default HTTP heade
 > For details beyond basic usage check [Configuration](configuration.md) page
 
 ## Request, Notification, Batch with default configuration
+
+Examples of basic JSON Rpc calls with default configuration
 <details>
 <summary>Expand</summary>
 
@@ -186,6 +188,8 @@ Content-Type: application/json
 
 
 ## AllowRawResponses
+
+Break protocol a bit and return bytes, HTTP codes, etc.
 <details>
 <summary>Expand</summary>
 
@@ -352,6 +356,8 @@ Content-Type: application/json
 
 
 ## DetailedResponseExceptions
+
+Hide or reveal exception information
 <details>
 <summary>Expand</summary>
 
@@ -481,6 +487,8 @@ Content-Type: application/json; charset=utf-8
 
 
 ## Routes
+
+Override routing with global setting or attribute
 <details>
 <summary>Expand</summary>
 

@@ -85,7 +85,12 @@ You may not want this enabled in production environment.
 
 > This is the default route for all controllers/actions inherited from `JsonRpcController`.
 
-It can be overridden with framework's `RouteAttribute` like usual. Conventional routing is not supported.
+It can be overridden with framework's `RouteAttribute` like usual.
+
+Limitations:
+* Conventional routing is not supported
+* Routes should start with `/`
+* Route tokens like `[controller]` currently do not work
 
 #### MethodStyle
 
