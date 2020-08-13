@@ -1,4 +1,4 @@
-- [Index](/index.md)
+- [Index](/)
 - English
   - [Overview](/en/overview.md)
   - Server
