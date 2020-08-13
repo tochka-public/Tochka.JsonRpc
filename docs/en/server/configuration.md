@@ -3,6 +3,8 @@
 There are two ways to configure library behavior: `Startup` options lambda and attributes for controllers/actions/parameters.
 *It is also possible to replace or inherit services used to process requests, but this is not described here.*
 
+> Check [Examples](examples.md) page to see how options affect requests/responses
+
 ## Startup options
 
 `.AddJsonRpcServer()` supports an overload to set up `JsonRpcOptions`.

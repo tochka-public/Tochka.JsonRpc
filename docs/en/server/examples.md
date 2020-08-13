@@ -2,6 +2,8 @@
 
 Here are examples for different scenarios. Common things like default HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
 
+> For details beyond basic usage check [Configuration](configuration.md) page
+
 ## Request, Notification, Batch with default configuration
 <details>
 <summary>Expand</summary>
@@ -251,7 +253,7 @@ Content-Type: application/octet-stream
 Content-Length →100
 ```
 ```
-�	
+�    
 
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abc
 ```
@@ -392,7 +394,7 @@ Content-Type: application/json
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "error.fail",
     "params": null
@@ -438,7 +440,7 @@ Content-Type: application/json
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "error.fail",
     "params": null
@@ -473,6 +475,172 @@ Content-Type: application/json; charset=utf-8
 </td>
 </tr>
 
+
+</table>
+</details>
+
+
+## Routes
+<details>
+<summary>Expand</summary>
+
+Change default route and override it with custom route in controller or action
+> `Startup.cs`
+```cs
+.AddJsonRpcServer(options => {
+    options.DefaultMethodOptions.Route = "/public_api";
+});
+```
+
+> `UsersController.cs`
+```cs
+public class UsersController : JsonRpcController
+{
+    public List<string> GetNames()
+    {
+        return new List<string> { "Alice", "Bob" };
+    }
+
+    [Route("/admin_api")]
+    public Guid Create(string name)
+    {
+        // add user to DB and return ID
+        return Guid.NewGuid();
+    }
+}
+```
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Response
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request to GetNames at default route
+```http
+POST /public_api HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "users.get_names",
+    "params": null
+}
+```
+
+</td>
+<td valign="top">
+
+Normal response
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": [
+        "Alice",
+        "Bob"
+    ]
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request to Create at default route 
+```http
+POST /public_api HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "users.create",
+    "params": {
+    	"name": "Charlie"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Error response
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32601,
+        "message": "Method not found",
+        "data": null
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request to Create at overridden route 
+```http
+POST /admin_api HTTP/1.1
+Content-Type: application/json
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "users.create",
+    "params": {
+    	"name": "Charlie"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Normal response
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": "ad355447-ee5e-4418-96b4-171e36fa994b"
+}
+```
+
+</td>
+</tr>
 
 </table>
 </details>
