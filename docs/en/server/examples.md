@@ -930,18 +930,7 @@ Change how `params` are bound to method arguments. See [Binding](binding.md) for
 <details>
 <summary>Expand</summary>
 
-TODO
-> `Startup.cs`
-```cs
-.AddJsonRpcServer(options => {
-    TODO options.DefaultMethodOptions.RequestSerializer = typeof(CamelCaseJsonRpcSerializer);
-});
-```
-
-> `TODO.cs`
-```cs
-
-```
+Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
 
 <table>
 <tr>
@@ -957,7 +946,7 @@ TODO
 
 <td valign="top">
 
-Request with two properties
+Request has object with two properties
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -968,7 +957,7 @@ Content-Type: application/json; charset=utf-8
     "jsonrpc": "2.0",
     "method": "foo",
     "params": {
-        "bar": 1
+        "bar": 1,
         "baz": "test"
     }
 }
@@ -978,6 +967,38 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 `params` are bound to method arguments by names
+```cs
+public void Foo(int bar, string baz){}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has array with two items
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": [
+        1,
+        "test"
+    ]
+}
+```
+
+</td>
+<td valign="top">
+
+`params` are bound to method arguments by indices
 ```cs
 public void Foo(int bar, string baz){}
 ```

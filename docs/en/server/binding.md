@@ -10,7 +10,7 @@ By default, `params` from request/notification are bound to action arguments:
     "jsonrpc": "2.0",
     "method": "foo",
     "params": {
-        "bar": 1
+        "bar": 1,
         "baz": "test"
     }
 }
