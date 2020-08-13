@@ -1,7 +1,7 @@
 # Server/Serialization
 
 In this library, JSON Rpc request/notification/response objects are called **"headers"**, and their serialization is
-handled separately from params/result/error properties. You can control how your data is serialized without worrying about headers.
+handled separately from params/result/error objects. You can control how your data is serialized without worrying about headers.
 
 **Note:** in this document, both serialization and **de**serialization are referred to as **serialization** for simplicity.
 
@@ -46,7 +46,9 @@ Register your serializer as service in DI:
 services.TryAddJsonRpcSerializer<YourSerializer>();
 ```
 
-Use it via global option or attribute as described abode.
+> This step is important. If you register manually eg. with `.AddSingleton`, it won't work. Use `.TryAddJsonRpcSerializer`.
+
+Use it via global option or attribute as described above.
 
 
 ## Serializing early pipeline errors

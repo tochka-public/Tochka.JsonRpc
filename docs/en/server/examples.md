@@ -502,6 +502,7 @@ Change default route and override it with custom route in controller or action
 
 > `UsersController.cs`
 ```cs
+/*[Route] override is also possible here*/
 public class UsersController : JsonRpcController
 {
     public List<string> GetNames()
@@ -660,7 +661,7 @@ Change how `method` property is matched to controllers and actions
 <details>
 <summary>Expand</summary>
 
-Request's `method` property can be sent in different formats depending on global setting
+Request's `method` property can be sent in different formats depending on global setting: as `controller.action` or as `action`
 > `Startup.cs`
 ```cs
 .AddJsonRpcServer(options => {
@@ -670,8 +671,10 @@ Request's `method` property can be sent in different formats depending on global
 
 > `EchoController.cs`
 ```cs
+/*[JsonRpcMethodStyle] override is also possible here*/
 public class EchoController : JsonRpcController
 {
+    /*[JsonRpcMethodStyle] override is also possible here*/
     public string ToLower(string value)
     {
         return value.ToLower();
@@ -761,6 +764,155 @@ Content-Type: application/json; charset=utf-8
     "id": 1,
     "jsonrpc": "2.0",
     "result": "test"
+}
+```
+
+</td>
+</tr>
+
+
+</table>
+</details>
+
+
+## Serialization
+
+Change default JSON serializer/deserializer or override it for controller/action. See [Serialization](serialization.md) for details.
+<details>
+<summary>Expand</summary>
+
+Note how changing serialization affects `params` and `method`.
+> `Startup.cs`
+```cs
+.AddJsonRpcServer(options => {
+    options.DefaultMethodOptions.RequestSerializer = typeof(CamelCaseJsonRpcSerializer);
+
+services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
+});
+```
+
+> `SimpleCalcController.cs`
+```cs
+/*[JsonRpcSerializer] override is also possible here*/
+public class SimpleCalcController : JsonRpcController
+    {
+        public object SubtractIntegers(int firstValue, int secondValue)
+        {
+            var result = firstValue - secondValue;
+            return new
+            {
+                firstValue,
+                secondValue,
+                firstMinusSecond = result
+            };
+        }
+
+        [JsonRpcSerializer(typeof(SnakeCaseJsonRpcSerializer))]
+        public object AddIntegers(int firstValue, int secondValue)
+        {
+            var result = firstValue + secondValue;
+            return new
+            {
+                firstValue,
+                secondValue,
+                firstPlusSecond = result
+            };
+        }
+    }
+```
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Response
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request with camelCase
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "simpleCalc.subtractIntegers",
+    "params": {
+    	"firstValue": 42,
+    	"secondValue": 38
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Response with camelCase
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": {
+        "firstValue": 42,
+        "secondValue": 38,
+        "firstMinusSecond": 4
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request with snake_case
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+	"id": 1,
+    "jsonrpc": "2.0",
+    "method": "simple_calc.add_integers",
+    "params": {
+    	"first_value": 42,
+    	"second_value": 38
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Response with snake_case
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": {
+        "first_value": 42,
+        "second_value": 38,
+        "first_plus_second": 80
+    }
 }
 ```
 
