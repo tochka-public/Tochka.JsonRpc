@@ -930,7 +930,7 @@ Change how `params` are bound to method arguments. See [Binding](binding.md) for
 <details>
 <summary>Expand</summary>
 
-Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
+###Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
 
 <table>
 <tr>
@@ -1015,7 +1015,7 @@ public void Foo(int bar, string baz){
 
 </table>
 
-Bind whole `params` object into one model, eg. when model has lots of properties
+###Bind whole `params` object into one model, eg. when model has lots of properties
 
 <table>
 <tr>
@@ -1101,8 +1101,7 @@ public class Data
 }
 
 public void Foo([FromParams(BindingStyle.Object)] Data data){
-    // data.Bar == 1
-    // data.Baz == "test"
+    // does not work for `params` array
 }
 ```
 ```json
@@ -1128,3 +1127,245 @@ public void Foo([FromParams(BindingStyle.Object)] Data data){
 </table>
 
 </details>
+
+
+###Bind `params` array into one collection, eg. when request has variable count of parameters
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Action method
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has object with two properties
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": {
+        "bar": 1,
+        "baz": 2
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Error because object properties can not be bound to array items
+```cs
+public void Foo([FromParams(BindingStyle.Array)] List<int> data){
+    // does not work for `params` object
+}
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": {
+            "data": [
+                "Bind error. Can not bind object to collection parameter. Json key [data]"
+            ]
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has array with two items
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": [
+        1,
+        2
+    ]
+}
+```
+
+</td>
+<td valign="top">
+
+Array items are bound to collection
+```cs
+public void Foo([FromParams(BindingStyle.Array)] List<int> data){
+    // data[0] == 1
+    // data[1] == 2
+}
+```
+
+</td>
+</tr>
+
+
+</table>
+
+</details>
+
+
+###Bind whole `params` object into one model, eg. when model has lots of properties
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Action method
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has object with two properties
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": {
+        "bar": 1,
+        "baz": "test"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+`params` are bound to single method argument
+```cs
+public class Data
+{
+    public int Bar { get; set; }
+    public string Baz { get; set; }
+}
+
+public void Foo([FromParams(BindingStyle.Object)] Data data){
+    // data.Bar == 1
+    // data.Baz == "test"
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has array with two items
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": [
+        1,
+        "test"
+    ]
+}
+```
+
+</td>
+<td valign="top">
+
+Error because array items can not be bound to object properties
+```cs
+public class Data
+{
+    public int Bar { get; set; }
+    public string Baz { get; set; }
+}
+
+public void Foo([FromParams(BindingStyle.Object)] Data data){
+    // does not work for `params` array
+}
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": {
+            "data": [
+                "Bind error. Can not bind array to object parameter. Json key [0]"
+            ]
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+
+</table>
+
+</details>
+
+
+###Mix different binding sources
+
+Also try default params, object, dynamic and custom serialization!
+```cs
+public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices]ICustomService service, CancellationToken token){
+    // bar, baz are bound by default
+    // data is bound with specified behavior
+    // service and token are bound by framework as usual
+}
+
+public void Foo2(int? bar, string baz="default_value"){
+    // "params" can have:
+    // "bar": null
+    // and omit baz entirely
+}
+```
+
+## Access extra information
+
+TODO
+
+## Errors and exceptions
+
+TODO
