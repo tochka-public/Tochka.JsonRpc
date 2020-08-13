@@ -968,7 +968,10 @@ Content-Type: application/json; charset=utf-8
 
 `params` are bound to method arguments by names
 ```cs
-public void Foo(int bar, string baz){}
+public void Foo(int bar, string baz){
+    // bar == 1
+    // baz == "test"
+}
 ```
 
 </td>
@@ -1000,7 +1003,10 @@ Content-Type: application/json; charset=utf-8
 
 `params` are bound to method arguments by indices
 ```cs
-public void Foo(int bar, string baz){}
+public void Foo(int bar, string baz){
+    // bar == 1
+    // baz == "test"
+}
 ```
 
 </td>
@@ -1008,4 +1014,117 @@ public void Foo(int bar, string baz){}
 
 
 </table>
+
+Bind whole `params` object into one model, eg. when model has lots of properties
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Action method
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has object with two properties
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": {
+        "bar": 1,
+        "baz": "test"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+`params` are bound to single method argument
+```cs
+public class Data
+{
+    public int Bar { get; set; }
+    public string Baz { get; set; }
+}
+
+public void Foo([FromParams(BindingStyle.Object)] Data data){
+    // data.Bar == 1
+    // data.Baz == "test"
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request has array with two items
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "foo",
+    "params": [
+        1,
+        "test"
+    ]
+}
+```
+
+</td>
+<td valign="top">
+
+Error because array items can not be bound to object properties
+```cs
+public class Data
+{
+    public int Bar { get; set; }
+    public string Baz { get; set; }
+}
+
+public void Foo([FromParams(BindingStyle.Object)] Data data){
+    // data.Bar == 1
+    // data.Baz == "test"
+}
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": {
+            "data": [
+                "Bind error. Can not bind array to object parameter. Json key [0]"
+            ]
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+
+</table>
+
 </details>
