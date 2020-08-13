@@ -87,4 +87,3 @@ Check out other pages for more advanced usage:
 
 - [Examples](examples.md)
 - [Configuration](configuration.md)
-- [Features](features.md)
