@@ -43,7 +43,7 @@ public class EchoController : JsonRpcController
 JSON Rpc Request
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -82,7 +82,7 @@ Content-Type: application/json; charset=utf-8
 JSON Rpc Notification
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -113,7 +113,7 @@ Content-Length: 0
 JSON Rpc Batch
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 [
@@ -157,7 +157,7 @@ Content-Type: application/json
 Responses for all items, except for notifications
 ```HTTP
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 [
@@ -234,7 +234,7 @@ public class DataController : JsonRpcController
 GetBytes Request
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -272,7 +272,7 @@ Content-Length →100
 Redirect Request
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -305,7 +305,7 @@ Location: https://google.com
 JSON Rpc Batch
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 [
@@ -326,7 +326,7 @@ Content-Type: application/json
 JSON Rpc Error
 ```HTTP
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 [
@@ -396,7 +396,7 @@ public class ErrorController : JsonRpcController
 Request
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -442,7 +442,7 @@ Content-Type: application/json; charset=utf-8
 Request
 ```http
 POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -535,7 +535,7 @@ public class UsersController : JsonRpcController
 Request to GetNames at default route
 ```http
 POST /public_api HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -575,7 +575,7 @@ Content-Type: application/json; charset=utf-8
 Request to Create at default route 
 ```http
 POST /public_api HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -618,7 +618,7 @@ Content-Type: application/json; charset=utf-8
 Request to Create at overridden route 
 ```http
 POST /admin_api HTTP/1.1
-Content-Type: application/json
+Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
@@ -649,6 +649,124 @@ Content-Type: application/json; charset=utf-8
 
 </td>
 </tr>
+
+</table>
+</details>
+
+
+## MethodStyle
+
+Change how `method` property is matched to controllers and actions
+<details>
+<summary>Expand</summary>
+
+Request's `method` property can be sent in different formats depending on global setting
+> `Startup.cs`
+```cs
+.AddJsonRpcServer(options => {
+    options.DefaultMethodOptions.MethodStyle = /* MethodStyle.ControllerAndAction or MethodStyle.ActionOnly*/;
+});
+```
+
+> `EchoController.cs`
+```cs
+public class EchoController : JsonRpcController
+{
+    public string ToLower(string value)
+    {
+        return value.ToLower();
+    }
+}
+```
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        Response
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request with method with `controller.action` (MethodStyle.ControllerAndAction)
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "echo.to_lower",
+    "params": {
+        "value": "TEST"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Response from `EchoController.ToLower`
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": "test"
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+Request with method with `action` (MethodStyle.ActionOnly)
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "to_lower",
+    "params": {
+        "value": "TEST"
+    }
+}
+```
+
+</td>
+<td valign="top">
+
+Response from `EchoController.ToLower`
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": "test"
+}
+```
+
+</td>
+</tr>
+
 
 </table>
 </details>
