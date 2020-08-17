@@ -1403,7 +1403,7 @@ See [errors documentation](errors) first.
 <details>
 <summary>Different ways to return an error from Action</summary>
 
-Consider this controller. Below are examples of its output.
+Consider this controller. Below are examples of its output. HTTP headers are omitted, response is always `200 OK`.
 
 ```
 TODO controller
@@ -1426,10 +1426,6 @@ TODO controller
 
 <td valign="top">
 
-```http
-POST /api/jsonrpc HTTP/1.1
-Content-Type: application/json; charset=utf-8
-```
 ```json
 {
     "id": 1,
@@ -1447,10 +1443,6 @@ TODO
 
 <td valign="top">
 
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-```
 ```json
 {
     "id": 1,
