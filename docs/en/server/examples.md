@@ -928,10 +928,9 @@ Content-Type: application/json; charset=utf-8
 
 Change how `params` are bound to method arguments. See [Binding](binding.md) for details.
 
-### Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
 
 <details>
-<summary>Expand</summary>
+<summary>Default behavior: params are bound to method arguments. Params can be [] or {} by specification</summary>
 
 <table>
 <tr>
@@ -1017,10 +1016,9 @@ public void Foo(int bar, string baz){
 </table>
 </details>
 
-### Bind whole `params` object into one model, eg. when model has lots of properties
 
 <details>
-<summary>Expand</summary>
+<summary>Bind whole params object into one model, eg. when model has lots of properties</summary>
 
 <table>
 <tr>
@@ -1134,10 +1132,8 @@ public void Foo([FromParams(BindingStyle.Object)] Data data){
 </details>
 
 
-### Bind `params` array into one collection, eg. when request has variable count of parameters
-
 <details>
-<summary>Expand</summary>
+<summary>Bind params array into one collection, eg. when request has variable count of parameters</summary>
 
 <table>
 <tr>
@@ -1239,10 +1235,8 @@ public void Foo([FromParams(BindingStyle.Array)] List<int> data){
 </details>
 
 
-### Bind whole `params` object into one model, eg. when model has lots of properties
-
 <details>
-<summary>Expand</summary>
+<summary>Bind whole params object into one model, eg. when model has lots of properties</summary>
 
 <table>
 <tr>
@@ -1356,10 +1350,10 @@ public void Foo([FromParams(BindingStyle.Object)] Data data){
 </details>
 
 
-### Mix different binding sources
+
 
 <details>
-<summary>Expand</summary>
+<summary>Mix different binding sources</summary>
 
 Also try default params, object, dynamic and custom serialization...
 ```cs
