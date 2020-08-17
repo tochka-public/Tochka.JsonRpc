@@ -928,10 +928,8 @@ Content-Type: application/json; charset=utf-8
 
 Change how `params` are bound to method arguments. See [Binding](binding.md) for details.
 
-### Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
-
 <details>
-<summary>Expand</summary>
+<summary>Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.</summary>
 
 <table>
 <tr>
