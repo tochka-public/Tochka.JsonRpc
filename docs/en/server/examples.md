@@ -1358,6 +1358,9 @@ public void Foo([FromParams(BindingStyle.Object)] Data data){
 
 ### Mix different binding sources
 
+<details>
+<summary>Expand</summary>
+
 Also try default params, object, dynamic and custom serialization...
 ```cs
 public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices]ICustomService service, CancellationToken token){
@@ -1373,9 +1376,31 @@ public void Foo2(int? bar, string baz="default_value"){
 }
 ```
 
+</details>
+
 ## Access extra information
 
-TODO
+<details>
+<summary>Expand</summary>
+
+JSON request is accessible from HttpContext.Items with extension method:
+```cs
+var call = HttpContext.GetJsonRpcCall();
+            
+var id = (call as UntypedRequest)?.Id;
+var isArrayParams = call.Params is JArray;
+var method = call.Method;
+var jsonString = call.RawJson;
+```
+
+Check if this is a nested pipeline (with a copy of HTTP context):
+```cs
+HttpContext.Items.TryGetValue(JsonRpcConstants.NestedPipelineItemKey, out var item);
+
+var isInsideMatrix = (item as bool?) == true;
+```
+
+</details>
 
 ## Errors and exceptions
 
