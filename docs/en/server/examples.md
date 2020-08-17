@@ -930,6 +930,8 @@ Change how `params` are bound to method arguments. See [Binding](binding.md) for
 <details>
 <summary>Expand</summary>
 
+TODO FIX THIS: ADD MORE SPOILERS FOR EACH SECTION
+
 ### Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
 
 <table>
@@ -1014,8 +1016,12 @@ public void Foo(int bar, string baz){
 
 
 </table>
+</details>
 
 ### Bind whole `params` object into one model, eg. when model has lots of properties
+
+<details>
+<summary>Expand</summary>
 
 <table>
 <tr>
@@ -1131,6 +1137,9 @@ public void Foo([FromParams(BindingStyle.Object)] Data data){
 
 ### Bind `params` array into one collection, eg. when request has variable count of parameters
 
+<details>
+<summary>Expand</summary>
+
 <table>
 <tr>
     <td>
@@ -1232,6 +1241,9 @@ public void Foo([FromParams(BindingStyle.Array)] List<int> data){
 
 
 ### Bind whole `params` object into one model, eg. when model has lots of properties
+
+<details>
+<summary>Expand</summary>
 
 <table>
 <tr>
@@ -1347,7 +1359,7 @@ public void Foo([FromParams(BindingStyle.Object)] Data data){
 
 ### Mix different binding sources
 
-Also try default params, object, dynamic and custom serialization!
+Also try default params, object, dynamic and custom serialization...
 ```cs
 public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices]ICustomService service, CancellationToken token){
     // bar, baz are bound by default
