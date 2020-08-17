@@ -1,6 +1,6 @@
 # Server/Errors
 
-Error handling is difficult. Here is what library does and what you can do manually.
+Error handling is difficult. Here is what library does and what you can do. Also see [errors and exceptions](examples?id=errors-and-exceptions) in examples.
 
 ## Return error manually
 

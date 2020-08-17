@@ -60,7 +60,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Normal response
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -98,7 +98,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 No response content by specification
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Length: 0
 ```
@@ -155,7 +155,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Responses for all items, except for notifications
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -251,7 +251,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Unmodified bytes in response
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
 Content-Length →100
@@ -289,7 +289,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 HTTP Redirect
-```HTTP
+```http
 HTTP/1.1 301 Moved Permanently
 Content-Length: 0
 Location: https://google.com
@@ -324,7 +324,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 JSON Rpc Error
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -411,7 +411,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 No details when `DetailedResponseExceptions` is **false**
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -457,7 +457,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 `ExceptionInfo` object when `DetailedResponseExceptions` is **true**
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -551,7 +551,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Normal response
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -593,7 +593,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Error response
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -636,7 +636,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Normal response
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -716,7 +716,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Response from `EchoController.ToLower`
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -755,7 +755,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Response from `EchoController.ToLower`
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -856,7 +856,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Response with camelCase
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -900,7 +900,7 @@ Content-Type: application/json; charset=utf-8
 <td valign="top">
 
 Response with snake_case
-```HTTP
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 ```
@@ -1398,4 +1398,75 @@ var isInsideMatrix = (item as bool?) == true;
 
 ## Errors and exceptions
 
+See [errors documentation](errors) first. 
+
+<details>
+<summary>Different ways to return an error from Action</summary>
+
+Consider this controller. Below are examples of what it produces.
+
+```
+TODO controller
+```
+
+<table>
+<tr>
+    <td>
+        Request
+    </td>
+    <td>
+        `JsonRpcOptions.DetailedResponseExceptions` false
+    </td>
+    <td>
+        `JsonRpcOptions.DetailedResponseExceptions` true
+    </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+```http
+POST /api/jsonrpc HTTP/1.1
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.error",
+    "params": {}
+}
+```
+
+<td>
+<td valign="top">
+</td>
 TODO
+</td>
+<td valign="top">
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": 1,
+        "message": "error with custom data",
+        "data": {
+            "bar": 0,
+            "baz": null
+        }
+    }
+}
+```
+
+</td>
+</tr>
+</table>
+
+</details>
