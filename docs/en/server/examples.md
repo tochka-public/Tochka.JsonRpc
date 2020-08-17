@@ -1415,10 +1415,10 @@ TODO controller
         Request
     </td>
     <td>
-        DetailedResponseExceptions disabled
+        Response
     </td>
     <td>
-        DetailedResponseExceptions enabled
+        Response with DetailedResponseExceptions
     </td>
 </tr>
 
