@@ -927,12 +927,11 @@ Content-Type: application/json; charset=utf-8
 ## Binding
 
 Change how `params` are bound to method arguments. See [Binding](binding.md) for details.
-<details>
-<summary>Expand</summary>
-
-TODO FIX THIS: ADD MORE SPOILERS FOR EACH SECTION
 
 ### Default behavior: `params` are bound to method arguments. `params` can be `[]` or `{}` by specification.
+
+<details>
+<summary>Expand</summary>
 
 <table>
 <tr>
