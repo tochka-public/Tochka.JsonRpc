@@ -1415,14 +1415,10 @@ TODO controller
         Request
     </td>
     <td>
-        
-        `JsonRpcOptions.DetailedResponseExceptions` false
-        
+        DetailedResponseExceptions disabled
     </td>
     <td>
-        
-        `JsonRpcOptions.DetailedResponseExceptions` true
-        
+        DetailedResponseExceptions enabled
     </td>
 </tr>
 
