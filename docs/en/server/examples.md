@@ -1403,7 +1403,7 @@ See [errors documentation](errors) first.
 <details>
 <summary>Different ways to return an error from Action</summary>
 
-Consider this controller. Below are examples of what it produces.
+Consider this controller. Below are examples of its output.
 
 ```
 TODO controller
@@ -1415,10 +1415,14 @@ TODO controller
         Request
     </td>
     <td>
+        
         `JsonRpcOptions.DetailedResponseExceptions` false
+        
     </td>
     <td>
+        
         `JsonRpcOptions.DetailedResponseExceptions` true
+        
     </td>
 </tr>
 
@@ -1439,11 +1443,10 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-<td>
-<td valign="top">
+</td>
+
 </td>
 TODO
-</td>
 <td valign="top">
 
 ```http
