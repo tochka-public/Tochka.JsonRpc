@@ -540,7 +540,7 @@ Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "users.get_names",
     "params": null
@@ -580,11 +580,11 @@ Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "users.create",
     "params": {
-    	"name": "Charlie"
+        "name": "Charlie"
     }
 }
 ```
@@ -623,11 +623,11 @@ Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "users.create",
     "params": {
-    	"name": "Charlie"
+        "name": "Charlie"
     }
 }
 ```
@@ -842,12 +842,12 @@ Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "simpleCalc.subtractIntegers",
     "params": {
-    	"firstValue": 42,
-    	"secondValue": 38
+        "firstValue": 42,
+        "secondValue": 38
     }
 }
 ```
@@ -886,12 +886,12 @@ Content-Type: application/json; charset=utf-8
 ```
 ```json
 {
-	"id": 1,
+    "id": 1,
     "jsonrpc": "2.0",
     "method": "simple_calc.add_integers",
     "params": {
-    	"first_value": 42,
-    	"second_value": 38
+        "first_value": 42,
+        "second_value": 38
     }
 }
 ```
@@ -1405,8 +1405,78 @@ See [errors documentation](errors) first.
 
 Consider this controller. Below are examples of its output. HTTP headers are omitted, response is always `200 OK`.
 
-```
-TODO controller
+```c#
+public class FailController : JsonRpcController
+{
+    public class MyData
+    {
+        public int Bar { get; set; }
+        public string Baz { get; set; }
+    }
+
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory)
+    {
+        this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+    }
+
+    public void ThrowException()
+    {
+        throw new DivideByZeroException("test");
+    }
+
+    public IError Error()
+    {
+        return jsonRpcErrorFactory.Error(1, "error with custom data", new MyData());
+    }
+
+    public IError PredefinedError()
+    {
+        return jsonRpcErrorFactory.InvalidParams("oops");
+        return jsonRpcErrorFactory.ParseError("oops");
+        return jsonRpcErrorFactory.InvalidRequest("oops");
+    }
+
+    public ActionResult MvcError()
+    {
+        return this.BadRequest(new MyData());
+    }
+
+    public ActionResult WrapExceptionManually()
+    {
+        try
+        {
+            throw new DivideByZeroException("oops");
+        }
+        catch(Exception e)
+        {
+            var error = jsonRpcErrorFactory.Exception(e);
+            return new ObjectResult(error);
+        }
+
+        return Ok();
+    }
+
+    public IError WrapHttpErrorManually()
+    {
+        return jsonRpcErrorFactory.HttpError(500, new Exception("details will be hidden or displayed based on settings"));
+    }
+
+    public IError ManuallyCreatedError()
+    {
+        return new Error<MyData>
+        {
+            Code = 1,
+            Message = "error with custom data",
+            Data = new MyData()
+            {
+                Bar = 1,
+                Baz = "test"
+            }
+        };
+    }
+}
 ```
 
 <table>
@@ -1420,6 +1490,62 @@ TODO controller
     <td>
         Response with DetailedResponseExceptions
     </td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.throw_exception",
+    "params": {}
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32000,
+        "message": "Server error",
+        "data": {
+            "internal_http_code": null,
+            "message": "test",
+            "details": null,
+            "type": "System.DivideByZeroException"
+        }
+    }
+}
+```
+
+</td>
+
+<td valign="top">
+
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32000,
+        "message": "Server error",
+        "data": {
+            "internal_http_code": null,
+            "message": "test",
+            "details": "System.DivideByZeroException: test\r\n   at WebApplication1.Controllers.FailController.ThrowException() ... (and the rest of the stack trace) ...",
+            "type": "System.DivideByZeroException"
+        }
+    }
+}
+
+</td>
 </tr>
 
 <tr>
@@ -1458,10 +1584,248 @@ TODO controller
 
 <td valign="top">
 
-same
+no difference
 
 </td>
 </tr>
+
+<tr>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.predefined_error",
+    "params": {}
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": "oops"
+    }
+}
+```
+
+</td>
+
+<td valign="top">
+
+no difference
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.mvc_error",
+    "params": {}
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": {
+            "bar": 0,
+            "baz": null
+        }
+    }
+}
+```
+
+</td>
+
+<td valign="top">
+
+no difference
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.wrap_exception_manually",
+    "params": {}
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32000,
+        "message": "Server error",
+        "data": {
+            "internal_http_code": null,
+            "message": "oops",
+            "details": null,
+            "type": "System.DivideByZeroException"
+        }
+    }
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32000,
+        "message": "Server error",
+        "data": {
+            "internal_http_code": null,
+            "message": "oops",
+            "details": "System.DivideByZeroException: oops\r\n   at WebApplication1.Controllers.FailController.WrapExceptionManually()  ... (and the rest of the stack trace) ...",
+            "type": "System.DivideByZeroException"
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.wrap_http_error_manually",
+    "params": {}
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32603,
+        "message": "Internal error",
+        "data": {
+            "internal_http_code": null,
+            "message": "details will be hidden or displayed based on settings",
+            "details": null,
+            "type": "System.Exception"
+        }
+    }
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32603,
+        "message": "Internal error",
+        "data": {
+            "internal_http_code": null,
+            "message": "details will be hidden or displayed based on settings",
+            "details": "System.Exception: details will be hidden or displayed based on settings",
+            "type": "System.Exception"
+        }
+    }
+}
+```
+
+</td>
+</tr>
+
+<tr>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "fail.manually_created_error",
+    "params": {}
+}
+```
+
+</td>
+
+<td valign="top">
+
+```json
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "error": {
+        "code": 1,
+        "message": "error with custom data",
+        "data": {
+            "bar": 1,
+            "baz": "test"
+        }
+    }
+}
+```
+
+</td>
+
+<td valign="top">
+
+no difference
+
+</td>
+</tr>
+
+
 </table>
 
 </details>
