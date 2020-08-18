@@ -33,6 +33,7 @@ jobs:
           node-version: 14
       
       - name: Install semantic-release dependencies
+        uses: c-hive/gha-npm-cache@v1
         run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec conventional-changelog-conventionalcommits
       
       - name: Run semantic-release
