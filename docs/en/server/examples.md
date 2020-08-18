@@ -1405,7 +1405,7 @@ See [errors documentation](errors) first.
 
 Consider actions in this controller. Below are examples of their output. HTTP headers are omitted, response is always `200 OK`.
 
-```c#
+```cs
 public class FailController : JsonRpcController
 {
     public class MyData
@@ -1440,7 +1440,7 @@ public class FailController : JsonRpcController
 
 <td valign="top">
 
-```c#
+```cs
 public void ThrowException()
 {
     throw new DivideByZeroException("test");
@@ -1496,7 +1496,7 @@ public void ThrowException()
 
 <td valign="top">
 
-```c#
+```cs
 public IError Error()
 {
     return jsonRpcErrorFactory.Error(1, "error with custom data", new MyData());
@@ -1535,7 +1535,7 @@ no difference
 
 <td valign="top">
 
-```c#
+```cs
 public IError PredefinedError()
 {
     return jsonRpcErrorFactory.InvalidParams("oops");
@@ -1574,7 +1574,7 @@ no difference
 
 <td valign="top">
 
-```c#
+```cs
 public ActionResult MvcError()
 {
     return this.BadRequest(new MyData());
@@ -1613,7 +1613,7 @@ no difference
 
 <td valign="top">
 
-```c#
+```cs
 public ActionResult WrapExceptionManually()
 {
     try
@@ -1679,7 +1679,7 @@ public ActionResult WrapExceptionManually()
 
 <td valign="top">
 
-```c#
+```cs
 public IError WrapHttpErrorManually()
 {
     var innerException = new DivideByZeroException("inner!");
@@ -1737,7 +1737,7 @@ public IError WrapHttpErrorManually()
 
 <td valign="top">
 
-```c#
+```cs
 public IError ManuallyCreatedError()
 {
     return new Error<MyData>
