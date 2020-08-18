@@ -2,13 +2,19 @@ name: Release nuget package
 
 on:
   push:
+    paths-ignore:
+      - README.md
+      - docs/**
+      - .*
+      - .*/**
     branches: 
-      - release
+      - master
       - beta
 
 jobs:
   make-release:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1.5.0
