@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server.Models;
 
