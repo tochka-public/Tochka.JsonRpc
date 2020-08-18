@@ -7,29 +7,47 @@ Install nuget package `Tochka.JsonRpc.Server`.
 Register it in `Startup.cs` and set compatibility version. Note that `.AddJsonRpcServer()` is an extension of `IMvcBuilder`, not `IServiceCollection`.
 
 ```cs
-    public void ConfigureServices(IServiceCollection services)
-        {
-		    services.AddMvc()
-                .AddJsonRpcServer()  // <-- add this
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
-        }
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc()
+        .AddJsonRpcServer()  // <-- add this
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
+}
+
+public void Configure(IApplicationBuilder app)
+{
+    app.UseMvc();  // <-- this is required obviously because we work on top of MVC
+}
 ```
 
 Write your API controller as usual, but instead of inheriting from `Controller`, inherit from `JsonRpcController`. To make it work, you don't need any attributes, special naming or constructors.
 
 ```cs
-    public class EchoController : JsonRpcController
-	{
-	    public string ToLower(string value)
-        {
-            return value.ToLower();
-        }
-	}
+public class EchoController : JsonRpcController
+{
+    public string ToLower(string value)
+    {
+        return value.ToLower();
+    }
+}
 ```
 
 ## Make a request
 
 Start your app and send POST (extra headers omitted)
+
+<table>
+    <tr>
+        <td>
+            Request
+        </td>
+        <td>
+            Response
+        </td>
+    </tr>
+<tr>
+<td valign="top">
+
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json
@@ -38,14 +56,15 @@ Content-Type: application/json
 {
     "id": 1,
     "jsonrpc": "2.0",
-    "method": "to_lower",
+    "method": "echo.to_lower",
     "params": {
         "value": "TEST"
     }
 }
 ```
 
-Expect response (extra headers omitted)
+</td>
+<td valign="top">
 
 ```HTTP
 HTTP/1.1 200 OK
@@ -59,8 +78,12 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
+</td>
+</tr>
+</table>
+
 That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like normal.
 Check out other pages for more advanced usage:
 
-- [Configuration](en/server/configuration.md)
-- [Features](en/server/features.md)
+- [Examples](examples.md)
+- [Configuration](configuration.md)

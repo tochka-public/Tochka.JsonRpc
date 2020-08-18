@@ -1,7 +1,7 @@
 # Server/Serialization
 
 In this library, JSON Rpc request/notification/response objects are called **"headers"**, and their serialization is
-handled separately from params/result/error properties. You can control how your data is serialized without worrying about headers.
+handled separately from params/result/error objects. You can control how your data is serialized without worrying about headers.
 
 **Note:** in this document, both serialization and **de**serialization are referred to as **serialization** for simplicity.
 
@@ -46,7 +46,9 @@ Register your serializer as service in DI:
 services.TryAddJsonRpcSerializer<YourSerializer>();
 ```
 
-Use it via global option or attribute as described abode.
+> This step is important. If you register manually eg. with `.AddSingleton`, it won't work. Use `.TryAddJsonRpcSerializer`.
+
+Use it via global option or attribute as described above.
 
 
 ## Serializing early pipeline errors
@@ -60,7 +62,9 @@ When matching request/notification `method` property,
 library compares `method` value with class name and/or method name, serialized with corresponding serializer.
 This way, you can have your `method` in camelCase, if desired.
 
-For example:
+For clarity check [Examples#Serialization](examples?id=serialization) and see code with responses/requests.
+
+Matching process example:
 
 * request has `"method": "user_data.get_name"`
 * global `RequestSerializer` is default `SnakeCaseJsonRpcSerializer`
@@ -68,7 +72,7 @@ For example:
 * Controller and action are `UserDataController.GetName()`
 * `UserDataController`: controller name is `UserData` and serialized as `user_data`
 * `GetName`: is serialized as `get_name`
-* `"user_data.get_name"` is equals to `user_data`.`get_name`, so this action will be invoked
+* `"user_data.get_name"` from request is equals to `user_data`.`get_name`, so this action will be invoked
 
 Another example:
 
@@ -79,4 +83,4 @@ Another example:
 * Action has `[JsonRpcSerializerAttribute(typeof(CamelCaseJsonRpcSerializer))]`
 * `ServiceDataController`: ignored because of `MethodStyle`
 * `SetValue`: is serialized as `setValue` with its specific serializer
-* `"setValue"` is equals to `setValue`, so this action will be invoked
+* `"setValue"` from request is equals to `setValue`, so this action will be invoked
