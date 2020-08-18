@@ -28,25 +28,24 @@ namespace Tochka.JsonRpc.Server.Pipeline
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            log.LogTrace($"{nameof(OnActionExecuted)} Started");
-            if (context.HttpContext.Items.TryGetValue(JsonRpcConstants.ActionResultTypeItemKey, out var resultType))
+            if (!(context.Controller is JsonRpcController))
             {
-                var methodMetadata = context.ActionDescriptor.GetProperty<MethodMetadata>() ?? throw new ArgumentNullException(nameof(MethodMetadata));
-                var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IJsonRpcSerializer;
-                switch (context.Result)
-                {
-                    case ObjectResult objectResult:
-                        var jsonValue = JsonConvert.SerializeObject(objectResult.Value, serializer.Settings);
-                        log.LogInformation("JsonRpc Action ObjectResult {code}: {value}", objectResult.StatusCode, jsonValue);
-                        break;
-                    default:
-                        log.LogInformation("JsonRpc Action result [{type}]: {result}", resultType, context.Result);
-                        break;
-                }
+                return;
             }
-            else
+
+            log.LogTrace($"{nameof(OnActionExecuted)} Started");
+
+            var methodMetadata = context.ActionDescriptor.GetProperty<MethodMetadata>() ?? throw new ArgumentNullException(nameof(MethodMetadata));
+            var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IJsonRpcSerializer;
+            switch (context.Result)
             {
-                log.LogTrace($"Not logging action result because type was not provided by {nameof(JsonRpcFilter)}");
+                case ObjectResult objectResult:
+                    var jsonValue = JsonConvert.SerializeObject(objectResult.Value, serializer.Settings);
+                    log.LogInformation("JsonRpc Action ObjectResult {code}: {value}", objectResult.StatusCode, jsonValue);
+                    break;
+                default:
+                    log.LogInformation("JsonRpc Action result [{type}]: {result}", context.Result.GetType(), context.Result);
+                    break;
             }
 
             log.LogTrace($"{nameof(OnActionExecuting)} Completed");
