@@ -16,6 +16,7 @@ namespace Tochka.JsonRpc.Common.Converters
     {
         public override void WriteJson(JsonWriter writer, IRequestWrapper value, JsonSerializer serializer)
         {
+            // NOTE: used in server to parse requests, no need for serialization
             throw new InvalidOperationException();
         }
 

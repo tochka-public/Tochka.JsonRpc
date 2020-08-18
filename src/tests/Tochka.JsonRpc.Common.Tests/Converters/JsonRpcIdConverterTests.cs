@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json;
@@ -16,19 +17,45 @@ namespace Tochka.JsonRpc.Common.Tests.Converters
     public class JsonRpcIdConverterTests
     {
         private JsonRpcIdConverter jsonRpcIdConverter;
+        private StringBuilder stringBuilder;
+        private JsonTextWriter writer;
 
         [SetUp]
         public void Setup()
         {
             jsonRpcIdConverter = new JsonRpcIdConverter();
+            stringBuilder = new StringBuilder();
+            writer = new JsonTextWriter(new StringWriter(stringBuilder));
         }
 
         [Test]
-        public void Test_WriteJson_Throws()
+        public void Test_WriteJson_WorksForNumber()
         {
-            Action action = () => jsonRpcIdConverter.WriteJson(Mock.Of<JsonWriter>(), Mock.Of<IRpcId>(), Mock.Of<JsonSerializer>());
+            var id = new NumberRpcId(42);
 
-            action.Should().Throw<InvalidOperationException>();
+            jsonRpcIdConverter.WriteJson(writer, id, Mock.Of<JsonSerializer>());
+
+            stringBuilder.ToString().Should().Be("42");
+        }
+
+        [Test]
+        public void Test_WriteJson_WorksForString()
+        {
+            var id = new StringRpcId("test");
+
+            jsonRpcIdConverter.WriteJson(writer, id, Mock.Of<JsonSerializer>());
+
+            stringBuilder.ToString().Should().Be("\"test\"");
+        }
+
+        [Test]
+        public void Test_WriteJson_WorksForNull()
+        {
+            IRpcId id = null;
+
+            jsonRpcIdConverter.WriteJson(writer, id, Mock.Of<JsonSerializer>());
+
+            stringBuilder.ToString().Should().Be("null");
         }
 
         [TestCase("")]

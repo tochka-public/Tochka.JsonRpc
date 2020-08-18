@@ -10,6 +10,7 @@ namespace Tochka.JsonRpc.Common.Converters
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
+            // NOTE: used in client to parse responses, no need for serialization
             throw new InvalidOperationException();
         }
 
