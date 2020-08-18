@@ -1,3 +1,10 @@
+### [1.0.12](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.11...v1.0.12) (2020-08-18)
+
+
+### Bug Fixes
+
+* **client:** proper deserialization of ids ([2fbc904](https://github.com/tochka-public/Tochka.JsonRpc/commit/2fbc904f98b322211bdc82c5d20e89e0b6588616))
+
 ### [1.0.11](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.10...v1.0.11) (2020-07-30)
 
 
