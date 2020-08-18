@@ -1530,6 +1530,7 @@ public class FailController : JsonRpcController
 
 <td valign="top">
 
+```json
 {
     "id": 1,
     "jsonrpc": "2.0",
@@ -1544,6 +1545,7 @@ public class FailController : JsonRpcController
         }
     }
 }
+```
 
 </td>
 </tr>
