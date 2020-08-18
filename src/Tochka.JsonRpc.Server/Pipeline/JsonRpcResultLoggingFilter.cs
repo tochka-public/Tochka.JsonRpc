@@ -23,7 +23,6 @@ namespace Tochka.JsonRpc.Server.Pipeline
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            return;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
