@@ -1,3 +1,21 @@
+### [1.0.14](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.13...v1.0.14) (2020-08-18)
+
+
+### Features
+
+* **server:** add sample request-response logging for reference ([ba01b6f](https://github.com/tochka-public/Tochka.JsonRpc/commit/ba01b6f7ad24674878fecd278622d42e77215bb0))
+* middleware now checks routes instead of verb/content-type heuristics ([3ce2177](https://github.com/tochka-public/Tochka.JsonRpc/commit/3ce217764770fe15f4569447b231331ec7842308))
+* rename rpc to jsonrpc ([5d87982](https://github.com/tochka-public/Tochka.JsonRpc/commit/5d8798222e1c449aff5da4d757a35626d29b005c))
+
+
+### Bug Fixes
+
+* **client:** proper compare ids when null ([022619c](https://github.com/tochka-public/Tochka.JsonRpc/commit/022619c53de71b6d913c7b50ea4846f91236da51))
+* **client:** proper deserialization of ids ([2fbc904](https://github.com/tochka-public/Tochka.JsonRpc/commit/2fbc904f98b322211bdc82c5d20e89e0b6588616))
+* **server:** logging checks for rpc controller ([51b9e7a](https://github.com/tochka-public/Tochka.JsonRpc/commit/51b9e7a3221844fb56e08ea69b405d2235528bc6))
+* forgotten changes to use route checks ([dca88be](https://github.com/tochka-public/Tochka.JsonRpc/commit/dca88beb72d545b31a3d9451eeea670ddd5a679f))
+* trim slash at url end for proper validation ([3d90df9](https://github.com/tochka-public/Tochka.JsonRpc/commit/3d90df930fc9d1b899c0e12f02a454b1b8a90d04))
+
 ### [1.0.12](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.11...v1.0.12) (2020-08-18)
 
 
