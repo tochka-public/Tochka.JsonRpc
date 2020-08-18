@@ -1403,7 +1403,7 @@ See [errors documentation](errors) first.
 <details>
 <summary>Different ways to return an error from Action</summary>
 
-Consider this controller. Below are examples of its output. HTTP headers are omitted, response is always `200 OK`.
+Consider actions in this controller. Below are examples of their output. HTTP headers are omitted, response is always `200 OK`.
 
 ```c#
 public class FailController : JsonRpcController
@@ -1420,72 +1420,16 @@ public class FailController : JsonRpcController
     {
         this.jsonRpcErrorFactory = jsonRpcErrorFactory;
     }
-
-    public void ThrowException()
-    {
-        throw new DivideByZeroException("test");
-    }
-
-    public IError Error()
-    {
-        return jsonRpcErrorFactory.Error(1, "error with custom data", new MyData());
-    }
-
-    public IError PredefinedError()
-    {
-        return jsonRpcErrorFactory.InvalidParams("oops");
-        return jsonRpcErrorFactory.ParseError("oops");
-        return jsonRpcErrorFactory.InvalidRequest("oops");
-    }
-
-    public ActionResult MvcError()
-    {
-        return this.BadRequest(new MyData());
-    }
-
-    public ActionResult WrapExceptionManually()
-    {
-        try
-        {
-            throw new DivideByZeroException("oops");
-        }
-        catch(Exception e)
-        {
-            var error = jsonRpcErrorFactory.Exception(e);
-            return new ObjectResult(error);
-        }
-
-        return Ok();
-    }
-
-    public IError WrapHttpErrorManually()
-    {
-        return jsonRpcErrorFactory.HttpError(500, new Exception("details will be hidden or displayed based on settings"));
-    }
-
-    public IError ManuallyCreatedError()
-    {
-        return new Error<MyData>
-        {
-            Code = 1,
-            Message = "error with custom data",
-            Data = new MyData()
-            {
-                Bar = 1,
-                Baz = "test"
-            }
-        };
-    }
 }
 ```
 
 <table>
 <tr>
     <td>
-        Request
+        Action
     </td>
     <td>
-        Response
+        Response without DetailedResponseExceptions
     </td>
     <td>
         Response with DetailedResponseExceptions
@@ -1496,12 +1440,10 @@ public class FailController : JsonRpcController
 
 <td valign="top">
 
-```json
+```c#
+public void ThrowException()
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.throw_exception",
-    "params": {}
+    throw new DivideByZeroException("test");
 }
 ```
 
@@ -1554,12 +1496,10 @@ public class FailController : JsonRpcController
 
 <td valign="top">
 
-```json
+```c#
+public IError Error()
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.error",
-    "params": {}
+    return jsonRpcErrorFactory.Error(1, "error with custom data", new MyData());
 }
 ```
 
@@ -1595,12 +1535,13 @@ no difference
 
 <td valign="top">
 
-```json
+```c#
+public IError PredefinedError()
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.predefined_error",
-    "params": {}
+    return jsonRpcErrorFactory.InvalidParams("oops");
+    // or others:
+    //return jsonRpcErrorFactory.ParseError("oops");
+    //return jsonRpcErrorFactory.InvalidRequest("oops");
 }
 ```
 
@@ -1633,12 +1574,10 @@ no difference
 
 <td valign="top">
 
-```json
+```c#
+public ActionResult MvcError()
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.mvc_error",
-    "params": {}
+    return this.BadRequest(new MyData());
 }
 ```
 
@@ -1674,12 +1613,20 @@ no difference
 
 <td valign="top">
 
-```json
+```c#
+public ActionResult WrapExceptionManually()
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.wrap_exception_manually",
-    "params": {}
+    try
+    {
+        throw new DivideByZeroException("oops");
+    }
+    catch(Exception e)
+    {
+        var error = jsonRpcErrorFactory.Exception(e);
+        return new ObjectResult(error);
+    }
+
+    return Ok();
 }
 ```
 
@@ -1732,13 +1679,11 @@ no difference
 
 <td valign="top">
 
-```json
-{
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.wrap_http_error_manually",
-    "params": {}
-}
+```c#
+public IError WrapHttpErrorManually()
+    {
+        return jsonRpcErrorFactory.HttpError(500, new Exception("details will be hidden or displayed based on settings"));
+    }
 ```
 
 </td>
@@ -1790,12 +1735,19 @@ no difference
 
 <td valign="top">
 
-```json
+```c#
+public IError ManuallyCreatedError()
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "fail.manually_created_error",
-    "params": {}
+    return new Error<MyData>
+    {
+        Code = 1,
+        Message = "error with custom data",
+        Data = new MyData()
+        {
+            Bar = 1,
+            Baz = "test"
+        }
+    };
 }
 ```
 
