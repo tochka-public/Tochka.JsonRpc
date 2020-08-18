@@ -1681,9 +1681,11 @@ public ActionResult WrapExceptionManually()
 
 ```c#
 public IError WrapHttpErrorManually()
-    {
-        return jsonRpcErrorFactory.HttpError(500, new Exception("details will be hidden or displayed based on settings"));
-    }
+{
+    var innerException = new DivideByZeroException("inner!");
+    var e = new Exception("message!", innerException);
+    return jsonRpcErrorFactory.HttpError(500, e);
+}
 ```
 
 </td>
@@ -1699,7 +1701,7 @@ public IError WrapHttpErrorManually()
         "message": "Internal error",
         "data": {
             "internal_http_code": null,
-            "message": "details will be hidden or displayed based on settings",
+            "message": "message!",
             "details": null,
             "type": "System.Exception"
         }
@@ -1720,8 +1722,8 @@ public IError WrapHttpErrorManually()
         "message": "Internal error",
         "data": {
             "internal_http_code": null,
-            "message": "details will be hidden or displayed based on settings",
-            "details": "System.Exception: details will be hidden or displayed based on settings",
+            "message": "message!",
+            "details": "System.Exception: message! ---> System.DivideByZeroException: inner!\r\n   --- End of inner exception stack trace ---",
             "type": "System.Exception"
         }
     }
