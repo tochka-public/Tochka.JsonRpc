@@ -10,7 +10,7 @@ By default, `params` from request/notification are bound to action arguments:
     "jsonrpc": "2.0",
     "method": "foo",
     "params": {
-        "bar": 1
+        "bar": 1,
         "baz": "test"
     }
 }
@@ -24,7 +24,7 @@ public void Foo(int bar, string baz){}
 
 Params are deserialized using `RequestSerializer` from global options or from `JsonRpcSerializerAttribute` if specified.
 You can write regular C# *camelCase* argument names and they will be populated from *snake_case* request `params`.
-If your request params are *camelCase*/*PascalCase* or have objects which require special handling, see [Serialization](en/server/serialization.md).
+If your request params are *camelCase*/*PascalCase* or have objects which require special handling, see [Serialization](serialization.md).
 
 
 ## Advanced scenarios
@@ -33,8 +33,8 @@ You may want to bind whole `params` into one model, if you have a lot of propert
 
 ```cs
 public class MyData{
-	public int Bar {get; set;}
-	public string Baz {get; set;}
+    public int Bar {get; set;}
+    public string Baz {get; set;}
 }
 
 public void Foo(MyData data){}
@@ -56,8 +56,8 @@ Another scenario: you may want to bind JSON array from `params` to a collection 
     "method": "foo",
     "params": [
         "a",
-		"b",
-		"c"
+        "b",
+        "c"
     ]
 }
 ```

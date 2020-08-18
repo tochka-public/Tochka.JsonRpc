@@ -5,6 +5,14 @@ You only need one line in `Startup.cs`, and a different base class for your cont
 
 **Note:** in this doc, JSON Rpc protocol is mentioned without version, implying `2.0`.
 
+
+## Getting started
+
+[Server Quickstart](server/quickstart.md)
+
+Client Quickstart (writing in progress)
+
+
 ## Key features
 
 * Simple installation
@@ -23,6 +31,7 @@ You only need one line in `Startup.cs`, and a different base class for your cont
 * Other middlewares can inspect raw and typed JSON Rpc request/response data
 * Lightweight extensibility: common models and utils are not tied to client or server packages
 
+
 ## Limitations and things to improve
 
 Some features are planned, but not implemented yet. The initial goal was just to make things work,
@@ -35,12 +44,6 @@ and fine-tune experience after release when we have some real-world usage feedba
 * Planned: Batches are currently handled in sequential fashion (easy to implement other strategies)
 * Planned: Pefrormance is not measured
 * Heavily relies on Json.NET. Alternative serialization in 3.x is still limited in features
-
-## Getting started
-
-[Server Quickstart](en/server/quickstart.md)
-
-Client Quickstart (writing in progress)
 
 
 ## Nuget Packages
