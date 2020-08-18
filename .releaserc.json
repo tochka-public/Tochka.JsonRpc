@@ -1,6 +1,6 @@
 {
   "branches": [
-    {"name": "release"},
+    {"name": "master"},
     {"name": "beta", "prerelease": true}
   ],
   "plugins": [
