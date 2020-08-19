@@ -10,15 +10,6 @@ using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Client.Models
 {
-    public interface IBatchJsonRpcResult
-    {
-        T GetResponse<T>(IRpcId id);
-        T AsResponse<T>(IRpcId id);
-        Error<JToken> AsRawError(IRpcId id);
-        Error<T> AsError<T>(IRpcId id);
-        Error<ExceptionInfo> AsErrorWithExceptionInfo(IRpcId id);
-    }
-
     public class BatchJsonRpcResult : IBatchJsonRpcResult
     {
         private readonly IJsonRpcCallContext context;
@@ -43,7 +34,7 @@ namespace Tochka.JsonRpc.Client.Models
             return items.ToDictionary(x => x.Id ?? NullId, x => x);
         }
 
-        public T GetResponse<T>(IRpcId id)
+        public T GetResponseOrThrow<T>(IRpcId id)
         {
             if (!TryGetValue(id, out var response))
             {
@@ -72,7 +63,17 @@ namespace Tochka.JsonRpc.Client.Models
             return default(T);
         }
 
-        public Error<JToken> AsRawError(IRpcId id)
+        public bool HasError(IRpcId id)
+        {
+            if (!TryGetValue(id, out var response))
+            {
+                throw new JsonRpcException($"Expected response id [{id}], got nothing", context);
+            }
+
+            return response is UntypedErrorResponse;
+        }
+
+        public Error<JToken> AsAnyError(IRpcId id)
         {
             TryGetValue(id, out var response);
             if (response is UntypedErrorResponse untypedErrorResponse)
@@ -83,12 +84,17 @@ namespace Tochka.JsonRpc.Client.Models
             return null;
         }
 
-        public Error<T> AsError<T>(IRpcId id)
+        public Error<T> AsTypedError<T>(IRpcId id)
         {
             TryGetValue(id, out var response);
             if (response is UntypedErrorResponse untypedErrorResponse)
             {
                 var error = untypedErrorResponse.Error;
+                if (error.Data == null)
+                {
+                    return null;
+                }
+
                 var data = error.Data.ToObject<T>(serializer.Serializer);
                 if (data.Equals(default(T)))
                 {
@@ -109,7 +115,7 @@ namespace Tochka.JsonRpc.Client.Models
 
         public Error<ExceptionInfo> AsErrorWithExceptionInfo(IRpcId id)
         {
-            return AsError<ExceptionInfo>(id);
+            return AsTypedError<ExceptionInfo>(id);
         }
 
         private bool TryGetValue(IRpcId id, out IResponse response)

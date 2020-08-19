@@ -7,15 +7,6 @@ using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Client.Models
 {
-    public interface ISingleJsonRpcResult
-    {
-        T GetResponse<T>();
-        T AsResponse<T>();
-        Error<JToken> AsRawError();
-        Error<T> AsError<T>();
-        Error<ExceptionInfo> AsErrorWithExceptionInfo();
-    }
-
     public class SingleJsonRpcResult : ISingleJsonRpcResult
     {
         private readonly IJsonRpcCallContext context;
@@ -36,7 +27,7 @@ namespace Tochka.JsonRpc.Client.Models
             this.serializer = serializer;
         }
 
-        public T GetResponse<T>()
+        public T GetResponseOrThrow<T>()
         {
             if (response == null)
             {
@@ -64,7 +55,9 @@ namespace Tochka.JsonRpc.Client.Models
             return default(T);
         }
 
-        public Error<JToken> AsRawError()
+        public bool HasError() => response is UntypedErrorResponse;
+
+        public Error<JToken> AsAnyError()
         {
             if (response is UntypedErrorResponse untypedErrorResponse)
             {
@@ -74,11 +67,16 @@ namespace Tochka.JsonRpc.Client.Models
             return null;
         }
 
-        public Error<T> AsError<T>()
+        public Error<T> AsTypedError<T>()
         {
             if (response is UntypedErrorResponse untypedErrorResponse)
             {
                 var error = untypedErrorResponse.Error;
+                if (error.Data == null)
+                {
+                    return null;
+                }
+
                 var data = error.Data.ToObject<T>(serializer.Serializer);
                 if (data.Equals(default(T)))
                 {
@@ -99,7 +97,7 @@ namespace Tochka.JsonRpc.Client.Models
 
         public Error<ExceptionInfo> AsErrorWithExceptionInfo()
         {
-            return AsError<ExceptionInfo>();
+            return AsTypedError<ExceptionInfo>();
         }
     }
 }
