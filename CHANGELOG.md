@@ -1,3 +1,5 @@
+### [1.0.15-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.14...v1.0.15-beta.1) (2020-08-19)
+
 ### [1.0.14](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.13...v1.0.14) (2020-08-18)
 
 
