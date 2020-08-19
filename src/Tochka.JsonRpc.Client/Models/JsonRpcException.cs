@@ -8,6 +8,11 @@ namespace Tochka.JsonRpc.Client.Models
     {
         public IJsonRpcCallContext Context { get; }
 
+        // for easy mocking
+        public JsonRpcException()
+        {
+        }
+
         public JsonRpcException(string message, IJsonRpcCallContext context) : base(message)
         {
             Context = context;

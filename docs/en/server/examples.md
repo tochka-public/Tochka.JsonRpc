@@ -1785,3 +1785,32 @@ no difference
 </table>
 
 </details>
+
+## Logging
+
+Enable simple json logging. For better accuracy, use your web server to log HTTP request/response body.
+<details>
+<summary>Expand</summary>
+
+Add to `Startup.cs`:
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc(options =>
+    {
+        options.Filters.Add(typeof(JsonRpcResultLoggingFilter));  // <-- this logs properly serialized response JSONs, but without headers
+    })
+    .AddJsonRpcServer()
+    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+}
+
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    app
+        .UseMiddleware<JsonRpcRequestLoggingMiddleware>()  // <-- this logs full request JSON. If batch, each request is logged separately
+        .UseMvc();
+}
+```
+
+</details>
