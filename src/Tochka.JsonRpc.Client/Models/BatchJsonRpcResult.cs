@@ -90,18 +90,7 @@ namespace Tochka.JsonRpc.Client.Models
             if (response is UntypedErrorResponse untypedErrorResponse)
             {
                 var error = untypedErrorResponse.Error;
-                if (error.Data == null)
-                {
-                    return null;
-                }
-
-                var data = error.Data.ToObject<T>(serializer.Serializer);
-                if (data.Equals(default(T)))
-                {
-                    // if user serializer failed: maybe this is server error, try header serializer
-                    data = error.Data.ToObject<T>(headerJsonRpcSerializer.Serializer);
-                }
-
+                var data = GetData<T>(error);
                 return new Error<T>()
                 {
                     Code = error.Code,
@@ -121,6 +110,24 @@ namespace Tochka.JsonRpc.Client.Models
         private bool TryGetValue(IRpcId id, out IResponse response)
         {
             return responses.TryGetValue(id ?? NullId, out response);
+        }
+
+        private T GetData<T>(Error<JToken> error)
+        {
+            if (error.Data == null)
+            {
+                // if data was not present at all, do not throw
+                return default(T);
+            }
+
+            var data = error.Data.ToObject<T>(serializer.Serializer);
+            if (data.Equals(default(T)))
+            {
+                // if user serializer failed: maybe this is server error, try header serializer
+                data = error.Data.ToObject<T>(headerJsonRpcSerializer.Serializer);
+            }
+
+            return data;
         }
 
         /// <summary>
