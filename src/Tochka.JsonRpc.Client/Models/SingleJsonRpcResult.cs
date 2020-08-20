@@ -7,15 +7,6 @@ using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Client.Models
 {
-    public interface ISingleJsonRpcResult
-    {
-        T GetResponse<T>();
-        T AsResponse<T>();
-        Error<JToken> AsRawError();
-        Error<T> AsError<T>();
-        Error<ExceptionInfo> AsErrorWithExceptionInfo();
-    }
-
     public class SingleJsonRpcResult : ISingleJsonRpcResult
     {
         private readonly IJsonRpcCallContext context;
@@ -36,7 +27,7 @@ namespace Tochka.JsonRpc.Client.Models
             this.serializer = serializer;
         }
 
-        public T GetResponse<T>()
+        public T GetResponseOrThrow<T>()
         {
             if (response == null)
             {
@@ -64,7 +55,9 @@ namespace Tochka.JsonRpc.Client.Models
             return default(T);
         }
 
-        public Error<JToken> AsRawError()
+        public bool HasError() => response is UntypedErrorResponse;
+
+        public Error<JToken> AsAnyError()
         {
             if (response is UntypedErrorResponse untypedErrorResponse)
             {
@@ -74,18 +67,12 @@ namespace Tochka.JsonRpc.Client.Models
             return null;
         }
 
-        public Error<T> AsError<T>()
+        public Error<T> AsTypedError<T>()
         {
             if (response is UntypedErrorResponse untypedErrorResponse)
             {
                 var error = untypedErrorResponse.Error;
-                var data = error.Data.ToObject<T>(serializer.Serializer);
-                if (data.Equals(default(T)))
-                {
-                    // if user serializer failed: maybe this is server error, try header serializer
-                    data = error.Data.ToObject<T>(headerJsonRpcSerializer.Serializer);
-                }
-
+                var data = GetData<T>(error);
                 return new Error<T>()
                 {
                     Code = error.Code,
@@ -97,9 +84,27 @@ namespace Tochka.JsonRpc.Client.Models
             return null;
         }
 
+        private T GetData<T>(Error<JToken> error)
+        {
+            if (error.Data == null)
+            {
+                // if data was not present at all, do not throw
+                return default(T);
+            }
+
+            var data = error.Data.ToObject<T>(serializer.Serializer);
+            if (data.Equals(default(T)))
+            {
+                // if user serializer failed: maybe this is server error, try header serializer
+                data = error.Data.ToObject<T>(headerJsonRpcSerializer.Serializer);
+            }
+
+            return data;
+        }
+
         public Error<ExceptionInfo> AsErrorWithExceptionInfo()
         {
-            return AsError<ExceptionInfo>();
+            return AsTypedError<ExceptionInfo>();
         }
     }
 }

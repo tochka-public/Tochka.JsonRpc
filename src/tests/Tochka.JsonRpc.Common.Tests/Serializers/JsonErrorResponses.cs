@@ -141,6 +141,27 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
                         }
                     }
                 );
+
+                yield return (
+                    @"{
+                        ""id"": null,
+                        ""jsonrpc"": ""2.0"",
+                        ""error"": {
+                            ""code"": -32001,
+                            ""message"": ""Server error""
+                        }
+                    }",
+                    new ErrorResponse<TestData>()
+                    {
+                        Error = new Error<TestData>()
+                        {
+                            Code = -32001,
+                            Message = "Server error",
+                            Data = null
+
+                        }
+                    }
+                );
             }
         }
         /*"id": null,
