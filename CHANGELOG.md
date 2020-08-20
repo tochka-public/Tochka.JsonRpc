@@ -1,3 +1,10 @@
+### [1.0.15](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.14...v1.0.15) (2020-08-20)
+
+
+### Bug Fixes
+
+* **client:** null if error data was not present ([a51c29d](https://github.com/tochka-public/Tochka.JsonRpc/commit/a51c29d3910b63786298f9e5b8b8abf7a5d6d62f))
+
 ### [1.0.14](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.13...v1.0.14) (2020-08-18)
 
 
