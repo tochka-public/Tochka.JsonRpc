@@ -7,16 +7,18 @@ namespace Tochka.JsonRpc.Server.Models
     [ExcludeFromCodeCoverage]
     public class ParameterMetadata
     {
-        public BindingStyle BindingStyle { get; }
         public JsonName Name { get; }
+        public Type Type { get; }
         public int Index { get; }
+        public BindingStyle BindingStyle { get; }
         public bool IsOptional { get; }
 
-        public ParameterMetadata(JsonName name, int index, BindingStyle bindingStyle, bool isOptional)
+        public ParameterMetadata(JsonName name, Type type, int index, BindingStyle bindingStyle, bool isOptional)
         {
-            BindingStyle = bindingStyle;
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            Type = type;
             Index = index;
+            BindingStyle = bindingStyle;
             IsOptional = isOptional;
         }
 

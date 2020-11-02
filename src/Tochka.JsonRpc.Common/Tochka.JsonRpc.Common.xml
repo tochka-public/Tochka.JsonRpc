@@ -90,12 +90,6 @@
             "application/json" Default content-type expected in JSON Rpc HTTP requests
             </summary>
         </member>
-        <member name="P:Tochka.JsonRpc.Common.Models.Request.Request`1.Jsonrpc">
-            <summary>
-            
-            </summary>
-            <example>2.0</example>
-        </member>
         <member name="P:Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall.RawJson">
             <summary>
             Set on deserialization. JSON content corresponding to this object
@@ -125,7 +119,6 @@
             <summary>
             
             </summary>
-            <example>2.0</example>
         </member>
         <member name="P:Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse.RawError">
             <summary>

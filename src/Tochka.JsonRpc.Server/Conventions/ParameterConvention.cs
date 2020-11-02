@@ -52,7 +52,7 @@ namespace Tochka.JsonRpc.Server.Conventions
             var serializer = Utils.GetSerializer(serializers, serializerType);
             var parameterName = serializer.GetJsonName(parameterModel.ParameterName);
             var isOptional = parameterModel.ParameterInfo.IsOptional; // see https://stackoverflow.com/q/9977530/
-            var result = new ParameterMetadata(parameterName, parameterModel.ParameterInfo.Position, rpcParams, isOptional);
+            var result = new ParameterMetadata(parameterName, parameterModel.ParameterType, parameterModel.ParameterInfo.Position, rpcParams, isOptional);
             log.LogTrace($"{parameterModel.DisplayName}: metadata [{result}]");
             return result;
         }

@@ -35,21 +35,14 @@ namespace WebApplication1
             services.AddMvc()
                 .AddJsonRpcServer()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddTransient<IApiDescriptionProvider, WtfProvider>();
-            services.AddTransient<IApiDescriptionProvider, KostylProvider>();
+            //services.AddTransient<IApiDescriptionProvider, WtfProviderNotUsed>();
+            services.AddTransient<IApiDescriptionProvider, WtfProvider>();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "aaa", Version = "v1" });
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Request<>).Assembly.GetName().Name}.xml"));
                 // TODO add doc for current application assembly?
                 
-                /* this works but custom schema insertion should be better...
-                 options.MapType<IRpcId>(() => new OpenApiSchema()
-                {
-                    Type = "string",
-                    Example = new OpenApiString("1")
-                });
-                */
                 // TODO how to use custom json serializer?
                 options.SchemaFilter<WtfFilter>();
                 

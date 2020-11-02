@@ -190,7 +190,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
             var rpcContext = new JsonRpcBindingContext
             {
-                ParameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, true)
+                ParameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, true)
             };
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetNoResult(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<NoParseResult>()))
@@ -213,7 +213,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
             var bindingContextMock = new Mock<ModelBindingContext>(MockBehavior.Strict);
             var rpcContext = new JsonRpcBindingContext
             {
-                ParameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false)
+                ParameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false)
             };
             var binderMock = new Mock<ParameterBinder>(testEnvironment.ServiceProvider.GetRequiredService<ILogger<ParameterBinder>>());
             binderMock.Setup(x => x.SetError(It.IsAny<ModelBindingContext>(), It.IsAny<string>(), It.IsAny<IParseResult>()))
