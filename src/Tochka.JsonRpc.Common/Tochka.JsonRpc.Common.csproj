@@ -15,6 +15,10 @@
     <Product>Tochka.JsonRpc</Product>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\vault\tochka\Tochka.JsonRpc\src\Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>

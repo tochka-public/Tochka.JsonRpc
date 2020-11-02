@@ -10,6 +10,10 @@ namespace Tochka.JsonRpc.Common.Models.Request
     {
         public IRpcId Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <example>2.0</example>
         public string Jsonrpc { get; set; } = JsonRpcConstants.Version;
 
         public string Method { get; set; }
