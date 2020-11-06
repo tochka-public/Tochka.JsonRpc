@@ -4,46 +4,72 @@
         <name>WebApplication1</name>
     </assembly>
     <members>
-        <member name="T:WebApplication1.Controllers.ModelTypeEmitter">
+        <member name="T:WebApplication1.Services.TypeEmitter">
             <summary>
             Creates types for proper schema generation. See https://jonathancrozier.com/blog/time-to-reflect-how-to-add-properties-to-a-c-sharp-object-dynamically-at-runtime
             </summary>
         </member>
-        <member name="M:WebApplication1.Controllers.WtfProvider.GetUniquePath(System.String,System.String)">
+        <member name="M:WebApplication1.Services.TypeEmitter.GetBodyType(System.String,System.Type,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Type})">
+            <summary>
+            Combine multiple arguments into one type or use type if impossible to create descendant
+            </summary>
+            <param name="name"></param>
+            <param name="baseBodyType"></param>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApplication1.Services.TypeEmitter.GenerateCallTypeWithAttribute(System.String,System.Type,System.Type,System.Type)">
+            <summary>
+            Create new type with attribute
+            </summary>
+            <param name="name"></param>
+            <param name="modelType"></param>
+            <param name="jsonRpcRequestSerializer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApplication1.Services.WtfProvider.GetUniquePath(System.String,System.String)">
             <summary>
             Add #method to JsonRpc urls to make them different for swagger
             </summary>
         </member>
-        <member name="P:WebApplication1.Controllers.WtfProvider.JsonRequestFormat">
+        <member name="P:WebApplication1.Services.WtfProvider.JsonRequestFormat">
             <summary>
             Request content-type application/json
             </summary>
         </member>
-        <member name="M:WebApplication1.Controllers.WtfProvider.WrapResponseType(System.Type)">
+        <member name="M:WebApplication1.Services.WtfProvider.WrapResponseType(System.String,System.Type,Tochka.JsonRpc.Server.Models.MethodMetadata)">
             <summary>
             Wrap action response type into Response`T, set content-type application/json and HTTP code 200
             </summary>
         </member>
-        <member name="M:WebApplication1.Controllers.WtfProvider.GetParameterDescriptions(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription,Tochka.JsonRpc.Server.Models.MethodMetadata)">
+        <member name="M:WebApplication1.Services.WtfProvider.GetParameterDescriptions(System.String,Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription,Tochka.JsonRpc.Server.Models.MethodMetadata)">
             <summary>
             Wrap JsonRpc-bound parameters into Request`T. T is compiled dynamically to allow swagger schema generation
             </summary>
+            <param name="actionName"></param>
             <param name="defaultDescription"></param>
             <param name="methodMetadata"></param>
             <returns></returns>
         </member>
-        <member name="M:WebApplication1.Controllers.WtfProvider.GetRequestType(Tochka.JsonRpc.Server.Models.MethodMetadata)">
+        <member name="M:WebApplication1.Services.WtfProvider.GetRequestType(System.String,Tochka.JsonRpc.Server.Models.MethodMetadata)">
             <summary>
             Generate type which describes whole request object with all parameters bound by json rpc
             </summary>
-            <param name="defaultDescription"></param>
+            <param name="actionName"></param>
             <param name="methodMetadata"></param>
             <returns></returns>
         </member>
-        <member name="P:WebApplication1.Controllers.WtfProvider.Order">
+        <member name="P:WebApplication1.Services.WtfProvider.Order">
             <summary>
             Arbitrary number greater than -1000 in DefaultApiDescriptionProvider
             </summary>
+        </member>
+        <member name="M:WebApplication1.Services.ServiceCollectionExtensions.GetJsonSerializerSettings(System.IServiceProvider)">
+            <summary>
+            Copy-pasted from swashbuckle library
+            </summary>
+            <param name="serviceProvider"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

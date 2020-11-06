@@ -10,14 +10,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
+using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server;
 using WebApplication1.Controllers;
+using WebApplication1.Services;
+using SchemaGenerator = WebApplication1.Services.SchemaGenerator;
 
 namespace WebApplication1
 {
@@ -35,19 +40,24 @@ namespace WebApplication1
             services.AddMvc()
                 .AddJsonRpcServer()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddTransient<IApiDescriptionProvider, WtfProviderNotUsed>();
-            services.AddTransient<IApiDescriptionProvider, WtfProvider>();
+            services.AddTransient<IApiDescriptionProvider, WtfProvider>();  // custom
             services.AddSwaggerGen(options =>
             {
+                
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "aaa", Version = "v1" });
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{typeof(Request<>).Assembly.GetName().Name}.xml"));
                 // TODO add doc for current application assembly?
                 
                 // TODO how to use custom json serializer?
-                options.SchemaFilter<WtfFilter>();
-                
+                options.SchemaFilter<WtfFilter>();  // custom
+                //options.RequestBodyFilter<BodyFilter>();
+
             });
+            services.Replace(ServiceDescriptor.Transient<ISchemaGenerator, SchemaGenerator>());
+            services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
             services.AddSwaggerGenNewtonsoftSupport();
+            //services.AddSwaggerGenJsonRpcSupport();  // custom
+            services.AddSingleton<ITypeEmitter, TypeEmitter>();
         }
         
 

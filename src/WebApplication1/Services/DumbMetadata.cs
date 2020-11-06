@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
-namespace WebApplication1.Controllers
+namespace WebApplication1.Services
 {
     public class DumbMetadata : ModelMetadata
     {
         public DumbMetadata(ModelMetadataIdentity identity) : base(identity)
         {
+            Properties = GetProperties(identity);
+        }
+
+        private ModelPropertyCollection GetProperties(ModelMetadataIdentity identity)
+        {
+            var props = identity.ModelType.GetProperties()
+                .Select(x => ModelMetadataIdentity.ForProperty(x.PropertyType, x.Name, x.DeclaringType))
+                .Select(x => new DumbMetadata(x));
+            return new ModelPropertyCollection(props);
         }
 
         public override IReadOnlyDictionary<object, object> AdditionalValues { get; }

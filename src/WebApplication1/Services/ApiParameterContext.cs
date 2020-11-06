@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing.Template;
 
-namespace WebApplication1.Controllers
+namespace WebApplication1.Services
 {
     internal class ApiParameterContext
     {

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Newtonsoft;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request;
@@ -21,19 +23,19 @@ using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
-namespace WebApplication1.Controllers
+namespace WebApplication1.Services
 {
     public class WtfProvider : IApiDescriptionProvider
     {
         private readonly IMethodMatcher methodMatcher;
         private readonly IEnumerable<IJsonRpcSerializer> serializers;
-        private readonly ModelTypeEmitter modelTypeEmitter;
+        private readonly ITypeEmitter typeEmitter;
 
-        public WtfProvider(IMethodMatcher methodMatcher, IEnumerable<IJsonRpcSerializer> serializers)
+        public WtfProvider(IMethodMatcher methodMatcher, IEnumerable<IJsonRpcSerializer> serializers, ITypeEmitter typeEmitter)
         {
             this.methodMatcher = methodMatcher;
             this.serializers = serializers;
-            modelTypeEmitter = new ModelTypeEmitter();
+            this.typeEmitter = typeEmitter;
         }
 
         public void OnProvidersExecuting(ApiDescriptionProviderContext context)
@@ -52,22 +54,22 @@ namespace WebApplication1.Controllers
             {
                 var defaultDescription = defaultDescriptions[action];
                 var methodMetadata = action.GetProperty<MethodMetadata>();
-                var methodName = methodMatcher.GetActionName(methodMetadata);
+                var actionName = methodMatcher.GetActionName(methodMetadata);
 
                 var apiDescription = new ApiDescription()
                 {
                     ActionDescriptor = action,
                     HttpMethod = HttpMethods.Post,
-                    RelativePath = GetUniquePath(defaultDescription.RelativePath, methodName),
+                    RelativePath = GetUniquePath(defaultDescription.RelativePath, actionName),
                     SupportedRequestFormats = {JsonRequestFormat},
                     SupportedResponseTypes =
                     {
                         // more than 1 response type is a complicated scenario (dont know how to deal with it)
-                        WrapResponseType(defaultDescription.SupportedResponseTypes.Single().Type)
+                        WrapResponseType(actionName, defaultDescription.SupportedResponseTypes.Single().Type, methodMetadata)
                     }
                 };
 
-                foreach (var parameterDescription in GetParameterDescriptions(defaultDescription, methodMetadata))
+                foreach (var parameterDescription in GetParameterDescriptions(actionName, defaultDescription, methodMetadata))
                 {
                     apiDescription.ParameterDescriptions.Add(parameterDescription);
                 }
@@ -98,11 +100,11 @@ namespace WebApplication1.Controllers
         /// <summary>
         /// Wrap action response type into Response`T, set content-type application/json and HTTP code 200
         /// </summary>
-        private static ApiResponseType WrapResponseType(Type existingResponseType)
+        private ApiResponseType WrapResponseType(string actionName, Type existingResponseType, MethodMetadata methodMetadata)
         {
             // If method returns void/Task/IActionResult, existingResponseType is null
-            var bodyType = existingResponseType ?? typeof(object);
-            var responseType = typeof(Response<>).MakeGenericType(bodyType);
+            var methodReturnType = existingResponseType ?? typeof(object);
+            var responseType = typeEmitter.CreateModelType(actionName, typeof(Response<>), methodReturnType, new Dictionary<string, Type>(), methodMetadata.MethodOptions.RequestSerializer);
             
             return new ApiResponseType()
             {
@@ -124,12 +126,13 @@ namespace WebApplication1.Controllers
         /// <summary>
         /// Wrap JsonRpc-bound parameters into Request`T. T is compiled dynamically to allow swagger schema generation
         /// </summary>
+        /// <param name="actionName"></param>
         /// <param name="defaultDescription"></param>
         /// <param name="methodMetadata"></param>
         /// <returns></returns>
-        private IEnumerable<ApiParameterDescription> GetParameterDescriptions(ApiDescription defaultDescription, MethodMetadata methodMetadata)
+        private IEnumerable<ApiParameterDescription> GetParameterDescriptions(string actionName, ApiDescription defaultDescription, MethodMetadata methodMetadata)
         {
-            var requestType = GetRequestType(methodMetadata);
+            var requestType = GetRequestType(actionName, methodMetadata);
             var jsonRpcParamsDescription = new ApiParameterDescription()
             {
                 Name = "params",
@@ -155,19 +158,18 @@ namespace WebApplication1.Controllers
         /// <summary>
         /// Generate type which describes whole request object with all parameters bound by json rpc
         /// </summary>
-        /// <param name="defaultDescription"></param>
+        /// <param name="actionName"></param>
         /// <param name="methodMetadata"></param>
         /// <returns></returns>
-        private Type GetRequestType(MethodMetadata methodMetadata)
+        private Type GetRequestType(string actionName, MethodMetadata methodMetadata)
         {
             // TODO we have all info about types and serialization here.
             // TODO how to pass this downstream for proper JSON serialization?
             // emit attributes?
             // use dictionary instead of type?
             // hack downstream schema generator? (still need to pass info?)
-            var serializer = serializers.First(x => x.GetType() == methodMetadata.MethodOptions.RequestSerializer);
-            // TODO свой ISerializerDataContractResolver который выбирает json settings и json contract resolver?
-
+            // TODO свой ISerializerDataContractResolver который выбирает json settings и json contract resolver? или уровнем выше?
+            
 
 
 
@@ -178,32 +180,27 @@ namespace WebApplication1.Controllers
                 .Where(x => x.BindingStyle == BindingStyle.Default)
                 .ToDictionary(x => x.Name.Original, x => x.Type);
 
+            var baseType = typeof(object);
+            
             if (parameterBoundAsArray != null)
             {
-                // return Request<List<T>> (or whatever collection is used)
+                // inherit List<T> (or whatever collection is used)
+                // and ignore other parameters
                 // because other stuff won't bind if its type is different from T
                 // so no difference for user, it is always visible as List<T>
-                return typeof(Request<>).MakeGenericType(parameterBoundAsArray.Type);
-            }
-
-            if (parameterBoundAsObject != null && !parametersBoundByDefault.Any())
-            {
-                // only whole object is bound, return Request<T>
-                return typeof(Request<>).MakeGenericType(parameterBoundAsObject.Type);
+                baseType = parameterBoundAsArray.Type;
+                parametersBoundByDefault.Clear();
             }
 
             if (parameterBoundAsObject != null)
             {
-                // combine default-bound parameters with bound object properties if present
-                foreach (var propertyInfo in parameterBoundAsObject.Type.GetProperties())
-                {
-                    parametersBoundByDefault[propertyInfo.Name] = propertyInfo.PropertyType;
-                }
+                // use existing object as base to preserve property attributes
+                baseType = parameterBoundAsObject.Type;
             }
 
             // compile type with properties corresponding to bound parameters
-            var requestBodyType = modelTypeEmitter.CreateModelType(methodMetadata.Action.Original, parametersBoundByDefault);
-            return typeof(Request<>).MakeGenericType(requestBodyType);
+            // and add attribute with JsonRpcSerializer to be used later
+            return typeEmitter.CreateModelType(actionName, typeof(Request<>), baseType, parametersBoundByDefault, methodMetadata.MethodOptions.RequestSerializer);
         }
 
         /// <summary>
@@ -261,5 +258,28 @@ namespace WebApplication1.Controllers
         }
         */
 
+    }
+
+    public static class ServiceCollectionExtensions
+    {
+        public static IServiceCollection AddSwaggerGenJsonRpcSupport(
+            this IServiceCollection services)
+        {
+            // we still need original contract resolver
+            services.AddTransient(s => new NewtonsoftDataContractResolver(s.GetRequiredService<IOptions<SchemaGeneratorOptions>>().Value, s.GetJsonSerializerSettings() ?? new JsonSerializerSettings()));
+            // override with our service
+            return services.Replace(ServiceDescriptor.Transient<ISerializerDataContractResolver, JsonRpcSerializerDataContractResolverNotUsed>());
+        }
+
+        /// <summary>
+        /// Copy-pasted from swashbuckle library
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        private static JsonSerializerSettings GetJsonSerializerSettings(
+            this IServiceProvider serviceProvider)
+        {
+            return serviceProvider.GetRequiredService<IOptions<MvcJsonOptions>>().Value?.SerializerSettings;
+        }
     }
 }

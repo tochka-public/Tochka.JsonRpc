@@ -26,14 +26,14 @@ namespace WebApplication1.Controllers
             this.apiDescriptionGroupCollectionProvider = apiDescriptionGroupCollectionProvider;
         }
 
-        public string Simple(int a, string b)
+        public string Simple(int firstArg, string secondArg)
         {
-            return $"{a}, {b}";
+            return $"{firstArg}, {secondArg}";
         }
 
-        public string SimpleObject(TestData testData)
+        public string SimpleObject(TestData testDataA, TestData testDataB)
         {
-            return $"{testData.Value}, {testData.AnotherValue}";
+            return $"{testDataA.Value}, {testDataA.AnotherValue}; {testDataB.Value}, {testDataB.AnotherValue}";
         }
 
         public TestData BindObject([FromParams(BindingStyle.Object)] TestData data)
