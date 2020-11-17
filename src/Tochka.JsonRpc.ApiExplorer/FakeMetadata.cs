@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
-namespace WebApplication1.Services
+namespace Tochka.JsonRpc.ApiExplorer
 {
-    public class DumbMetadata : ModelMetadata
+    /// <summary>
+    /// Swagger generator uses ModelMetadata.ModelType so we need to provide it somehow
+    /// </summary>
+    public class FakeMetadata : ModelMetadata
     {
-        public DumbMetadata(ModelMetadataIdentity identity) : base(identity)
+        public FakeMetadata(Type type) : base(ModelMetadataIdentity.ForType(type))
         {
-            Properties = GetProperties(identity);
-        }
-
-        private ModelPropertyCollection GetProperties(ModelMetadataIdentity identity)
-        {
-            var props = identity.ModelType.GetProperties()
-                .Select(x => ModelMetadataIdentity.ForProperty(x.PropertyType, x.Name, x.DeclaringType))
-                .Select(x => new DumbMetadata(x));
-            return new ModelPropertyCollection(props);
         }
 
         public override IReadOnlyDictionary<object, object> AdditionalValues { get; }

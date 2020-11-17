@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using NJsonSchema;
+using NJsonSchema.Generation;
+using NJsonSchema.Generation.SchemaProcessors;
+using NJsonSchema.Infrastructure;
+using WebApplication1.Controllers;
 
 namespace WebApplication1
 {
@@ -19,6 +21,7 @@ namespace WebApplication1
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Trace); })
                 .UseStartup<Startup>();
     }
 }

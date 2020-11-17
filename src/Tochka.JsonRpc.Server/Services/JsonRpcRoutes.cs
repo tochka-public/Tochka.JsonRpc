@@ -23,6 +23,7 @@ namespace Tochka.JsonRpc.Server.Services
             log.LogTrace($"Registered route [{route}]");
         }
 
+        // TODO use TemplateMatcher
         public bool IsJsonRpcRoute(string route) => routes.Contains(route.TrimEnd('/'));
     }
 }

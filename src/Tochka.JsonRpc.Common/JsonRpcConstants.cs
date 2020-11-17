@@ -51,6 +51,11 @@ namespace Tochka.JsonRpc.Common
         public static readonly string ReservedMethodPrefix = "rpc.";
 
         /// <summary>
+        /// "rpc.discover" for OpenRPC Service Discovery
+        /// </summary>
+        public static readonly string ServiceDiscoveryMethod = "rpc.discover";
+
+        /// <summary>
         /// -32000 Server Error. Usually happens on unhandled Exception
         /// </summary>
         public static readonly int ExceptionCode = -32000;
@@ -70,5 +75,16 @@ namespace Tochka.JsonRpc.Common
         /// "application/json" Default content-type expected in JSON Rpc HTTP requests
         /// </summary>
         public static readonly string ContentType = "application/json";
+
+        /// <summary>
+        /// "JsonRpc" Prefix for swagger documents
+        /// </summary>
+        public static readonly string JsonRpcSwaggerPrefix = "JsonRpc";
+
+        /// <summary>
+        /// "REST" Swagger document name for non-JsonRpc actions
+        /// </summary>
+        public const string DefaultSwaggerDoc = "rest";
+
     }
 }

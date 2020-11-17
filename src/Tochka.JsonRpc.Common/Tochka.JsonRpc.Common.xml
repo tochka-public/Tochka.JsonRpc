@@ -69,6 +69,11 @@
             "rpc." Specification restricts use of methods with this prefix
             </summary>
         </member>
+        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.ServiceDiscoveryMethod">
+            <summary>
+            "rpc.discover" for OpenRPC Service Discovery
+            </summary>
+        </member>
         <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.ExceptionCode">
             <summary>
             -32000 Server Error. Usually happens on unhandled Exception
@@ -88,6 +93,16 @@
         <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.ContentType">
             <summary>
             "application/json" Default content-type expected in JSON Rpc HTTP requests
+            </summary>
+        </member>
+        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.JsonRpcSwaggerPrefix">
+            <summary>
+            "JsonRpc" Prefix for swagger documents
+            </summary>
+        </member>
+        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.DefaultSwaggerDoc">
+            <summary>
+            "REST" Swagger document name for non-JsonRpc actions
             </summary>
         </member>
         <member name="P:Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall.RawJson">
