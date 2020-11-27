@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.ApiExplorer
+namespace Tochka.JsonRpc.ApiExplorer
 {
     public static class ApiExplorerConstants
     {

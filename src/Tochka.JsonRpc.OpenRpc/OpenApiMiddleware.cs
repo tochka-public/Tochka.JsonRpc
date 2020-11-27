@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +38,7 @@ namespace Tochka.JsonRpc.OpenRpc
 
         private async Task ReturnDocument(HttpContext httpContext, OpenRpcGenerator openRpcGenerator, string documentName)
         {
+            // TODO протестить правильно ли собирается урл из запроса через middleware в servers
             var host = new UriBuilder(httpContext.Request.GetEncodedUrl())
             {
                 Path = null,

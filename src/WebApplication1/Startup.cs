@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,8 +21,8 @@ using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.OpenRpc;
 using Tochka.JsonRpc.Server;
+using Tochka.JsonRpc.Swagger;
 using WebApplication1.Controllers;
-using WebApplication1.Services;
 
 namespace WebApplication1
 {
@@ -34,7 +34,7 @@ namespace WebApplication1
         }
 
         public IConfiguration Configuration { get; }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
@@ -42,34 +42,17 @@ namespace WebApplication1
                 {
                     options.DetailedResponseExceptions = true;
                     options.AllowRawResponses = true;
-
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSwaggerGenWithJsonRpc();
             services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
-
-            services.AddTransient<ContentDescriptorGenerator>();
-            services.AddTransient<OpenRpcGenerator>();
-            services.Configure<OpenRpcOptions>(options =>
-            {
-                options.Docs.Add("test", new OpenApiInfo()
-                {
-                    Description = "alala",
-                    Title = "title",
-                    Version = "42"
-                });
-            });
+            services.AddSwaggerWithJsonRpc();
+            services.AddOpenRpc();
+            services.AddDefaultOpenRpcDocument(Configuration);
         }
         
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // TODO разбить на документы по сериализаторам, как со сваггером
-            // TODO урл протестить в servers
-            // TODO оверрайднутые урлы пробрасывать в method.servers
-            app.UseMiddleware<OpenApiMiddleware>();
-            app.UseSwagger();
-            app.UseSwaggerUiWithJsonRpc();
             app.UseMvc();
         }
     }

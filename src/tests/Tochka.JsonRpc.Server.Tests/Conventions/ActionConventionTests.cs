@@ -118,7 +118,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             var methodStyle = MethodStyle.ActionOnly;
             var attributes = new List<object>
             {
-                new Mock<JsonRpcSerializerAttribute>(serializerType).Object,
+                new Mock<JsonRpcTypeInfoAttribute>(serializerType).Object,
                 new Mock<RouteAttribute>(route.Value).Object,
                 new Mock<JsonRpcMethodStyleAttribute>(methodStyle).Object,
             };
@@ -144,7 +144,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             var methodStyle = MethodStyle.ActionOnly;
             var attributes = new List<object>
             {
-                new Mock<JsonRpcSerializerAttribute>(serializerType).Object,
+                new Mock<JsonRpcTypeInfoAttribute>(serializerType).Object,
                 new Mock<RouteAttribute>(route.Value).Object,
                 new Mock<JsonRpcMethodStyleAttribute>(methodStyle).Object,
             };

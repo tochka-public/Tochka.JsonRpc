@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Models.Binding;

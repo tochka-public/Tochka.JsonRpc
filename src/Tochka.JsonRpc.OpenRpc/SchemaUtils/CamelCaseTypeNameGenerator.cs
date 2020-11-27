@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NJsonSchema;
 
 namespace Tochka.JsonRpc.OpenRpc.SchemaUtils

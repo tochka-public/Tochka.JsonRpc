@@ -37,5 +37,5 @@
         "prepareCmd": "echo ${nextRelease.version}",
         "successCmd": "echo ${nextRelease.version} > VERSION && echo ${nextRelease.version.replace(/\\.\\d+\\.\\d+$/, '')} > MAJOR_VERSION && echo ${nextRelease.version.replace(/\\.\\d+$/, '')} > MINOR_VERSION"
       }
-    ]  ]
+    ]  ]
 }

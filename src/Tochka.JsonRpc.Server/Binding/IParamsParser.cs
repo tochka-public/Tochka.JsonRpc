@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Models.Binding;
 

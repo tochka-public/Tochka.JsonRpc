@@ -1,4 +1,4 @@
-﻿using Tochka.JsonRpc.Common.Models.Request.Untyped;
+using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Common.Models.Request

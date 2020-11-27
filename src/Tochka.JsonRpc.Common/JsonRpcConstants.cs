@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tochka.JsonRpc.Common
 {
@@ -26,10 +26,20 @@ namespace Tochka.JsonRpc.Common
         public static readonly string ControllerMethodSeparator = ".";
 
         /// <summary>
-        /// "id" JSON property to look for Id in single request
+        /// "id" JSON property to look for Id in single request/response
         /// </summary>
         public static readonly string IdProperty = "id";
+        
+        /// <summary>
+        /// "jsonrpc" JSON property to look for version in single request/response
+        /// </summary>
+        public static readonly string JsonrpcVersionProperty = "jsonrpc";
 
+        /// <summary>
+        /// "method" JSON property to look for method in single request
+        /// </summary>
+        public static readonly string MethodProperty = "method";
+        
         /// <summary>
         /// "result" JSON property to look for successful response data in single response
         /// </summary>
@@ -77,9 +87,9 @@ namespace Tochka.JsonRpc.Common
         public static readonly string ContentType = "application/json";
 
         /// <summary>
-        /// "JsonRpc" Prefix for swagger documents
+        /// "JsonRpc" Prefix for documents like Swagger and OpenRpc
         /// </summary>
-        public static readonly string JsonRpcSwaggerPrefix = "JsonRpc";
+        public static readonly string ApiDocumentName = "jsonrpc";
 
         /// <summary>
         /// "REST" Swagger document name for non-JsonRpc actions

@@ -3,10 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <Title>assembly_title</Title>
+    <Description>assembly_description</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\vault\tochka\Tochka.JsonRpc\src\WebApplication1\WebApplication1.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\WebApplication1.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 

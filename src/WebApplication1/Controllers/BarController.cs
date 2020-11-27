@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Settings;
 

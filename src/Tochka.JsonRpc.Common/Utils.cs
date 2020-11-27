@@ -1,14 +1,22 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Common
 {
     public static class Utils
     {
-        public static string GetSwaggerFriendlyDocumentName(Type serializerType)
+        public static string GetSwaggerFriendlyDocumentName(Type serializerType, Type defaultSerializer)
         {
-            return $"{JsonRpcConstants.JsonRpcSwaggerPrefix}_{serializerType.Name.Replace("JsonRpcSerializer", string.Empty)}".ToLowerInvariant();
+            // use simple name for document with default configured serializer
+            // TODO: is it possible to get from actual settings?
+            if (serializerType == defaultSerializer)
+            {
+                return JsonRpcConstants.ApiDocumentName.ToLowerInvariant();
+            }
+
+            return $"{JsonRpcConstants.ApiDocumentName}_{serializerType.Name.Replace("JsonRpcSerializer", string.Empty)}".ToLowerInvariant();
         }
 
         public static bool IsCollection(Type type)

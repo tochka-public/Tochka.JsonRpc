@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -37,7 +37,7 @@ namespace Tochka.JsonRpc.ApiExplorer
 
                 var bodyType = GetBodyType(bodyTypeName, baseBodyType, properties);
                 var requestType = typeof(Request<>).MakeGenericType(bodyType);
-                return GenerateTypeWithSerializerAttribute(requestTypeName, requestType, jsonRpcRequestSerializer);
+                return GenerateTypeWithAttributes(requestTypeName, requestType, jsonRpcRequestSerializer, actionName);
             }
         }
 
@@ -47,7 +47,7 @@ namespace Tochka.JsonRpc.ApiExplorer
             {
                 var responseTypeName = $"{actionName}Response".Replace('.', '_').Replace('`', '_');
                 var responseType = typeof(Response<>).MakeGenericType(bodyType);
-                return GenerateTypeWithSerializerAttribute(responseTypeName, responseType, jsonRpcRequestSerializer);
+                return GenerateTypeWithAttributes(responseTypeName, responseType, jsonRpcRequestSerializer, actionName);
             }
         }
 
@@ -111,13 +111,13 @@ namespace Tochka.JsonRpc.ApiExplorer
         /// Create new type with attribute
         /// </summary>
         /// <returns></returns>
-        private Type GenerateTypeWithSerializerAttribute(string name, Type baseType, Type jsonRpcRequestSerializer)
+        private Type GenerateTypeWithAttributes(string name, Type baseType, Type jsonRpcRequestSerializer, string actionName)
         {
             var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseType);
 
-            var attrType = typeof(JsonRpcSerializerAttribute);
-            var attrConstructor = attrType.GetConstructor(new []{ typeof(Type) });
-            var attrParams = new object[] {jsonRpcRequestSerializer};
+            var attrType = typeof(JsonRpcTypeInfoAttribute);
+            var attrConstructor = attrType.GetConstructor(new []{ typeof(Type), typeof(string) });
+            var attrParams = new object[] {jsonRpcRequestSerializer, actionName};
             var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams);
             typeBuilder.SetCustomAttribute(attrBuilder);
 

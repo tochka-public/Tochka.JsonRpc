@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -57,8 +57,8 @@ namespace Tochka.JsonRpc.OpenRpc
                 Name = id,
                 Schema = schema,
                 Required = isRequired,
-                Description = type.GetDescription(),
-                Summary = type.GetXmlDocsSummary(),
+                Description = type.GetDescription(),  // TODO пробросить из action-а, или нет?
+                Summary = type.GetXmlDocsSummary(),  // TODO пробросить из action-а, или нет?
                 Deprecated = type.GetAttribute<ObsoleteAttribute>() != null
             };
             return contentDescriptor;

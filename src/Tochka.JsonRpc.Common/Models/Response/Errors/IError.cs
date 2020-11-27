@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Common.Models.Response.Errors
+namespace Tochka.JsonRpc.Common.Models.Response.Errors
 {
     public interface IError
     {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Server.Settings

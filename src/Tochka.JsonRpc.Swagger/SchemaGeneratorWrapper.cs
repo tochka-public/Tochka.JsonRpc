@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server.Attributes;
 
-namespace WebApplication1.Services
+namespace Tochka.JsonRpc.Swagger
 {
     public class SchemaGeneratorWrapper : ISchemaGenerator
     {
@@ -25,7 +25,7 @@ namespace WebApplication1.Services
 
         public OpenApiSchema GenerateSchema(Type type, SchemaRepository schemaRepository, MemberInfo memberInfo = null, ParameterInfo parameterInfo = null)
         {
-            var serializerType = type.GetCustomAttribute<JsonRpcSerializerAttribute>()?.SerializerType;
+            var serializerType = type.GetCustomAttribute<JsonRpcTypeInfoAttribute>()?.SerializerType;
             var resolver = GetResolver(serializerType);
             var generator = new SchemaGenerator(generatorOptions, resolver);
             return generator.GenerateSchema(type, schemaRepository, memberInfo, parameterInfo);

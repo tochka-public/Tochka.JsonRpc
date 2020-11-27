@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Services;
@@ -47,8 +48,9 @@ namespace Tochka.JsonRpc.ApiExplorer
                 var originalDescription = existingDescriptions[action];
                 var methodMetadata = action.GetProperty<MethodMetadata>();
                 var actionName = methodMatcher.GetActionName(methodMetadata);
+                // TODO use options
+                var defaultSerializerType = typeof(SnakeCaseJsonRpcSerializer);
 
-                
                 var apiDescription = new ApiDescription()
                 {
                     ActionDescriptor = action,
@@ -63,12 +65,12 @@ namespace Tochka.JsonRpc.ApiExplorer
                         // Single because more than 1 response type is a complicated scenario, don't know how to deal with it
                         WrapResponseType(actionName, originalDescription.SupportedResponseTypes.SingleOrDefault()?.Type, methodMetadata)
                     },
-                    GroupName = Utils.GetSwaggerFriendlyDocumentName(methodMetadata.MethodOptions.RequestSerializer),
+                    GroupName = Utils.GetSwaggerFriendlyDocumentName(methodMetadata.MethodOptions.RequestSerializer, defaultSerializerType),
                     Properties =
                     {
                         [ApiExplorerConstants.ActionNameProperty] = actionName,
                     }
-            };
+                };
 
                 foreach (var parameterDescription in GetParameterDescriptions(actionName, originalDescription, methodMetadata))
                 {

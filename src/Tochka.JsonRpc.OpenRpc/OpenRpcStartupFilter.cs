@@ -2,18 +2,18 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Tochka.JsonRpc.Server.Pipeline
+namespace Tochka.JsonRpc.OpenRpc
 {
     /// <summary>
-    /// Registers JSON Rpc middleware at the beginning of the pipeline
+    /// Registers OpenRpc middleware at the beginning of the pipeline
     /// </summary>
-    public class JsonRpcStartupFilter : IStartupFilter
+    public class OpenRpcStartupFilter : IStartupFilter
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
             return builder =>
             {
-                builder.UseMiddleware<JsonRpcMiddleware>();
+                builder.UseMiddleware<OpenApiMiddleware>();
                 next(builder);
             };
         }

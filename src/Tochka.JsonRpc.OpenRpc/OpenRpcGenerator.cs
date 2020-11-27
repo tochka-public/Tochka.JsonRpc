@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -21,7 +21,6 @@ namespace Tochka.JsonRpc.OpenRpc
         private readonly ContentDescriptorGenerator contentDescriptorGenerator;
         private readonly OpenRpcOptions options;
         private readonly JsonRpcOptions jsonRpcOptions;
-
 
         public OpenRpcGenerator(IOptions<JsonRpcOptions> jsorRpcOptions, IOptions<OpenRpcOptions> options,IApiDescriptionGroupCollectionProvider apiDescriptionsProvider, ContentDescriptorGenerator contentDescriptorGenerator)
         {
@@ -57,7 +56,7 @@ namespace Tochka.JsonRpc.OpenRpc
             {
                 // this is used to determine $ref path
                 // TODO document or document.Components? both work...
-                schema.Value.Parent = document.Components;
+                schema.Value.Parent = document;
             }
 
             // this actually creates $ref values

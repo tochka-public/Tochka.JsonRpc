@@ -1,23 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Newtonsoft;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Serializers;
 
-namespace WebApplication1.Services
+namespace Tochka.JsonRpc.Swagger
 {
     public static class Extensions
     {
@@ -29,41 +26,48 @@ namespace WebApplication1.Services
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSwaggerGenWithJsonRpc(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services)
         {
-            services.AddSingleton<ITypeEmitter, TypeEmitter>();
-            services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
-            services.AddTransient<ISchemaGenerator, SchemaGeneratorWrapper>();
+            // TODO add options lambda
+            services.TryAddSingleton<ITypeEmitter, TypeEmitter>();
+            if (services.All(x => x.ImplementationType != typeof(JsonRpcDescriptionProvider)))
+            {
+                services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
+            }
+
+            services.TryAddTransient<ISchemaGenerator, SchemaGeneratorWrapper>();
 
             services.AddSwaggerGen(options =>
             {
-                options.SchemaFilter<CommonPropertiesFilter>();
+                options.SchemaFilter<CommonJsonRpcPropertiesFilter>();
                 options.DocInclusionPredicate(DocumentSelector);
                 // TODO add options to skip this if user wants to customize?
-                options.SwaggerDoc(JsonRpcConstants.DefaultSwaggerDoc, new OpenApiInfo { Title = $"{JsonRpcConstants.DefaultSwaggerDoc}", Version = "v1" });
+                options.SwaggerDoc(JsonRpcConstants.DefaultSwaggerDoc, new OpenApiInfo {Title = $"{JsonRpcConstants.DefaultSwaggerDoc}", Version = "v1"});
 
                 var registeredSerializers = services
-                    .Where(x => 
-                        x.Lifetime == ServiceLifetime.Singleton 
-                        && x.ServiceType.IsAssignableTo(typeof(IJsonRpcSerializer))
-                        )
+                    .Where(x =>
+                        x.Lifetime == ServiceLifetime.Singleton
+                        && typeof(IJsonRpcSerializer).IsAssignableFrom(x.ServiceType)
+                    )
                     .Select(x => x.ImplementationType)
-                    .Distinct();
+                    .Distinct()
+                    .ToHashSet();
+                // skip this because no API should be actually using it
+                registeredSerializers.Remove(typeof(HeaderJsonRpcSerializer));
                 foreach (var serializerType in registeredSerializers)
                 {
-                    // skip this because no API should be actually using it
-                    if (serializerType == typeof(HeaderJsonRpcSerializer))
-                    {
-                        continue;
-                    }
-
-                    var name = Utils.GetSwaggerFriendlyDocumentName(serializerType);
-                    options.SwaggerDoc(name, new OpenApiInfo { Title = name, Version = "v1" });
+                    var name = Utils.GetSwaggerFriendlyDocumentName(serializerType, DefaultSerializer);
+                    options.SwaggerDoc(name, new OpenApiInfo {Title = name, Version = "v1"});
                 }
+
                 // TODO add doc for current application assembly by default? for all user assemblies? how?
-                // TODO add options lambda
+                var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+
             });
             services.AddSwaggerGenNewtonsoftSupport();
+            services.AddSingleton<IStartupFilter, SwaggerUiWithJsonRpcStartupFilter>();
             return services;
         }
 
@@ -74,13 +78,15 @@ namespace WebApplication1.Services
                 return docName.Equals(JsonRpcConstants.DefaultSwaggerDoc, StringComparison.InvariantCultureIgnoreCase);
             }
 
-            if (description.GroupName.StartsWith(JsonRpcConstants.JsonRpcSwaggerPrefix, StringComparison.InvariantCultureIgnoreCase))
+            if (description.GroupName.StartsWith(JsonRpcConstants.ApiDocumentName, StringComparison.InvariantCultureIgnoreCase))
             {
                 return docName.Equals(description.GroupName, StringComparison.InvariantCultureIgnoreCase);
             }
 
             return false;
         }
+
+        private static readonly Type DefaultSerializer = typeof(SnakeCaseJsonRpcSerializer);
 
         public static IApplicationBuilder UseSwaggerUiWithJsonRpc(this IApplicationBuilder app)
         {
@@ -99,13 +105,12 @@ namespace WebApplication1.Services
                         continue;
                     }
 
-                    var name = Utils.GetSwaggerFriendlyDocumentName(serializerType);
+                    var name = Utils.GetSwaggerFriendlyDocumentName(serializerType, DefaultSerializer);
                     c.SwaggerEndpoint($"/swagger/{name}/swagger.json", $"{name}");
                 }
             });
 
             return app;
         }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NJsonSchema.Generation;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server;

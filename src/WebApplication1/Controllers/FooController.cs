@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -18,6 +18,16 @@ namespace WebApplication1.Controllers
 {
     public class FooController : JsonRpcController
     {
+        /// <summary>
+        /// Simple.Summary~
+        /// </summary>
+        /// <param name="firstArg">Simple.Param1~</param>
+        /// <param name="secondArg">Simple.Param2~</param>
+        /// <returns>Simple.Returns~</returns>
+        /// <remarks>Simple.Remarks~</remarks>
+        /// <example>Simple.Example~</example>
+        /// <response code="222">Simple.Response222~</response>
+        /// <response code="200">Values2.Response200~</response>
         public string Simple(int firstArg, string secondArg)
         {
             return $"{firstArg}, {secondArg}";
@@ -33,6 +43,7 @@ namespace WebApplication1.Controllers
             return data;
         }
 
+        /*
         [JsonRpcSerializer(typeof(SnakeCaseJsonRpcSerializer))]
         public TestData BindObjectSnake([FromParams(BindingStyle.Object)] TestData data)
         {
@@ -60,10 +71,20 @@ namespace WebApplication1.Controllers
         {
             return values;
         }
+        */
 
+        /// <summary>
+        /// TestData.Summary~
+        /// </summary>
+        /// <remarks>TestData.Remarks~</remarks>
+        /// <example>TestData.Example~</example>
         public class TestData
         {
-            
+            /// <summary>
+            /// TestData.Value.Summary~
+            /// </summary>
+            /// <remarks>TestData.Value.Remarks~</remarks>
+            /// <example>99999~</example>
             public int Value { get; set; }
             public string AnotherValue { get; set; }
             public NestedClass Prop1 { get; set; }
