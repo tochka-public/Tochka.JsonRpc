@@ -76,26 +76,6 @@ namespace Tochka.JsonRpc.Client.Tests
         }
 
         [Test]
-        public void Test_GetBaseAddress_ReturnsUri()
-        {
-            var value = "http://foo.bar/";
-            var expected = new Uri(value);
-
-            var result = clientMock.Object.GetBaseAddress(value);
-
-            result.Should().Be(expected);
-        }
-
-        [Test]
-        public void Test_GetBaseAddress_ThrowsOnNoTrailingSlash()
-        {
-            var value = "http://foo.bar";
-            Action action = () => clientMock.Object.GetBaseAddress(value);
-
-            action.Should().Throw<ArgumentException>();
-        }
-
-        [Test]
         public async Task Test_SendNotification1_ChainsToActualMehtod()
         {
             var notification = new Notification<object>();
