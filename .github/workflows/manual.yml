@@ -1,4 +1,4 @@
-name: Release nuget package
+name: Manual Release nuget package
 
 on: [workflow_dispatch]
 
