@@ -47,7 +47,7 @@ namespace WebApplication1
             services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
             services.AddSwaggerWithJsonRpc();
             services.AddOpenRpc();
-            services.AddDefaultOpenRpcDocument(Configuration);
+            services.AddDefaultOpenRpcDocument();
         }
         
 

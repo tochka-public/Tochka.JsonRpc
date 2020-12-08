@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -28,14 +31,14 @@ namespace Tochka.JsonRpc.ApiExplorer
             moduleBuilder = assemblyBuilder.DefineDynamicModule(AssemblyId);
         }
 
-        public Type CreateRequestType(string actionName, Type baseBodyType, IReadOnlyDictionary<string, Type> properties, Type jsonRpcRequestSerializer)
+        public Type CreateRequestType(string actionName, Type baseBodyType, IReadOnlyDictionary<string, Type> properties, Type jsonRpcRequestSerializer, XElement actionXmlDoc)
         {
             lock (lockObject)
             {
                 var bodyTypeName = $"{actionName}Params".Replace('.', '_').Replace('`', '_');
                 var requestTypeName = $"{actionName}Request".Replace('.', '_').Replace('`', '_');
 
-                var bodyType = GetBodyType(bodyTypeName, baseBodyType, properties);
+                var bodyType = GetBodyType(bodyTypeName, baseBodyType, properties, actionXmlDoc);
                 var requestType = typeof(Request<>).MakeGenericType(bodyType);
                 return GenerateTypeWithAttributes(requestTypeName, requestType, jsonRpcRequestSerializer, actionName);
             }
@@ -55,7 +58,7 @@ namespace Tochka.JsonRpc.ApiExplorer
         /// Combine multiple arguments into one type or use type directly if impossible to create descendant
         /// </summary>
         /// <returns></returns>
-        private Type GetBodyType(string name, Type baseBodyType, IReadOnlyDictionary<string, Type> properties)
+        private Type GetBodyType(string name, Type baseBodyType, IReadOnlyDictionary<string, Type> properties, XElement actionXmlDoc)
         {
             // Can't inherit from sealed, don't want to deal with valuetypes, default public constructor required
             if (baseBodyType.IsSealed || baseBodyType.IsValueType || baseBodyType.GetConstructor(Type.EmptyTypes) == null)
@@ -76,13 +79,14 @@ namespace Tochka.JsonRpc.ApiExplorer
             var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseBodyType);
             foreach (var property in properties)
             {
-                CreateProperty(typeBuilder, property.Key, property.Value);
+                var description = GetXmlParam(actionXmlDoc, property.Key);
+                CreateProperty(typeBuilder, property.Key, property.Value, description);
             }
 
             return typeBuilder.CreateType();
         }
 
-        private void CreateProperty(TypeBuilder typeBuilder, string propertyName, Type propertyType)
+        private void CreateProperty(TypeBuilder typeBuilder, string propertyName, Type propertyType, string description)
         {
             var fieldName = $"_{propertyName}";
             var fieldBuilder = typeBuilder.DefineField(fieldName, propertyType, FieldAttributes.Private);
@@ -105,6 +109,14 @@ namespace Tochka.JsonRpc.ApiExplorer
             var propertyBuilder = typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
             propertyBuilder.SetGetMethod(getMethodBuilder);
             propertyBuilder.SetSetMethod(setMethodBuilder);
+
+            var attrType = typeof(DisplayAttribute);
+            var attrConstructor = attrType.GetConstructor(Type.EmptyTypes);
+            var attrParams = new object[] {};
+            var props = new PropertyInfo[] { attrType.GetProperty(nameof(DisplayAttribute.Description)) };
+            var propValues = new object[] { description };
+            var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams, props, propValues);
+            propertyBuilder.SetCustomAttribute(attrBuilder);
         }
 
         /// <summary>
@@ -124,6 +136,15 @@ namespace Tochka.JsonRpc.ApiExplorer
             return typeBuilder.CreateType();
         }
 
-        
+        /// <summary>
+        /// Finds "param" xmldoc for given name
+        /// </summary>
+        /// <param name="actionXmlDoc"></param>
+        /// <param name="paramName"></param>
+        /// <returns></returns>
+        private string GetXmlParam(XElement actionXmlDoc, string paramName)
+        {
+            return actionXmlDoc?.Elements("param").FirstOrDefault(x => x.Attributes().Any(a => a.Name == "name" && a.Value == paramName))?.Value ?? string.Empty;
+        }
     }
 }

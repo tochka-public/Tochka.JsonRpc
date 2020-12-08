@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using NJsonSchema;
 using NJsonSchema.Generation;
 using Tochka.JsonRpc.Common.Serializers;
@@ -17,7 +19,8 @@ namespace Tochka.JsonRpc.OpenRpc.SchemaUtils
                 DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull,
                 SerializerSettings = jsonRpcSerializer.Settings,
                 SchemaNameGenerator = new NameGenerator(jsonRpcSerializer),
-                TypeNameGenerator = new CamelCaseTypeNameGenerator()
+                TypeNameGenerator = new CamelCaseTypeNameGenerator(),
+                GenerateExamples = true
             };
             Resolver = new JsonSchemaResolver(root, settings);
             Generator = new JsonSchemaGenerator(settings);

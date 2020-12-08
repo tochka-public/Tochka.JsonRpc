@@ -14,7 +14,7 @@ namespace Tochka.JsonRpc.OpenRpc.SchemaUtils
         public JsonSchema GenerateSchema(ContextualType type, IJsonRpcSerializer serializer)
         {
             var item = GetOrAdd(serializer);
-            item.Generate(type);  // if first time will return schema itself, we don't need that
+            item.Generate(type);  // if called first time, will return schema itself, we don't need that
             return item.Generate(type);  // will always return reference
         }
 

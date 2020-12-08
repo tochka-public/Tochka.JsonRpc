@@ -5,6 +5,7 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Serializers;
@@ -12,6 +13,9 @@ using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
+using Namotion.Reflection;
+using System.Xml.Linq;
+using Microsoft.Extensions.Options;
 
 namespace Tochka.JsonRpc.ApiExplorer
 {
@@ -22,11 +26,13 @@ namespace Tochka.JsonRpc.ApiExplorer
     {
         private readonly IMethodMatcher methodMatcher;
         private readonly ITypeEmitter typeEmitter;
+        private readonly JsonRpcOptions options;
 
-        public JsonRpcDescriptionProvider(IMethodMatcher methodMatcher, ITypeEmitter typeEmitter)
+        public JsonRpcDescriptionProvider(IMethodMatcher methodMatcher, ITypeEmitter typeEmitter, IOptions<JsonRpcOptions> options)
         {
             this.methodMatcher = methodMatcher;
             this.typeEmitter = typeEmitter;
+            this.options = options.Value;
         }
 
         public void OnProvidersExecuting(ApiDescriptionProviderContext context)
@@ -46,10 +52,10 @@ namespace Tochka.JsonRpc.ApiExplorer
             foreach (var action in jsonRpcActions)
             {
                 var originalDescription = existingDescriptions[action];
+                var actionXmlDoc = (originalDescription.ActionDescriptor as ControllerActionDescriptor).MethodInfo.GetXmlDocsElement();
                 var methodMetadata = action.GetProperty<MethodMetadata>();
                 var actionName = methodMatcher.GetActionName(methodMetadata);
-                // TODO use options
-                var defaultSerializerType = typeof(SnakeCaseJsonRpcSerializer);
+                var defaultSerializerType = options.DefaultMethodOptions.RequestSerializer;
 
                 var apiDescription = new ApiDescription()
                 {
@@ -72,7 +78,7 @@ namespace Tochka.JsonRpc.ApiExplorer
                     }
                 };
 
-                foreach (var parameterDescription in GetParameterDescriptions(actionName, originalDescription, methodMetadata))
+                foreach (var parameterDescription in GetParameterDescriptions(actionName, originalDescription, methodMetadata, actionXmlDoc))
                 {
                     apiDescription.ParameterDescriptions.Add(parameterDescription);
                 }
@@ -117,9 +123,9 @@ namespace Tochka.JsonRpc.ApiExplorer
         /// <param name="defaultDescription"></param>
         /// <param name="methodMetadata"></param>
         /// <returns></returns>
-        private IEnumerable<ApiParameterDescription> GetParameterDescriptions(string actionName, ApiDescription defaultDescription, MethodMetadata methodMetadata)
+        private IEnumerable<ApiParameterDescription> GetParameterDescriptions(string actionName, ApiDescription defaultDescription, MethodMetadata methodMetadata, XElement actionXmlDoc)
         {
-            var requestType = GetRequestType(actionName, methodMetadata);
+            var requestType = GetRequestType(actionName, methodMetadata, actionXmlDoc);
             var jsonRpcParamsDescription = new ApiParameterDescription()
             {
                 Name = "params",
@@ -148,7 +154,7 @@ namespace Tochka.JsonRpc.ApiExplorer
         /// <param name="actionName"></param>
         /// <param name="methodMetadata"></param>
         /// <returns></returns>
-        private Type GetRequestType(string actionName, MethodMetadata methodMetadata)
+        private Type GetRequestType(string actionName, MethodMetadata methodMetadata, XElement actionXmlDoc)
         {
             var parameterBoundAsObject = methodMetadata.Parameters.Values.FirstOrDefault(x => x.BindingStyle == BindingStyle.Object);
             var parameterBoundAsArray = methodMetadata.Parameters.Values.FirstOrDefault(x => x.BindingStyle == BindingStyle.Array);
@@ -174,7 +180,7 @@ namespace Tochka.JsonRpc.ApiExplorer
 
             // compile type with properties corresponding to bound parameters
             // and add attribute with JsonRpcSerializer to be used later
-            return typeEmitter.CreateRequestType(actionName, baseType, parametersBoundByDefault, methodMetadata.MethodOptions.RequestSerializer);
+            return typeEmitter.CreateRequestType(actionName, baseType, parametersBoundByDefault, methodMetadata.MethodOptions.RequestSerializer, actionXmlDoc);
         }
 
         /// <summary>

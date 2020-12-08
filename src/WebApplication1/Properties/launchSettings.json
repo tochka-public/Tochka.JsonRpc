@@ -3,7 +3,7 @@
   "profiles": {
     "WebApplication1": {
       "commandName": "Project",
-      "applicationUrl": "https://*:5001;http://*:5000",
+      "applicationUrl": "https://0.0.0.0:5001;http://0.0.0.0:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

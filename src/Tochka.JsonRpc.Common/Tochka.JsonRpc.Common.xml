@@ -46,7 +46,17 @@
         </member>
         <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.IdProperty">
             <summary>
-            "id" JSON property to look for Id in single request
+            "id" JSON property to look for Id in single request/response
+            </summary>
+        </member>
+        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.JsonrpcVersionProperty">
+            <summary>
+            "jsonrpc" JSON property to look for version in single request/response
+            </summary>
+        </member>
+        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.MethodProperty">
+            <summary>
+            "method" JSON property to look for method in single request
             </summary>
         </member>
         <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.ResultProperty">
@@ -95,9 +105,9 @@
             "application/json" Default content-type expected in JSON Rpc HTTP requests
             </summary>
         </member>
-        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.JsonRpcSwaggerPrefix">
+        <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.ApiDocumentName">
             <summary>
-            "JsonRpc" Prefix for swagger documents
+            "JsonRpc" Prefix for documents like Swagger and OpenRpc
             </summary>
         </member>
         <member name="F:Tochka.JsonRpc.Common.JsonRpcConstants.DefaultSwaggerDoc">

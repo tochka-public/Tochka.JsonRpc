@@ -10,7 +10,7 @@ namespace Tochka.JsonRpc.Common
         public static string GetSwaggerFriendlyDocumentName(Type serializerType, Type defaultSerializer)
         {
             // use simple name for document with default configured serializer
-            // TODO: is it possible to get from actual settings?
+            // TODO: is it possible to get from Configuration?
             if (serializerType == defaultSerializer)
             {
                 return JsonRpcConstants.ApiDocumentName.ToLowerInvariant();

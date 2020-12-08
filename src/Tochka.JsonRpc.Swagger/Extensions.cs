@@ -52,7 +52,7 @@ namespace Tochka.JsonRpc.Swagger
                     .Select(x => x.ImplementationType)
                     .Distinct()
                     .ToHashSet();
-                // skip this because no API should be actually using it
+                // skipping this because no API should be actually using it
                 registeredSerializers.Remove(typeof(HeaderJsonRpcSerializer));
                 foreach (var serializerType in registeredSerializers)
                 {
@@ -60,7 +60,6 @@ namespace Tochka.JsonRpc.Swagger
                     options.SwaggerDoc(name, new OpenApiInfo {Title = name, Version = "v1"});
                 }
 
-                // TODO add doc for current application assembly by default? for all user assemblies? how?
                 var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);

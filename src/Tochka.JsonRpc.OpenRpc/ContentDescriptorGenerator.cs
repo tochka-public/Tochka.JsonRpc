@@ -57,8 +57,8 @@ namespace Tochka.JsonRpc.OpenRpc
                 Name = id,
                 Schema = schema,
                 Required = isRequired,
-                Description = type.GetDescription(),  // TODO пробросить из action-а, или нет?
-                Summary = type.GetXmlDocsSummary(),  // TODO пробросить из action-а, или нет?
+                Description = type.GetXmlDocsRemarks(),  // dont get confused: Description is taken from "remarks" tag;
+                Summary = type.GetDescription(),  // Summary is taken from attributes or "summary" tag (method should be named "GetSummary"?)
                 Deprecated = type.GetAttribute<ObsoleteAttribute>() != null
             };
             return contentDescriptor;

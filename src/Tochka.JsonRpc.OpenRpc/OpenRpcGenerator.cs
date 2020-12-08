@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Namotion.Reflection;
@@ -77,6 +78,7 @@ namespace Tochka.JsonRpc.OpenRpc
 
         private Method GetMethod(ApiDescription apiDescription, Uri host, string defaultRoute)
         {
+            var methodInfo = (apiDescription.ActionDescriptor as ControllerActionDescriptor).MethodInfo;
             var methodMetadata = apiDescription.ActionDescriptor.GetProperty<MethodMetadata>();
             var maybeOverrideServers = methodMetadata.MethodOptions.Route != defaultRoute
                 ? GetServers(host, methodMetadata.MethodOptions.Route)
@@ -86,13 +88,13 @@ namespace Tochka.JsonRpc.OpenRpc
                 Name = apiDescription.Properties[ApiExplorerConstants.ActionNameProperty] as string,
                 Deprecated = apiDescription.IsObsoleteTransitive(),
                 Servers = maybeOverrideServers,
-                Summary = null, // TODO как? атрибуты? подсмотреть в сваггер
-                Description = null, // TODO как? атрибуты? подсмотреть в сваггер
-                Links = null, // TODO как? атрибуты? подсмотреть в сваггер
-                ExternalDocs = null, // TODO как? атрибуты? подсмотреть в сваггер
-                Tags = null, // TODO как? атрибуты? подсмотреть в сваггер
-                Examples = null, // TODO как? атрибуты? подсмотреть в сваггер
-                Errors = null, // TODO как? атрибуты? подсмотреть в сваггер
+                Summary = methodInfo.GetXmlDocsSummary(),
+                Description = methodInfo.GetXmlDocsRemarks(),
+                Links = null,
+                ExternalDocs = null,
+                Tags = null,
+                Examples = null,
+                Errors = null,
                 ParamStructure = GetParamStructure(methodMetadata),
                 Result = GetResultContentDescriptor(apiDescription, methodMetadata),
                 Params = GetParamsContentDescriptors(apiDescription, methodMetadata).ToList(),

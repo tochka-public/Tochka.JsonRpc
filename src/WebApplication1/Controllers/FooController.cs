@@ -43,6 +43,19 @@ namespace WebApplication1.Controllers
             return data;
         }
 
+
+        public string SimpleWithDefaults(int? firstArg, string secondArg="defaultValue", long?thirdArg=null)
+        {
+            return $"{firstArg}, {secondArg} {thirdArg}";
+        }
+
+        public string SimpleObjectNullable(TestData testDataA, TestData testDataB=null)
+        {
+            return $"{testDataA.Value}, {testDataA.AnotherValue}; {testDataB?.Value}, {testDataB?.AnotherValue}";
+        }
+
+        
+
         /*
         [JsonRpcSerializer(typeof(SnakeCaseJsonRpcSerializer))]
         public TestData BindObjectSnake([FromParams(BindingStyle.Object)] TestData data)
@@ -85,8 +98,8 @@ namespace WebApplication1.Controllers
             /// </summary>
             /// <remarks>TestData.Value.Remarks~</remarks>
             /// <example>99999~</example>
-            public int Value { get; set; }
-            public string AnotherValue { get; set; }
+            public int Value { get; set; } = 999;
+            public string AnotherValue { get; set; } = "defaultAnotherValue";
             public NestedClass Prop1 { get; set; }
             public NestedClass Prop2 { get; set; }
         }
