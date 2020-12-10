@@ -1,29 +1,3 @@
-### [1.0.19](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.18...v1.0.19) (2020-12-10)
-
-
-### Features
-
-* **server:** Swagger and OpenRPC generation ([894be54](https://github.com/tochka-public/Tochka.JsonRpc/commit/894be54b308276b46549656aeff379ccbfda56b3))
-
-
-### Bug Fixes
-
-* add project descriptions, remove trash ([7111a32](https://github.com/tochka-public/Tochka.JsonRpc/commit/7111a32af2731b648cb1ce7eed153eb3f0997f5f))
-
-### [1.0.18](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.17...v1.0.18) (2020-12-10)
-
-
-### Features
-
-* **server:** skip this version, use next minor
-
-### [1.0.17](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.16...v1.0.17) (2020-12-03)
-
-
-### Features
-
-* **server:** skip this version, use next minor
-
 ### [1.0.16](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.15...v1.0.16) (2020-12-03)
 
 
