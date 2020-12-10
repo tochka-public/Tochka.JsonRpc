@@ -30,6 +30,7 @@ Client Quickstart (writing in progress)
 * Client is intended to be helpful when diagnosing errors
 * Other middlewares can inspect raw and typed JSON Rpc request/response data
 * Lightweight extensibility: common models and utils are not tied to client or server packages
+* Autodocumentation support: Swagger/OpenAPI and [OpenRPC](https://open-rpc.org/)
 
 
 ## Limitations and things to improve
@@ -51,5 +52,7 @@ and fine-tune experience after release when we have some real-world usage feedba
 | link| description |
 | - | - |
 | [Tochka.JsonRpc.Server](https://www.nuget.org/packages/Tochka.JsonRpc.Server/) | ASP.Net Core middleware and services |
+| [Tochka.JsonRpc.Swagger](https://www.nuget.org/packages/Tochka.JsonRpc.Swagger/) | Swagger document generator |
+| [Tochka.JsonRpc.OpenRpc](https://www.nuget.org/packages/Tochka.JsonRpc.OpenRpc/) | OpenRPC document generator |
 | [Tochka.JsonRpc.Client](https://www.nuget.org/packages/Tochka.JsonRpc.Client/) | JSON Rpc client base with error handling |
 | [Tochka.JsonRpc.Common](https://www.nuget.org/packages/Tochka.JsonRpc.Common/) | Models and utils to allow extensibility without directly depending on server or client |

@@ -9,6 +9,7 @@
     - [Batches](/en/server/batches.md)
     - [Errors](/en/server/errors.md)
     - [Utils](/en/server/utils.md)
+    - [Autodocs](/en/server/autodocs.md)
   - Client (writing in progress)
 - Russian (в процессе написания)
 - **Links**
