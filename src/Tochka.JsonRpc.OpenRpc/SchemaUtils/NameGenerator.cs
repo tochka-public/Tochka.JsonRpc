@@ -16,8 +16,7 @@ namespace Tochka.JsonRpc.OpenRpc.SchemaUtils
 
         public string Generate(Type type)
         {
-            var result = jsonRpcSerializer.GetJsonName(type.Name).Json;
-            return result;
+            return jsonRpcSerializer.GetJsonName(type.Name).Json;
         }
     }
 }
