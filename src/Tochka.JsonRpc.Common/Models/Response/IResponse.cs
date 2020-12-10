@@ -1,4 +1,4 @@
-﻿using Tochka.JsonRpc.Common.Models.Id;
+using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 
 namespace Tochka.JsonRpc.Common.Models.Response

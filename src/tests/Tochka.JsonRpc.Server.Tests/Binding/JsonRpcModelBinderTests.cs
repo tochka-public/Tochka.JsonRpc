@@ -86,7 +86,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
                 RequestSerializer = typeof(CamelCaseJsonRpcSerializer)
             };
             var methodMetadata = new MethodMetadata(jsonRpcMethodOptions, new JsonName("test", "test"), new JsonName("test", "test"));
-            methodMetadata.Add(new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false));
+            methodMetadata.Add(new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false));
             var bindingContextMock = MockContext(methodMetadata: methodMetadata);
             var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
 
@@ -103,7 +103,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var jsonRpcMethodOptions = new JsonRpcMethodOptions();
             var methodMetadata = new MethodMetadata(jsonRpcMethodOptions, new JsonName("test", "test"), new JsonName("test", "test"));
-            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
+            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false);
             methodMetadata.Add(parameterMetadata);
             var bindingContextMock = MockContext(methodMetadata: methodMetadata);
             var binder = testEnvironment.ServiceProvider.GetRequiredService<JsonRpcModelBinder>();
@@ -124,7 +124,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         {
             var jsonRpcMethodOptions = new JsonRpcMethodOptions();
             var methodMetadata = new MethodMetadata(jsonRpcMethodOptions, new JsonName("test", "test"), new JsonName("test", "test"));
-            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
+            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false);
             methodMetadata.Add(parameterMetadata);
             var name = "test";
             var bindingContextMock = MockContext(methodMetadata: methodMetadata, name:name);

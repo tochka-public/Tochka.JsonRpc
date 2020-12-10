@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 

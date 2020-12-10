@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -73,7 +74,8 @@ namespace Tochka.JsonRpc.Server.Conventions
             actionModel.Selectors.Add(new SelectorModel()
             {
                 AttributeRouteModel = new AttributeRouteModel() {Template = methodOptions.Route},
-                ActionConstraints = {new JsonRpcAttribute()}
+                
+                ActionConstraints = {new JsonRpcAttribute(), new HttpMethodActionConstraint(new []{ HttpMethods.Post })}  // TODO может, оставить?
             });
             log.LogTrace($"{actionModel.DisplayName}: applied {nameof(JsonRpcAttribute)}, route [{methodOptions.Route}]");
         }
@@ -85,7 +87,7 @@ namespace Tochka.JsonRpc.Server.Conventions
         /// <returns></returns>
         internal JsonRpcMethodOptions MakeOptions(ActionModel actionModel)
         {
-            var serializerType = Utils.GetAttributeTransitive<JsonRpcSerializerAttribute>(actionModel)?.SerializerType ?? defaultMethodOptions.RequestSerializer;
+            var serializerType = Utils.GetAttributeTransitive<JsonRpcTypeInfoAttribute>(actionModel)?.SerializerType ?? defaultMethodOptions.RequestSerializer;
             var route = Utils.GetAttributeTransitive<RouteAttribute>(actionModel)?.Template ?? defaultMethodOptions.Route;
             var method = Utils.GetAttributeTransitive<JsonRpcMethodStyleAttribute>(actionModel)?.MethodStyle ?? defaultMethodOptions.MethodStyle;
             log.LogTrace($"{actionModel.DisplayName}: options are [{serializerType.FullName}], [{route}], [{method}]");

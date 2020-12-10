@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Tochka.JsonRpc.Server.Settings;
@@ -13,7 +13,9 @@ namespace Tochka.JsonRpc.Server.Models
         public JsonName Action { get; }
         public string HumanReadableFullName => $"{Controller.Original}.{Action.Original}";
 
-        internal readonly Dictionary<string, ParameterMetadata> Parameters  = new Dictionary<string, ParameterMetadata>();
+        internal readonly Dictionary<string, ParameterMetadata> ParametersInternal = new Dictionary<string, ParameterMetadata>();
+
+        public IReadOnlyDictionary<string, ParameterMetadata> Parameters => ParametersInternal;
 
         public MethodMetadata(JsonRpcMethodOptions methodOptions, JsonName controller, JsonName action)
         {
@@ -24,12 +26,12 @@ namespace Tochka.JsonRpc.Server.Models
 
         public void Add(ParameterMetadata parameterMetadata)
         {
-            Parameters[parameterMetadata.Name.Original] = parameterMetadata;
+            ParametersInternal[parameterMetadata.Name.Original] = parameterMetadata;
         }
 
         public ParameterMetadata Get(string originalName)
         {
-            if(Parameters.TryGetValue(originalName, out var result))
+            if(ParametersInternal.TryGetValue(originalName, out var result))
             {
                 return result;
             }
@@ -39,7 +41,7 @@ namespace Tochka.JsonRpc.Server.Models
 
         public override string ToString()
         {
-            return $"{HumanReadableFullName}({Parameters.Count} args): {Controller.Json}.{Action.Json}, {MethodOptions.MethodStyle}";
+            return $"{HumanReadableFullName}({ParametersInternal.Count} args): {Controller.Json}.{Action.Json}, {MethodOptions.MethodStyle}";
         }
     }
 }

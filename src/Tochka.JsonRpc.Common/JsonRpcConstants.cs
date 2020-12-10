@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tochka.JsonRpc.Common
 {
@@ -26,10 +26,20 @@ namespace Tochka.JsonRpc.Common
         public static readonly string ControllerMethodSeparator = ".";
 
         /// <summary>
-        /// "id" JSON property to look for Id in single request
+        /// "id" JSON property to look for Id in single request/response
         /// </summary>
         public static readonly string IdProperty = "id";
+        
+        /// <summary>
+        /// "jsonrpc" JSON property to look for version in single request/response
+        /// </summary>
+        public static readonly string JsonrpcVersionProperty = "jsonrpc";
 
+        /// <summary>
+        /// "method" JSON property to look for method in single request
+        /// </summary>
+        public static readonly string MethodProperty = "method";
+        
         /// <summary>
         /// "result" JSON property to look for successful response data in single response
         /// </summary>
@@ -51,6 +61,11 @@ namespace Tochka.JsonRpc.Common
         public static readonly string ReservedMethodPrefix = "rpc.";
 
         /// <summary>
+        /// "rpc.discover" for OpenRPC Service Discovery
+        /// </summary>
+        public static readonly string ServiceDiscoveryMethod = "rpc.discover";
+
+        /// <summary>
         /// -32000 Server Error. Usually happens on unhandled Exception
         /// </summary>
         public static readonly int ExceptionCode = -32000;
@@ -70,5 +85,16 @@ namespace Tochka.JsonRpc.Common
         /// "application/json" Default content-type expected in JSON Rpc HTTP requests
         /// </summary>
         public static readonly string ContentType = "application/json";
+
+        /// <summary>
+        /// "JsonRpc" Prefix for documents like Swagger and OpenRpc
+        /// </summary>
+        public static readonly string ApiDocumentName = "jsonrpc";
+
+        /// <summary>
+        /// "REST" Swagger document name for non-JsonRpc actions
+        /// </summary>
+        public const string DefaultSwaggerDoc = "rest";
+
     }
 }

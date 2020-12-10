@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Server.Settings
+namespace Tochka.JsonRpc.Server.Settings
 {
     public enum BatchHandling
     {

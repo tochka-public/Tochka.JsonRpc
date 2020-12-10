@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Server.Services
+namespace Tochka.JsonRpc.Server.Services
 {
     public interface IJsonRpcRoutes
     {

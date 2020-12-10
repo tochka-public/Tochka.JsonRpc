@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Common.Serializers;

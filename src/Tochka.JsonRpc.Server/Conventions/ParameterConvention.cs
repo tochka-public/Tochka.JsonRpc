@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -51,8 +51,9 @@ namespace Tochka.JsonRpc.Server.Conventions
             var rpcParams = Utils.GetAttribute<FromParamsAttribute>(parameterModel)?.BindingStyle ?? BindingStyle.Default;
             var serializer = Utils.GetSerializer(serializers, serializerType);
             var parameterName = serializer.GetJsonName(parameterModel.ParameterName);
+            // TODO use RequiredAttribute?
             var isOptional = parameterModel.ParameterInfo.IsOptional; // see https://stackoverflow.com/q/9977530/
-            var result = new ParameterMetadata(parameterName, parameterModel.ParameterInfo.Position, rpcParams, isOptional);
+            var result = new ParameterMetadata(parameterName, parameterModel.ParameterType, parameterModel.ParameterInfo.Position, rpcParams, isOptional);
             log.LogTrace($"{parameterModel.DisplayName}: metadata [{result}]");
             return result;
         }
@@ -72,7 +73,7 @@ namespace Tochka.JsonRpc.Server.Conventions
 
         internal void ValidateParameter(ParameterModel parameterModel, BindingStyle bindingStyle)
         {
-            var isCollection = parameterModel.ParameterType.GetInterface(nameof(ICollection)) != null;
+            var isCollection = Common.Utils.IsCollection(parameterModel.ParameterType);
             switch (bindingStyle)
             {
                 case BindingStyle.Default:

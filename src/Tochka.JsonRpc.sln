@@ -1,23 +1,31 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Client", "Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj", "{8BA87BD9-A9E6-450D-8E48-004624425D45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Client", "Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj", "{8BA87BD9-A9E6-450D-8E48-004624425D45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Common", "Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.csproj", "{819815AE-4A59-4A1C-BE0C-D69BFC89E8CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Common", "Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.csproj", "{819815AE-4A59-4A1C-BE0C-D69BFC89E8CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server", "Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj", "{40FE6400-7AE6-49CC-892A-394531AE1782}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Server", "Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj", "{40FE6400-7AE6-49CC-892A-394531AE1782}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{93D7EE53-F1D6-4794-92F9-E8DF8908DC9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Client.Tests", "tests\Tochka.JsonRpc.Client.Tests\Tochka.JsonRpc.Client.Tests.csproj", "{706FD81A-CF12-4A64-8CD6-003578AABCA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Client.Tests", "tests\Tochka.JsonRpc.Client.Tests\Tochka.JsonRpc.Client.Tests.csproj", "{706FD81A-CF12-4A64-8CD6-003578AABCA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Common.Tests", "tests\Tochka.JsonRpc.Common.Tests\Tochka.JsonRpc.Common.Tests.csproj", "{B518A8CC-69DD-4D9D-A9BB-5B124E02EEC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Common.Tests", "tests\Tochka.JsonRpc.Common.Tests\Tochka.JsonRpc.Common.Tests.csproj", "{B518A8CC-69DD-4D9D-A9BB-5B124E02EEC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server.IntegrationTests", "tests\Tochka.JsonRpc.Server.IntegrationTests\Tochka.JsonRpc.Server.IntegrationTests.csproj", "{633F684F-8B51-4703-94E6-F5464CE2026C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Server.IntegrationTests", "tests\Tochka.JsonRpc.Server.IntegrationTests\Tochka.JsonRpc.Server.IntegrationTests.csproj", "{633F684F-8B51-4703-94E6-F5464CE2026C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server.Tests", "tests\Tochka.JsonRpc.Server.Tests\Tochka.JsonRpc.Server.Tests.csproj", "{DA967643-64DA-4DB8-A247-72F4343A1DA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Server.Tests", "tests\Tochka.JsonRpc.Server.Tests\Tochka.JsonRpc.Server.Tests.csproj", "{DA967643-64DA-4DB8-A247-72F4343A1DA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{39921324-CEE1-479E-9A7B-9683704B2BF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.OpenRpc", "Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj", "{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tochka.JsonRpc.Swagger", "Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj", "{5881CA6C-93A1-4A1F-A305-8F124B521324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.ApiExplorer", "Tochka.JsonRpc.ApiExplorer\Tochka.JsonRpc.ApiExplorer.csproj", "{8BA1DC7F-09EF-4283-9C09-BA172792321A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +35,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8BA87BD9-A9E6-450D-8E48-004624425D45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -116,11 +121,65 @@ Global
 		{DA967643-64DA-4DB8-A247-72F4343A1DA1}.Release|x64.Build.0 = Release|Any CPU
 		{DA967643-64DA-4DB8-A247-72F4343A1DA1}.Release|x86.ActiveCfg = Release|Any CPU
 		{DA967643-64DA-4DB8-A247-72F4343A1DA1}.Release|x86.Build.0 = Release|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Debug|x64.Build.0 = Debug|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Debug|x86.Build.0 = Debug|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Release|x64.ActiveCfg = Release|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Release|x64.Build.0 = Release|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Release|x86.ActiveCfg = Release|Any CPU
+		{39921324-CEE1-479E-9A7B-9683704B2BF0}.Release|x86.Build.0 = Release|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Debug|x64.Build.0 = Debug|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Debug|x86.Build.0 = Debug|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Release|x64.ActiveCfg = Release|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Release|x64.Build.0 = Release|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0CA9FFB2-2026-4804-B11C-16F5751A4C1E}.Release|x86.Build.0 = Release|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Debug|x64.Build.0 = Debug|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Debug|x86.Build.0 = Debug|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Release|x64.ActiveCfg = Release|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Release|x64.Build.0 = Release|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Release|x86.ActiveCfg = Release|Any CPU
+		{5881CA6C-93A1-4A1F-A305-8F124B521324}.Release|x86.Build.0 = Release|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Debug|x64.Build.0 = Debug|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Debug|x86.Build.0 = Debug|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Release|x64.ActiveCfg = Release|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Release|x64.Build.0 = Release|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Release|x86.ActiveCfg = Release|Any CPU
+		{8BA1DC7F-09EF-4283-9C09-BA172792321A}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{706FD81A-CF12-4A64-8CD6-003578AABCA3} = {93D7EE53-F1D6-4794-92F9-E8DF8908DC9F}
 		{B518A8CC-69DD-4D9D-A9BB-5B124E02EEC4} = {93D7EE53-F1D6-4794-92F9-E8DF8908DC9F}
 		{633F684F-8B51-4703-94E6-F5464CE2026C} = {93D7EE53-F1D6-4794-92F9-E8DF8908DC9F}
 		{DA967643-64DA-4DB8-A247-72F4343A1DA1} = {93D7EE53-F1D6-4794-92F9-E8DF8908DC9F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {93630835-1CE2-4464-8098-470B7C329D1A}
 	EndGlobalSection
 EndGlobal

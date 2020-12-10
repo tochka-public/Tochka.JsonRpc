@@ -77,7 +77,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_ParseParams_CallsParseObject()
         {
             var expected = Mock.Of<IParseResult>();
-            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
+            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false);
             paramsParserMock.Setup(x => x.ParseObject(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<BindingStyle>()))
                 .Returns(expected);
 
@@ -92,7 +92,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_ParseParams_CallsParseArray()
         {
             var expected = Mock.Of<IParseResult>();
-            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
+            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false);
             paramsParserMock.Setup(x => x.ParseArray(It.IsAny<JArray>(), It.IsAny<int>(), It.IsAny<BindingStyle>()))
                 .Returns(expected);
 
@@ -107,7 +107,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         public void Test_ParseParams_CallsParseNull()
         {
             var expected = Mock.Of<IParseResult>();
-            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
+            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false);
             paramsParserMock.Setup(x => x.ParseNull(It.IsAny<BindingStyle>()))
                 .Returns(expected);
 
@@ -121,7 +121,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
         [Test]
         public void Test_ParseParams_ReturnsError()
         {
-            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), 0, BindingStyle.Default, false);
+            var parameterMetadata = new ParameterMetadata(new JsonName("test", "test"), typeof(object), 0, BindingStyle.Default, false);
 
             var result = paramsParserMock.Object.ParseParams(JValue.CreateString(string.Empty), parameterMetadata);
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Http;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Serializers;

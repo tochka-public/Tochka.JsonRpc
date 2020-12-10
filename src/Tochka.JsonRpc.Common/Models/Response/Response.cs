@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 
@@ -9,6 +9,9 @@ namespace Tochka.JsonRpc.Common.Models.Response
     {
         public IRpcId Id { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Jsonrpc { get; set; } = JsonRpcConstants.Version;
 
         public TResult Result { get; set; }
