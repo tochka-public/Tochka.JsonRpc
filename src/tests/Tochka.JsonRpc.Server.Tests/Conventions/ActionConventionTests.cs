@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -84,8 +85,11 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             model.Selectors.Should().HaveCount(1);
             model.Selectors[0].Should().NotBe(selectorToRemove);
             model.Selectors[0].AttributeRouteModel.Template.Should().Be(route);
-            model.Selectors[0].ActionConstraints.Should().HaveCount(1);
+            model.Selectors[0].ActionConstraints.Should().HaveCount(2);
             model.Selectors[0].ActionConstraints[0].Should().BeOfType<JsonRpcAttribute>();
+            model.Selectors[0].ActionConstraints[1].Should().BeOfType<HttpMethodActionConstraint>();
+            model.Selectors[0].ActionConstraints[1].As<HttpMethodActionConstraint>().HttpMethods.Should().HaveCount(1);
+            model.Selectors[0].ActionConstraints[1].As<HttpMethodActionConstraint>().HttpMethods.First().Should().Be(HttpMethods.Post);
         }
 
         [Test]
@@ -118,7 +122,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             var methodStyle = MethodStyle.ActionOnly;
             var attributes = new List<object>
             {
-                new Mock<JsonRpcTypeInfoAttribute>(serializerType).Object,
+                new Mock<JsonRpcTypeInfoAttribute>(serializerType, "test").Object,
                 new Mock<RouteAttribute>(route.Value).Object,
                 new Mock<JsonRpcMethodStyleAttribute>(methodStyle).Object,
             };
@@ -144,7 +148,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
             var methodStyle = MethodStyle.ActionOnly;
             var attributes = new List<object>
             {
-                new Mock<JsonRpcTypeInfoAttribute>(serializerType).Object,
+                new Mock<JsonRpcTypeInfoAttribute>(serializerType, "test").Object,
                 new Mock<RouteAttribute>(route.Value).Object,
                 new Mock<JsonRpcMethodStyleAttribute>(methodStyle).Object,
             };
