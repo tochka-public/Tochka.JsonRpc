@@ -48,7 +48,7 @@ namespace Tochka.JsonRpc.OpenRpc
                 {
                     Title = title,
                     Description = description,
-                    Version = "v1"
+                    Version = ApiExplorerConstants.DefaultApiVersion
                 });
             });
             return services;

@@ -42,7 +42,7 @@ namespace Tochka.JsonRpc.Swagger
                 options.SchemaFilter<CommonJsonRpcPropertiesFilter>();
                 options.DocInclusionPredicate(DocumentSelector);
                 // TODO add options to skip this if user wants to customize?
-                options.SwaggerDoc(JsonRpcConstants.DefaultSwaggerDoc, new OpenApiInfo {Title = $"{JsonRpcConstants.DefaultSwaggerDoc}", Version = "v1"});
+                options.SwaggerDoc(JsonRpcConstants.DefaultSwaggerDoc, new OpenApiInfo {Title = $"{JsonRpcConstants.DefaultSwaggerDoc}", Version = ApiExplorerConstants.DefaultApiVersion});
 
                 var registeredSerializers = services
                     .Where(x =>
@@ -57,7 +57,7 @@ namespace Tochka.JsonRpc.Swagger
                 foreach (var serializerType in registeredSerializers)
                 {
                     var name = Utils.GetSwaggerFriendlyDocumentName(serializerType, DefaultSerializer);
-                    options.SwaggerDoc(name, new OpenApiInfo {Title = name, Version = "v1"});
+                    options.SwaggerDoc(name, new OpenApiInfo {Title = name, Version = ApiExplorerConstants.DefaultApiVersion});
                 }
 
                 var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
