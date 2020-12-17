@@ -1,3 +1,11 @@
+### [1.0.22](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.21...v1.0.22) (2020-12-17)
+
+
+### Bug Fixes
+
+* **server:** also fixed tests ([967d52a](https://github.com/tochka-public/Tochka.JsonRpc/commit/967d52a1a8a3788c5f266a6980cdef53645d9f1a))
+* **server:** split attributes back for better usability ([628d90d](https://github.com/tochka-public/Tochka.JsonRpc/commit/628d90d9a21b58b441d724075739a7371c3f5d7c))
+
 ### [1.0.21](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.20...v1.0.21) (2020-12-14)
 
 ### [1.0.20](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.19...v1.0.20) (2020-12-10)
