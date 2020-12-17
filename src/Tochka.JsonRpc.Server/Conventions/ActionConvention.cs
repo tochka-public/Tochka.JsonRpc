@@ -87,7 +87,7 @@ namespace Tochka.JsonRpc.Server.Conventions
         /// <returns></returns>
         internal JsonRpcMethodOptions MakeOptions(ActionModel actionModel)
         {
-            var serializerType = Utils.GetAttributeTransitive<JsonRpcTypeInfoAttribute>(actionModel)?.SerializerType ?? defaultMethodOptions.RequestSerializer;
+            var serializerType = Utils.GetAttributeTransitive<JsonRpcSerializerAttribute>(actionModel)?.SerializerType ?? defaultMethodOptions.RequestSerializer;
             var route = Utils.GetAttributeTransitive<RouteAttribute>(actionModel)?.Template ?? defaultMethodOptions.Route;
             var method = Utils.GetAttributeTransitive<JsonRpcMethodStyleAttribute>(actionModel)?.MethodStyle ?? defaultMethodOptions.MethodStyle;
             log.LogTrace($"{actionModel.DisplayName}: options are [{serializerType.FullName}], [{route}], [{method}]");
