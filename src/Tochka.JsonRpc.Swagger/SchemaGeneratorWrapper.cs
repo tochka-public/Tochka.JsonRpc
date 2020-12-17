@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Newtonsoft;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server.Attributes;
 
