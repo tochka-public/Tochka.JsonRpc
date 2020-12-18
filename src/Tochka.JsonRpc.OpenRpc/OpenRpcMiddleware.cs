@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 
 namespace Tochka.JsonRpc.OpenRpc
 {
-    public class OpenApiMiddleware
+    public class OpenRpcMiddleware
     {
         private readonly RequestDelegate next;
         private readonly TemplateMatcher requestMatcher;
         private readonly OpenRpcOptions options;
 
-        public OpenApiMiddleware(RequestDelegate next, IOptions<OpenRpcOptions> options)
+        public OpenRpcMiddleware(RequestDelegate next, IOptions<OpenRpcOptions> options)
         {
             this.next = next;
             this.options = options.Value;

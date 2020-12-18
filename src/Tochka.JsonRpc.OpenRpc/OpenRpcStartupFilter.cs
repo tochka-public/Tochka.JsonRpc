@@ -13,7 +13,7 @@ namespace Tochka.JsonRpc.OpenRpc
         {
             return builder =>
             {
-                builder.UseMiddleware<OpenApiMiddleware>();
+                builder.UseMiddleware<OpenRpcMiddleware>();
                 next(builder);
             };
         }
