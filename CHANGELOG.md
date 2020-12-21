@@ -1,3 +1,10 @@
+### [1.0.23](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.22...v1.0.23) (2020-12-21)
+
+
+### Bug Fixes
+
+* **server:** properly name middleware ([b16ffdf](https://github.com/tochka-public/Tochka.JsonRpc/commit/b16ffdf0941bc9c3f4f63b76fbda5ed0b4a1492c))
+
 ### [1.0.22](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.21...v1.0.22) (2020-12-17)
 
 
