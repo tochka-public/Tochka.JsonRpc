@@ -73,6 +73,21 @@ namespace Tochka.JsonRpc.Server.Models.Response
                     await Value.WriteToAsync(jsonWriter, context.OriginalHttpContext.RequestAborted);
                 }
             }
+
+            SetResponseContextItem(context.OriginalHttpContext);
+        }
+
+        /// <summary>
+        /// Store ambient information about response. Useful for metrics
+        /// </summary>
+        /// <param name="context"></param>
+        private void SetResponseContextItem(HttpContext context)
+        {
+            var errorCode = Value[JsonRpcConstants.ErrorProperty]?[JsonRpcConstants.ErrorCodeProperty]?.Value<string>();
+            if (!string.IsNullOrEmpty(errorCode))
+            {
+                context.Items[JsonRpcConstants.ResponseErrorCodeItemKey] = errorCode;
+            }
         }
     }
 }
