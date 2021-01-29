@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -49,10 +50,10 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
         [Test]
         public async Task Test_Write_SetsResponseProperties()
         {
-            var resposneMock = new Mock<HttpResponse>();
+            var responseMock = new Mock<HttpResponse>();
             var httpContextMock = new Mock<HttpContext>();
             httpContextMock.SetupGet(x => x.Response)
-                .Returns(resposneMock.Object);
+                .Returns(responseMock.Object);
             var next = Mock.Of<RequestDelegate>();
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, next)
             {
@@ -64,9 +65,9 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
 
             await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
-            resposneMock.VerifySet(x => x.StatusCode = 200);
-            resposneMock.VerifySet(x => x.ContentLength = null);
-            resposneMock.VerifySet(x => x.ContentType = It.IsAny<string>());
+            responseMock.VerifySet(x => x.StatusCode = 200);
+            responseMock.VerifySet(x => x.ContentLength = null);
+            responseMock.VerifySet(x => x.ContentType = It.IsAny<string>());
         }
 
         [Test]
@@ -76,12 +77,12 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             {
                 {"a", "b"}
             };
-            var resposneMock = new Mock<HttpResponse>();
-            resposneMock.SetupGet(x => x.Headers)
+            var responseMock = new Mock<HttpResponse>();
+            responseMock.SetupGet(x => x.Headers)
                 .Returns(responseHeaders);
             var httpContextMock = new Mock<HttpContext>();
             httpContextMock.SetupGet(x => x.Response)
-                .Returns(resposneMock.Object);
+                .Returns(responseMock.Object);
             var next = Mock.Of<RequestDelegate>();
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, next)
             {
@@ -97,7 +98,7 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
 
             await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
-            resposneMock.VerifyGet(x => x.Headers);
+            responseMock.VerifyGet(x => x.Headers);
             responseHeaders.Should().HaveCount(2);
             responseHeaders.Should().ContainKey("header");
         }
@@ -106,12 +107,12 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
         public async Task Test_Write_WritesBody()
         {
             var ms = new MemoryStream();
-            var resposneMock = new Mock<HttpResponse>();
-            resposneMock.SetupGet(x => x.Body)
+            var responseMock = new Mock<HttpResponse>();
+            responseMock.SetupGet(x => x.Body)
                 .Returns(ms);
             var httpContextMock = new Mock<HttpContext>();
             httpContextMock.SetupGet(x => x.Response)
-                .Returns(resposneMock.Object);
+                .Returns(responseMock.Object);
             httpContextMock.SetupGet(x => x.RequestAborted)
                 .Returns(new CancellationToken());
             var next = Mock.Of<RequestDelegate>();
@@ -132,12 +133,12 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
         public async Task Test_Write_ChecksCancellationToken()
         {
             var ms = new MemoryStream();
-            var resposneMock = new Mock<HttpResponse>();
-            resposneMock.SetupGet(x => x.Body)
+            var responseMock = new Mock<HttpResponse>();
+            responseMock.SetupGet(x => x.Body)
                 .Returns(ms);
             var httpContextMock = new Mock<HttpContext>();
             httpContextMock.SetupGet(x => x.Response)
-                .Returns(resposneMock.Object);
+                .Returns(responseMock.Object);
             httpContextMock.SetupGet(x => x.RequestAborted)
                 .Returns(new CancellationToken(true));
             var next = Mock.Of<RequestDelegate>();
@@ -151,6 +152,81 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             Func<Task> action = async () => await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
 
             await action.Should().ThrowAsync<TaskCanceledException>();
+        }
+
+        [Test]
+        public async Task Test_Write_SetsResponseErrorCodeOnError()
+        {
+            var items = new Dictionary<object, object>();
+            var ms = new MemoryStream();
+            var responseMock = new Mock<HttpResponse>();
+            responseMock.SetupGet(x => x.Body)
+                .Returns(ms);
+            var httpContextMock = new Mock<HttpContext>();
+            httpContextMock.SetupGet(x => x.Response)
+                .Returns(responseMock.Object);
+            httpContextMock.SetupGet(x => x.RequestAborted)
+                .Returns(new CancellationToken());
+            httpContextMock.SetupGet(x => x.Items)
+                .Returns(items);
+            var next = Mock.Of<RequestDelegate>();
+            var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, next)
+            {
+                WriteResponse = true
+            };
+            var notification = new UntypedNotification();
+            var value = new JObject()
+            {
+                {
+                    "error", new JObject()
+                    {
+                        {"code", new JValue(1)}
+                    }
+                }
+            };
+            var wrapper = new JsonServerResponseWrapper(value, notification, null);
+
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
+
+            var result = httpContextMock.Object.Items[JsonRpcConstants.ResponseErrorCodeItemKey] as string;
+            result.Should().Be("1");
+        }
+
+        [Test]
+        public async Task Test_Write_DoesNotSetResponseErrorCodeOnSuccess()
+        {
+            var items = new Dictionary<object, object>();
+            var ms = new MemoryStream();
+            var responseMock = new Mock<HttpResponse>();
+            responseMock.SetupGet(x => x.Body)
+                .Returns(ms);
+            var httpContextMock = new Mock<HttpContext>();
+            httpContextMock.SetupGet(x => x.Response)
+                .Returns(responseMock.Object);
+            httpContextMock.SetupGet(x => x.RequestAborted)
+                .Returns(new CancellationToken());
+            httpContextMock.SetupGet(x => x.Items)
+                .Returns(items);
+            var next = Mock.Of<RequestDelegate>();
+            var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, next)
+            {
+                WriteResponse = true
+            };
+            var notification = new UntypedNotification();
+            var value = new JObject()
+            {
+                {
+                    "result", new JObject()
+                    {
+                        {"value", new JValue(1)}
+                    }
+                }
+            };
+            var wrapper = new JsonServerResponseWrapper(value, notification, null);
+
+            await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
+
+            httpContextMock.Object.Items.ContainsKey(JsonRpcConstants.ResponseErrorCodeItemKey).Should().BeFalse();
         }
 
         [Test]

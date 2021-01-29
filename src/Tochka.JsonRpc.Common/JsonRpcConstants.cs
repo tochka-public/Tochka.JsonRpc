@@ -21,6 +21,12 @@ namespace Tochka.JsonRpc.Common
         public static readonly object ActionResultTypeItemKey = new object();
 
         /// <summary>
+        /// Response error code. Stored in HttpContext.Items after response is written
+        /// </summary>
+        public static readonly object ResponseErrorCodeItemKey = new object();
+
+
+        /// <summary>
         /// "." Delimiter in "controller_name.action_name" to mimic "Class.Method" notation
         /// </summary>
         public static readonly string ControllerMethodSeparator = ".";
@@ -29,7 +35,7 @@ namespace Tochka.JsonRpc.Common
         /// "id" JSON property to look for Id in single request/response
         /// </summary>
         public static readonly string IdProperty = "id";
-        
+
         /// <summary>
         /// "jsonrpc" JSON property to look for version in single request/response
         /// </summary>
@@ -39,7 +45,7 @@ namespace Tochka.JsonRpc.Common
         /// "method" JSON property to look for method in single request
         /// </summary>
         public static readonly string MethodProperty = "method";
-        
+
         /// <summary>
         /// "result" JSON property to look for successful response data in single response
         /// </summary>
@@ -49,6 +55,11 @@ namespace Tochka.JsonRpc.Common
         /// "error" JSON property to look for error in single response
         /// </summary>
         public static readonly string ErrorProperty = "error";
+
+        /// <summary>
+        /// "code" JSON property inside "error"
+        /// </summary>
+        public static readonly string ErrorCodeProperty = "code";
 
         /// <summary>
         /// "2.0" JSON Rpc version
@@ -95,6 +106,5 @@ namespace Tochka.JsonRpc.Common
         /// "REST" Swagger document name for non-JsonRpc actions
         /// </summary>
         public const string DefaultSwaggerDoc = "rest";
-
     }
 }
