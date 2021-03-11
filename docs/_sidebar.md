@@ -11,8 +11,10 @@
     - [Utils](/en/server/utils)
     - [Autodocs](/en/server/autodocs)
   - Client (writing in progress)
+    - ...
 - Russian (в процессе написания)
+  - ...
 - **Links**
-  - [Readme](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
-  - [Nuget](https://www.nuget.org/profiles/tochka-public)
-  - [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
+  - [Readme ➪](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
+  - [Nuget ➪](https://www.nuget.org/profiles/tochka-public)
+  - [JSON-RPC 2.0 Specification ➪](https://www.jsonrpc.org/specification)
