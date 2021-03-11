@@ -3,7 +3,7 @@
 There are two ways to configure library behavior: `Startup` options lambda and attributes for controllers/actions/parameters.
 *It is also possible to replace or inherit services used to process requests, but this is not described here.*
 
-> Check [Examples](examples.md) page to see how options affect requests/responses
+> Check [Examples](examples) page to see how options affect requests/responses
 
 ## Startup options
 
@@ -46,7 +46,7 @@ For all other results:
 * When `false`, server responds with JSON Rpc server error
 * When `true`, let framework interpret it as with normal REST controllers
 
-**Note:** Batches will **break** if this option is enabled and one of requests returns non-json data! See [Batches](batches.md).
+**Note:** Batches will **break** if this option is enabled and one of requests returns non-json data! See [Batches](batches).
 
 #### DetailedResponseExceptions
 
@@ -101,7 +101,7 @@ Limitations:
 * `ControllerAndAction`: treat `method` as `controller.action`. Vaules like `foo.bar` are mathed to `FooController.Bar`
 * `ActionOnly`: treat `method` as `action`. Vaules like `bar` are mathed to `Bar` action in any JsonRpcController
 
-Serialization of names is handled by `RequestSerializer`, see below and [Serialization](serialization.md) for more info.
+Serialization of names is handled by `RequestSerializer`, see below and [Serialization](serialization) for more info.
 
 It can be overridden by `JsonRpcMethodStyleAttribute`
 
@@ -113,7 +113,7 @@ It can be overridden by `JsonRpcMethodStyleAttribute`
 
 You can serialize content in a way different from JSON Rpc "header" object.
 There are `SnakeCaseJsonRpcSerializer` and `CamelCaseJsonRpcSerializer` in `Tochka.JsonRpc.Common` package.
-See [Serialization](serialization.md) for more info.
+See [Serialization](serialization) for more info.
 
 It can be overridden by `JsonRpcSerializerAttribute`
 
@@ -126,10 +126,10 @@ It can be overridden by `JsonRpcSerializerAttribute`
 
 #### JsonRpcSerializerAttribute
 
-> Override default `RequestSerializer` on any controller/action. See details above for `RequestSerializer` and [Serialization](serialization.md).
+> Override default `RequestSerializer` on any controller/action. See details above for `RequestSerializer` and [Serialization](serialization).
 
 #### FromParamsAttribute
 
 > Override default parameter binding behavior which is `BindingStyle.Default`
 
-Change how JSON Rpc `params` are bound to action arguments. See [Binding](binding.md).
+Change how JSON Rpc `params` are bound to action arguments. See [Binding](binding).

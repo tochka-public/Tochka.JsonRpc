@@ -85,5 +85,5 @@ Content-Type: application/json; charset=utf-8
 That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like normal.
 Check out other pages for more advanced usage:
 
-- [Examples](examples.md)
-- [Configuration](configuration.md)
+- [Examples](examples)
+- [Configuration](configuration)

@@ -2,7 +2,7 @@
 
 Here are examples for different scenarios. Common things like default HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
 
-> For details beyond basic usage check [Configuration](configuration.md) page
+> For details beyond basic usage check [Configuration](configuration) page
 
 ## Request, Notification, Batch with default configuration
 
@@ -777,7 +777,7 @@ Content-Type: application/json; charset=utf-8
 
 ## Serialization
 
-Change default JSON serializer/deserializer or override it for controller/action. See [Serialization](serialization.md) for details.
+Change default JSON serializer/deserializer or override it for controller/action. See [Serialization](serialization) for details.
 <details>
 <summary>Expand</summary>
 
@@ -926,7 +926,7 @@ Content-Type: application/json; charset=utf-8
 
 ## Binding
 
-Change how `params` are bound to method arguments. See [Binding](binding.md) for details.
+Change how `params` are bound to method arguments. See [Binding](binding) for details.
 
 
 <details>
