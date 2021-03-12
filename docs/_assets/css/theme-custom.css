@@ -62,11 +62,11 @@
 }
 
 .sidebar-nav ul:not(.app-sub-sidebar) > li.file > a::before {
-  content: '🗋 ';
+  content: '📓 ';
 }
 
 .sidebar-nav ul:not(.app-sub-sidebar) > li.file.open > a::before {
-  content: '🗎 ';
+  content: '📖 ';
 }
 
 .sidebar-nav a {
