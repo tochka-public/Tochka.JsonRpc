@@ -254,7 +254,7 @@ Unmodified bytes in response
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-Content-Length →100
+Content-Length: 100
 ```
 ```
 �    
