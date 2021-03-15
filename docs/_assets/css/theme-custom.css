@@ -50,6 +50,10 @@
   margin-left: 4px;
 }
 
+.sidebar-nav > p > a[href="#/"]::before {
+  content: '📒 ';
+}
+
 .sidebar-nav ul:not(.app-sub-sidebar) > li.folder::before {
   content: '📁 ';
 }
