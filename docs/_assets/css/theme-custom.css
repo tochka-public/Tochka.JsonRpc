@@ -11,6 +11,8 @@
     --sidebar-nav-pagelink-background-image--active   : ;
     --sidebar-nav-pagelink-background-image--collapse : ;
     --sidebar-nav-pagelink-background-image--loaded   : ;
+    --sidebar-nav-pagelink-padding                    : ;
+    --sidebar-nav-link-padding                        : ;
 
     --content-max-width                               : 100%;
 }
