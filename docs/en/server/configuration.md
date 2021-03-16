@@ -98,8 +98,8 @@ Limitations:
 
 > Rules how JSON Rpc `method` property is matched to controllers/actions
 
-* `ControllerAndAction`: treat `method` as `controller.action`. Vaules like `foo.bar` are mathed to `FooController.Bar`
-* `ActionOnly`: treat `method` as `action`. Vaules like `bar` are mathed to `Bar` action in any JsonRpcController
+* `ControllerAndAction`: treat `method` as `controller.action`. Values like `foo.bar` are matched to `FooController.Bar`
+* `ActionOnly`: treat `method` as `action`. Values like `bar` are matched to `Bar` action in any JsonRpcController
 
 Serialization of names is handled by `RequestSerializer`, see below and [Serialization](serialization) for more info.
 
