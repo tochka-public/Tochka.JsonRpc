@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Serializers;

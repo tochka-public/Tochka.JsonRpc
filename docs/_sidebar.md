@@ -1,17 +1,20 @@
 - English
-  - [Overview](/en/overview.md)
+  - [Overview](/en/overview)
   - Server
-    - [Quickstart](/en/server/quickstart.md)
-    - [Examples](/en/server/examples.md)
-    - [Configuration](/en/server/configuration.md)
-    - [Binding](/en/server/binding.md)
-    - [Serialization](/en/server/serialization.md)
-    - [Batches](/en/server/batches.md)
-    - [Errors](/en/server/errors.md)
-    - [Utils](/en/server/utils.md)
+    - [Quickstart](/en/server/quickstart)
+    - [Examples](/en/server/examples)
+    - [Configuration](/en/server/configuration)
+    - [Binding](/en/server/binding)
+    - [Serialization](/en/server/serialization)
+    - [Batches](/en/server/batches)
+    - [Errors](/en/server/errors)
+    - [Utils](/en/server/utils)
+    - [Autodocs](/en/server/autodocs)
   - Client (writing in progress)
+    - ...
 - Russian (в процессе написания)
+  - ...
 - **Links**
-  - [Readme](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
-  - [Nuget](https://www.nuget.org/profiles/tochka-public)
-  - [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
+  - [Readme ➪](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
+  - [Nuget ➪](https://www.nuget.org/profiles/tochka-public)
+  - [JSON-RPC 2.0 Specification ➪](https://www.jsonrpc.org/specification)

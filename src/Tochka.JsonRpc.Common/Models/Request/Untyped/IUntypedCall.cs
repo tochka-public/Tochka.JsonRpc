@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Tochka.JsonRpc.Common.Models.Request.Untyped

@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Server.Models.Binding
+namespace Tochka.JsonRpc.Server.Models.Binding
 {
     public interface IParseResult
     {

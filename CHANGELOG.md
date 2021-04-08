@@ -1,11 +1,43 @@
-### [1.0.15-beta.2](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.15-beta.1...v1.0.15-beta.2) (2020-08-20)
+### [1.0.24](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.23...v1.0.24) (2021-01-29)
+
+### [1.0.23](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.22...v1.0.23) (2020-12-21)
+
+
+### Bug Fixes
+
+* **server:** properly name middleware ([b16ffdf](https://github.com/tochka-public/Tochka.JsonRpc/commit/b16ffdf0941bc9c3f4f63b76fbda5ed0b4a1492c))
+
+### [1.0.22](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.21...v1.0.22) (2020-12-17)
+
+
+### Bug Fixes
+
+* **server:** also fixed tests ([967d52a](https://github.com/tochka-public/Tochka.JsonRpc/commit/967d52a1a8a3788c5f266a6980cdef53645d9f1a))
+* **server:** split attributes back for better usability ([628d90d](https://github.com/tochka-public/Tochka.JsonRpc/commit/628d90d9a21b58b441d724075739a7371c3f5d7c))
+
+### [1.0.21](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.20...v1.0.21) (2020-12-14)
+
+### [1.0.20](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.19...v1.0.20) (2020-12-10)
+
+
+### Features
+
+* **server:** Swagger and OpenRPC generation
+
+
+### [1.0.16](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.15...v1.0.16) (2020-12-03)
+
+
+### Features
+
+* **client:** allow urls to end without trailing slash ([#22](https://github.com/tochka-public/Tochka.JsonRpc/pull/22))
+
+### [1.0.15](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.14...v1.0.15) (2020-08-20)
 
 
 ### Bug Fixes
 
 * **client:** null if error data was not present ([a51c29d](https://github.com/tochka-public/Tochka.JsonRpc/commit/a51c29d3910b63786298f9e5b8b8abf7a5d6d62f))
-
-### [1.0.15-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.14...v1.0.15-beta.1) (2020-08-19)
 
 ### [1.0.14](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.13...v1.0.14) (2020-08-18)
 

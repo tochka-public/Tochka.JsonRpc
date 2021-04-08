@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -72,6 +72,21 @@ namespace Tochka.JsonRpc.Server.Models.Response
                     jsonWriter.Formatting = headerJsonRpcSerializer.Settings.Formatting;
                     await Value.WriteToAsync(jsonWriter, context.OriginalHttpContext.RequestAborted);
                 }
+            }
+
+            SetResponseContextItem(context.OriginalHttpContext);
+        }
+
+        /// <summary>
+        /// Store ambient information about response. Useful for metrics
+        /// </summary>
+        /// <param name="context"></param>
+        private void SetResponseContextItem(HttpContext context)
+        {
+            var errorCode = Value[JsonRpcConstants.ErrorProperty]?[JsonRpcConstants.ErrorCodeProperty]?.Value<string>();
+            if (!string.IsNullOrEmpty(errorCode))
+            {
+                context.Items[JsonRpcConstants.ResponseErrorCodeItemKey] = errorCode;
             }
         }
     }

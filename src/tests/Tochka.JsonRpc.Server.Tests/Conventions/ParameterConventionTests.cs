@@ -84,7 +84,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
 
             parameterConvention.Apply(model);
 
-            metadata.Parameters.Should().HaveCount(1);
+            metadata.ParametersInternal.Should().HaveCount(1);
             model.BindingInfo.Should().NotBeNull();
         }
 

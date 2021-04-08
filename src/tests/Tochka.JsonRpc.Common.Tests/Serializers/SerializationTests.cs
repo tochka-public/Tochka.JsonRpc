@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Newtonsoft.Json.Linq;

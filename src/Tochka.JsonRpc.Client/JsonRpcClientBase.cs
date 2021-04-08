@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -231,20 +231,10 @@ namespace Tochka.JsonRpc.Client
         /// <param name="options"></param>
         protected internal virtual void InitializeClient(HttpClient client, JsonRpcClientOptionsBase options)
         {
-            client.BaseAddress = GetBaseAddress(options.Url);
+            client.BaseAddress = new Uri(options.Url, UriKind.Absolute);
             client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
             client.Timeout = options.Timeout;
             log.LogTrace($"Client initialized: url {client.BaseAddress}, user-agent {client.DefaultRequestHeaders.UserAgent}, timeout {client.Timeout.TotalSeconds}s.");
-        }
-
-        protected internal virtual Uri GetBaseAddress(string url)
-        {
-            if (!url.EndsWith("/"))
-            {
-                throw new ArgumentException("Url must end with '/' to prevent unexpected behavior when joining url parts", nameof(url));
-            }
-
-            return new Uri(url, UriKind.Absolute);
         }
 
         /// <summary>

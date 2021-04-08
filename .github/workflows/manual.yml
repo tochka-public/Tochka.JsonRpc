@@ -1,0 +1,51 @@
+name: Manual Release nuget package
+
+on: [workflow_dispatch]
+
+jobs:
+  make-release:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.2
+      
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Install dependencies
+        run: dotnet restore src/
+    
+      - name: Build
+        run: dotnet build src/ --no-restore --configuration Debug
+    
+      - name: Test
+        run: dotnet test src/ --no-build
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Install semantic-release dependencies
+        run: npm install -g semantic-release@17 @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/git @semantic-release/changelog @semantic-release/exec conventional-changelog-conventionalcommits
+      
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
+
+      - name: Build with version
+        run: dotnet build src/ --no-restore --configuration Release -p:Version=$(cat VERSION)
+    
+      - name: Pack
+        run: dotnet pack src/ --no-build --no-restore --configuration Release -p:Version=$(cat VERSION)
+        
+      - name: Push
+        env:
+          NUGET_URL: "https://api.nuget.org/v3/index.json"
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        run: dotnet nuget push "src/**/*.nupkg" --no-symbols true --source $NUGET_URL --api-key $NUGET_KEY

@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Common.Tests.Serializers
+namespace Tochka.JsonRpc.Common.Tests.Serializers
 {
     public class TestData
     {

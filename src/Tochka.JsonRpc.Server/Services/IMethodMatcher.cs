@@ -1,4 +1,4 @@
-﻿using Tochka.JsonRpc.Server.Models;
+using Tochka.JsonRpc.Server.Models;
 
 namespace Tochka.JsonRpc.Server.Services
 {
