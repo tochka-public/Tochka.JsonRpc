@@ -215,6 +215,7 @@ namespace Tochka.JsonRpc.Server.Services
             {
                 context.OriginalHttpContext.RequestAborted.ThrowIfCancellationRequested();
                 var nestedHttpContext = nestedContextFactory.Create(context.OriginalHttpContext, call, context.RequestEncoding);
+                PropagateItems(context.OriginalHttpContext, nestedHttpContext);
                 log.LogTrace($"{nameof(SafeNext)}: invoking pipeline on nested context");
                 await context.Next(nestedHttpContext);
                 nestedHeaders = nestedHttpContext.Response.Headers;
@@ -233,6 +234,47 @@ namespace Tochka.JsonRpc.Server.Services
                 var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
                 return new JsonServerResponseWrapper(response, call, nestedHeaders);
             }
+        }
+
+        internal void PropagateItems(HttpContext context, HttpContext nestedHttpContext)
+        {
+            if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ActionDescriptorItemKey))
+            {
+                log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ActionDescriptorItemKey)}");
+            }
+            if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ActionResultTypeItemKey))
+            {
+                log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ActionResultTypeItemKey)}");
+            }
+            if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ResponseErrorCodeItemKey))
+            {
+                log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ResponseErrorCodeItemKey)}");
+            }
+        }
+
+        /// <summary>
+        /// Copies JsonRpc related items to original HttpContext. Sets null values on conflict (in batches).
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="nestedHttpContext"></param>
+        /// <param name="itemKey"></param>
+        /// <returns></returns>
+        internal virtual bool PropagateItemsInternal(HttpContext context, HttpContext nestedHttpContext, object itemKey)
+        {
+            if (!nestedHttpContext.Items.ContainsKey(itemKey))
+            {
+                return false;
+            }
+
+            if (context.Items.ContainsKey(itemKey))
+            {
+                // This is batch and somebody has already set value. Override with null to avoid conflicts. 
+                context.Items[itemKey] = null;
+                return false;
+            }
+
+            context.Items[itemKey] = nestedHttpContext.Items[itemKey];
+            return true;
         }
     }
 }
