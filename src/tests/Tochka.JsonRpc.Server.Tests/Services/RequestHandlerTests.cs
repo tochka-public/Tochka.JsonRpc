@@ -74,12 +74,14 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                 .Returns(new CancellationToken(true));
             var next = Mock.Of<RequestDelegate>();
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, next);
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
 
             var result = await requestHandlerMock.Object.SafeNext(call, handlingContext, false);
 
             result.Should().BeOfType<JsonServerResponseWrapper>();
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<OperationCanceledException>()));
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
 
         [Test]
@@ -702,6 +704,22 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, key), Times.Once);
         }
 
+        [Test]
+        public void Test_PropagateItemsInternal_IgnoresIfNull()
+        {
+            var key = "test";
+            var context = MockContext();
+            context.Object.Items.Should().BeEmpty();
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var result = requestHandlerMock.Object.PropagateItemsInternal(context.Object, null, key);
+
+            result.Should().BeFalse();
+            context.Object.Items.Should().BeEmpty();
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, null, key), Times.Once);
+        }
 
         [TestCase("value", "value")]
         [TestCase("", "value")]

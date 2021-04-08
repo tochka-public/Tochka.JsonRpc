@@ -131,6 +131,7 @@ namespace Tochka.JsonRpc.Server.Services
             {
                 throw new JsonRpcInternalException("JSON Rpc batch request is empty");
             }
+
             // the server MUST NOT return an empty Array and should return nothing at all
             var hasRequestInBatch = batchRequestWrapper.Batch.OfType<UntypedRequest>().Any();
             context.WriteResponse = hasRequestInBatch;
@@ -211,10 +212,11 @@ namespace Tochka.JsonRpc.Server.Services
         {
             log.LogTrace($"{nameof(SafeNext)}: Started. {nameof(allowRawResponses)} is [{allowRawResponses}]");
             IHeaderDictionary nestedHeaders = null;
+            HttpContext nestedHttpContext = null;
             try
             {
                 context.OriginalHttpContext.RequestAborted.ThrowIfCancellationRequested();
-                var nestedHttpContext = nestedContextFactory.Create(context.OriginalHttpContext, call, context.RequestEncoding);
+                nestedHttpContext = nestedContextFactory.Create(context.OriginalHttpContext, call, context.RequestEncoding);
                 log.LogTrace($"{nameof(SafeNext)}: invoking pipeline on nested context");
                 await context.Next(nestedHttpContext);
                 PropagateItems(context.OriginalHttpContext, nestedHttpContext);
@@ -224,6 +226,7 @@ namespace Tochka.JsonRpc.Server.Services
                 {
                     throw new JsonRpcInternalException($"{nameof(ResponseReader)} returned null");
                 }
+
                 log.LogTrace($"{nameof(SafeNext)}: Completed");
                 return result;
 
@@ -231,6 +234,7 @@ namespace Tochka.JsonRpc.Server.Services
             catch (Exception e)
             {
                 log.LogWarning(e, $"{nameof(SafeNext)} failed: converting exception to json response");
+                PropagateItems(context.OriginalHttpContext, nestedHttpContext);
                 var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
                 return new JsonServerResponseWrapper(response, call, nestedHeaders);
             }
@@ -242,10 +246,12 @@ namespace Tochka.JsonRpc.Server.Services
             {
                 log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ActionDescriptorItemKey)}");
             }
+
             if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ActionResultTypeItemKey))
             {
                 log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ActionResultTypeItemKey)}");
             }
+
             if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ResponseErrorCodeItemKey))
             {
                 log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ResponseErrorCodeItemKey)}");
@@ -261,6 +267,11 @@ namespace Tochka.JsonRpc.Server.Services
         /// <returns></returns>
         internal virtual bool PropagateItemsInternal(HttpContext context, HttpContext nestedHttpContext, object itemKey)
         {
+            if (nestedHttpContext == null)
+            {
+                return false;
+            }
+
             if (!nestedHttpContext.Items.ContainsKey(itemKey))
             {
                 return false;
