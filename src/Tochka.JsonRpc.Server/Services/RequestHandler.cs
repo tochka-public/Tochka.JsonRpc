@@ -215,9 +215,9 @@ namespace Tochka.JsonRpc.Server.Services
             {
                 context.OriginalHttpContext.RequestAborted.ThrowIfCancellationRequested();
                 var nestedHttpContext = nestedContextFactory.Create(context.OriginalHttpContext, call, context.RequestEncoding);
-                PropagateItems(context.OriginalHttpContext, nestedHttpContext);
                 log.LogTrace($"{nameof(SafeNext)}: invoking pipeline on nested context");
                 await context.Next(nestedHttpContext);
+                PropagateItems(context.OriginalHttpContext, nestedHttpContext);
                 nestedHeaders = nestedHttpContext.Response.Headers;
                 var result = await responseReader.GetResponse(nestedHttpContext, call, allowRawResponses, context.OriginalHttpContext.RequestAborted);
                 if (result == null)
