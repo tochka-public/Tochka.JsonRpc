@@ -83,7 +83,7 @@ namespace Tochka.JsonRpc.Server.Models.Response
         /// <param name="context"></param>
         private void SetResponseContextItem(HttpContext context)
         {
-            var errorCode = Value[JsonRpcConstants.ErrorProperty]?[JsonRpcConstants.ErrorCodeProperty]?.Value<string>();
+            var errorCode = (Value as JObject)?[JsonRpcConstants.ErrorProperty]?[JsonRpcConstants.ErrorCodeProperty]?.Value<string>();
             if (!string.IsNullOrEmpty(errorCode))
             {
                 context.Items[JsonRpcConstants.ResponseErrorCodeItemKey] = errorCode;
