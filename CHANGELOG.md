@@ -1,3 +1,10 @@
+### [1.0.25](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.24...v1.0.25) (2021-04-12)
+
+
+### Bug Fixes
+
+* wrong line ([cfaff83](https://github.com/tochka-public/Tochka.JsonRpc/commit/cfaff830fbf11b25dae31f38b530c2354583b502))
+
 ### [1.0.24](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.23...v1.0.24) (2021-01-29)
 
 ### [1.0.23](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.22...v1.0.23) (2020-12-21)
