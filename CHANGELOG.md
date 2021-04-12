@@ -1,5 +1,8 @@
 ### [1.0.25](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.24...v1.0.25) (2021-04-12)
 
+### Features
+
+* **server:** passing additional info about nested HttpContext to real HttpContext (useful for metrics and tracing)
 
 ### Bug Fixes
 
