@@ -40,9 +40,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         [SetUp]
         public void Setup()
         {
-            testEnvironment = new TestEnvironment(services =>
-            {
-            });
+            testEnvironment = new TestEnvironment(services => { });
 
             contextFactoryMock = new Mock<INestedContextFactory>
             {
@@ -76,12 +74,14 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                 .Returns(new CancellationToken(true));
             var next = Mock.Of<RequestDelegate>();
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, next);
-            
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
+
             var result = await requestHandlerMock.Object.SafeNext(call, handlingContext, false);
 
             result.Should().BeOfType<JsonServerResponseWrapper>();
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<OperationCanceledException>()));
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
 
         [Test]
@@ -97,12 +97,14 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             nextMock.Setup(x => x(It.IsAny<HttpContext>()))
                 .Throws<DivideByZeroException>();
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, nextMock.Object);
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
 
             var result = await requestHandlerMock.Object.SafeNext(callMock.Object, handlingContext, false);
 
             result.Should().BeOfType<JsonServerResponseWrapper>();
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<DivideByZeroException>()));
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
 
         [Test]
@@ -118,6 +120,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, nextMock.Object);
             responseReaderMock.Setup(x => x.GetResponse(It.IsAny<HttpContext>(), It.IsAny<IUntypedCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new DivideByZeroException());
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
 
             var result = await requestHandlerMock.Object.SafeNext(callMock.Object, handlingContext, false);
 
@@ -125,6 +128,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             responseReaderMock.Verify(x => x.GetResponse(It.IsAny<HttpContext>(), It.IsAny<IUntypedCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()));
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<DivideByZeroException>()));
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
 
         [Test]
@@ -140,6 +144,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, nextMock.Object);
             responseReaderMock.Setup(x => x.GetResponse(It.IsAny<HttpContext>(), It.IsAny<IUntypedCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(Mock.Of<IServerResponseWrapper>());
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
 
             var result = await requestHandlerMock.Object.SafeNext(callMock.Object, handlingContext, false);
 
@@ -147,6 +152,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             result.Should().BeAssignableTo<IServerResponseWrapper>();
             responseReaderMock.Verify(x => x.GetResponse(It.IsAny<HttpContext>(), It.IsAny<IUntypedCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()));
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
 
         [Test]
@@ -160,6 +166,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                 .Returns(new CancellationToken(false));
             var nextMock = new Mock<RequestDelegate>();
             var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, nextMock.Object);
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
 
             var result = await requestHandlerMock.Object.SafeNext(callMock.Object, handlingContext, false);
 
@@ -168,6 +175,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<JsonRpcInternalException>()));
             responseReaderMock.Verify(x => x.GetResponse(It.IsAny<HttpContext>(), It.IsAny<IUntypedCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()));
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
 
         [Test]
@@ -213,7 +221,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                 .Returns(JsonRpcConstants.Version);
             var handlingContext = new HandlingContext(Mock.Of<HttpContext>(), Mock.Of<Encoding>(), Mock.Of<RequestDelegate>());
             requestHandlerMock.Setup(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), false))
-                .ReturnsAsync((IServerResponseWrapper)null);
+                .ReturnsAsync((IServerResponseWrapper) null);
 
             await requestHandlerMock.Object.GetResponseSafeInBatch(callMock.Object, handlingContext);
 
@@ -368,7 +376,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                     request
                 }
             };
-            
+
             var handlingContext = new HandlingContext(Mock.Of<HttpContext>(), Mock.Of<Encoding>(), Mock.Of<RequestDelegate>());
             requestHandlerMock.Setup(x => x.HandleBatchSequential(It.IsAny<BatchRequestWrapper>(), It.IsAny<HandlingContext>()))
                 .ReturnsAsync(value);
@@ -393,7 +401,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
                 }
             };
             var handlingContext = new HandlingContext(Mock.Of<HttpContext>(), Mock.Of<Encoding>(), Mock.Of<RequestDelegate>());
-            Func<Task> action = async () => await requestHandlerMock.Object.HandleBatch(batch, (BatchHandling)(-1), handlingContext);
+            Func<Task> action = async () => await requestHandlerMock.Object.HandleBatch(batch, (BatchHandling) (-1), handlingContext);
 
             await action.Should().ThrowAsync<ArgumentOutOfRangeException>();
             requestHandlerMock.Verify(x => x.HandleBatch(It.IsAny<BatchRequestWrapper>(), It.IsAny<BatchHandling>(), It.IsAny<HandlingContext>()));
@@ -677,6 +685,140 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             errorFactoryMock.Verify(x => x.Exception(It.IsAny<Exception>()));
         }
 
+        [Test]
+        public void Test_PropagateItemsInternal_IgnoresIfNoKey()
+        {
+            var key = "test";
+            var context = MockContext();
+            var nestedContext = MockContext();
+            context.Object.Items.Should().BeEmpty();
+            nestedContext.Object.Items.Should().BeEmpty();
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var result = requestHandlerMock.Object.PropagateItemsInternal(context.Object, nestedContext.Object, key);
+
+            result.Should().BeFalse();
+            context.Object.Items.Should().BeEmpty();
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, key), Times.Once);
+        }
+
+        [Test]
+        public void Test_PropagateItemsInternal_IgnoresIfNull()
+        {
+            var key = "test";
+            var context = MockContext();
+            context.Object.Items.Should().BeEmpty();
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var result = requestHandlerMock.Object.PropagateItemsInternal(context.Object, null, key);
+
+            result.Should().BeFalse();
+            context.Object.Items.Should().BeEmpty();
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, null, key), Times.Once);
+        }
+
+        [TestCase("value", "value")]
+        [TestCase("", "value")]
+        [TestCase(null, "value")]
+        [TestCase("value", "")]
+        [TestCase("", "")]
+        [TestCase(null, "")]
+        [TestCase("value", null)]
+        [TestCase("", null)]
+        [TestCase(null, null)]
+        public void Test_PropagateItemsInternal_SetsNullIfExists(string contextValue, string nestedContextValue)
+        {
+            var key = "test";
+            var context = MockContext();
+            var nestedContext = MockContext();
+            context.Object.Items[key] = contextValue;
+            nestedContext.Object.Items[key] = nestedContextValue;
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var result = requestHandlerMock.Object.PropagateItemsInternal(context.Object, nestedContext.Object, key);
+
+            result.Should().BeFalse();
+            context.Object.Items.Should().Contain(new KeyValuePair<object, object>(key, null));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, key), Times.Once);
+        }
+
+        [TestCase("value")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void Test_PropagateItemsInternal_SetsValueIfNotExists(string nestedContextValue)
+        {
+            var key = "test";
+            var context = MockContext();
+            var nestedContext = MockContext();
+            nestedContext.Object.Items[key] = nestedContextValue;
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var result = requestHandlerMock.Object.PropagateItemsInternal(context.Object, nestedContext.Object, key);
+
+            result.Should().BeTrue();
+            context.Object.Items.Should().Contain(new KeyValuePair<object, object>(key, nestedContextValue));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, key), Times.Once);
+        }
+
+        [TestCase("value", "value")]
+        [TestCase("", "value")]
+        [TestCase(null, "value")]
+        [TestCase("value", "")]
+        [TestCase("", "")]
+        [TestCase(null, "")]
+        [TestCase("value", null)]
+        [TestCase("", null)]
+        [TestCase(null, null)]
+        public void Test_PropagateItemsInternal_SetsNullIfCalledMultipleTimes(string value1, string value2)
+        {
+            var key = "test";
+            var context = MockContext();
+            var nestedContext1 = MockContext();
+            var nestedContext2 = MockContext();
+            context.Object.Items.Should().BeEmpty();
+            nestedContext1.Object.Items[key] = value1;
+            nestedContext2.Object.Items[key] = value2;
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var result1 = requestHandlerMock.Object.PropagateItemsInternal(context.Object, nestedContext1.Object, key);
+            var result2 = requestHandlerMock.Object.PropagateItemsInternal(context.Object, nestedContext2.Object, key);
+
+            result1.Should().BeTrue();
+            result2.Should().BeFalse();
+            context.Object.Items.Should().Contain(new KeyValuePair<object, object>(key, null));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, nestedContext1.Object, key), Times.Once);
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(context.Object, nestedContext2.Object, key), Times.Once);
+        }
+
+        [Test]
+        public void Test_PropagateItems_CallsInternalWithKeys()
+        {
+            var context = MockContext();
+            var nestedContext = MockContext();
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, JsonRpcConstants.ActionDescriptorItemKey))
+                .Verifiable();
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, JsonRpcConstants.ActionResultTypeItemKey))
+                .Verifiable();
+            requestHandlerMock
+                .Setup(x => x.PropagateItemsInternal(context.Object, nestedContext.Object, JsonRpcConstants.ResponseErrorCodeItemKey))
+                .Verifiable();
+
+            requestHandlerMock.Object.PropagateItems(context.Object, nestedContext.Object);
+
+            requestHandlerMock.Verify();
+        }
 
         [TearDown]
         public void TearDown_VerifyAfterTest()
@@ -687,6 +829,14 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             requestHandlerMock.VerifyNoOtherCalls();
 
             // dont care for nested context factory and options
+        }
+
+        private Mock<HttpContext> MockContext()
+        {
+            var items = new Dictionary<object, object>();
+            var httpContextMock = new Mock<HttpContext>();
+            httpContextMock.SetupGet(x => x.Items).Returns(items);
+            return httpContextMock;
         }
     }
 }

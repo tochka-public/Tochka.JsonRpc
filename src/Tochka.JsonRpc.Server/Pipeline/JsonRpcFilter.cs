@@ -35,6 +35,7 @@ namespace Tochka.JsonRpc.Server.Pipeline
             var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IJsonRpcSerializer;
             context.Result = actionResultConverter.ConvertActionResult(context.Result, methodMetadata, serializer);
             context.HttpContext.Items[JsonRpcConstants.ActionResultTypeItemKey] = context.Result.GetType();
+            context.HttpContext.Items[JsonRpcConstants.ActionDescriptorItemKey] = context.ActionDescriptor;
             log.LogTrace($"{nameof(OnResultExecuting)} Completed");
         }
 
@@ -55,6 +56,7 @@ namespace Tochka.JsonRpc.Server.Pipeline
             var result = actionResultConverter.GetFailedBindingResult(context.ModelState);
             context.Result = result;
             context.HttpContext.Items[JsonRpcConstants.ActionResultTypeItemKey] = result.GetType();
+            context.HttpContext.Items[JsonRpcConstants.ActionDescriptorItemKey] = context.ActionDescriptor;
             log.LogTrace($"{nameof(OnActionExecuting)} Completed");
         }
 

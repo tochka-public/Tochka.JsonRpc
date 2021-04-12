@@ -125,6 +125,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
                 .Returns(Mock.Of<IActionResult>).Verifiable();
             var itemsMock = new Mock<IDictionary<object, object>>(MockBehavior.Strict);
             itemsMock.SetupSet(x => x[JsonRpcConstants.ActionResultTypeItemKey] = It.IsAny<Type>()).Verifiable();
+            itemsMock.SetupSet(x => x[JsonRpcConstants.ActionDescriptorItemKey] = It.IsAny<object>()).Verifiable();
             var httpContextMock = new Mock<HttpContext>(MockBehavior.Strict);
             httpContextMock.SetupGet(x => x.Items).Returns(itemsMock.Object).Verifiable();
             var mocks = new[]
@@ -230,6 +231,7 @@ namespace Tochka.JsonRpc.Server.Tests.Pipeline
             actionDescriptorMock.Object.Properties = properties;
             var itemsMock = new Mock<IDictionary<object, object>>(MockBehavior.Strict);
             itemsMock.SetupSet(x => x[JsonRpcConstants.ActionResultTypeItemKey] = It.IsAny<object>()).Verifiable();
+            itemsMock.SetupSet(x => x[JsonRpcConstants.ActionDescriptorItemKey] = It.IsAny<object>()).Verifiable();
             var httpContextMock = new Mock<HttpContext>(MockBehavior.Strict);
             httpContextMock.SetupGet(x => x.RequestServices).Returns(testEnvironment.ServiceProvider).Verifiable();
             httpContextMock.SetupGet(x => x.Items).Returns(itemsMock.Object).Verifiable();
