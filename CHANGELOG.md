@@ -1,3 +1,10 @@
+### [1.0.26-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.25...v1.0.26-beta.1) (2021-04-13)
+
+
+### Features
+
+* **server:** Introduced `JsonRpcErrorResponseException` to allow direct control over error responses ([501c0ed](https://github.com/tochka-public/Tochka.JsonRpc/commit/501c0ed4b6169bd323f855f255f20f238366ef90))
+
 ### [1.0.25](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.24...v1.0.25) (2021-04-12)
 
 ### Features
