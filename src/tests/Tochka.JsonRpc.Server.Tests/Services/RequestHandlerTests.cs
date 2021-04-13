@@ -106,6 +106,42 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
             requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
         }
+        
+        [Test]
+        public async Task Test_SafeNext_WrapsErrorResponseException()
+        {
+            var callMock = new Mock<IUntypedCall>();
+            callMock.SetupGet(x => x.Jsonrpc)
+                .Returns(JsonRpcConstants.Version);
+            var httpContextMock = new Mock<HttpContext>();
+            httpContextMock.SetupGet(x => x.RequestAborted)
+                .Returns(new CancellationToken(false));
+            var nextMock = new Mock<RequestDelegate>();
+            var errorData = new object();
+            var exception = new JsonRpcErrorResponseException(new Error<object>
+            {
+                Code = 42,
+                Data = errorData,
+                Message = "test"
+            });
+            nextMock.Setup(x => x(It.IsAny<HttpContext>()))
+                .Throws(exception);
+            var handlingContext = new HandlingContext(httpContextMock.Object, Encoding.UTF8, nextMock.Object);
+            requestHandlerMock.Setup(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
+
+            var result = await requestHandlerMock.Object.SafeNext(callMock.Object, handlingContext, false);
+
+            result.Should().BeOfType<JsonServerResponseWrapper>();
+            var response = (result as JsonServerResponseWrapper).Value;
+            response["error"].Should().NotBeNull();
+            response["error"]["code"].Value<int>().Should().Be(42);
+            response["error"]["message"].Value<string>().Should().Be("test");
+            response["error"]["data"].Should().NotBeNull();
+                
+            errorFactoryMock.Verify(x => x.Exception(It.IsAny<Exception>()), Times.Never);
+            requestHandlerMock.Verify(x => x.SafeNext(It.IsAny<IUntypedCall>(), It.IsAny<HandlingContext>(), It.IsAny<bool>()));
+            requestHandlerMock.Verify(x => x.PropagateItemsInternal(It.IsAny<HttpContext>(), It.IsAny<HttpContext>(), It.IsAny<object>()));
+        }
 
         [Test]
         public async Task Test_SafeNext_WrapsReaderException()

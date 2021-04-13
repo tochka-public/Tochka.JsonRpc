@@ -56,10 +56,7 @@ namespace Tochka.JsonRpc.Client.Tests
             var services = new ServiceCollection();
             var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
             services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options =>
-            {
-                options.Url = "http://foo.bar/";
-            });
+            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
             services.AddSingleton(Mock.Of<ILogger>());
 
             services.AddJsonRpcClient<TestClient>(actionMock.Object);
@@ -73,10 +70,7 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             var services = new ServiceCollection();
             services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options =>
-            {
-                options.Url = "http://foo.bar/";
-            });
+            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
             services.AddSingleton(Mock.Of<ILogger>());
 
             services.AddJsonRpcClient<TestClient>();
@@ -123,10 +117,7 @@ namespace Tochka.JsonRpc.Client.Tests
             var services = new ServiceCollection();
             var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
             services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options =>
-            {
-                options.Url = "http://foo.bar/";
-            });
+            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
             services.AddSingleton(Mock.Of<ILogger>());
 
             services.AddJsonRpcClient<ITestClient, TestClient>(actionMock.Object);
@@ -140,13 +131,10 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             var services = new ServiceCollection();
             services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options =>
-            {
-                options.Url = "http://foo.bar/";
-            });
+            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
             services.AddSingleton(Mock.Of<ILogger>());
 
-            services.AddJsonRpcClient<ITestClient,TestClient>();
+            services.AddJsonRpcClient<ITestClient, TestClient>();
             services.BuildServiceProvider().GetRequiredService<ITestClient>();
         }
 
