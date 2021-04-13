@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Tochka.JsonRpc.Common;
@@ -23,6 +24,7 @@ using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Conventions;
+using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Pipeline;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
@@ -338,17 +340,17 @@ namespace Tochka.JsonRpc.Server.Tests
         }
 
         [Test]
-        public void Test_ConvertExceptionToResponse_ConvertsExceptions()
+        public void Test_ConvertExceptionToResponse_ConvertsGeneralExceptions()
         {
             var errorFactoryMock = new Mock<IJsonRpcErrorFactory>();
             errorFactoryMock
                 .Setup(x => x.Exception(It.IsAny<Exception>()))
                 .Returns(new Error<object>
-            {
-                Code = 0,
-                Message = string.Empty,
-                Data = string.Empty
-            });
+                {
+                    Code = 0,
+                    Message = string.Empty,
+                    Data = string.Empty
+                });
             var exception = new Exception();
 
             var result = errorFactoryMock.Object.ConvertExceptionToResponse(exception, new HeaderJsonRpcSerializer());
@@ -359,6 +361,36 @@ namespace Tochka.JsonRpc.Server.Tests
             result["error"]["code"].Should().NotBeNull();
             result["error"]["message"].Should().NotBeNull();
             result["error"]["data"].Should().NotBeNull();
+        }
+
+        [Test]
+        public void Test_ConvertExceptionToResponse_ConvertsErrorResponseExceptions()
+        {
+            var errorFactoryMock = new Mock<IJsonRpcErrorFactory>();
+            var errorData = new object();
+            var exception = new JsonRpcErrorResponseException(new Error<object>
+            {
+                Code = 42,
+                Data = errorData,
+                Message = "test"
+            });
+
+            var result = errorFactoryMock.Object.ConvertExceptionToResponse(exception, new HeaderJsonRpcSerializer());
+
+            errorFactoryMock.VerifyNoOtherCalls();
+            result["error"].Should().NotBeNull();
+            result["error"]["code"].Value<int>().Should().Be(42);
+            result["error"]["message"].Value<string>().Should().Be("test");
+            result["error"]["data"].Should().NotBeNull();
+        }
+
+        [Test]
+        public void Test_ThrowAsResponseException_Throws()
+        {
+            var error = Mock.Of<IError>();
+            Action action = () => error.ThrowAsResponseException();
+
+            action.Should().ThrowExactly<JsonRpcErrorResponseException>().Which.Error.Should().BeSameAs(error);
         }
 
         private static Mock<T> RegisterMock<T>(IServiceCollection services, params object[] args) where T : class

@@ -16,6 +16,7 @@ using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Conventions;
+using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Pipeline;
 using Tochka.JsonRpc.Server.Services;
@@ -25,10 +26,10 @@ namespace Tochka.JsonRpc.Server
 {
     public static class Extensions
     {
-        public static IMvcBuilder AddJsonRpcServer(this IMvcBuilder mvcBuilder, Action<JsonRpcOptions> configureOptions=null)
+        public static IMvcBuilder AddJsonRpcServer(this IMvcBuilder mvcBuilder, Action<JsonRpcOptions> configureOptions = null)
         {
             var services = mvcBuilder.Services;
-            if(services == null) throw new ArgumentNullException();
+            if (services == null) throw new ArgumentNullException();
             services.Configure(configureOptions ?? (options => { }));
 
             // mvc integration
@@ -51,7 +52,7 @@ namespace Tochka.JsonRpc.Server
             services.TryAddSingleton<IParamsParser, ParamsParser>();
             services.TryAddScoped<IActionResultConverter, ActionResultConverter>();
             services.TryAddTransient<INestedContextFactory, NestedContextFactory>();
-            
+
             // required non-overridable services
             services.TryAddJsonRpcSerializer<HeaderJsonRpcSerializer>();
             services.TryAddJsonRpcSerializer<SnakeCaseJsonRpcSerializer>();
@@ -60,7 +61,7 @@ namespace Tochka.JsonRpc.Server
         }
 
         public static IServiceCollection TryAddJsonRpcSerializer<T>(this IServiceCollection services)
-        where T: class, IJsonRpcSerializer
+            where T : class, IJsonRpcSerializer
         {
             // this is wrong because resolves two different instances, but we don't care, they are true singletons under the hood
             services.TryAddEnumerable(new ServiceDescriptor(typeof(IJsonRpcSerializer), typeof(T), ServiceLifetime.Singleton));
@@ -68,7 +69,7 @@ namespace Tochka.JsonRpc.Server
             return services;
         }
 
-        public static IUntypedCall GetJsonRpcCall(this HttpContext context) => (IUntypedCall)context.Items[JsonRpcConstants.RequestItemKey];
+        public static IUntypedCall GetJsonRpcCall(this HttpContext context) => (IUntypedCall) context.Items[JsonRpcConstants.RequestItemKey];
 
         /// <summary>
         /// Get serialized property/method/action/controller/parameter JSON name
@@ -96,7 +97,10 @@ namespace Tochka.JsonRpc.Server
         /// <returns></returns>
         public static JToken ConvertExceptionToResponse(this IJsonRpcErrorFactory errorFactory, Exception e, HeaderJsonRpcSerializer headerJsonRpcSerializer)
         {
-            return errorFactory.ConvertErrorToResponse(errorFactory.Exception(e), headerJsonRpcSerializer);
+            var value = e is JsonRpcErrorResponseException responseException
+                ? responseException.Error
+                : errorFactory.Exception(e);
+            return errorFactory.ConvertErrorToResponse(value, headerJsonRpcSerializer);
         }
 
         /// <summary>
@@ -113,11 +117,21 @@ namespace Tochka.JsonRpc.Server
                 Error = new Error<object>
                 {
                     Code = value.Code,
-                    Message = value.Message, 
+                    Message = value.Message,
                     Data = value.GetData()
                 }
             };
             return JToken.FromObject(error, headerJsonRpcSerializer.Serializer);
+        }
+
+        /// <summary>
+        /// Throws special JsonRpcErrorResponseException which is converted into response with given code, message and data
+        /// </summary>
+        /// <param name="error"></param>
+        /// <exception cref="JsonRpcErrorResponseException"></exception>
+        public static void ThrowAsResponseException(this IError error)
+        {
+            throw new JsonRpcErrorResponseException(error);
         }
 
         internal static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
@@ -127,5 +141,6 @@ namespace Tochka.JsonRpc.Server
             serviceCollection.TryAddEnumerable(new ServiceDescriptor(typeof(IConfigureOptions<MvcOptions>), typeof(ConventionConfigurator<T>), ServiceLifetime.Singleton));
             return serviceCollection;
         }
+
     }
 }
