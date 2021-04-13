@@ -1,3 +1,5 @@
+### [1.0.26-beta.2](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.26-beta.1...v1.0.26-beta.2) (2021-04-13)
+
 ### [1.0.26-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.25...v1.0.26-beta.1) (2021-04-13)
 
 
