@@ -203,7 +203,10 @@ namespace Tochka.JsonRpc.Server.Services
             }
             catch (Exception e)
             {
-                log.LogWarning(e, $"{nameof(GetResponseSafeInBatch)} failed: converting exception to json response");
+                if (!(e is JsonRpcErrorResponseException))
+                {
+                    log.LogWarning(e, $"{nameof(GetResponseSafeInBatch)} failed: converting exception to json response");
+                }
                 return errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
             }
         }
@@ -233,7 +236,11 @@ namespace Tochka.JsonRpc.Server.Services
             }
             catch (Exception e)
             {
-                log.LogWarning(e, $"{nameof(SafeNext)} failed: converting exception to json response");
+                if (!(e is JsonRpcErrorResponseException))
+                {
+                    log.LogWarning(e, $"{nameof(SafeNext)} failed: converting exception to json response");
+                }
+
                 PropagateItems(context.OriginalHttpContext, nestedHttpContext);
                 var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
                 return new JsonServerResponseWrapper(response, call, nestedHeaders);
