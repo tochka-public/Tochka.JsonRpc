@@ -1,3 +1,10 @@
+### [1.0.27](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.26...v1.0.27) (2021-04-16)
+
+
+### Bug Fixes
+
+* **server:** make `JsonRpcErrorResponseException` public ([f97414c](https://github.com/tochka-public/Tochka.JsonRpc/commit/f97414cc98500aeb4178bade95bae6378d8e7f9e))
+
 ### [1.0.26](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.25...v1.0.26) (2021-04-15)
 
 
