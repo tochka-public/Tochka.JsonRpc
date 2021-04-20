@@ -36,7 +36,6 @@ namespace Tochka.JsonRpc.Server
             services.TryAddConvention<ControllerConvention>();
             services.TryAddConvention<ActionConvention>();
             services.TryAddConvention<ParameterConvention>();
-            services.AddSingleton<IStartupFilter, JsonRpcStartupFilter>();
             services.TryAddSingleton<JsonRpcFormatter>();
             services.TryAddSingleton<JsonRpcModelBinder>();
             services.TryAddScoped<JsonRpcFilter>();
