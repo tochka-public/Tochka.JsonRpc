@@ -12,7 +12,9 @@ Examples of basic JSON Rpc calls with default configuration
 
 > `Startup.cs`
 ```cs
-.AddJsonRpcServer()
+services.AddJsonRpcServer();
+
+app.UseMiddleware<JsonRpcMiddleware>();
 ```
 
 > `EchoController.cs`
@@ -198,6 +200,8 @@ Break protocol a bit and return bytes, HTTP codes, etc.
 .AddJsonRpcServer(options => {
     options.AllowRawResponses = true;
 });
+
+app.UseMiddleware<JsonRpcMiddleware>();
 ```
 
 > `DataController.cs`
@@ -366,6 +370,8 @@ Hide or reveal exception information
 .AddJsonRpcServer(options => {
     options.DetailedResponseExceptions = /*true or false*/;
 });
+
+app.UseMiddleware<JsonRpcMiddleware>();
 ```
 
 > `ErrorController.cs`
@@ -498,6 +504,8 @@ Change default route and override it with custom route in controller or action
 .AddJsonRpcServer(options => {
     options.DefaultMethodOptions.Route = "/public_api";
 });
+
+app.UseMiddleware<JsonRpcMiddleware>();
 ```
 
 > `UsersController.cs`
@@ -667,6 +675,8 @@ Request's `method` property can be sent in different formats depending on global
 .AddJsonRpcServer(options => {
     options.DefaultMethodOptions.MethodStyle = /* MethodStyle.ControllerAndAction or MethodStyle.ActionOnly*/;
 });
+
+app.UseMiddleware<JsonRpcMiddleware>();
 ```
 
 > `EchoController.cs`
@@ -789,6 +799,8 @@ Note how changing serialization affects `params` and `method`.
 });
 
 services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
+
+app.UseMiddleware<JsonRpcMiddleware>();
 ```
 
 > `SimpleCalcController.cs`
@@ -1808,6 +1820,7 @@ public void ConfigureServices(IServiceCollection services)
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
     app
+        .UseMiddleware<JsonRpcMiddleware>()
         .UseMiddleware<JsonRpcRequestLoggingMiddleware>()  // <-- this logs full request JSON. If batch, each request is logged separately
         .UseMvc();
 }

@@ -4,7 +4,7 @@
 
 Install nuget package `Tochka.JsonRpc.Server`.
 
-Register it in `Startup.cs` and set compatibility version. Note that `.AddJsonRpcServer()` is an extension of `IMvcBuilder`, not `IServiceCollection`.
+Register it in `Startup.cs` and set compatibility version. Note that `.AddJsonRpcServer()` is an extension of `IMvcBuilder`, not `IServiceCollection`. Add middleware as early as possible.
 
 ```cs
 public void ConfigureServices(IServiceCollection services)
@@ -16,6 +16,7 @@ public void ConfigureServices(IServiceCollection services)
 
 public void Configure(IApplicationBuilder app)
 {
+    app.UseMiddleware<JsonRpcMiddleware>();  // <-- add this
     app.UseMvc();  // <-- this is required obviously because we work on top of MVC
 }
 ```
