@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Tochka.JsonRpc.Server.Pipeline;
 
 namespace Tochka.JsonRpc.Server.IntegrationTests
 {
@@ -40,11 +41,12 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
         public void Configure(IApplicationBuilder app)
         {
             app
-                    /*
+                /*
                 .UseAuthentication()
                 .UseDefaultFiles()
                 .UseStaticFiles()
                 */
+                .UseMiddleware<JsonRpcMiddleware>()
                 .UseMvc();
         }
     }
