@@ -1,3 +1,19 @@
+### [1.0.28](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.27...v1.0.28) (2021-04-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **server:** Removed StartupFilter to enforce manual JsonRpcMiddleware registration for better flexibility
+
+### Bug Fixes
+
+* **server:** reflect changes in docs ([ff1bcbc](https://github.com/tochka-public/Tochka.JsonRpc/commit/ff1bcbc53148ab9e6da4f82f2e79da40ceacbf43))
+
+
+### Code Refactoring
+
+* **server:** Removed StartupFilter to enforce manual JsonRpcMiddleware registration for better flexibility ([ce735da](https://github.com/tochka-public/Tochka.JsonRpc/commit/ce735da6f91e3f841f9b4c1cbb0b4661ad864a60))
+
 ### [1.0.27](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.26...v1.0.27) (2021-04-16)
 
 
