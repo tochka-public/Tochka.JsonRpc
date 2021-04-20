@@ -98,7 +98,6 @@ namespace Tochka.JsonRpc.Server.Tests
             result.Remove((typeof(ControllerConvention), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(ActionConvention), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(ParameterConvention), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(IStartupFilter), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(JsonRpcFormatter), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(JsonRpcModelBinder), ServiceLifetime.Singleton)).Should().BeTrue();
             result.Remove((typeof(JsonRpcFilter), ServiceLifetime.Scoped)).Should().BeTrue();
