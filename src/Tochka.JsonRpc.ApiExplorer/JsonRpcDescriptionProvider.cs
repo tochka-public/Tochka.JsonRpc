@@ -51,7 +51,11 @@ namespace Tochka.JsonRpc.ApiExplorer
             var jsonRpcActions = context.Actions.Where(x => x.GetProperty<MethodMetadata>() != null);
             foreach (var action in jsonRpcActions)
             {
-                var originalDescription = existingDescriptions[action];
+                if (!existingDescriptions.TryGetValue(action, out var originalDescription))
+                {
+                    // action was excluded from Results, eg because ignored with [ApiExplorerSettings(IgnoreApi = true)]
+                    continue;
+                }
                 var actionXmlDoc = (originalDescription.ActionDescriptor as ControllerActionDescriptor).MethodInfo.GetXmlDocsElement();
                 var methodMetadata = action.GetProperty<MethodMetadata>();
                 var actionName = methodMatcher.GetActionName(methodMetadata);
