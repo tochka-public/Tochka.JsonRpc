@@ -1,3 +1,10 @@
+### [1.0.29-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.28...v1.0.29-beta.1) (2021-04-27)
+
+
+### Bug Fixes
+
+* **server:** Support usage of ApiExplorerSettingsAttribute ([1b786fe](https://github.com/tochka-public/Tochka.JsonRpc/commit/1b786fe8421bb032bb7bbbaa2dcfab6bf4603b80))
+
 ### [1.0.28](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.27...v1.0.28) (2021-04-20)
 
 
