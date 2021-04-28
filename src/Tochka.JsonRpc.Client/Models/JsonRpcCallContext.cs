@@ -9,6 +9,7 @@ using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
+using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models
 {
@@ -29,8 +30,8 @@ namespace Tochka.JsonRpc.Client.Models
         public IResponse SingleResponse { get; private set; }
 
         public List<IResponse> BatchResponse { get; private set; }
-
         public IError Error { get; private set; }
+        public string ErrorInfo { get; private set; }
 
         public void WithRequestUrl(string requestUrl)
         {
@@ -67,9 +68,9 @@ namespace Tochka.JsonRpc.Client.Models
             }
         }
 
-        public void WithHttpContent(HttpContent httpContent)
+        public void WithHttpContent(HttpContent httpContent, string httpContentString)
         {
-            HttpContentInfo = $"{httpContent}";
+            HttpContentInfo = GetStringWithLimit(httpContentString);
             if (httpContent == null)
             {
                 throw new JsonRpcException("Response content is null", this);
@@ -152,9 +153,10 @@ namespace Tochka.JsonRpc.Client.Models
             }
         }
 
-        public void WithError(IError error)
+        public void WithError(UntypedErrorResponse untypedErrorResponse)
         {
-            Error = error;
+            ErrorInfo = GetStringWithLimit(untypedErrorResponse.RawError);
+            Error = untypedErrorResponse.Error;
         }
 
         [ExcludeFromCodeCoverage]
@@ -225,11 +227,11 @@ namespace Tochka.JsonRpc.Client.Models
                 emptyOutput = false;
             }
 
-            if (Error != null)
+            if (ErrorInfo != null)
             {
                 sb.AppendLine();
                 sb.AppendLine($"    JSON Rpc error:");
-                sb.AppendLine($"        {Error}");
+                sb.AppendLine($"        {ErrorInfo}");
                 emptyOutput = false;
             }
 
@@ -240,5 +242,10 @@ namespace Tochka.JsonRpc.Client.Models
 
             return sb.ToString();
         }
+
+        private string GetStringWithLimit(string str) =>
+            str.Length <= JsonRpcConstants.MaxLenghtLogging
+                ? str
+                : str.Substring(0, JsonRpcConstants.MaxLenghtLogging - 1);
     }
 }

@@ -27,6 +27,6 @@ namespace Tochka.JsonRpc.Common.Models.Request
             };
         }
 
-        public override string ToString() => $"{nameof(Request<object>)}<{typeof(TParams).Name}>: {nameof(Method)} [{Method}], {nameof(Id)} [{Id}], {nameof(Params)} [{Params}]";
+        public override string ToString() => $"{nameof(Request<object>)}: {nameof(Method)} [{Method}], {nameof(Id)} [{Id}], {nameof(Params)} [{Params}]";
     }
 }
