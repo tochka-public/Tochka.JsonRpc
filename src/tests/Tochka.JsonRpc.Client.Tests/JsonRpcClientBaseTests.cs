@@ -93,7 +93,7 @@ namespace Tochka.JsonRpc.Client.Tests
             var url = "test";
             var method = "method";
             var parameters = new object();
-            
+
             clientMock.Setup(x => x.SendNotification(url, It.Is<Notification<object>>(y => y.Method == method && y.Params == parameters), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
@@ -259,15 +259,15 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new SingleResponseWrapper(){Single = new UntypedResponse()});
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns(new SingleResponseWrapper() {Single = new UntypedResponse()});
 
             var result = await clientMock.Object.SendRequest(request, new CancellationToken());
 
             result.Should().NotBeNull();
             serializerMock.Verify(x => x.Serializer);
             clientMock.Verify(x => x.CreateHttpContent(It.IsAny<UntypedRequest>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()));
+            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
         }
 
         [TestCase(HttpStatusCode.NoContent)]
@@ -355,8 +355,8 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<IResponseWrapper>());
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns(Mock.Of<IResponseWrapper>());
 
             Func<Task> action = async () => await clientMock.Object.SendRequest(request, new CancellationToken());
 
@@ -377,18 +377,21 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new BatchResponseWrapper() { Batch = new List<IResponse>()
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns(new BatchResponseWrapper()
                 {
-                    new Response<object>()
-                } });
+                    Batch = new List<IResponse>()
+                    {
+                        new Response<object>()
+                    }
+                });
 
             var result = await clientMock.Object.SendBatch(batch, new CancellationToken());
 
             result.Should().NotBeNull();
             serializerMock.Verify(x => x.Serializer);
             clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()));
+            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
         }
 
         [Test]
@@ -405,8 +408,8 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new SingleResponseWrapper()
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns(new SingleResponseWrapper()
                 {
                     Single = new Response<object>()
                 });
@@ -416,7 +419,7 @@ namespace Tochka.JsonRpc.Client.Tests
 
             serializerMock.Verify(x => x.Serializer);
             clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()));
+            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
         }
 
         [Test]
@@ -433,15 +436,15 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<IResponseWrapper>());
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns(Mock.Of<IResponseWrapper>());
             Func<Task> action = async () => await clientMock.Object.SendBatch(batch, new CancellationToken());
 
             await action.Should().ThrowAsync<JsonRpcException>();
 
             serializerMock.Verify(x => x.Serializer);
             clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()));
+            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
         }
 
         [Test]
@@ -458,15 +461,15 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((IResponseWrapper)null);
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns((IResponseWrapper) null);
             Func<Task> action = async () => await clientMock.Object.SendBatch(batch, new CancellationToken());
 
             await action.Should().ThrowAsync<JsonRpcException>();
 
             serializerMock.Verify(x => x.Serializer);
             clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()));
+            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
         }
 
         [Test]
@@ -479,8 +482,8 @@ namespace Tochka.JsonRpc.Client.Tests
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
             handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<HttpResponseMessage>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new BatchResponseWrapper()
+            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
+                .Returns(new BatchResponseWrapper()
                 {
                     Batch = new List<IResponse>()
                 });
@@ -513,33 +516,27 @@ namespace Tochka.JsonRpc.Client.Tests
         }
 
         [Test]
-        public async Task Test_ParseBody_DeserializesJson()
+        public void Test_ParseBody_DeserializesJson()
         {
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
-            var httpResponse = new HttpResponseMessage()
-            {
-                Content = new StringContent(@"{""id"": null, ""result"": null}")
-            };
+            var stringContent = @"{""id"": null, ""result"": null}";
 
-            var result = await clientMock.Object.ParseBody(httpResponse, new CancellationToken());
+            var result = clientMock.Object.ParseBody(stringContent);
 
             result.Should().BeOfType<SingleResponseWrapper>();
         }
 
         [Test]
-        public async Task Test_ParseBody_ThrowsOnBadJson()
+        public void Test_ParseBody_ThrowsOnBadJson()
         {
             serializerMock.Setup(x => x.Serializer)
                 .Returns(new JsonSerializer());
-            var httpResponse = new HttpResponseMessage()
-            {
-                Content = new StringContent(@"{""id"": null, ""result"": null")
-            };
+            var stringContent = @"{""id"": null, ""result"": null";
 
-            Func<Task> action = async () => await clientMock.Object.ParseBody(httpResponse, new CancellationToken());
+            Action action = () => clientMock.Object.ParseBody(stringContent);
 
-            await action.Should().ThrowAsync<JsonException>();
+            action.Should().Throw<JsonException>();
         }
     }
 }
