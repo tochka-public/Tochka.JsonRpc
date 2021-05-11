@@ -114,6 +114,6 @@ namespace Tochka.JsonRpc.Common
         /// <summary>
         /// Restriction for logging long texts
         /// </summary>
-        public const int MaxLenghtLogging = 5000;
+        public const int LogStringLimit = 5000;
     }
 }

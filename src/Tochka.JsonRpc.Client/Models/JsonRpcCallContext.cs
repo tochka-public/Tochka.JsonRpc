@@ -244,8 +244,8 @@ namespace Tochka.JsonRpc.Client.Models
         }
 
         private string GetStringWithLimit(string str) =>
-            string.IsNullOrWhiteSpace(str) || str.Length <= JsonRpcConstants.MaxLenghtLogging
+            string.IsNullOrEmpty(str) || str.Length <= JsonRpcConstants.LogStringLimit
                 ? str
-                : str.Substring(0, JsonRpcConstants.MaxLenghtLogging - 1);
+                : str.Substring(0, JsonRpcConstants.LogStringLimit - 1);
     }
 }
