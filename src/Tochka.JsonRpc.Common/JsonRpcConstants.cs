@@ -110,5 +110,10 @@ namespace Tochka.JsonRpc.Common
         /// "REST" Swagger document name for non-JsonRpc actions
         /// </summary>
         public const string DefaultSwaggerDoc = "rest";
+
+        /// <summary>
+        /// Restriction for logging long texts
+        /// </summary>
+        public const int LogStringLimit = 5000;
     }
 }

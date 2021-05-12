@@ -39,7 +39,7 @@ namespace Tochka.JsonRpc.Client.Models
                 case UntypedResponse untypedResponse:
                     return untypedResponse.Result.ToObject<T>(serializer.Serializer);
                 case UntypedErrorResponse untypedErrorResponse:
-                    context.WithError(untypedErrorResponse.Error);
+                    context.WithError(untypedErrorResponse);
                     throw new JsonRpcException($"Expected successful response with [{typeof(T).Name}] paparamsyload, got error", context);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name);

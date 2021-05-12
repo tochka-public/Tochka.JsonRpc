@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using FluentAssertions;
 using Moq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Common.Models.Id;
@@ -45,8 +46,8 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithSingleResponse_ThrowsIfHasBatchResponse()
         {
-            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() { new UntypedRequest()});
-            jsonRpcCallContext.WithBatchResponse(new List<IResponse>(){new UntypedResponse()});
+            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() {new UntypedRequest()});
+            jsonRpcCallContext.WithBatchResponse(new List<IResponse>() {new UntypedResponse()});
 
             Action action = () => jsonRpcCallContext.WithSingleResponse(Mock.Of<IResponse>());
 
@@ -64,7 +65,7 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithSingleResponse_ThrowsOnWrongVersion()
         {
-            Action action = () => jsonRpcCallContext.WithSingleResponse(new UntypedResponse(){Jsonrpc = ""});
+            Action action = () => jsonRpcCallContext.WithSingleResponse(new UntypedResponse() {Jsonrpc = ""});
 
             action.Should().Throw<JsonRpcException>();
         }
@@ -90,7 +91,7 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithSingleResponse_ThrowsOnIdMismatch()
         {
-            jsonRpcCallContext.WithSingle(new UntypedRequest(){Id = new StringRpcId("")});
+            jsonRpcCallContext.WithSingle(new UntypedRequest() {Id = new StringRpcId("")});
 
             Action action = () => jsonRpcCallContext.WithSingleResponse(new UntypedResponse());
 
@@ -114,8 +115,8 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             jsonRpcCallContext.WithSingle(new UntypedRequest());
             jsonRpcCallContext.WithSingleResponse(new UntypedResponse());
-            
-            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() { new UntypedResponse() });
+
+            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() {new UntypedResponse()});
 
             action.Should().Throw<InvalidOperationException>();
         }
@@ -125,7 +126,7 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             jsonRpcCallContext.WithBatch(new List<IUntypedCall>());
 
-            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() { new UntypedResponse() });
+            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() {new UntypedResponse()});
 
             action.Should().Throw<InvalidOperationException>();
         }
@@ -133,7 +134,7 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithBatchResponse_ThrowsOnNull()
         {
-            jsonRpcCallContext.WithBatch(new List<IUntypedCall>(){new UntypedRequest()});
+            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() {new UntypedRequest()});
 
             Action action = () => jsonRpcCallContext.WithBatchResponse(null);
 
@@ -143,7 +144,7 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithBatchResponse_ThrowsOnEmpty()
         {
-            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() { new UntypedRequest() });
+            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() {new UntypedRequest()});
 
             Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>());
 
@@ -153,9 +154,9 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithBatchResponse_ThrowsOnCountMismatch()
         {
-            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() { new UntypedRequest(), new UntypedRequest() });
+            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() {new UntypedRequest(), new UntypedRequest()});
 
-            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>(){new UntypedResponse()});
+            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() {new UntypedResponse()});
 
             action.Should().Throw<JsonRpcException>();
         }
@@ -163,9 +164,9 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithBatchResponse_ThrowsOnWrongVersion()
         {
-            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() { new UntypedRequest(), new UntypedRequest() });
+            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() {new UntypedRequest(), new UntypedRequest()});
 
-            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() { new UntypedResponse(), new UntypedResponse(){Jsonrpc = ""} });
+            Action action = () => jsonRpcCallContext.WithBatchResponse(new List<IResponse>() {new UntypedResponse(), new UntypedResponse() {Jsonrpc = ""}});
 
             action.Should().Throw<JsonRpcException>();
         }
@@ -173,8 +174,8 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithBatchResponse_Works()
         {
-            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() { new UntypedRequest(), new UntypedRequest() });
-            var batchResponse = new List<IResponse>() { new UntypedResponse(), new UntypedResponse() };
+            jsonRpcCallContext.WithBatch(new List<IUntypedCall>() {new UntypedRequest(), new UntypedRequest()});
+            var batchResponse = new List<IResponse>() {new UntypedResponse(), new UntypedResponse()};
 
             Action action = () => jsonRpcCallContext.WithBatchResponse(batchResponse);
 
@@ -186,9 +187,14 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithError_Works()
         {
-            var error = Mock.Of<IError>();
-
-            jsonRpcCallContext.WithError(error);
+            var error = Mock.Of<Error<JToken>>();
+            const string errorString = "some-error";
+            var untypedErrorResponse = new UntypedErrorResponse
+            {
+                Error = error,
+                RawError = errorString
+            };
+            jsonRpcCallContext.WithError(untypedErrorResponse);
 
             jsonRpcCallContext.Error.Should().Be(error);
         }
@@ -215,7 +221,7 @@ namespace Tochka.JsonRpc.Client.Tests
         [Test]
         public void Test_WithHttpContent_ThrowsOnNull()
         {
-            Action action = () => jsonRpcCallContext.WithHttpContent(null);
+            Action action = () => jsonRpcCallContext.WithHttpContent(null, null);
 
             action.Should().Throw<JsonRpcException>();
         }
@@ -231,7 +237,7 @@ namespace Tochka.JsonRpc.Client.Tests
                 }
             };
 
-            Action action = () => jsonRpcCallContext.WithHttpContent(content);
+            Action action = () => jsonRpcCallContext.WithHttpContent(content, null);
 
             action.Should().Throw<JsonRpcException>();
         }
@@ -241,7 +247,7 @@ namespace Tochka.JsonRpc.Client.Tests
         {
             var content = new StringContent(string.Empty);
 
-            Action action = () => jsonRpcCallContext.WithHttpContent(content);
+            Action action = () => jsonRpcCallContext.WithHttpContent(content, null);
 
             action.Should().Throw<JsonRpcException>();
         }
@@ -250,11 +256,13 @@ namespace Tochka.JsonRpc.Client.Tests
         public void Test_WithHttpContent_Works()
         {
             var content = new StringContent("test");
+            const string contentString = "some-content";
 
-            Action action = () => jsonRpcCallContext.WithHttpContent(content);
+            Action action = () => jsonRpcCallContext.WithHttpContent(content, contentString);
 
             action.Should().NotThrow();
-            jsonRpcCallContext.HttpContentInfo.Should().NotBeNullOrWhiteSpace();
+            jsonRpcCallContext.HttpContentInfo.Should()
+                .BeEquivalentTo(contentString);
         }
     }
 }
