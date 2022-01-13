@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Tochka.JsonRpc.Client;
 using Tochka.JsonRpc.Common.Serializers;
 
-Host.CreateDefaultBuilder(args).ConfigureServices((hostContext, services) =>
+Host.CreateDefaultBuilder(args).ConfigureServices((services) =>
 {
     services.Configure<RandomOrgOptions>(config =>
     {
