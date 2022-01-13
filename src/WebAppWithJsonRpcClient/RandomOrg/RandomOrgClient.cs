@@ -13,6 +13,10 @@ public class RandomOrgClient : JsonRpcClientBase, IRandomOrgClient
     public RandomOrgClient(HttpClient client, IOptions<RandomOrgOptions> config, IJsonRpcSerializer serializer, HeaderJsonRpcSerializer headerJsonRpcSerializer, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<RandomOrgClient> log)
         : base(client, serializer, headerJsonRpcSerializer, config.Value, jsonRpcIdGenerator, log)
     {
+        if (string.IsNullOrWhiteSpace(config.Value?.Token))
+        {
+            throw new ArgumentNullException(nameof(config.Value.Token));
+        }
         apiKey = config.Value.Token;
     }
 

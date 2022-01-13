@@ -4,5 +4,5 @@ namespace WebAppWithJsonRpcClient.RandomOrg;
 
 public class RandomOrgOptions : JsonRpcClientOptionsBase
 {
-    public string Token { get; set; }
+    public string? Token { get; set; }
 }

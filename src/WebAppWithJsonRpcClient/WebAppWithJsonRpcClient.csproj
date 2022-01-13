@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj" />
+      <PackageReference Include="Tochka.JsonRpc.Client" Version="1.0.30" />
     </ItemGroup>
-
+    
 </Project>

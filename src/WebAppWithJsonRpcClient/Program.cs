@@ -5,8 +5,6 @@ using WebAppWithJsonRpcClient.RandomOrg;
 var builder = WebApplication
     .CreateBuilder(args);
 
-var a = await Task.FromResult(1);
-
 builder.Services.Configure<RandomOrgOptions>(config =>
 {
     config.Token = "";
