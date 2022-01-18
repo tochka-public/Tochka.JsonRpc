@@ -1,6 +1,6 @@
 ﻿using Tochka.JsonRpc.Server.Pipeline;
 
-namespace JsonRpcServer;
+namespace WebAppWithJsonRpcServer;
 
 public class TestController : JsonRpcController
 {
