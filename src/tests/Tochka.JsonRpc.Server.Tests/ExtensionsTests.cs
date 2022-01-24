@@ -174,13 +174,17 @@ namespace Tochka.JsonRpc.Server.Tests
 
             var optionsMock = new Mock<IOptions<JsonRpcOptions>>();
             optionsMock.SetupGet(x => x.Value).Returns(new JsonRpcOptions());
+            var mvcOptionsMock = new Mock<IOptions<MvcOptions>>();
+            mvcOptionsMock.SetupGet(x => x.Value).Returns(new MvcOptions());
+            var mvcNewtonsoftJsonOptions = new Mock<IOptions<MvcNewtonsoftJsonOptions>>();
+            mvcNewtonsoftJsonOptions.SetupGet(x => x.Value).Returns(new MvcNewtonsoftJsonOptions());
             var mocks = new List<Mock>
             {
                 RegisterMock<ControllerConvention>(services, null),
                 RegisterMock<ActionConvention>(services, optionsMock.Object, null, null, null, null),
                 RegisterMock<ParameterConvention>(services, null, null),
                 RegisterMock<IStartupFilter>(services),
-                RegisterMock<JsonRpcFormatter>(services, new HeaderJsonRpcSerializer(), Mock.Of<ArrayPool<char>>()),
+                RegisterMock<JsonRpcFormatter>(services, new HeaderJsonRpcSerializer(), Mock.Of<ArrayPool<char>>(), mvcOptionsMock.Object, mvcNewtonsoftJsonOptions.Object),
                 RegisterMock<JsonRpcModelBinder>(services),
                 RegisterMock<JsonRpcFilter>(services, null, null),
                 RegisterMock<IParameterBinder>(services),

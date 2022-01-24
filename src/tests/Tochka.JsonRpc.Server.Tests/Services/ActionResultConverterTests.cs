@@ -32,7 +32,11 @@ namespace Tochka.JsonRpc.Server.Tests.Services
     {
         private TestEnvironment testEnvironment;
         private JsonRpcOptions jsonRpcOptions;
-        private static readonly Mock<JsonRpcFormatter> FormatterMock = new Mock<JsonRpcFormatter>(new HeaderJsonRpcSerializer(), Mock.Of<ArrayPool<char>>());
+
+        private static Mock<JsonRpcFormatter> FormatterMock = new Mock<JsonRpcFormatter>(new HeaderJsonRpcSerializer(),
+            Mock.Of<ArrayPool<char>>(),
+            Mock.Of<IOptions<MvcOptions>>(options => options.Value == new MvcOptions()),
+            Mock.Of<IOptions<MvcNewtonsoftJsonOptions>>(options => options.Value == new MvcNewtonsoftJsonOptions()));
 
         [SetUp]
         public void Setup()

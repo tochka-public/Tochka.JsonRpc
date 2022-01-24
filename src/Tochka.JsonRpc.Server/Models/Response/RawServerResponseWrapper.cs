@@ -27,13 +27,13 @@ namespace Tochka.JsonRpc.Server.Models.Response
             sink.StatusCode = Source.StatusCode;
             sink.ContentLength = null;
 
-            if (Source.Headers != null)
-            {
-                foreach (var header in Source.Headers)
-                {
-                    sink.Headers.Append(header.Key, header.Value);
-                }
-            }
+            // if (Source.Headers != null)
+            // {
+            //     foreach (var header in Source.Headers)
+            //     {
+            //         sink.Headers.Append(header.Key, header.Value);
+            //     }
+            // }
 
             // TODO is this sane? Maybe return body since we're already violating protocol?
             if (!context.WriteResponse)

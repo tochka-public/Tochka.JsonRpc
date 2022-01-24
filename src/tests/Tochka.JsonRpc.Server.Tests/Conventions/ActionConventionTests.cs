@@ -5,10 +5,10 @@ using System.Reflection;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -270,7 +270,7 @@ namespace Tochka.JsonRpc.Server.Tests.Conventions
         private ActionConvention GetActionConvention(JsonRpcOptions jsonRpcOptions, params object[] services)
         {
             var optionsWrapper = new OptionsWrapper<JsonRpcOptions>(jsonRpcOptions);
-            var allServices = new List<object> {optionsWrapper};
+            var allServices = new List<object> { optionsWrapper };
             allServices.AddRange(services);
             return ActivatorUtilities.CreateInstance<ActionConvention>(testEnvironment.ServiceProvider, allServices.ToArray());
         }

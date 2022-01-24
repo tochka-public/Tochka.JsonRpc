@@ -66,9 +66,9 @@ namespace Tochka.JsonRpc.Server.Tests.Models.Response
             sourceMock.SetupGet(x => x.Headers)
                 .Returns(headers);
             var wrapper = new RawServerResponseWrapper(sourceMock.Object);
-
+        
             await wrapper.Write(handlingContext, new HeaderJsonRpcSerializer());
-
+        
             resposneMock.VerifyGet(x => x.Headers);
             responseHeaders.Should().HaveCount(2);
             responseHeaders.Should().ContainKey("header");
