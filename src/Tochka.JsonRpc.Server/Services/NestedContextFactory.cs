@@ -48,15 +48,6 @@ namespace Tochka.JsonRpc.Server.Services
             newFeatures.Set(requestFeature);
             var responseFeature = new StreamResponseBodyFeature(new MemoryStream());
             newFeatures.Set<IHttpResponseBodyFeature>(responseFeature);
-            var httpBodyControlFeature = newFeatures.Get<IHttpBodyControlFeature>();
-            if (httpBodyControlFeature != null)
-            {
-                httpBodyControlFeature.AllowSynchronousIO = true;
-            }
-            else
-            {
-                newFeatures.Set<IHttpBodyControlFeature>(new SynchronousHttpBodyControlFeature());
-            }
         }
 
         protected virtual IItemsFeature CreateItems(IItemsFeature originalItems)

@@ -33,9 +33,10 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 })
                 ;
             */
-            services.AddMvc()
-                .AddJsonRpcServer()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers(options =>
+                    options.EnableEndpointRouting = false)
+                .AddNewtonsoftJson()
+                .AddJsonRpcServer();
         }
 
         public void Configure(IApplicationBuilder app)

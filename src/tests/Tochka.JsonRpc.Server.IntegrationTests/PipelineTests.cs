@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,9 +37,6 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
-            var testEnvironemt = new TestEnvironment(services =>
-            {
-            });
             factory = new TestAppFactory();
             client = factory.CreateDefaultClient(new LoggingHandler());
         }

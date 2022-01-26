@@ -13,4 +13,4 @@ var app = builder.Build();
 app.UseMiddleware<JsonRpcMiddleware>();
 app.UseMvc();
 
-app.Run();
+await app.RunAsync();

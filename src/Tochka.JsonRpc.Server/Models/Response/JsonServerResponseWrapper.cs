@@ -1,12 +1,11 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Serializers;
 
@@ -65,13 +64,9 @@ namespace Tochka.JsonRpc.Server.Models.Response
                 return;
             }
 
-            using (var writer = new HttpResponseStreamWriter(sink.Body, context.RequestEncoding))
+            await using (var writer = new HttpResponseStreamWriter(sink.Body, context.RequestEncoding))
             {
-                using (var jsonWriter = new JsonTextWriter(writer))
-                {
-                    jsonWriter.Formatting = headerJsonRpcSerializer.Settings.Formatting;
-                    await Value.WriteToAsync(jsonWriter, context.OriginalHttpContext.RequestAborted);
-                }
+                await writer.WriteAsync(new StringBuilder(Value.ToString()), context.OriginalHttpContext.RequestAborted);
             }
 
             SetResponseContextItem(context.OriginalHttpContext);
