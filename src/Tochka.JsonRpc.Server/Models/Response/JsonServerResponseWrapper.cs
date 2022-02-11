@@ -44,13 +44,13 @@ namespace Tochka.JsonRpc.Server.Models.Response
         public async Task Write(HandlingContext context, HeaderJsonRpcSerializer headerJsonRpcSerializer)
         {
             var sink = context.OriginalHttpContext.Response;
-            // if (Headers != null)
-            // {
-            //     foreach (var header in Headers)
-            //     {
-            //         sink.Headers.Append(header.Key, header.Value);
-            //     }
-            // }
+            if (Headers != null)
+            {
+                foreach (var header in Headers)
+                {
+                    sink.Headers.Append(header.Key, header.Value);
+                }
+            }
             sink.StatusCode = 200;
             sink.ContentLength = null;
             var responseMediaType = new MediaTypeHeaderValue(JsonRpcConstants.ContentType)

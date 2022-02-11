@@ -65,7 +65,7 @@ namespace Tochka.JsonRpc.Server
             return services;
         }
 
-        public static IUntypedCall GetJsonRpcCall(this HttpContext context) => (IUntypedCall) context.Items[JsonRpcConstants.RequestItemKey];
+        public static IUntypedCall GetJsonRpcCall(this HttpContext context) => (IUntypedCall)context.Items[JsonRpcConstants.RequestItemKey];
 
         /// <summary>
         /// Get serialized property/method/action/controller/parameter JSON name
@@ -130,13 +130,12 @@ namespace Tochka.JsonRpc.Server
             throw new JsonRpcErrorResponseException(error);
         }
 
-        internal static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
+        public static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
             where T : class
         {
             serviceCollection.TryAddSingleton<T>();
             serviceCollection.TryAddEnumerable(new ServiceDescriptor(typeof(IConfigureOptions<MvcOptions>), typeof(ConventionConfigurator<T>), ServiceLifetime.Singleton));
             return serviceCollection;
         }
-
     }
 }

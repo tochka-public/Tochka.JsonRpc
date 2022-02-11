@@ -33,8 +33,7 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 })
                 ;
             */
-            services.AddControllers(options =>
-                    options.EnableEndpointRouting = false)
+            services.AddControllers(mvcOptions => { mvcOptions.SuppressOutputFormatterBuffering = true; })
                 .AddNewtonsoftJson()
                 .AddJsonRpcServer();
         }
@@ -48,7 +47,8 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 .UseStaticFiles()
                 */
                 .UseMiddleware<JsonRpcMiddleware>()
-                .UseMvc();
+                .UseRouting() // используем систему маршрутизации
+                .UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
