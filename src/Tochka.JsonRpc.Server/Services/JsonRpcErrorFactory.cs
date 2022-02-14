@@ -13,7 +13,7 @@ namespace Tochka.JsonRpc.Server.Services
     /// <summary>
     /// Creates errors by specification rules, wraps exceptions depending on options
     /// </summary>
-    public class JsonRpcErrorFactory : IJsonRpcErrorFactory
+    internal class JsonRpcErrorFactory : IJsonRpcErrorFactory
     {
         private readonly ILogger log;
         private readonly JsonRpcOptions options;

@@ -37,6 +37,9 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
+            var testEnvironemt = new TestEnvironment(services =>
+            {
+            });
             factory = new TestAppFactory();
             client = factory.CreateDefaultClient(new LoggingHandler());
         }

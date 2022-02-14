@@ -18,11 +18,6 @@ namespace Tochka.JsonRpc.Server.Tests
 {
     public class UtilsTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Test_IsJsonRpcController_True()
         {

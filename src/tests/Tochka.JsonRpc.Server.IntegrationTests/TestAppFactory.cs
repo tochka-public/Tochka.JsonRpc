@@ -11,7 +11,7 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
     {
         protected override IWebHostBuilder CreateWebHostBuilder()
         {
-            return new WebHostBuilder()
+            return WebHost.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                 {
                     services.AddLogging(logBuilder =>
