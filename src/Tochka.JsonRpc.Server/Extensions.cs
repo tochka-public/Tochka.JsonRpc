@@ -130,7 +130,7 @@ namespace Tochka.JsonRpc.Server
             throw new JsonRpcErrorResponseException(error);
         }
 
-        public static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
+        internal static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
             where T : class
         {
             serviceCollection.TryAddSingleton<T>();
