@@ -47,7 +47,7 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 .UseStaticFiles()
                 */
                 .UseMiddleware<JsonRpcMiddleware>()
-                .UseRouting() // используем систему маршрутизации
+                .UseRouting()
                 .UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
