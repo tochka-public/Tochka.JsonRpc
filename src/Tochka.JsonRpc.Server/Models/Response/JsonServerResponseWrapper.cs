@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -51,6 +52,7 @@ namespace Tochka.JsonRpc.Server.Models.Response
                     sink.Headers.Append(header.Key, header.Value);
                 }
             }
+
             sink.StatusCode = 200;
             sink.ContentLength = null;
             var responseMediaType = new MediaTypeHeaderValue(JsonRpcConstants.ContentType)
@@ -66,7 +68,13 @@ namespace Tochka.JsonRpc.Server.Models.Response
 
             await using (var writer = new HttpResponseStreamWriter(sink.Body, context.RequestEncoding))
             {
-                await writer.WriteAsync(new StringBuilder(Value.ToString()), context.OriginalHttpContext.RequestAborted);
+                using var jsonWriter = new JsonTextWriter(writer)
+                {
+                    CloseOutput = false,
+                    AutoCompleteOnClose = false
+                };
+                jsonWriter.Formatting = headerJsonRpcSerializer.Settings.Formatting;
+                await Value.WriteToAsync(jsonWriter, context.OriginalHttpContext.RequestAborted);
             }
 
             SetResponseContextItem(context.OriginalHttpContext);
