@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tochka.JsonRpc.Server.Pipeline;
@@ -33,7 +32,7 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 })
                 ;
             */
-            services.AddControllers(mvcOptions => { mvcOptions.SuppressOutputFormatterBuffering = true; })
+            services.AddControllers()
                 .AddNewtonsoftJson()
                 .AddJsonRpcServer();
         }
