@@ -27,7 +27,7 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseContentRoot(".");
-            // base.ConfigureWebHost(builder);
+            base.ConfigureWebHost(builder);
         }
     }
 }
