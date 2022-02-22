@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Company>Tochka</Company>
-    <Description>Swagger document generator</Description>
+    <Description>Swagger document generator from JSON Rpc</Description>
     <Copyright>Tochka</Copyright>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
