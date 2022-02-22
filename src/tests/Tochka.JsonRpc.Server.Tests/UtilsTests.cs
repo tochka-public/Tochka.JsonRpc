@@ -126,10 +126,6 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_ProbablyIsJsonRpc_ReturnsTrue()
         {
             var request = Mock.Of<HttpRequest>(request => request.Method == HttpMethods.Post, MockBehavior.Strict);
-            // var request = new DefaultHttpRequest(new DefaultHttpContext())
-            // {
-            //     Method = HttpMethods.Post
-            // };
             var contentType = MediaTypeHeaderValue.Parse(JsonRpcConstants.ContentType);
             Utils.ProbablyIsJsonRpc(request, contentType).Should().BeTrue();
         }
@@ -138,10 +134,6 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_ProbablyIsJsonRpc_ReturnsFalseOnMethod(string httpMethod)
         {
             var request = Mock.Of<HttpRequest>(request => request.Method == httpMethod, MockBehavior.Strict);
-            // var request = new DefaultHttpRequest(new DefaultHttpContext())
-            // {
-            //     Method = httpMethod
-            // };
             var contentType = MediaTypeHeaderValue.Parse(JsonRpcConstants.ContentType);
 
             Utils.ProbablyIsJsonRpc(request, contentType).Should().BeFalse();
@@ -151,10 +143,6 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_ProbablyIsJsonRpc_ReturnsFalseOnContentType()
         {
             var request = Mock.Of<HttpRequest>(request => request.Method == HttpMethods.Post, MockBehavior.Strict);
-            // var request = new DefaultHttpRequest(new DefaultHttpContext())
-            // {
-            //     Method = HttpMethods.Post
-            // };
             var contentType = MediaTypeHeaderValue.Parse("text/json");
 
             Utils.ProbablyIsJsonRpc(request, contentType).Should().BeFalse();
@@ -164,10 +152,6 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_ProbablyIsJsonRpc_ReturnsFalseOnNull()
         {
             var request = Mock.Of<HttpRequest>(request => request.Method == HttpMethods.Post, MockBehavior.Strict);
-            // var request = new DefaultHttpRequest(new DefaultHttpContext())
-            // {
-            //     Method = HttpMethods.Post
-            // };
 
             Utils.ProbablyIsJsonRpc(request, null).Should().BeFalse();
         }
