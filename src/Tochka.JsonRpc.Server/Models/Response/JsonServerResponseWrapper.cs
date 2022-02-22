@@ -71,9 +71,9 @@ namespace Tochka.JsonRpc.Server.Models.Response
                 using var jsonWriter = new JsonTextWriter(writer)
                 {
                     CloseOutput = false,
-                    AutoCompleteOnClose = false
+                    AutoCompleteOnClose = false,
+                    Formatting = headerJsonRpcSerializer.Settings.Formatting
                 };
-                jsonWriter.Formatting = headerJsonRpcSerializer.Settings.Formatting;
                 await Value.WriteToAsync(jsonWriter, context.OriginalHttpContext.RequestAborted);
             }
 
