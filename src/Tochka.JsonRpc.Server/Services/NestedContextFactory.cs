@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
+using Tochka.JsonRpc.Server.Models.Response;
 
 namespace Tochka.JsonRpc.Server.Services
 {
@@ -46,11 +46,8 @@ namespace Tochka.JsonRpc.Server.Services
             newFeatures.Set(itemsFeature);
             var requestFeature = CreateRequest(originalFeatures.Get<IHttpRequestFeature>(), call, requestEncoding);
             newFeatures.Set(requestFeature);
-            var responseFeature = new HttpResponseFeature()
-            {
-                Body = new MemoryStream()
-            };
-            newFeatures.Set<IHttpResponseFeature>(responseFeature);
+            var responseFeature = new StreamResponseBodyFeature(new MemoryStream());
+            newFeatures.Set<IHttpResponseBodyFeature>(responseFeature);
         }
 
         protected virtual IItemsFeature CreateItems(IItemsFeature originalItems)

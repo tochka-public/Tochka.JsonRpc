@@ -1,15 +1,12 @@
 using System;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
@@ -68,7 +65,7 @@ namespace Tochka.JsonRpc.Server
             return services;
         }
 
-        public static IUntypedCall GetJsonRpcCall(this HttpContext context) => (IUntypedCall) context.Items[JsonRpcConstants.RequestItemKey];
+        public static IUntypedCall GetJsonRpcCall(this HttpContext context) => (IUntypedCall)context.Items[JsonRpcConstants.RequestItemKey];
 
         /// <summary>
         /// Get serialized property/method/action/controller/parameter JSON name
@@ -140,6 +137,5 @@ namespace Tochka.JsonRpc.Server
             serviceCollection.TryAddEnumerable(new ServiceDescriptor(typeof(IConfigureOptions<MvcOptions>), typeof(ConventionConfigurator<T>), ServiceLifetime.Singleton));
             return serviceCollection;
         }
-
     }
 }

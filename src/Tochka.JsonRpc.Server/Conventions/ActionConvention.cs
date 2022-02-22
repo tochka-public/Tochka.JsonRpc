@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -73,9 +73,9 @@ namespace Tochka.JsonRpc.Server.Conventions
             actionModel.Selectors.Clear();
             actionModel.Selectors.Add(new SelectorModel()
             {
-                AttributeRouteModel = new AttributeRouteModel() {Template = methodOptions.Route},
-                
-                ActionConstraints = {new JsonRpcAttribute(), new HttpMethodActionConstraint(new []{ HttpMethods.Post })}  // TODO может, оставить?
+                AttributeRouteModel = new AttributeRouteModel() { Template = methodOptions.Route },
+
+                ActionConstraints = { new JsonRpcAttribute(), new HttpMethodActionConstraint(new[] { HttpMethods.Post }) } // TODO может, оставить?
             });
             log.LogTrace($"{actionModel.DisplayName}: applied {nameof(JsonRpcAttribute)}, route [{methodOptions.Route}]");
         }

@@ -6,7 +6,6 @@ using System.Reflection;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Net.Http.Headers;
 using Moq;
@@ -36,7 +35,7 @@ namespace Tochka.JsonRpc.Server.Tests
         {
             var actionAttribute = new AuthorizeAttribute("action");
             var controllerAttribute = new AuthorizeAttribute("controller");
-            var actionMock = GetActionModelMock(new List<object> {actionAttribute}, new List<object> {controllerAttribute});
+            var actionMock = GetActionModelMock(new List<object> { actionAttribute }, new List<object> { controllerAttribute });
 
             Utils.GetAttributeTransitive<AuthorizeAttribute>(actionMock.Object).Should().Be(actionAttribute);
         }
@@ -45,7 +44,7 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_GetAttributeTransitive_ReturnsActionAttribute()
         {
             var actionAttribute = new AuthorizeAttribute("action");
-            var actionMock = GetActionModelMock(new List<object> {actionAttribute}, new List<object> { });
+            var actionMock = GetActionModelMock(new List<object> { actionAttribute }, new List<object> { });
 
             Utils.GetAttributeTransitive<AuthorizeAttribute>(actionMock.Object).Should().Be(actionAttribute);
         }
@@ -54,7 +53,7 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_GetAttributeTransitive_ReturnsControllerAttribute()
         {
             var controllerAttribute = new AuthorizeAttribute("controller");
-            var actionMock = GetActionModelMock(new List<object> { }, new List<object> {controllerAttribute});
+            var actionMock = GetActionModelMock(new List<object> { }, new List<object> { controllerAttribute });
 
             Utils.GetAttributeTransitive<AuthorizeAttribute>(actionMock.Object).Should().Be(controllerAttribute);
         }
@@ -71,7 +70,7 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_GetAttributeTransitive_ThrowsOnMultipleActionAttributes()
         {
             var actionAttribute = new AuthorizeAttribute("action");
-            var actionMock = GetActionModelMock(new List<object> {actionAttribute, actionAttribute}, new List<object> { });
+            var actionMock = GetActionModelMock(new List<object> { actionAttribute, actionAttribute }, new List<object> { });
 
             Action action = () => Utils.GetAttributeTransitive<AuthorizeAttribute>(actionMock.Object);
 
@@ -82,7 +81,7 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_GetAttributeTransitive_ThrowsOnMultipleControllerAttributes()
         {
             var controllerAttribute = new AuthorizeAttribute("controller");
-            var actionMock = GetActionModelMock(new List<object> { }, new List<object> {controllerAttribute, controllerAttribute});
+            var actionMock = GetActionModelMock(new List<object> { }, new List<object> { controllerAttribute, controllerAttribute });
 
             Action action = () => Utils.GetAttributeTransitive<AuthorizeAttribute>(actionMock.Object);
 
@@ -93,7 +92,7 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_GetAttribute_ReturnsValue()
         {
             var parameterAttribute = new AuthorizeAttribute("parameter");
-            var parameterMock = GetParameterModelMock(new List<object> {parameterAttribute});
+            var parameterMock = GetParameterModelMock(new List<object> { parameterAttribute });
 
             Utils.GetAttribute<AuthorizeAttribute>(parameterMock.Object).Should().Be(parameterAttribute);
         }
@@ -110,7 +109,7 @@ namespace Tochka.JsonRpc.Server.Tests
         public void Test_GetAttribute_ThrowsOnMultipmeAttributes()
         {
             var parameterAttribute = new AuthorizeAttribute("parameter");
-            var parameterMock = GetParameterModelMock(new List<object> {parameterAttribute, parameterAttribute});
+            var parameterMock = GetParameterModelMock(new List<object> { parameterAttribute, parameterAttribute });
 
             Action action = () => Utils.GetAttribute<AuthorizeAttribute>(parameterMock.Object);
 
@@ -126,10 +125,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [Test]
         public void Test_ProbablyIsJsonRpc_ReturnsTrue()
         {
-            var request = new DefaultHttpRequest(new DefaultHttpContext())
-            {
-                Method = HttpMethods.Post
-            };
+            var request = Mock.Of<HttpRequest>(request => request.Method == HttpMethods.Post, MockBehavior.Strict);
             var contentType = MediaTypeHeaderValue.Parse(JsonRpcConstants.ContentType);
             Utils.ProbablyIsJsonRpc(request, contentType).Should().BeTrue();
         }
@@ -137,10 +133,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [TestCaseSource(typeof(UtilsTests), nameof(BadHttpMethods))]
         public void Test_ProbablyIsJsonRpc_ReturnsFalseOnMethod(string httpMethod)
         {
-            var request = new DefaultHttpRequest(new DefaultHttpContext())
-            {
-                Method = httpMethod
-            };
+            var request = Mock.Of<HttpRequest>(request => request.Method == httpMethod, MockBehavior.Strict);
             var contentType = MediaTypeHeaderValue.Parse(JsonRpcConstants.ContentType);
 
             Utils.ProbablyIsJsonRpc(request, contentType).Should().BeFalse();
@@ -149,10 +142,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [Test]
         public void Test_ProbablyIsJsonRpc_ReturnsFalseOnContentType()
         {
-            var request = new DefaultHttpRequest(new DefaultHttpContext())
-            {
-                Method = HttpMethods.Post
-            };
+            var request = Mock.Of<HttpRequest>(request => request.Method == HttpMethods.Post, MockBehavior.Strict);
             var contentType = MediaTypeHeaderValue.Parse("text/json");
 
             Utils.ProbablyIsJsonRpc(request, contentType).Should().BeFalse();
@@ -161,10 +151,7 @@ namespace Tochka.JsonRpc.Server.Tests
         [Test]
         public void Test_ProbablyIsJsonRpc_ReturnsFalseOnNull()
         {
-            var request = new DefaultHttpRequest(new DefaultHttpContext())
-            {
-                Method = HttpMethods.Post
-            };
+            var request = Mock.Of<HttpRequest>(request => request.Method == HttpMethods.Post, MockBehavior.Strict);
 
             Utils.ProbablyIsJsonRpc(request, null).Should().BeFalse();
         }

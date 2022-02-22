@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tochka.JsonRpc.Server.Pipeline;
@@ -33,9 +32,9 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 })
                 ;
             */
-            services.AddMvc()
-                .AddJsonRpcServer()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers()
+                .AddNewtonsoftJson()
+                .AddJsonRpcServer();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -47,7 +46,8 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
                 .UseStaticFiles()
                 */
                 .UseMiddleware<JsonRpcMiddleware>()
-                .UseMvc();
+                .UseRouting()
+                .UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

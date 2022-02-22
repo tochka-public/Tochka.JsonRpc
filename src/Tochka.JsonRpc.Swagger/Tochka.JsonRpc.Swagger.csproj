@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Company>Tochka</Company>
     <Description>Swagger document generator</Description>
     <Copyright>Tochka</Copyright>
@@ -10,7 +10,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <LangVersion>7.1</LangVersion>
     <PackageProjectUrl>https://tochka-public.github.io/Tochka.JsonRpc</PackageProjectUrl>
     <Authors>Tochka</Authors>
     <Product>Tochka.JsonRpc</Product>

@@ -2,13 +2,11 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Serializers;
@@ -74,7 +72,7 @@ namespace Tochka.JsonRpc.Server.Services
 
         internal virtual async Task<IRequestWrapper> ParseRequest(HttpContext context, Encoding encoding)
         {
-            context.Request.EnableRewind();
+            context.Request.EnableBuffering();
             var body = context.Request.Body;
 
             using (var streamReader = new HttpRequestStreamReader(body, encoding))

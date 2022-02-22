@@ -1,8 +1,5 @@
 using System;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Http;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Settings;
