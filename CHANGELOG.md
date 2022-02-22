@@ -1,3 +1,12 @@
+### [1.0.31](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.30...v1.0.31) (2022-02-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* support for dotnet 6
+
+* Merge pull request #52 from tochka-public/feature/server-dotnet6/master ([bea4757](https://github.com/tochka-public/Tochka.JsonRpc/commit/bea475704966303eb39faa22e6660dc4c57a2455)), closes [#52](https://github.com/tochka-public/Tochka.JsonRpc/issues/52)
+
 ### [1.0.30](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.29...v1.0.30) (2021-05-12)
 
 ### [1.0.29](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.28...v1.0.29) (2021-04-28)
