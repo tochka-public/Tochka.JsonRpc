@@ -1,3 +1,11 @@
+### [1.0.32](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.31...v1.0.32) (2022-02-22)
+
+
+### Bug Fixes
+
+* upd sources to trigger release ([e112fd3](https://github.com/tochka-public/Tochka.JsonRpc/commit/e112fd3e1bff36616e96e66c89d080d13f67f1c0))
+* update nuget command ([cbbbbba](https://github.com/tochka-public/Tochka.JsonRpc/commit/cbbbbbaeac8017f83231b221217ed936cf7d61f8))
+
 ### [1.0.31](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.30...v1.0.31) (2022-02-22)
 
 
