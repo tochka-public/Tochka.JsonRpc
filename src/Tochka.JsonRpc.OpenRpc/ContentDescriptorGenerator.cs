@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Namotion.Reflection;
 using NJsonSchema;
+using NJsonSchema.Generation;
 using NJsonSchema.Infrastructure;
 using Tochka.JsonRpc.Common.Serializers;
 using Tochka.JsonRpc.OpenRpc.Models;
@@ -45,12 +46,13 @@ namespace Tochka.JsonRpc.OpenRpc
         {
             var serializer = serializers.First(x => x.GetType() == serializerType);
             var id = serializer.GetJsonName(propertyType.Name).Json;
-            var isRequired = propertyType.GetAttribute<RequiredAttribute>() != null;
-            return Generate(propertyType, id, serializer, isRequired);
+            var isRequired = propertyType.GetContextAttribute<RequiredAttribute>() != null;
+            return Generate(propertyType.PropertyType, id, serializer, isRequired);
         }
 
         private ContentDescriptor Generate(ContextualType type, string id, IJsonRpcSerializer serializer, bool isRequired)
         {
+            var settings = new JsonSchemaGeneratorSettings();
             var schema = schemaGenerator.GenerateSchema(type, serializer);
             var contentDescriptor = new ContentDescriptor
             {
@@ -58,7 +60,7 @@ namespace Tochka.JsonRpc.OpenRpc
                 Schema = schema,
                 Required = isRequired,
                 Description = type.GetXmlDocsRemarks(),  // dont get confused: Description is taken from "remarks" tag;
-                Summary = type.GetDescription(),  // Summary is taken from attributes or "summary" tag (method should be named "GetSummary"?)
+                Summary = type.GetDescription(settings),  // Summary is taken from attributes or "summary" tag (method should be named "GetSummary"?)
                 Deprecated = type.GetAttribute<ObsoleteAttribute>() != null
             };
             return contentDescriptor;

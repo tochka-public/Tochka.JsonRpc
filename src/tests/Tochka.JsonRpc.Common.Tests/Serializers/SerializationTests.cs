@@ -26,12 +26,12 @@ namespace Tochka.JsonRpc.Common.Tests.Serializers
 
         private static bool IgnoreRawId(IMemberInfo x)
         {
-            return x.SelectedMemberInfo.DeclaringType == typeof(UntypedRequest) && x.SelectedMemberInfo.Name == nameof(UntypedRequest.RawId);
+            return x.DeclaringType == typeof(UntypedRequest) && x.Name == nameof(UntypedRequest.RawId);
         }
 
         private static bool IgnoreRawJson(IMemberInfo x)
         {
-            return x.SelectedMemberInfo.DeclaringType.IsAssignableFrom(typeof(IUntypedCall)) && x.SelectedMemberInfo.Name == nameof(IUntypedCall.RawJson);
+            return x.DeclaringType.IsAssignableFrom(typeof(IUntypedCall)) && x.Name == nameof(IUntypedCall.RawJson);
         }
     }
 }

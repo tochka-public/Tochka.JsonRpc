@@ -62,6 +62,11 @@ namespace Tochka.JsonRpc.Swagger
 
                 var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                {
+                    // sanity check to enforce users set up their projects properly
+                    throw new FileNotFoundException("Swagger requires generated XMLdoc file! Add <GenerateDocumentationFile>true</GenerateDocumentationFile> to your csproj or disable Swagger integration", xmlPath);
+                }
                 options.IncludeXmlComments(xmlPath);
 
             });

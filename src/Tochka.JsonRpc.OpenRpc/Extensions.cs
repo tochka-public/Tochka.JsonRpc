@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,15 @@ namespace Tochka.JsonRpc.OpenRpc
             }
             
             services.Configure(configureOptions ?? (options => { }));
+            
+            var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            if (File.Exists(xmlPath))
+            {
+                // sanity check to enforce users set up their projects properly
+                throw new FileNotFoundException("OpenRpc requires generated XMLdoc file! Add <GenerateDocumentationFile>true</GenerateDocumentationFile> to your csproj or disable OpenRpc integration", xmlPath);
+            }
+            
             return services;
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Dynamic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -54,9 +55,9 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
         {
             var request = CreateRequest(data);
             var response = await client.SendAsync(request);
-            response.StatusCode.Should().Be(200);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var result = await ReadResponse(response, expected?.GetType());
-            result.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.SelectedMemberInfo.MemberType == typeof(IgnoreData)));
+            result.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Type == typeof(IgnoreData)));
         }
 
         [TestCaseSource(typeof(BadRequests), nameof(BadRequests.Cases))]
@@ -64,9 +65,9 @@ namespace Tochka.JsonRpc.Server.IntegrationTests
         {
             var request = CreateStringRequest(data);
             var response = await client.SendAsync(request);
-            response.StatusCode.Should().Be(200);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var result = await ReadResponse(response, expected?.GetType());
-            result.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.SelectedMemberInfo.MemberType == typeof(IgnoreData)));
+            result.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Type == typeof(IgnoreData)));
         }
 
         private HttpRequestMessage CreateRequest(object data)

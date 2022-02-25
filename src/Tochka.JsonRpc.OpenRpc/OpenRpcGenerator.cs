@@ -125,7 +125,7 @@ namespace Tochka.JsonRpc.OpenRpc
                     // TODO what if param and prop names collide? eg public void Foo(int bar, [FromParams(BindingStyle.Object)] HasBar objectWithBarProperty){}
                     if (methodMetadata.Parameters.TryGetValue(propertyInfo.Name, out var parameterMetadata))
                     {
-                        yield return contentDescriptorGenerator.GenerateForParameter(property, serializerType, parameterMetadata);
+                        yield return contentDescriptorGenerator.GenerateForParameter(property.PropertyType, serializerType, parameterMetadata);
                     }
                     else
                     {
