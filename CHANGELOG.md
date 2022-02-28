@@ -1,3 +1,10 @@
+### [1.0.34](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.33...v1.0.34) (2022-02-28)
+
+
+### Features
+
+* explicitly check for generated xmldoc + bump all references ([97f46f8](https://github.com/tochka-public/Tochka.JsonRpc/commit/97f46f8bb4fba9d0943ce5dfb8699051412b152e))
+
 ### [1.0.33](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.32...v1.0.33) (2022-02-28)
 
 ### [1.0.32](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.31...v1.0.32) (2022-02-22)
