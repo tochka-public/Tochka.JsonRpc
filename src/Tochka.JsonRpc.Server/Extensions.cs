@@ -36,6 +36,8 @@ namespace Tochka.JsonRpc.Server
             services.TryAddSingleton<JsonRpcFormatter>();
             services.TryAddSingleton<JsonRpcModelBinder>();
             services.TryAddScoped<JsonRpcFilter>();
+            //turning off option causes double setting content-length header, it causes exception in kestrel
+            services.Configure<MvcOptions>(mvcOptions => { mvcOptions.SuppressOutputFormatterBuffering = true; });
 
             // required user-overridable services
             services.TryAddSingleton<IParameterBinder, ParameterBinder>();
