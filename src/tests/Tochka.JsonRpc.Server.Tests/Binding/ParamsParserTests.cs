@@ -54,7 +54,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
 
             result.Should().BeOfType(expected.GetType());
             result.Should().BeEquivalentTo(expected, options =>
-                options.Excluding(x => x.RuntimeType == typeof(ErrorParseResult) && x.SelectedMemberInfo.Name == nameof(ErrorParseResult.Message))
+                options.Excluding(x => x.Type == typeof(ErrorParseResult) && x.Name == nameof(ErrorParseResult.Message))
             );
             paramsParserMock.Verify(x => x.ParseArray(jArray, index, style));
             paramsParserMock.VerifyNoOtherCalls();
@@ -67,7 +67,7 @@ namespace Tochka.JsonRpc.Server.Tests.Binding
 
             result.Should().BeOfType(expected.GetType());
             result.Should().BeEquivalentTo(expected, options =>
-                options.Excluding(x => x.RuntimeType == typeof(ErrorParseResult) && x.SelectedMemberInfo.Name == nameof(ErrorParseResult.Message))
+                options.Excluding(x => x.Type == typeof(ErrorParseResult) && x.Name == nameof(ErrorParseResult.Message))
             );
             paramsParserMock.Verify(x => x.ParseObject(jObject, property, style));
             paramsParserMock.VerifyNoOtherCalls();

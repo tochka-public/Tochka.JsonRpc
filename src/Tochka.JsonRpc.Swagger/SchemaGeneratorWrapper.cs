@@ -40,7 +40,7 @@ namespace Tochka.JsonRpc.Swagger
             }
 
             var serializer = serializers.First(x => x.GetType() == serializerType);
-            return new NewtonsoftDataContractResolver(generatorOptions, serializer.Settings);
+            return new NewtonsoftDataContractResolver(serializer.Settings);
         }
     }
 }
