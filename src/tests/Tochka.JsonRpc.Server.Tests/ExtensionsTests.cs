@@ -125,6 +125,7 @@ namespace Tochka.JsonRpc.Server.Tests
             result.Remove((typeof(IConfigureOptions<MvcOptions>), ServiceLifetime.Singleton));
             result.Remove((typeof(IConfigureOptions<MvcOptions>), ServiceLifetime.Singleton));
             result.Remove((typeof(IConfigureOptions<MvcOptions>), ServiceLifetime.Singleton));
+            result.Remove((typeof(IConfigureOptions<MvcOptions>), ServiceLifetime.Singleton));
 
             result.Should().BeEmpty("no other services are expected");
         }
