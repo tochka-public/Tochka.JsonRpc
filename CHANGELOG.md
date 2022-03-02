@@ -1,3 +1,10 @@
+### [1.0.35](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.34...v1.0.35) (2022-03-02)
+
+
+### Bug Fixes
+
+* wrong check for file exists ([f34d80c](https://github.com/tochka-public/Tochka.JsonRpc/commit/f34d80caffa6877a1be543c2dd7498b02e82e051))
+
 ### [1.0.34](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.33...v1.0.34) (2022-02-28)
 
 
