@@ -26,7 +26,7 @@ namespace Tochka.JsonRpc.Swagger
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmldocAssembly)
         {
             // TODO add options lambda
             services.TryAddSingleton<ITypeEmitter, TypeEmitter>();
@@ -60,7 +60,7 @@ namespace Tochka.JsonRpc.Swagger
                     options.SwaggerDoc(name, new OpenApiInfo {Title = name, Version = ApiExplorerConstants.DefaultApiVersion});
                 }
 
-                var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+                var xmlFile = $"{xmldocAssembly.GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 if (!File.Exists(xmlPath))
                 {

@@ -17,7 +17,7 @@ namespace Tochka.JsonRpc.OpenRpc
 {
     public static class Extensions
     {
-        public static IServiceCollection AddOpenRpc(this IServiceCollection services, Action<OpenRpcOptions> configureOptions = null)
+        public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmldocAssembly, Action<OpenRpcOptions> configureOptions = null)
         {
             if (services == null)
             {
@@ -33,27 +33,26 @@ namespace Tochka.JsonRpc.OpenRpc
                 // add by interface if not present
                 services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
             }
-            
+
             services.Configure(configureOptions ?? (options => { }));
-            
-            var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+
+            var xmlFile = $"{xmldocAssembly.GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             if (!File.Exists(xmlPath))
             {
                 // sanity check to enforce users set up their projects properly
                 throw new FileNotFoundException("OpenRpc requires generated XMLdoc file! Add <GenerateDocumentationFile>true</GenerateDocumentationFile> to your csproj or disable OpenRpc integration", xmlPath);
             }
-            
+
             return services;
         }
 
-        public static IServiceCollection AddDefaultOpenRpcDocument(this IServiceCollection services)
+        public static IServiceCollection AddDefaultOpenRpcDocument(this IServiceCollection services, Assembly xmldocAssembly)
         {
             services.Configure<OpenRpcOptions>(options =>
             {
-                var entryAssembly = Assembly.GetEntryAssembly();
-                var title = entryAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? string.Empty;  // returns assembly name, not what Rider shows in Csproj>Properties>Nuget>Title
-                var description = entryAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? string.Empty;
+                var title = xmldocAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? string.Empty;  // returns assembly name, not what Rider shows in Csproj>Properties>Nuget>Title
+                var description = xmldocAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? string.Empty;
                 options.Docs.Add(JsonRpcConstants.ApiDocumentName, new OpenApiInfo()
                 {
                     Title = title,
