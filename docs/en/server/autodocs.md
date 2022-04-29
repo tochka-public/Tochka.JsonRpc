@@ -29,7 +29,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc()
         .AddJsonRpcServer()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-    services.AddSwaggerWithJsonRpc();  // <-- add this
+    services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly());  // <-- add this
 }
 ```
 
@@ -113,8 +113,8 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc()
         .AddJsonRpcServer()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-    services.AddOpenRpc();  // <-- add this
-    services.AddDefaultOpenRpcDocument();  // <-- add this
+    services.AddOpenRpc(Assembly.GetExecutingAssembly());  // <-- add this
+    services.AddDefaultOpenRpcDocument(Assembly.GetExecutingAssembly());  // <-- add this
 }
 ```
 
