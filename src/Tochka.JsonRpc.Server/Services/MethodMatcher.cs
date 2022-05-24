@@ -19,21 +19,23 @@ namespace Tochka.JsonRpc.Server.Services
         {
             var actionName = GetActionName(methodMetadata);
             var result = method.Equals(actionName, StringComparison.OrdinalIgnoreCase);
-            log.LogTrace($"Matching [{method}] to action [{actionName}]: {result}");
+
+            log.LogTrace("Matching [{method}] to action [{actionName}]: {result}",
+                         method,
+                         actionName,
+                         result);
+            
             return result;
         }
 
         public string GetActionName(MethodMetadata methodMetadata)
         {
-            switch (methodMetadata.MethodOptions.MethodStyle)
+            return methodMetadata.MethodOptions.MethodStyle switch
             {
-                case MethodStyle.ControllerAndAction:
-                    return $"{methodMetadata.Controller.Json}{JsonRpcConstants.ControllerMethodSeparator}{methodMetadata.Action.Json}";
-                case MethodStyle.ActionOnly:
-                    return methodMetadata.Action.Json;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(methodMetadata.MethodOptions.MethodStyle), methodMetadata.MethodOptions.MethodStyle, null);
-            }
+                MethodStyle.ControllerAndAction => $"{methodMetadata.Controller.Json}{JsonRpcConstants.ControllerMethodSeparator}{methodMetadata.Action.Json}",
+                MethodStyle.ActionOnly => methodMetadata.Action.Json,
+                _ => throw new ArgumentOutOfRangeException(nameof(methodMetadata.MethodOptions.MethodStyle), methodMetadata.MethodOptions.MethodStyle, null)
+            };
         }
     }
 }

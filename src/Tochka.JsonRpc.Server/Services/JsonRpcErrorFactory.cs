@@ -95,7 +95,7 @@ namespace Tochka.JsonRpc.Server.Services
         {
             if (IsReserved(code))
             {
-                throw new ArgumentOutOfRangeException(nameof(code), code, $"This code is in reserved range [-32768, -32000], use another");
+                throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another");
             }
 
             return new Error<object>
@@ -176,8 +176,8 @@ namespace Tochka.JsonRpc.Server.Services
             switch (errorData)
             {
                 case Exception e when options.DetailedResponseExceptions:
-                    log.LogTrace($"Wrap detailed exception [{e.GetType().Name}]");
-                    return new ExceptionInfo()
+                    log.LogTrace("Wrap detailed exception [{exceptionTypeName}]", e.GetType().Name);
+                    return new ExceptionInfo
                     {
                         InternalHttpCode = httpCode,
                         Message = e.Message,
@@ -185,7 +185,7 @@ namespace Tochka.JsonRpc.Server.Services
                         Details = e.ToString()
                     };
                 case Exception e:
-                    log.LogTrace($"Wrap exception without details [{e.GetType().Name}]");
+                    log.LogTrace("Wrap exception without details [{exceptionTypeName}]", e.GetType().Name);
                     return new ExceptionInfo()
                     {
                         InternalHttpCode = httpCode,

@@ -13,7 +13,7 @@ namespace Tochka.JsonRpc.Server.Models
         public JsonName Action { get; }
         public string HumanReadableFullName => $"{Controller.Original}.{Action.Original}";
 
-        internal readonly Dictionary<string, ParameterMetadata> ParametersInternal = new Dictionary<string, ParameterMetadata>();
+        internal readonly Dictionary<string, ParameterMetadata> ParametersInternal = new();
 
         public IReadOnlyDictionary<string, ParameterMetadata> Parameters => ParametersInternal;
 

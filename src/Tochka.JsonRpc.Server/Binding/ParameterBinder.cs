@@ -19,7 +19,8 @@ namespace Tochka.JsonRpc.Server.Binding
 
         public virtual Task SetResult(ModelBindingContext context, IParseResult result, string parameterName, JsonRpcBindingContext jsonRpcBindingContext)
         {
-            log.LogTrace($"Binding parameter [{parameterName}]");
+            log.LogTrace("Binding parameter [{parameterName}]", parameterName);
+            
             switch (result)
             {
                 case SuccessParseResult successBindResult:
@@ -54,12 +55,21 @@ namespace Tochka.JsonRpc.Server.Binding
         {
             try
             {
-                log.LogTrace($"{nameof(SetResultSafe)}, parameterName {parameterName}: [{result}]");
+                log.LogTrace("{methodName}, parameterName {parameterName}: [{result}]",
+                             nameof(SetResultSafe),
+                             parameterName,
+                             result);
+                
                 SetDeserializedResult(context, result.Value, serializer);
             }
             catch (Exception e)
             {
-                log.LogWarning(e, $"{nameof(SetResultSafe)}, parameterName {parameterName} failed result was [{result}]");
+                log.LogWarning(e,
+                               "{methodName}, parameterName {parameterName} failed result was [{result}]",
+                               nameof(SetResultSafe),
+                               parameterName,
+                               result);
+                
                 context.ModelState.AddModelError(parameterName, $"{result}. {e.GetType().Name}: {e.Message}");
             }
 
@@ -74,27 +84,40 @@ namespace Tochka.JsonRpc.Server.Binding
         /// <param name="serializer"></param>
         protected internal virtual void SetDeserializedResult(ModelBindingContext context, JToken json, JsonSerializer serializer)
         {
-            log.LogTrace($"{nameof(SetDeserializedResult)} deserializing json to [{context.ModelMetadata.ModelType.Name}]");
+            log.LogTrace("{methodName} deserializing json to [{modelTypeName}]", nameof(SetDeserializedResult), context.ModelMetadata.ModelType.Name);
+            
             context.Result = ModelBindingResult.Success(json.ToObject(context.ModelMetadata.ModelType, serializer));
         }
 
         protected internal virtual Task SetError(ModelBindingContext context, string parameterName, IParseResult parseResult)
         {
-            log.LogTrace($"{nameof(SetError)}, parameterName {parameterName}: [{parseResult}]");
+            log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
+                         nameof(SetError),
+                         parameterName,
+                         parseResult);
+            
             context.ModelState.AddModelError(parameterName, parseResult.ToString());
             return Task.CompletedTask;
         }
 
         protected internal virtual Task SetNullResult(ModelBindingContext context, string parameterName, NullParseResult nullParseResult)
         {
-            log.LogTrace($"{nameof(SetNullResult)}, parameterName {parameterName}: [{nullParseResult}]");
+            log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
+                         nameof(SetNullResult),
+                         parameterName,
+                         nullParseResult);
+            
             context.Result = ModelBindingResult.Success(null);
             return Task.CompletedTask;
         }
 
         protected internal virtual Task SetNoResult(ModelBindingContext context, string parameterName, NoParseResult noParseResult)
         {
-            log.LogTrace($"{nameof(SetNoResult)}, parameterName {parameterName}: [{noParseResult}]");
+            log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
+                         nameof(SetNoResult),
+                         parameterName,
+                         noParseResult);
+            
             return Task.CompletedTask;
         }
     }

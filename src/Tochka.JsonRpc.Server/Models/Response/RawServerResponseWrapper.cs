@@ -41,7 +41,7 @@ namespace Tochka.JsonRpc.Server.Models.Response
                 return;
             }
 
-            if (!(Source.Body is MemoryStream ms))
+            if (Source.Body is not MemoryStream ms)
             {
                 throw new JsonRpcInternalException("Expected MemoryStream to read response");
             }
@@ -49,6 +49,5 @@ namespace Tochka.JsonRpc.Server.Models.Response
             ms.Seek(0, SeekOrigin.Begin);
             await ms.CopyToAsync(sink.Body, 81920, context.OriginalHttpContext.RequestAborted);
         }
-
     }
 }

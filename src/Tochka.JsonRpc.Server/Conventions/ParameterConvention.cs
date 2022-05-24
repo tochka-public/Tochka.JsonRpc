@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -54,7 +53,7 @@ namespace Tochka.JsonRpc.Server.Conventions
             // TODO use RequiredAttribute?
             var isOptional = parameterModel.ParameterInfo.IsOptional; // see https://stackoverflow.com/q/9977530/
             var result = new ParameterMetadata(parameterName, parameterModel.ParameterType, parameterModel.ParameterInfo.Position, rpcParams, isOptional);
-            log.LogTrace($"{parameterModel.DisplayName}: metadata [{result}]");
+            log.LogTrace("{parameterName}: metadata [{metadata}]", parameterModel.DisplayName, result);
             return result;
         }
 
@@ -62,13 +61,13 @@ namespace Tochka.JsonRpc.Server.Conventions
         {
             if (parameterModel.BindingInfo == null)
             {
-                parameterModel.BindingInfo = new BindingInfo()
+                parameterModel.BindingInfo = new BindingInfo
                 {
                     BinderType = typeof(JsonRpcModelBinder),
                     BindingSource = BindingSource.Custom
                 };
             }
-            log.LogTrace($"{parameterModel.DisplayName}: applied {nameof(JsonRpcModelBinder)}");
+            log.LogTrace("{parameterName}: applied {binder}", parameterModel.DisplayName, nameof(JsonRpcModelBinder));
         }
 
         internal void ValidateParameter(ParameterModel parameterModel, BindingStyle bindingStyle)

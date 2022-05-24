@@ -31,8 +31,8 @@ namespace Tochka.JsonRpc.Server.Services
             if (context.Items.ContainsKey(JsonRpcConstants.RequestItemKey))
             {
                 var call = context.Items[JsonRpcConstants.RequestItemKey] as IUntypedCall;
-                log.LogTrace($"Found cached call in HttpContext");
-                return new SingleRequestWrapper()
+                log.LogTrace("Found cached call in HttpContext");
+                return new SingleRequestWrapper
                 {
                     Call = call
                 };
@@ -41,7 +41,7 @@ namespace Tochka.JsonRpc.Server.Services
             try
             {
                 var requestWrapper = await ParseRequest(context, encoding);
-                if (!(requestWrapper is SingleRequestWrapper singleRequestWrapper))
+                if (requestWrapper is not SingleRequestWrapper singleRequestWrapper)
                 {
                     return requestWrapper;
                 }
@@ -53,16 +53,16 @@ namespace Tochka.JsonRpc.Server.Services
 
                 if (string.IsNullOrEmpty(singleRequestWrapper.Call.Method))
                 {
-                    throw new JsonRpcInternalException($"Method is null or empty");
+                    throw new JsonRpcInternalException("Method is null or empty");
                 }
 
                 context.Items[JsonRpcConstants.RequestItemKey] = singleRequestWrapper.Call;
-                log.LogTrace($"Caching call in HttpContext");
+                log.LogTrace("Caching call in HttpContext");
                 return requestWrapper;
             }
             catch (Exception e)
             {
-                log.LogWarning(e, $"{nameof(GetRequestWrapper)} failed, return bad request");
+                log.LogWarning(e, "{action} failed, return bad request", nameof(GetRequestWrapper));
                 return new BadRequestWrapper
                 {
                     Exception = e
@@ -79,7 +79,7 @@ namespace Tochka.JsonRpc.Server.Services
             {
                 using (var jsonReader = new JsonTextReader(streamReader))
                 {
-                    log.LogTrace($"Reading request body");
+                    log.LogTrace("Reading request body");
                     var json = await JToken.ReadFromAsync(jsonReader, context.RequestAborted);
                     var result = json.ToObject<IRequestWrapper>(headerJsonRpcSerializer.Serializer);
                     body.Position = 0;

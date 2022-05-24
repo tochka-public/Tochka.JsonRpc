@@ -44,33 +44,35 @@ namespace Tochka.JsonRpc.Server.Services
             switch (actionResult)
             {
                 case ObjectResult result:
-                    log.LogTrace($"Action returned object result [{result.GetType().Name}], value [{result.Value?.GetType().Name}], status code [{result.StatusCode}]");
+                    log.LogTrace("Action returned object result [{resultTypeName}], value [{resultValueTypeName}], status code [{resultStatusCode}]",
+                                 result.GetType().Name,
+                                 result.Value?.GetType().Name,
+                                 result.StatusCode);
+                    
                     // null code is normal so we pretend that it is good
                     // subclassed (probably bad) ObjectResults set code explicitly
                     return CreateObjectResult(result.StatusCode ?? 200, result.Value, serializer);
 
                 case StatusCodeResult result:
                     // method returned only http code
-                    log.LogTrace($"Action returned only http code result [{result.GetType().Name}], status code [{result.StatusCode}]");
+                    log.LogTrace("Action returned only http code result [{resultTypeName}], status code [{resultStatusCode}]", result.GetType().Name, result.StatusCode);
                     return CreateObjectResult(result.StatusCode, null, serializer);
 
                 case EmptyResult _:
                     // method was void (or returned null?)
-                    log.LogTrace($"Action returned empty result");
+                    log.LogTrace("Action returned empty result");
                     return CreateObjectResult(200, null, serializer);
 
                 default:
                     // return as is
                     if (options.AllowRawResponses)
                     {
-                        log.LogTrace($"Action returned [{actionResult.GetType().Name}], return as raw");
+                        log.LogTrace("Action returned [{resultTypeName}], return as raw", actionResult.GetType().Name);
                         return actionResult;
                     }
-                    else
-                    {
-                        log.LogTrace($"Action returned [{actionResult.GetType().Name}], raw responses not allowed");
-                        throw new JsonRpcInternalException($"Raw responses are not allowed by default, check {nameof(JsonRpcOptions)}", actionResult, metadata, null);
-                    }
+
+                    log.LogTrace("Action returned [{resultTypeName}], raw responses not allowed", actionResult.GetType().Name);
+                    throw new JsonRpcInternalException($"Raw responses are not allowed by default, check {nameof(JsonRpcOptions)}", actionResult, metadata, null);
             }
         }
 
@@ -104,15 +106,15 @@ namespace Tochka.JsonRpc.Server.Services
         {
             if (Utils.IsGoodHttpCode(code))
             {
-                log.LogTrace($"HTTP Code [{code}] is good");
+                log.LogTrace("HTTP Code [{code}] is good", code);
                 return null;
             }
 
-            log.LogTrace($"HTTP Code [{code}] is bad, return http error");
+            log.LogTrace("HTTP Code [{code}] is bad, return http error", code);
             var error = jsonRpcErrorFactory.HttpError(code, value);
             return new UntypedErrorResponse
             {
-                Error = new Error<JToken>()
+                Error = new Error<JToken>
                 {
                     Code = error.Code,
                     Message = error.Message,
@@ -132,12 +134,12 @@ namespace Tochka.JsonRpc.Server.Services
             switch (value)
             {
                 case IError error:
-                    log.LogTrace($"Returned value is Error [{value.GetType().Name}], return as error");
+                    log.LogTrace("Returned value is Error [{valueTypeName}], return as error", value.GetType().Name);
                     return GetErrorResponse(error, serializer);
                     
                 default:
-                    log.LogTrace($"Returned value is normal object [{value?.GetType().Name}], return as response");
-                    return new UntypedResponse()
+                    log.LogTrace("Returned value is normal object [{valueTypeName}], return as response", value?.GetType().Name);
+                    return new UntypedResponse
                     {
                         Result = SerializeContent(value, serializer)
                     };
@@ -148,7 +150,7 @@ namespace Tochka.JsonRpc.Server.Services
         {
             return new UntypedErrorResponse
             {
-                Error = new Error<JToken>()
+                Error = new Error<JToken>
                 {
                     Code = error.Code,
                     Message = error.Message,
