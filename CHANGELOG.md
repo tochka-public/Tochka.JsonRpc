@@ -1,3 +1,5 @@
+### [1.0.37](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.36...v1.0.37) (2022-05-26)
+
 ### [1.0.36](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.35...v1.0.36) (2022-04-29)
 
 ### [1.0.35](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.34...v1.0.35) (2022-03-02)
