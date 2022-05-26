@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
-using Tochka.JsonRpc.Server.Models.Response;
 
 namespace Tochka.JsonRpc.Server.Services
 {
@@ -34,7 +33,7 @@ namespace Tochka.JsonRpc.Server.Services
             OverrideRequestDataFeatures(newFeatures, context.Features, call, requestEncoding);
             // NOTE: factory breaks HttpContextAccessor
             var result = httpContextFactory.Create(newFeatures);
-            log.LogTrace($"Created HttpContext [{result}]");
+            log.LogTrace("Created HttpContext [{httpContext}]", result);
             return result;
         }
 
@@ -58,7 +57,8 @@ namespace Tochka.JsonRpc.Server.Services
                 result.Items.Add(originalItem);
             }
 
-            log.LogTrace($"Copied items: [{result.Items.Count}]");
+            log.LogTrace("Copied items: [{itemsCount}]", result.Items.Count);
+            
             return result;
         }
 
@@ -77,7 +77,17 @@ namespace Tochka.JsonRpc.Server.Services
                 Headers = new HeaderDictionary(headers),
                 Body = new MemoryStream(requestEncoding.GetBytes(call.RawJson))
             };
-            log.LogTrace($"Copied request: [{result.Protocol}] [{result.Method}] [{result.Scheme}] [{result.Path}] [{result.PathBase}] [{result.QueryString}] [{result.RawTarget}], [{headers.Count}] headers");
+
+            log.LogTrace("Copied request: [{resultProtocol}] [{resultMethod}] [{resultScheme}] [{resultPath}] [{resultPathBase}] [{resultQueryString}] [{resultRawTarget}], [{headersCount}] headers",
+                         result.Protocol,
+                         result.Method,
+                         result.Scheme,
+                         result.Path,
+                         result.PathBase,
+                         result.QueryString,
+                         result.RawTarget,
+                         headers.Count);
+
             return result;
         }
     }

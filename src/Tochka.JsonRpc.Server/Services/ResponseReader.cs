@@ -36,22 +36,27 @@ namespace Tochka.JsonRpc.Server.Services
         public virtual async Task<IServerResponseWrapper> GetResponse(HttpContext nestedHttpContext, IUntypedCall call, bool allowRawResponses, CancellationToken token)
         {
             var actionResultType = Utils.GetActionResultType(nestedHttpContext);
-            log.LogTrace($"{nameof(GetResponse)}: {nameof(allowRawResponses)} is [{allowRawResponses}], {nameof(actionResultType)} is [{actionResultType}]");
+
+            log.LogTrace("{action}: {allowRawResponsesName} is [{allowRawResponses}], {actionResultTypeName} is [{actionResultType}]",
+                         nameof(GetResponse),
+                         nameof(allowRawResponses),
+                         allowRawResponses,
+                         nameof(actionResultType),
+                         actionResultType);
+            
             var responseWrapper = await GetResponseWrapper(nestedHttpContext.Response, actionResultType, call, token);
-            switch (responseWrapper)
+
+            return responseWrapper switch
             {
-                case RawServerResponseWrapper _ when !allowRawResponses:
-                    throw new JsonRpcInternalException($"Raw responses are not allowed by default and not supported in batches, check {nameof(JsonRpcOptions)}");
-                case null:
-                    throw new ArgumentNullException(nameof(responseWrapper));
-                default:
-                    return responseWrapper;
-            }
+                RawServerResponseWrapper _ when !allowRawResponses => throw new JsonRpcInternalException($"Raw responses are not allowed by default and not supported in batches, check {nameof(JsonRpcOptions)}"),
+                null => throw new ArgumentNullException(nameof(responseWrapper)),
+                _ => responseWrapper
+            };
         }
 
         protected internal virtual async Task<IServerResponseWrapper> GetResponseWrapper(HttpResponse response, Type actionResultType, IUntypedCall call, CancellationToken token)
         {
-            if (!(response.Body is MemoryStream ms))
+            if (response.Body is not MemoryStream ms)
             {
                 throw new JsonRpcInternalException("Expected MemoryStream to read response");
             }
@@ -59,22 +64,31 @@ namespace Tochka.JsonRpc.Server.Services
             var contentType = response.GetTypedHeaders().ContentType;
             // TODO not sure if this will be right encoding
             var encoding = contentType?.Encoding ?? Encoding.UTF8;
-            log.LogTrace($"{nameof(GetResponseWrapper)}: {nameof(encoding)} is [{encoding.EncodingName}]");
+            log.LogTrace("{action}: encoding is [{encodingName}]", nameof(GetResponseWrapper), encoding.EncodingName);
             ms.Seek(0, SeekOrigin.Begin);
             return await HandleResultType(response, actionResultType, call, ms, encoding, token);
         }
 
         protected internal virtual async Task<IServerResponseWrapper> HandleResultType(HttpResponse response, Type actionResultType, IUntypedCall call, MemoryStream responseBody, Encoding encoding, CancellationToken token)
         {
-            switch (actionResultType)
+            return actionResultType switch
             {
-                case Type objectResult when objectResult == typeof(ObjectResult):
-                    return await HandleObjectResult(response, call, responseBody, encoding, token);
-                case null:
-                    return await HandleNullResult(response, call, responseBody, encoding, token);
-                default:
-                    return await HandleUnknownResult(response, call, responseBody, encoding, token);
-            }
+                {} objectResult when objectResult == typeof(ObjectResult) => await HandleObjectResult(response,
+                                                                                                      call,
+                                                                                                      responseBody,
+                                                                                                      encoding,
+                                                                                                      token),
+                null => await HandleNullResult(response,
+                                               call,
+                                               responseBody,
+                                               encoding,
+                                               token),
+                _ => await HandleUnknownResult(response,
+                                               call,
+                                               responseBody,
+                                               encoding,
+                                               token)
+            };
         }
 
         /// <summary>
@@ -88,7 +102,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <returns></returns>
         protected internal virtual async Task<IServerResponseWrapper> HandleObjectResult(HttpResponse response, IUntypedCall call, MemoryStream responseBody, Encoding encoding, CancellationToken token)
         {
-            log.LogTrace($"{nameof(HandleObjectResult)}");
+            log.LogTrace("{action}", nameof(HandleObjectResult));
             var jToken = await ReadJsonResponse(responseBody, encoding, token);
             return new JsonServerResponseWrapper(jToken, call, response.Headers);
         }
@@ -104,7 +118,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <returns></returns>
         protected internal virtual Task<IServerResponseWrapper> HandleNullResult(HttpResponse response, IUntypedCall call, MemoryStream responseBody, Encoding encoding, CancellationToken token)
         {
-            log.LogTrace($"{nameof(HandleNullResult)}");
+            log.LogTrace("{action}", nameof(HandleNullResult));
             var body = ReadTextBody(responseBody, encoding);
             var jToken = FormatHttpErrorResponse(response, body);
             return Task.FromResult<IServerResponseWrapper>(new JsonServerResponseWrapper(jToken, call, response.Headers));
@@ -121,7 +135,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// <returns></returns>
         protected internal virtual Task<IServerResponseWrapper> HandleUnknownResult(HttpResponse response, IUntypedCall call, MemoryStream responseBody, Encoding encoding, CancellationToken token)
         {
-            log.LogTrace($"{nameof(GetResponseWrapper)}: return raw response");
+            log.LogTrace("{action}: return raw response", nameof(GetResponseWrapper));
             return Task.FromResult<IServerResponseWrapper>(new RawServerResponseWrapper(response));
         }
         
@@ -132,7 +146,7 @@ namespace Tochka.JsonRpc.Server.Services
                 using (var jsonReader = new JsonTextReader(reader))
                 {
                     // we obey how response was serialized
-                    log.LogTrace($"Reading json from body");
+                    log.LogTrace("Reading json from body");
                     return await JToken.ReadFromAsync(jsonReader, token);
                 }
             }
@@ -140,7 +154,7 @@ namespace Tochka.JsonRpc.Server.Services
 
         protected internal virtual string ReadTextBody(MemoryStream ms, Encoding encoding)
         {
-            log.LogTrace($"Reading text body");
+            log.LogTrace("Reading text body");
             return ms.Length == 0
                 ? null
                 : encoding.GetString(ms.ToArray());
@@ -148,14 +162,13 @@ namespace Tochka.JsonRpc.Server.Services
 
         protected internal virtual JToken FormatHttpErrorResponse(HttpResponse response, string rawBody)
         {
-            log.LogTrace($"{nameof(FormatHttpErrorResponse)}: http code is [{response.StatusCode}]");
-            switch (response.StatusCode)
+            log.LogTrace("{action}: http code is [{responseStatusCode}]", nameof(FormatHttpErrorResponse), response.StatusCode);
+
+            return response.StatusCode switch
             {
-                case 404:
-                    return errorFactory.ConvertErrorToResponse(errorFactory.MethodNotFound(rawBody), headerJsonRpcSerializer);
-                default:
-                    return errorFactory.ConvertErrorToResponse(errorFactory.InternalError(rawBody), headerJsonRpcSerializer);
-            }
+                404 => errorFactory.ConvertErrorToResponse(errorFactory.MethodNotFound(rawBody), headerJsonRpcSerializer),
+                _ => errorFactory.ConvertErrorToResponse(errorFactory.InternalError(rawBody), headerJsonRpcSerializer)
+            };
         }
     }
 }

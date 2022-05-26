@@ -18,7 +18,7 @@ namespace Tochka.JsonRpc.Server.Pipeline
 
         public async Task Invoke(HttpContext context)
         {
-            log.LogTrace($"Started");
+            log.LogTrace("{action} of {middleware} Started", nameof(Invoke), nameof(JsonRpcRequestLoggingMiddleware));
             var call = context.GetJsonRpcCall();
             switch (call)
             {
@@ -26,12 +26,15 @@ namespace Tochka.JsonRpc.Server.Pipeline
                     log.LogInformation("JsonRpc notification [{method}]. Raw json: [{rawJson}]", untypedNotification.Method, untypedNotification.RawJson);
                     break;
                 case UntypedRequest untypedRequest:
-                    log.LogInformation("JsonRpc request [{method}], id [{id}]. Raw json: [{rawJson}]", untypedRequest.Method, untypedRequest.Id, untypedRequest.RawJson);
+                    log.LogInformation("JsonRpc request [{method}], id [{id}]. Raw json: [{rawJson}]",
+                                       untypedRequest.Method,
+                                       untypedRequest.Id,
+                                       untypedRequest.RawJson);
                     break;
             }
 
             await next(context);
-            log.LogTrace($"Completed");
+            log.LogTrace("{action} of {middleware} Completed", nameof(Invoke), nameof(JsonRpcRequestLoggingMiddleware));
         }
     }
 }

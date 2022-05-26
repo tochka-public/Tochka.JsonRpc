@@ -44,40 +44,41 @@ namespace Tochka.JsonRpc.Server.Services
             var context = new HandlingContext(httpContext, requestEncoding, next);
             try
             {
-                log.LogTrace($"RequestWrapper is {requestWrapper?.GetType().Name}, encoding is {requestEncoding.EncodingName}");
+                log.LogTrace("RequestWrapper is {requestWrapperTypeName}, encoding is {requestEncodingName}", requestWrapper?.GetType().Name, requestEncoding.EncodingName);
                 var responseWrapper = await HandleRequestWrapper(requestWrapper, context);
                 await responseWrapper.Write(context, headerJsonRpcSerializer);
             }
             catch (Exception e)
             {
                 // paranoid safeguard against unexpected errors
-                log.LogWarning(e, $"{nameof(HandleRequest)} failed, write error response");
+                log.LogWarning(e, "{action} failed, write error response", nameof(HandleRequest));
                 await HandleException(context, e);
             }
         }
 
-        protected internal virtual async Task<Models.Response.IServerResponseWrapper> HandleRequestWrapper(IRequestWrapper requestWrapper, HandlingContext context)
+        protected internal virtual async Task<IServerResponseWrapper> HandleRequestWrapper(IRequestWrapper requestWrapper, HandlingContext context)
         {
             try
             {
-                switch (requestWrapper)
+                return requestWrapper switch
                 {
-                    case BadRequestWrapper badRequestWrapper:
-                        return HandleBad(badRequestWrapper, context);
-                    case BatchRequestWrapper batchRequestWrapper:
-                        return await HandleBatch(batchRequestWrapper, options.BatchHandling, context);
-                    case SingleRequestWrapper singleRequestWrapper:
-                        return await HandleSingle(singleRequestWrapper, context);
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(requestWrapper), requestWrapper?.GetType().Name);
-                }
+                    BadRequestWrapper badRequestWrapper => HandleBad(badRequestWrapper, context),
+                    BatchRequestWrapper batchRequestWrapper => await HandleBatch(batchRequestWrapper, options.BatchHandling, context),
+                    SingleRequestWrapper singleRequestWrapper => await HandleSingle(singleRequestWrapper, context),
+                    _ => throw new ArgumentOutOfRangeException(nameof(requestWrapper), requestWrapper?.GetType().Name)
+                };
             }
             catch (Exception e)
             {
                 // If the batch rpc call itself fails to be recognized as an valid JSON or as an Array with at least one value, the response from the Server MUST be a single Response object
                 // i think even if we failed parsing and don't know if this is a notification, this is right
                 context.WriteResponse = true;
-                log.LogWarning(e, $"{nameof(HandleRequestWrapper)} failed, set writeResponse [{context.WriteResponse}], convert exception to error response");
+
+                log.LogWarning(e,
+                               "{action} failed, set writeResponse [{contextWriteResponse}], convert exception to error response",
+                               nameof(HandleRequestWrapper),
+                               context.WriteResponse);
+                
                 var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
                 return GetResponseWrapper(response);
             }
@@ -85,7 +86,7 @@ namespace Tochka.JsonRpc.Server.Services
 
         protected internal virtual JsonServerResponseWrapper HandleBad(BadRequestWrapper badRequestWrapper, HandlingContext context)
         {
-            log.LogTrace($"{nameof(HandleBad)}: converting exception to json response");
+            log.LogTrace("{action}: converting exception to json response", nameof(HandleBad));
             context.WriteResponse = true;
             var error = GetError(badRequestWrapper.Exception);
             var errorResponse = new ErrorResponse<object>
@@ -120,7 +121,7 @@ namespace Tochka.JsonRpc.Server.Services
         protected internal virtual async Task<IServerResponseWrapper> HandleSingle(SingleRequestWrapper singleRequestWrapper, HandlingContext context)
         {
             context.WriteResponse = singleRequestWrapper.Call is UntypedRequest;
-            log.LogTrace($"{nameof(HandleSingle)}: set writeResponse [{context.WriteResponse}] because call is request");
+            log.LogTrace("{action}: set writeResponse [{contextWriteResponse}] because call is request", nameof(HandleSingle), context.WriteResponse);
             return await SafeNext(singleRequestWrapper.Call, context, options.AllowRawResponses);
         }
 
@@ -135,7 +136,13 @@ namespace Tochka.JsonRpc.Server.Services
             // the server MUST NOT return an empty Array and should return nothing at all
             var hasRequestInBatch = batchRequestWrapper.Batch.OfType<UntypedRequest>().Any();
             context.WriteResponse = hasRequestInBatch;
-            log.LogTrace($"{nameof(HandleBatch)}: set writeResponse [{context.WriteResponse}] because {nameof(hasRequestInBatch)} is [{hasRequestInBatch}]");
+
+            log.LogTrace("{action}: set writeResponse [{contextWriteResponse}] because {hasRequestInBatchName} is [{hasRequestInBatch}]",
+                         nameof(HandleBatch),
+                         context.WriteResponse,
+                         nameof(hasRequestInBatch),
+                         hasRequestInBatch);
+            
             // We ignore headers and other properties from nested responses because there is no good way to solve possible conflicts
             switch (batchHandling)
             {
@@ -151,7 +158,7 @@ namespace Tochka.JsonRpc.Server.Services
         protected internal virtual async Task HandleException(HandlingContext context, Exception e)
         {
             context.WriteResponse = true;
-            log.LogTrace($"{nameof(HandleException)}: set writeResponse [{context.WriteResponse}]");
+            log.LogTrace("{action}: set writeResponse [{contextWriteResponse}]", nameof(HandleException), context.WriteResponse);
             var response = errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
             var wrapper = GetResponseWrapper(response);
             await wrapper.Write(context, headerJsonRpcSerializer);
@@ -165,20 +172,32 @@ namespace Tochka.JsonRpc.Server.Services
         protected internal virtual async Task<JArray> HandleBatchSequential(BatchRequestWrapper batchRequestWrapper, HandlingContext context)
         {
             var batchResponse = new JArray();
-            var i = 1;
+            var index = 1;
+            
             foreach (var call in batchRequestWrapper.Batch)
             {
-                log.LogTrace($"{nameof(HandleBatchSequential)}: [{i}/{batchRequestWrapper.Batch.Count}] processing");
+                log.LogTrace("{action}: [{index}/{batchCount}] processing", nameof(HandleBatchSequential), index, batchRequestWrapper.Batch.Count);
+                
                 var response = await GetResponseSafeInBatch(call, context);
+                
                 if (call is UntypedRequest)
                 {
                     batchResponse.Add(response);
-                    log.LogTrace($"{nameof(HandleBatchSequential)}: [{i}/{batchRequestWrapper.Batch.Count}] add response to result because call was request");
+
+                    log.LogTrace("{action}: [{index}/{batchCount}] add response to result because call was request",
+                                 nameof(HandleBatchSequential),
+                                 index,
+                                 batchRequestWrapper.Batch.Count);
                 }
                 else
                 {
-                    log.LogTrace($"{nameof(HandleBatchSequential)}: [{i}/{batchRequestWrapper.Batch.Count}] ignored response because call was not request");
+                    log.LogTrace("{action}: [{index}/{batchCount}] ignored response because call was not request",
+                                 nameof(HandleBatchSequential),
+                                 index,
+                                 batchRequestWrapper.Batch.Count);
                 }
+
+                index++;
             }
 
             return batchResponse;
@@ -203,9 +222,9 @@ namespace Tochka.JsonRpc.Server.Services
             }
             catch (Exception e)
             {
-                if (!(e is JsonRpcErrorResponseException))
+                if (e is not JsonRpcErrorResponseException)
                 {
-                    log.LogWarning(e, $"{nameof(GetResponseSafeInBatch)} failed: converting exception to json response");
+                    log.LogWarning(e, "{action} failed: converting exception to json response", nameof(GetResponseSafeInBatch));
                 }
                 return errorFactory.ConvertExceptionToResponse(e, headerJsonRpcSerializer);
             }
@@ -213,14 +232,20 @@ namespace Tochka.JsonRpc.Server.Services
 
         protected internal virtual async Task<IServerResponseWrapper> SafeNext(IUntypedCall call, HandlingContext context, bool allowRawResponses)
         {
-            log.LogTrace($"{nameof(SafeNext)}: Started. {nameof(allowRawResponses)} is [{allowRawResponses}]");
+            log.LogTrace("{action}: Started. {allowRawResponsesName} is [{allowRawResponses}]",
+                         nameof(SafeNext),
+                         nameof(allowRawResponses),
+                         allowRawResponses);
+            
             IHeaderDictionary nestedHeaders = null;
             HttpContext nestedHttpContext = null;
             try
             {
                 context.OriginalHttpContext.RequestAborted.ThrowIfCancellationRequested();
                 nestedHttpContext = nestedContextFactory.Create(context.OriginalHttpContext, call, context.RequestEncoding);
-                log.LogTrace($"{nameof(SafeNext)}: invoking pipeline on nested context");
+                
+                log.LogTrace("{action}: invoking pipeline on nested context", nameof(SafeNext));
+                
                 await context.Next(nestedHttpContext);
                 PropagateItems(context.OriginalHttpContext, nestedHttpContext);
                 nestedHeaders = nestedHttpContext.Response.Headers;
@@ -230,15 +255,16 @@ namespace Tochka.JsonRpc.Server.Services
                     throw new JsonRpcInternalException($"{nameof(ResponseReader)} returned null");
                 }
 
-                log.LogTrace($"{nameof(SafeNext)}: Completed");
+                log.LogTrace("{action}: Completed", nameof(SafeNext));
+                
                 return result;
 
             }
             catch (Exception e)
             {
-                if (!(e is JsonRpcErrorResponseException))
+                if (e is not JsonRpcErrorResponseException)
                 {
-                    log.LogWarning(e, $"{nameof(SafeNext)} failed: converting exception to json response");
+                    log.LogWarning(e, "{action} failed: converting exception to json response", nameof(SafeNext));
                 }
 
                 PropagateItems(context.OriginalHttpContext, nestedHttpContext);
@@ -251,17 +277,17 @@ namespace Tochka.JsonRpc.Server.Services
         {
             if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ActionDescriptorItemKey))
             {
-                log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ActionDescriptorItemKey)}");
+                log.LogTrace("Propagated item to original HttpContext: {actionTypeKey}", nameof(JsonRpcConstants.ActionDescriptorItemKey));
             }
 
             if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ActionResultTypeItemKey))
             {
-                log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ActionResultTypeItemKey)}");
+                log.LogTrace("Propagated item to original HttpContext: {actionTypeKey}", nameof(JsonRpcConstants.ActionResultTypeItemKey));
             }
 
             if (PropagateItemsInternal(context, nestedHttpContext, JsonRpcConstants.ResponseErrorCodeItemKey))
             {
-                log.LogTrace($"Propagated item to original HttpContext: {nameof(JsonRpcConstants.ResponseErrorCodeItemKey)}");
+                log.LogTrace("Propagated item to original HttpContext: {actionTypeKey}", nameof(JsonRpcConstants.ResponseErrorCodeItemKey));
             }
         }
 

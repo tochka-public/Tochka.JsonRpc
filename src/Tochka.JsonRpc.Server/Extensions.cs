@@ -27,7 +27,7 @@ namespace Tochka.JsonRpc.Server
         {
             var services = mvcBuilder.Services;
             if (services == null) throw new ArgumentNullException();
-            services.Configure(configureOptions ?? (options => { }));
+            services.Configure(configureOptions ?? (_ => { }));
 
             // mvc integration
             services.TryAddConvention<ControllerConvention>();

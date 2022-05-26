@@ -20,7 +20,8 @@ namespace Tochka.JsonRpc.Server.Services
         public void Register(string route)
         {
             routes.Add(route.TrimEnd('/'));
-            log.LogTrace($"Registered route [{route}]");
+            
+            log.LogTrace("Registered route [{route}]", route);
         }
 
         // TODO use TemplateMatcher

@@ -28,7 +28,8 @@ namespace Tochka.JsonRpc.Server.Conventions
             // ignore what mvc could have done
             controllerModel.Selectors.Clear();
             controllerModel.Filters.Insert(0, new ServiceFilterAttribute(typeof(JsonRpcFilter)));
-            log.LogTrace($"{controllerModel.DisplayName}: applied {nameof(JsonRpcFilter)}");
+
+            log.LogTrace("{controllerName}: applied {filterName}", controllerModel.DisplayName, nameof(JsonRpcFilter));
         }
     }
 }

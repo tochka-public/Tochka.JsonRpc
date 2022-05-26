@@ -30,13 +30,13 @@ namespace Tochka.JsonRpc.Server.Pipeline
         /// <param name="context"></param>
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            log.LogTrace($"{nameof(OnResultExecuting)} Started");
+            log.LogTrace("{action} Started", nameof(OnResultExecuting));
             var methodMetadata = context.ActionDescriptor.GetProperty<MethodMetadata>() ?? throw new ArgumentNullException(nameof(MethodMetadata));
             var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IJsonRpcSerializer;
             context.Result = actionResultConverter.ConvertActionResult(context.Result, methodMetadata, serializer);
             context.HttpContext.Items[JsonRpcConstants.ActionResultTypeItemKey] = context.Result.GetType();
             context.HttpContext.Items[JsonRpcConstants.ActionDescriptorItemKey] = context.ActionDescriptor;
-            log.LogTrace($"{nameof(OnResultExecuting)} Completed");
+            log.LogTrace("{action} Completed", nameof(OnResultExecuting));
         }
 
         /// <inheritdoc />
@@ -46,10 +46,13 @@ namespace Tochka.JsonRpc.Server.Pipeline
         /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            log.LogTrace($"{nameof(OnActionExecuting)} Started");
+            log.LogTrace("{action} Started", nameof(OnActionExecuting));
             if (context.Result != null || context.ModelState.IsValid)
             {
-                log.LogTrace($"{nameof(OnActionExecuting)} Completed: result is not null: {context.Result != null}, model state is valid: {context.ModelState.IsValid}");
+                log.LogTrace("{action} Completed: result is not null: {resultIsNotNull}, model state is valid: {modelStateIsValid}",
+                             nameof(OnActionExecuting),
+                             context.Result != null,
+                             context.ModelState.IsValid);
                 return;
             }
 
@@ -57,7 +60,7 @@ namespace Tochka.JsonRpc.Server.Pipeline
             context.Result = result;
             context.HttpContext.Items[JsonRpcConstants.ActionResultTypeItemKey] = result.GetType();
             context.HttpContext.Items[JsonRpcConstants.ActionDescriptorItemKey] = context.ActionDescriptor;
-            log.LogTrace($"{nameof(OnActionExecuting)} Completed");
+            log.LogTrace("{action} Completed", nameof(OnActionExecuting));
         }
 
         public void OnActionExecuted(ActionExecutedContext context)

@@ -59,7 +59,7 @@ namespace Tochka.JsonRpc.Server.Conventions
             var controllerName = serializer.GetJsonName(actionModel.Controller.ControllerName);
             var actionName = serializer.GetJsonName(actionModel.ActionName);
             var result = new MethodMetadata(methodOptions, controllerName, actionName);
-            log.LogTrace($"{actionModel.DisplayName}: metadata [{result}]");
+            log.LogTrace("{actionModelName}: metadata [{metadata}]", actionModel.DisplayName, result);
             return result;
         }
 
@@ -71,13 +71,28 @@ namespace Tochka.JsonRpc.Server.Conventions
         internal void SetAttributes(ActionModel actionModel, JsonRpcMethodOptions methodOptions)
         {
             actionModel.Selectors.Clear();
-            actionModel.Selectors.Add(new SelectorModel()
-            {
-                AttributeRouteModel = new AttributeRouteModel() { Template = methodOptions.Route },
 
-                ActionConstraints = { new JsonRpcAttribute(), new HttpMethodActionConstraint(new[] { HttpMethods.Post }) } // TODO может, оставить?
+            actionModel.Selectors.Add(new SelectorModel
+            {
+                AttributeRouteModel = new AttributeRouteModel
+                {
+                    Template = methodOptions.Route
+                },
+
+                ActionConstraints =
+                {
+                    new JsonRpcAttribute(),
+                    new HttpMethodActionConstraint(new[]
+                    {
+                        HttpMethods.Post
+                    })
+                } // TODO может, оставить?
             });
-            log.LogTrace($"{actionModel.DisplayName}: applied {nameof(JsonRpcAttribute)}, route [{methodOptions.Route}]");
+
+            log.LogTrace("{actionModelName}: applied {attributeName}, route [{route}]",
+                         actionModel.DisplayName,
+                         nameof(JsonRpcAttribute),
+                         methodOptions.Route);
         }
 
         /// <summary>
@@ -90,8 +105,14 @@ namespace Tochka.JsonRpc.Server.Conventions
             var serializerType = Utils.GetAttributeTransitive<JsonRpcSerializerAttribute>(actionModel)?.SerializerType ?? defaultMethodOptions.RequestSerializer;
             var route = Utils.GetAttributeTransitive<RouteAttribute>(actionModel)?.Template ?? defaultMethodOptions.Route;
             var method = Utils.GetAttributeTransitive<JsonRpcMethodStyleAttribute>(actionModel)?.MethodStyle ?? defaultMethodOptions.MethodStyle;
-            log.LogTrace($"{actionModel.DisplayName}: options are [{serializerType.FullName}], [{route}], [{method}]");
-            return new JsonRpcMethodOptions()
+
+            log.LogTrace("{actionModelName}: options are [{serializerName}], [{route}], [{method}]",
+                         actionModel.DisplayName,
+                         serializerType.FullName,
+                         route,
+                         method);
+            
+            return new JsonRpcMethodOptions
             {
                 RequestSerializer = serializerType,
                 Route = route,
@@ -119,6 +140,6 @@ namespace Tochka.JsonRpc.Server.Conventions
             KnownRoutes.Add(key, methodMetadata);
         }
 
-        internal readonly Dictionary<string, MethodMetadata> KnownRoutes = new Dictionary<string, MethodMetadata>(StringComparer.InvariantCultureIgnoreCase);
+        internal readonly Dictionary<string, MethodMetadata> KnownRoutes = new(StringComparer.InvariantCultureIgnoreCase);
     }
 }

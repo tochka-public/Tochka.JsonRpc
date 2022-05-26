@@ -26,27 +26,27 @@ namespace Tochka.JsonRpc.Server.Pipeline
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (!(context.Controller is JsonRpcController))
+            if (context.Controller is not JsonRpcController)
             {
                 return;
             }
 
-            log.LogTrace($"{nameof(OnActionExecuted)} Started");
+            log.LogTrace("{action} Started", nameof(OnActionExecuted));
 
             var methodMetadata = context.ActionDescriptor.GetProperty<MethodMetadata>() ?? throw new ArgumentNullException(nameof(MethodMetadata));
             var serializer = context.HttpContext.RequestServices.GetRequiredService(methodMetadata.MethodOptions.RequestSerializer) as IJsonRpcSerializer;
             switch (context.Result)
             {
                 case ObjectResult objectResult:
-                    var jsonValue = JsonConvert.SerializeObject(objectResult.Value, serializer.Settings);
+                    var jsonValue = JsonConvert.SerializeObject(objectResult.Value, serializer?.Settings);
                     log.LogInformation("JsonRpc Action ObjectResult {code}: {value}", objectResult.StatusCode, jsonValue);
                     break;
                 default:
-                    log.LogInformation("JsonRpc Action result [{type}]: {result}", context.Result.GetType(), context.Result);
+                    log.LogInformation("JsonRpc Action result [{type}]: {result}", context.Result?.GetType(), context.Result);
                     break;
             }
 
-            log.LogTrace($"{nameof(OnActionExecuting)} Completed");
+            log.LogTrace("{action} Completed", nameof(OnActionExecuted));
         }
     }
 }
