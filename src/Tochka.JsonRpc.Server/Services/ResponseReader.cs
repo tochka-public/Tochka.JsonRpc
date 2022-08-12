@@ -43,7 +43,7 @@ namespace Tochka.JsonRpc.Server.Services
                          allowRawResponses,
                          nameof(actionResultType),
                          actionResultType);
-            
+
             var responseWrapper = await GetResponseWrapper(nestedHttpContext.Response, actionResultType, call, token);
 
             return responseWrapper switch
@@ -138,18 +138,17 @@ namespace Tochka.JsonRpc.Server.Services
             log.LogTrace("{action}: return raw response", nameof(GetResponseWrapper));
             return Task.FromResult<IServerResponseWrapper>(new RawServerResponseWrapper(response));
         }
-        
+
         protected internal virtual async Task<JToken> ReadJsonResponse(MemoryStream ms, Encoding encoding, CancellationToken token)
         {
-            using (var reader = new StreamReader(ms, encoding))
+            using var reader = new StreamReader(ms, encoding);
+            using var jsonReader = new JsonTextReader(reader)
             {
-                using (var jsonReader = new JsonTextReader(reader))
-                {
-                    // we obey how response was serialized
-                    log.LogTrace("Reading json from body");
-                    return await JToken.ReadFromAsync(jsonReader, token);
-                }
-            }
+                DateParseHandling = DateParseHandling.None
+            };
+            // we obey how response was serialized
+            log.LogTrace("Reading json from body");
+            return await JToken.ReadFromAsync(jsonReader, token);
         }
 
         protected internal virtual string ReadTextBody(MemoryStream ms, Encoding encoding)

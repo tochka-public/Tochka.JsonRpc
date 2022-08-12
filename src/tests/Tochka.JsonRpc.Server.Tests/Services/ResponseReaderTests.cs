@@ -131,6 +131,21 @@ namespace Tochka.JsonRpc.Server.Tests.Services
         }
 
         [Test]
+        public async Task Test_ReadJsonResponse_ReadsJsonAndDoNotConvertDateTimeFormat()
+        {
+            var encoding = Encoding.UTF8;
+            var value = @"{
+  ""created_at"": ""2022-05-05T05:05:05.123000Z""
+}";
+            var ms = new MemoryStream(encoding.GetBytes(value));
+
+            var result = await responseReaderMock.Object.ReadJsonResponse(ms, encoding, new CancellationToken());
+
+            result.ToString().Should().Be(value);
+            responseReaderMock.Verify(x => x.ReadJsonResponse(It.IsAny<MemoryStream>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()));
+        }
+
+        [Test]
         public async Task Test_HandleUnknownResult_ReturnsRaw()
         {
             var responseMock = new Mock<HttpResponse>();
@@ -160,7 +175,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             var jsonResult = result as JsonServerResponseWrapper;
             Assert.AreEqual(json, jsonResult.Value);
             Assert.AreEqual(headers, jsonResult.Headers);
-            
+
             responseReaderMock.Verify(x => x.FormatHttpErrorResponse(It.IsAny<HttpResponse>(), It.IsAny<string>()));
             responseReaderMock.Verify(x => x.ReadTextBody(It.IsAny<MemoryStream>(), It.IsAny<Encoding>()));
             responseReaderMock.Verify(x => x.HandleNullResult(It.IsAny<HttpResponse>(), It.IsAny<IUntypedCall>(), It.IsAny<MemoryStream>(), It.IsAny<Encoding>(), It.IsAny<CancellationToken>()));
@@ -323,7 +338,7 @@ namespace Tochka.JsonRpc.Server.Tests.Services
             Func<Task> action = async () => await responseReaderMock.Object.GetResponse(httpContextMock.Object, Mock.Of<IUntypedCall>(), false, new CancellationToken());
 
             await action.Should().ThrowAsync<JsonRpcInternalException>();
-            
+
             responseReaderMock.Verify(x => x.GetResponseWrapper(It.IsAny<HttpResponse>(), It.IsAny<Type>(), It.IsAny<IUntypedCall>(), It.IsAny<CancellationToken>()));
             responseReaderMock.Verify(x => x.GetResponse(It.IsAny<HttpContext>(), It.IsAny<IUntypedCall>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()));
         }
