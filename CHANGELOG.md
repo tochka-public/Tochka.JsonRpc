@@ -1,3 +1,10 @@
+## [1.0.39](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.38...v1.0.39) (2022-08-15)
+
+
+### Bug Fixes
+
+* fixed broking dateTimeFormat when reading response from mvc ([e0a4881](https://github.com/tochka-public/Tochka.JsonRpc/commit/e0a4881e2c570ee1fcf50d37bb95db15764e8403))
+
 ## [1.0.38](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.37...v1.0.38) (2022-06-23)
 
 
