@@ -1,3 +1,10 @@
+## [1.0.40-beta.2](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.40-beta.1...v1.0.40-beta.2) (2022-12-21)
+
+
+### Bug Fixes
+
+* try to bump beta version ([b61d515](https://github.com/tochka-public/Tochka.JsonRpc/commit/b61d515ef452f49d45ef00946bef60723be5a852))
+
 ## [1.0.40-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.39...v1.0.40-beta.1) (2022-12-21)
 
 
