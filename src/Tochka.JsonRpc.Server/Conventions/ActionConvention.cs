@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
@@ -70,9 +71,11 @@ namespace Tochka.JsonRpc.Server.Conventions
         /// <param name="methodOptions"></param>
         internal void SetAttributes(ActionModel actionModel, JsonRpcMethodOptions methodOptions)
         {
+            // TODO not sure about collisions if there are multiple selectors
+            var existingEndpointMetadata = actionModel.Selectors.SelectMany(x => x.EndpointMetadata).ToList();
             actionModel.Selectors.Clear();
 
-            actionModel.Selectors.Add(new SelectorModel
+            var selectorModel = new SelectorModel
             {
                 AttributeRouteModel = new AttributeRouteModel
                 {
@@ -87,7 +90,13 @@ namespace Tochka.JsonRpc.Server.Conventions
                         HttpMethods.Post
                     })
                 } // TODO может, оставить?
-            });
+            };
+            foreach (var x in existingEndpointMetadata)
+            {
+                selectorModel.EndpointMetadata.Add(x);
+            }
+
+            actionModel.Selectors.Add(selectorModel);
 
             log.LogTrace("{actionModelName}: applied {attributeName}, route [{route}]",
                          actionModel.DisplayName,
@@ -111,7 +120,7 @@ namespace Tochka.JsonRpc.Server.Conventions
                          serializerType.FullName,
                          route,
                          method);
-            
+
             return new JsonRpcMethodOptions
             {
                 RequestSerializer = serializerType,
