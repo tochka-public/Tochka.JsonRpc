@@ -5,6 +5,15 @@
 
 * copy endpoint metadata from existing selectors to custom selector ([76992ba](https://github.com/tochka-public/Tochka.JsonRpc/commit/76992ba5b6d574a65a68cf84ade17e6f8f133271))
 * proper enumeration ([91b7012](https://github.com/tochka-public/Tochka.JsonRpc/commit/91b70122ad3513f0d8ac59d50b0ab5f655c100f4))
+* try to bump beta version ([91bc76e](https://github.com/tochka-public/Tochka.JsonRpc/commit/91bc76ed8b11153a638e708d4e57ec7f1f4862a1))
+
+## [1.0.40-beta.1](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.39...v1.0.40-beta.1) (2022-12-21)
+
+
+### Bug Fixes
+
+* copy endpoint metadata from existing selectors to custom selector ([76992ba](https://github.com/tochka-public/Tochka.JsonRpc/commit/76992ba5b6d574a65a68cf84ade17e6f8f133271))
+* proper enumeration ([91b7012](https://github.com/tochka-public/Tochka.JsonRpc/commit/91b70122ad3513f0d8ac59d50b0ab5f655c100f4))
 
 ## [1.0.39](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.38...v1.0.39) (2022-08-15)
 
