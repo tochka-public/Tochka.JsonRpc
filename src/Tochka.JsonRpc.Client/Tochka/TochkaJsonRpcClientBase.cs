@@ -7,6 +7,9 @@ using Tochka.JsonRpc.Common.Serializers;
 
 namespace Tochka.JsonRpc.Client.Tochka
 {
+    /// <summary>
+    /// Base json-rpc client with authentication configuration
+    /// </summary>
     public abstract class TochkaJsonRpcClientBase : JsonRpcClientBase
     {
         protected TochkaJsonRpcClientBase(HttpClient client, IJsonRpcSerializer serializer, HeaderJsonRpcSerializer headerJsonRpcSerializer, IOptions<TochkaJsonRpcClientOptionsBase> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log) : base(client, serializer, headerJsonRpcSerializer, options.Value, jsonRpcIdGenerator, log)
