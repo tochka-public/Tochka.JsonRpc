@@ -16,6 +16,11 @@ namespace Tochka.JsonRpc.Client.Settings
         /// Request timeout, default is 10 seconds
         /// </summary>
         public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
+
+        /// <summary>
+        /// If true, logs requests/notifications/batches
+        /// </summary>
+        public bool LogRequests { get; set; }
     }
 
 }
