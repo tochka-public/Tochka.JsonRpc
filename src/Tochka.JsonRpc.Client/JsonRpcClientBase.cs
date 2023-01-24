@@ -61,7 +61,7 @@ namespace Tochka.JsonRpc.Client
             var data = notification.WithSerializedParams(Serializer);
             if (Options.LogRequests)
             {
-                log.LogInformation(data.ToString());
+                log.LogInformation("Json-rpc notification: {jsonRpcNotification}", JsonConvert.SerializeObject(data, Serializer.Settings));
             }
             context.WithSingle(data);
             var content = CreateHttpContent(data);
@@ -105,7 +105,7 @@ namespace Tochka.JsonRpc.Client
             var data = request.WithSerializedParams(Serializer);
             if (Options.LogRequests)
             {
-                log.LogInformation(data.ToString());
+                log.LogInformation("Json-rpc requset: {jsonRpcRequest}", JsonConvert.SerializeObject(data, Serializer.Settings));
             }
             context.WithSingle(data);
             var content = CreateHttpContent(data);
@@ -178,7 +178,7 @@ namespace Tochka.JsonRpc.Client
             var data = calls.Select(x => x.WithSerializedParams(Serializer)).ToList();
             if (Options.LogRequests)
             {
-                data.ForEach(d => log.LogInformation(d.ToString()));
+                log.LogInformation("Json-rpc batch: {jsonRpcBatch}", JsonConvert.SerializeObject(data, Serializer.Settings));
             }
             context.WithBatch(data);
             var content = CreateHttpContent(data);
