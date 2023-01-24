@@ -105,7 +105,7 @@ namespace Tochka.JsonRpc.Client
             var data = request.WithSerializedParams(Serializer);
             if (Options.LogRequests)
             {
-                log.LogInformation("Json-rpc requset: {jsonRpcRequest}", JsonConvert.SerializeObject(data, Serializer.Settings));
+                log.LogInformation("Json-rpc request: {jsonRpcRequest}", JsonConvert.SerializeObject(data, Serializer.Settings));
             }
             context.WithSingle(data);
             var content = CreateHttpContent(data);
