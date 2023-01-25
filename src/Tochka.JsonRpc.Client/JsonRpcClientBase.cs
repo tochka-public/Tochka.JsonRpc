@@ -59,6 +59,10 @@ namespace Tochka.JsonRpc.Client
             var context = CreateContext();
             context.WithRequestUrl(requestUrl);
             var data = notification.WithSerializedParams(Serializer);
+            if (Options.LogRequests)
+            {
+                log.LogInformation("{jsonRpcPayload}", data);
+            }
             context.WithSingle(data);
             var content = CreateHttpContent(data);
             var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
@@ -99,6 +103,10 @@ namespace Tochka.JsonRpc.Client
             var context = CreateContext();
             context.WithRequestUrl(requestUrl);
             var data = request.WithSerializedParams(Serializer);
+            if (Options.LogRequests)
+            {
+                log.LogInformation("{jsonRpcPayload}", data);
+            }
             context.WithSingle(data);
             var content = CreateHttpContent(data);
             var httpResponseMessage = await Client.PostAsync((string) null, content, cancellationToken);
@@ -168,6 +176,10 @@ namespace Tochka.JsonRpc.Client
             var context = CreateContext();
             context.WithRequestUrl(requestUrl);
             var data = calls.Select(x => x.WithSerializedParams(Serializer)).ToList();
+            if (Options.LogRequests)
+            {
+                log.LogInformation("{jsonRpcPayload}", data);
+            }
             context.WithBatch(data);
             var content = CreateHttpContent(data);
             var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
