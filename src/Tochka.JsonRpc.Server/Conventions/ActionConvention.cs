@@ -72,7 +72,9 @@ namespace Tochka.JsonRpc.Server.Conventions
         internal void SetAttributes(ActionModel actionModel, JsonRpcMethodOptions methodOptions)
         {
             // TODO not sure about collisions if there are multiple selectors
-            var existingEndpointMetadata = actionModel.Selectors.SelectMany(x => x.EndpointMetadata).ToList();
+            var existingEndpointMetadata = actionModel.Selectors.SelectMany(x => x.EndpointMetadata)
+                .Concat(actionModel.Controller.Selectors.SelectMany(x => x.EndpointMetadata))
+                .ToList();
             actionModel.Selectors.Clear();
 
             var selectorModel = new SelectorModel
