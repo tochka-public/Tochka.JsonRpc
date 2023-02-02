@@ -1,3 +1,10 @@
+## [1.0.42](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.41...v1.0.42) (2023-02-02)
+
+
+### Bug Fixes
+
+* copy attributes from controller to each action ([faa586c](https://github.com/tochka-public/Tochka.JsonRpc/commit/faa586c2e2dd07717844f51d5701e54d97ffa040))
+
 ## [1.0.41](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.40...v1.0.41) (2023-01-25)
 
 ## [1.0.40](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.39...v1.0.40) (2022-12-23)
