@@ -16,23 +16,23 @@ public class SimpleController : ControllerBase
     }
 
     [HttpPost("/notification")]
-    public async Task<object?> ProcessNotification([FromBody] JsonDocument body)
+    public async Task<object?> ProcessNotification()
     {
-        requestValidator.Validate(Request, body);
+        requestValidator.Validate(Request);
         return Ok();
     }
 
     [HttpPost("/request")]
-    public async Task<object?> ProcessRequest([FromBody] JsonDocument body)
+    public async Task<object?> ProcessRequest()
     {
-        requestValidator.Validate(Request, body);
+        requestValidator.Validate(Request);
         return responseProvider.GetResponse();
     }
 
     [HttpPost("/batch")]
-    public async Task<object?> ProcessBatch([FromBody] JsonDocument body)
+    public async Task<object?> ProcessBatch()
     {
-        requestValidator.Validate(Request, body);
+        requestValidator.Validate(Request);
         return responseProvider.GetResponse();
     }
 }

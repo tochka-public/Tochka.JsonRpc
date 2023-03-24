@@ -4,7 +4,7 @@ namespace Tochka.JsonRpc.Client.Tests.WebApplication;
 
 internal class SimpleRequestValidator : IRequestValidator
 {
-    public void Validate(HttpRequest request, JsonDocument body)
+    public void Validate(HttpRequest request)
     {
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,84 +61,35 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task SendNotification_SendRequestWithNullData_SerializeSuccessfully()
     {
-        var expectedRequest = JsonDocument.Parse(@"{
+        var expectedRequestJson = @"{
     ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": null
-}");
+}".TrimAllLines();
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
 
         await camelCaseJsonRpcClient.SendNotification<object>(NotificationUrl, Method, null, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendNotification_SendRequestWithPlainDataCamelCase_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequest = JsonDocument.Parse(@"{
+        var expectedRequestJson = @"{
     ""jsonrpc"": ""2.0"",
-    ""params"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""nullableField"": null
-    }
-}");
-
-        string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
-
-        await camelCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
-    }
-
-    [Test]
-    public async Task SendNotification_SendRequestWithPlainDataSnakeCase_SerializeSuccessfully()
-    {
-        var requestData = TestData.Plain;
-        var expectedRequest = JsonDocument.Parse(@"{
-    ""jsonrpc"": ""2.0"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}");
-
-        string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
-
-        await snakeCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
-    }
-
-    [Test]
-    public async Task SendNotification_SendRequestWithNestedDataCamelCase_SerializeSuccessfully()
-    {
-        var requestData = TestData.Nested;
-        var expectedRequest = JsonDocument.Parse(@"{
-    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {
         ""boolField"": true,
         ""stringField"": ""123"",
@@ -145,35 +97,34 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""doubleField"": 1.23,
         ""enumField"": ""two"",
         ""nullableField"": null,
-        ""nestedField"": {
-            ""boolField"": true,
-            ""stringField"": ""456"",
-            ""intField"": 456,
-            ""doubleField"": 4.56,
-            ""enumField"": ""two"",
-            ""nullableField"": null
-        }
+        ""notRequiredField"": null,
+        ""nestedField"": null
     }
-}");
+}".TrimAllLines();
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
 
         await camelCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
-    public async Task SendNotification_SendRequestWithNestedDataSnakeCase_SerializeSuccessfully()
+    public async Task SendNotification_SendRequestWithPlainDataSnakeCase_SerializeSuccessfully()
     {
-        var requestData = TestData.Nested;
-        var expectedRequest = JsonDocument.Parse(@"{
+        var requestData = TestData.Plain;
+        var expectedRequestJson = @"{
     ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {
         ""bool_field"": true,
         ""string_field"": ""123"",
@@ -181,37 +132,125 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""double_field"": 1.23,
         ""enum_field"": ""two"",
         ""nullable_field"": null,
+        ""not_required_field"": null,
+        ""nested_field"": null
+    }
+}".TrimAllLines();
+
+        string actualContentType = null;
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
+
+        await snakeCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
+
+        actualContentType.Should().Contain("application/json");
+        actualRequestJson.Should().Be(expectedRequestJson);
+    }
+
+    [Test]
+    public async Task SendNotification_SendRequestWithNestedDataCamelCase_SerializeSuccessfully()
+    {
+        var requestData = TestData.Nested;
+        var expectedRequestJson = @"{
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
+    ""params"": {
+        ""boolField"": true,
+        ""stringField"": ""123"",
+        ""intField"": 123,
+        ""doubleField"": 1.23,
+        ""enumField"": ""two"",
+        ""nullableField"": null,
+        ""notRequiredField"": null,
+        ""nestedField"": {
+            ""boolField"": true,
+            ""stringField"": ""456"",
+            ""intField"": 456,
+            ""doubleField"": 4.56,
+            ""enumField"": ""two"",
+            ""nullableField"": null,
+            ""notRequiredField"": null,
+            ""nestedField"": null
+        }
+    }
+}".TrimAllLines();
+
+        string actualContentType = null;
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
+
+        await camelCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
+
+        actualContentType.Should().Contain("application/json");
+        actualRequestJson.Should().Be(expectedRequestJson);
+    }
+
+    [Test]
+    public async Task SendNotification_SendRequestWithNestedDataSnakeCase_SerializeSuccessfully()
+    {
+        var requestData = TestData.Nested;
+        var expectedRequestJson = @"{
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
+    ""params"": {
+        ""bool_field"": true,
+        ""string_field"": ""123"",
+        ""int_field"": 123,
+        ""double_field"": 1.23,
+        ""enum_field"": ""two"",
+        ""nullable_field"": null,
+        ""not_required_field"": null,
         ""nested_field"": {
             ""bool_field"": true,
             ""string_field"": ""456"",
             ""int_field"": 456,
             ""double_field"": 4.56,
             ""enum_field"": ""two"",
-            ""nullable_field"": null
+            ""nullable_field"": null,
+            ""not_required_field"": null,
+            ""nested_field"": null
         }
     }
-}");
+}".TrimAllLines();
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
 
         await snakeCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendRequest_SendRequestWithStringId_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -219,17 +258,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
     }
 
@@ -237,11 +280,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_SendRequestWithIntId_SerializeSuccessfully()
     {
         var id = 123;
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": {id},
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": {id},
@@ -249,28 +293,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new NumberRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
     }
 
     [Test]
     public async Task SendRequest_SendRequestWithNullId_SerializeSuccessfully()
     {
-        var expectedRequest = JsonDocument.Parse(@"{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @"{
     ""id"": null,
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {}
-}");
+}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@"{
     ""jsonrpc"": ""2.0"",
     ""id"": null,
@@ -278,17 +327,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, null, Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
     }
 
@@ -296,11 +349,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_SendRequestWithNullData_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": null
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -308,17 +362,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest<object>(RequestUrl, new StringRpcId(id), Method, null, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<object?>().Should().BeNull();
     }
@@ -334,13 +392,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {expectedRequestData}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -349,17 +410,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
@@ -375,13 +440,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""int_field"": 123,
     ""double_field"": 1.23,
     ""enum_field"": ""two"",
-    ""nullable_field"": null
+    ""nullable_field"": null,
+    ""not_required_field"": null,
+    ""nested_field"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {expectedRequestData}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -390,16 +458,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
@@ -416,20 +489,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
     ""nullableField"": null,
+    ""notRequiredField"": null,
     ""nestedField"": {
         ""boolField"": true,
         ""stringField"": ""456"",
         ""intField"": 456,
         ""doubleField"": 4.56,
         ""enumField"": ""two"",
-        ""nullableField"": null
+        ""nullableField"": null,
+        ""notRequiredField"": null,
+        ""nestedField"": null
     }
 }";
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {expectedRequestData}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -438,17 +515,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
@@ -465,20 +546,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""double_field"": 1.23,
     ""enum_field"": ""two"",
     ""nullable_field"": null,
+    ""not_required_field"": null,
     ""nested_field"": {
         ""bool_field"": true,
         ""string_field"": ""456"",
         ""int_field"": 456,
         ""double_field"": 4.56,
         ""enum_field"": ""two"",
-        ""nullable_field"": null
+        ""nullable_field"": null,
+        ""not_required_field"": null,
+        ""nested_field"": null
     }
 }";
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {expectedRequestData}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -487,16 +572,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
@@ -505,11 +595,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetErrorWithCamelCaseData_DeserializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($@"{{
@@ -524,24 +615,30 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
-            ""nullableField"": null
+            ""nullableField"": null,
+            ""notRequiredField"": null,
+            ""nestedField"": null
         }}
     }}
 }}");
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
         var error = response.AsTypedError<TestData>();
         error.Code.Should().Be(errorCode);
@@ -553,11 +650,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetErrorWithSnakeCaseData_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($@"{{
@@ -572,23 +670,30 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""int_field"": 123,
             ""double_field"": 1.23,
             ""enum_field"": ""two"",
-            ""nullable_field"": null
+            ""nullable_field"": null,
+            ""notRequiredField"": null,
+            ""nestedField"": null
         }}
     }}
 }}");
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
         var error = response.AsTypedError<TestData>();
         error.Code.Should().Be(errorCode);
@@ -600,11 +705,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetErrorWithoutData_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($@"{{
@@ -617,16 +723,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
         var error = response.AsTypedError<TestData>();
         error.Code.Should().Be(errorCode);
@@ -638,11 +749,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithErrorInResult_DeserializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -652,17 +764,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
     }
 
@@ -670,11 +786,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithResultInError_DeserializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -688,17 +805,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
     }
 
@@ -706,20 +827,26 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithoutId_ThrowArgumentException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""result"": {{}}
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -727,28 +854,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<ArgumentException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendRequest_GetResponseWithoutResultOrError_ThrowArgumentException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}""
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -756,19 +888,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<ArgumentException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendRequest_GetResponseWithBothResultAndError_ThrowArgumentException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
@@ -780,9 +912,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -790,24 +927,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<ArgumentException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendRequest_GetResponseNot200Code_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Throws<ArgumentOutOfRangeException>();
 
@@ -815,19 +957,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendRequest_GetResponseWithDifferentId_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""{Guid.NewGuid().ToString()}"",
@@ -835,9 +977,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -845,19 +992,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendRequest_GetResponseWithNullId_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
+        var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0"",
+    ""method"": ""some-method"",
     ""params"": {{}}
-}}");
+}}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
     ""jsonrpc"": ""2.0"",
     ""id"": null,
@@ -865,9 +1012,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -875,21 +1027,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
     public async Task SendBatch_BatchWithRequestWithStringId_LinkResponseSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {{}}
     }}
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
         ""jsonrpc"": ""2.0"",
@@ -899,9 +1051,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -917,8 +1074,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id)).Should().BeFalse();
     }
 
@@ -926,13 +1082,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWithRequestWithIntId_LinkResponseSuccessfully()
     {
         var id = 123;
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": {id},
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {{}}
     }}
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
         ""jsonrpc"": ""2.0"",
@@ -942,9 +1099,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -960,21 +1122,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new NumberRpcId(id)).Should().BeFalse();
     }
 
     [Test]
     public async Task SendBatch_BatchWithRequestWithNullId_LinkResponseSuccessfully()
     {
-        var expectedRequest = JsonDocument.Parse(@"[
+        var expectedRequestJson = @"[
     {
-        ""jsonrpc"": ""2.0"",
         ""id"": null,
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {}
     }
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@"[
     {
         ""jsonrpc"": ""2.0"",
@@ -984,9 +1146,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1002,8 +1169,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(null).Should().BeFalse();
     }
 
@@ -1018,15 +1184,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
         ""jsonrpc"": ""2.0"",
@@ -1037,9 +1206,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1055,8 +1229,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id)).Should().BeFalse();
         response.GetResponseOrThrow<TestData>(new StringRpcId(id)).Should().BeEquivalentTo(expectedResponseData);
     }
@@ -1073,20 +1246,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id1}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id2}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
         ""jsonrpc"": ""2.0"",
@@ -1102,9 +1279,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1126,8 +1308,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id1)).Should().BeFalse();
         response.HasError(new StringRpcId(id2)).Should().BeFalse();
         response.GetResponseOrThrow<TestData>(new StringRpcId(id1)).Should().BeEquivalentTo(expectedResponseData);
@@ -1138,24 +1319,32 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWith1Notification_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequest = JsonDocument.Parse(@"[
+        var expectedRequestJson = @"[
     {
         ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {
             ""boolField"": true,
             ""stringField"": ""123"",
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
-            ""nullableField"": null
+            ""nullableField"": null,
+            ""notRequiredField"": null,
+            ""nestedField"": null
         }
     }
-]");
+]".TrimAllLines();
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(JsonDocument.Parse("{}"));
 
@@ -1170,8 +1359,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.Should().BeNull();
     }
 
@@ -1179,35 +1367,46 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWithNotifications_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequest = JsonDocument.Parse(@"[
+        var expectedRequestJson = @"[
     {
         ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {
             ""boolField"": true,
             ""stringField"": ""123"",
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
-            ""nullableField"": null
+            ""nullableField"": null,
+            ""notRequiredField"": null,
+            ""nestedField"": null
         }
     },
     {
         ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {
             ""boolField"": true,
             ""stringField"": ""123"",
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
-            ""nullableField"": null
+            ""nullableField"": null,
+            ""notRequiredField"": null,
+            ""nestedField"": null
         }
     }
-]");
+]".TrimAllLines();
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
 
         var calls = new List<ICall>()
         {
@@ -1225,8 +1424,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.Should().BeNull();
     }
 
@@ -1241,19 +1439,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }},
     {{
         ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
         ""jsonrpc"": ""2.0"",
@@ -1264,9 +1466,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1287,8 +1494,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id)).Should().BeFalse();
         response.GetResponseOrThrow<TestData>(new StringRpcId(id)).Should().BeEquivalentTo(expectedResponseData);
     }
@@ -1304,15 +1510,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"[
@@ -1329,9 +1538,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1347,8 +1561,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id)).Should().BeTrue();
         var error = response.AsTypedError<TestData>(new StringRpcId(id));
         error.Code.Should().Be(errorCode);
@@ -1368,20 +1581,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id1}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id2}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"[
@@ -1407,9 +1624,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1431,8 +1653,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id1)).Should().BeTrue();
         response.HasError(new StringRpcId(id2)).Should().BeTrue();
         var error1 = response.AsTypedError<TestData>(new StringRpcId(id1));
@@ -1457,20 +1678,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id1}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id2}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"[
@@ -1492,9 +1717,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedResponseData = requestData;
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1516,8 +1746,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id1)).Should().BeTrue();
         response.HasError(new StringRpcId(id2)).Should().BeFalse();
         var error1 = response.AsTypedError<TestData>(new StringRpcId(id1));
@@ -1538,15 +1767,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"{{
@@ -1560,9 +1792,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }}");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1579,8 +1816,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
@@ -1594,15 +1830,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
-    ""nullableField"": null
+    ""nullableField"": null,
+    ""notRequiredField"": null,
+    ""nestedField"": null
 }";
-        var expectedRequest = JsonDocument.Parse(@$"[
+        var expectedRequestJson = @$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
+        ""jsonrpc"": ""2.0"",
+        ""method"": ""some-method"",
         ""params"": {expectedRequestData}
     }}
-]");
+]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
         ""jsonrpc"": ""2.0"",
@@ -1612,9 +1851,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]");
 
         string actualContentType = null;
-        JsonDocument actualRequestBody = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>(), It.IsAny<JsonDocument>()))
-            .Callback<HttpRequest, JsonDocument>((request, body) => (actualContentType, actualRequestBody) = (request.ContentType, body));
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
@@ -1630,8 +1874,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
-        // https://github.com/fluentassertions/fluentassertions/issues/1212
-        actualRequestBody.Should().BeEquivalentTo(expectedRequest, static opt => opt.ComparingByMembers<JsonElement>());
+        actualRequestJson.Should().Be(expectedRequestJson);
         var act = () => response.GetResponseOrThrow<TestData>(new StringRpcId(id));
         act.Should().Throw<JsonRpcException>();
     }
