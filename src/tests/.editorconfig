@@ -29,3 +29,4 @@ dotnet_diagnostic.CA1001.severity = none
 ##########################################
 ##########################################
 # ... дописывайте кастомные настройки здесь ...
+resharper_keep_existing_initializer_arrangement = true
