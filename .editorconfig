@@ -14,7 +14,7 @@ resharper_keep_existing_linebreaks = true
 ##########################################
 # Если нужно еще больше свободы в переносах строк, можно раскомментировать эти настройки для еще менее строгого форматирования:
 
-#resharper_keep_existing_property_patterns_arrangement = true
+resharper_keep_existing_property_patterns_arrangement = true
 #resharper_keep_existing_initializer_arrangement = true
 #resharper_keep_existing_declaration_block_arrangement = true
 #resharper_keep_existing_invocation_parens_arrangement = true
