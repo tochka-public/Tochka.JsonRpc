@@ -4,8 +4,5 @@ using System.Text.Json;
 namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
 
 [ExcludeFromCodeCoverage]
-public class UntypedNotification : Notification<JsonDocument?>, IUntypedCall
-{
-    /// <inheritdoc />
-    public string RawJson { get; set; }
-}
+public record UntypedNotification(string Method, JsonDocument? Params, string Jsonrpc = JsonRpcConstants.Version)
+    : Notification<JsonDocument>(Method, Params, Jsonrpc), IUntypedCall;

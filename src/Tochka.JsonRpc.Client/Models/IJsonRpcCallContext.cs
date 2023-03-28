@@ -9,6 +9,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models
 {
+    [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
     public interface IJsonRpcCallContext
     {
         string? RequestUrl { get; }
@@ -17,11 +18,7 @@ namespace Tochka.JsonRpc.Client.Models
         int ExpectedBatchResponseCount { get; }
         string? HttpResponseInfo { get; }
         string? HttpContentInfo { get; }
-        string? ErrorInfo { get; }
-
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
         IError? Error { get; }
-
         IResponse? SingleResponse { get; }
         List<IResponse>? BatchResponse { get; }
 

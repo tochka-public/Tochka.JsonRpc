@@ -8,7 +8,7 @@ public interface ISingleJsonRpcResult
     T? GetResponseOrThrow<T>();
     T? AsResponse<T>();
     bool HasError();
-    Error<JsonDocument>? AsUntypedError();
-    Error<T>? AsError<T>();
+    Error<JsonDocument>? AsAnyError();
+    Error<T>? AsTypedError<T>();
     Error<ExceptionInfo>? AsErrorWithExceptionInfo();
 }

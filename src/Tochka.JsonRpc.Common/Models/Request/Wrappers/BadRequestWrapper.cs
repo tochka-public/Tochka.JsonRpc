@@ -3,7 +3,4 @@
 namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
 [ExcludeFromCodeCoverage]
-public class BadRequestWrapper : IRequestWrapper
-{
-    public Exception Exception { get; set; }
-}
+public record BadRequestWrapper(Exception Exception) : IRequestWrapper;

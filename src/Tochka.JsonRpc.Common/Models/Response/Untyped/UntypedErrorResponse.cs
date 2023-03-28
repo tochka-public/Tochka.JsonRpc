@@ -1,21 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Tochka.JsonRpc.Common.Models.Id;
+using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 [ExcludeFromCodeCoverage]
-public class UntypedErrorResponse : ErrorResponse<JsonDocument>
-{
-    /// <summary>
-    /// Set on deserialization. JSON content corresponding to error property
-    /// </summary>
-    [JsonIgnore]
-    public string RawError { get; set; }
-
-    /// <summary>
-    /// Set on deserialization. JSON content corresponding to id property
-    /// </summary>
-    [JsonIgnore]
-    public string RawId { get; set; }
-}
+public record UntypedErrorResponse(IRpcId Id, Error<JsonDocument> Error, string Jsonrpc = JsonRpcConstants.Version)
+    : ErrorResponse<JsonDocument>(Id, Error, Jsonrpc);

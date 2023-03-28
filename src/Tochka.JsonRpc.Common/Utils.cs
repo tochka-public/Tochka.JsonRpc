@@ -4,7 +4,7 @@ namespace Tochka.JsonRpc.Common;
 
 public static class Utils
 {
-    public static JsonDocument? SerializeParams<TParams>(TParams data, JsonSerializerOptions serializerOptions)
+    internal static JsonDocument? SerializeParams<TParams>(TParams data, JsonSerializerOptions serializerOptions)
         where TParams : class?
     {
         if (data == null)

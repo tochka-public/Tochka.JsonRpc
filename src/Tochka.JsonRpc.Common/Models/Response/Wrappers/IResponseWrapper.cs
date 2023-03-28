@@ -2,7 +2,7 @@
 
 namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
-[SuppressMessage("Design", "CA1040:Не используйте пустые интерфейсы")]
+[SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "Required for serialization")]
 public interface IResponseWrapper
 {
 }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
@@ -25,7 +26,6 @@ namespace Tochka.JsonRpc.Client.Models
         public IResponse? SingleResponse { get; private set; }
         public List<IResponse>? BatchResponse { get; private set; }
         public IError? Error { get; private set; }
-        public string? ErrorInfo { get; private set; }
 
         public void WithRequestUrl(string? requestUrl)
         {
@@ -102,9 +102,8 @@ namespace Tochka.JsonRpc.Client.Models
                 throw new JsonRpcException("Received response but call was not request or batch", this);
             }
 
-            var idsAreNull = singleResponse.Id == null && request.Id == null;
-            var idsAreEqual = singleResponse.Id?.Equals(request.Id) ?? false;
-            if (!idsAreNull && !idsAreEqual)
+            var idsAreEqual = singleResponse.Id.Equals(request.Id);
+            if (!idsAreEqual && singleResponse.Id is not NullRpcId)
             {
                 throw new JsonRpcException($"JSON Rpc response id is invalid: [{singleResponse.Id}], expected [{request.Id}]", this);
             }
@@ -144,11 +143,7 @@ namespace Tochka.JsonRpc.Client.Models
             }
         }
 
-        public void WithError(UntypedErrorResponse untypedErrorResponse)
-        {
-            ErrorInfo = GetStringWithLimit(untypedErrorResponse.RawError);
-            Error = untypedErrorResponse.Error;
-        }
+        public void WithError(UntypedErrorResponse untypedErrorResponse) => Error = untypedErrorResponse.Error;
 
         [ExcludeFromCodeCoverage]
         public override string ToString()
@@ -218,11 +213,11 @@ namespace Tochka.JsonRpc.Client.Models
                 emptyOutput = false;
             }
 
-            if (ErrorInfo != null)
+            if (Error != null)
             {
                 sb.AppendLine();
                 sb.AppendLine($"    JSON Rpc error:");
-                sb.AppendLine(CultureInfo.InvariantCulture, $"        {ErrorInfo}");
+                sb.AppendLine(CultureInfo.InvariantCulture, $"        {Error}");
                 emptyOutput = false;
             }
 

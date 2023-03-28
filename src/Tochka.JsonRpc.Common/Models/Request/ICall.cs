@@ -5,15 +5,15 @@ namespace Tochka.JsonRpc.Common.Models.Request;
 
 public interface ICall
 {
-    string Jsonrpc { get; set; }
+    string Jsonrpc { get; }
 
-    string Method { get; set; }
+    string Method { get; }
 
     IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions);
 }
 
-public interface ICall<TParams> : ICall
+public interface ICall<out TParams> : ICall
     where TParams : class?
 {
-    TParams Params { get; set; }
+    TParams? Params { get; }
 }

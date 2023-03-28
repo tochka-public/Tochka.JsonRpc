@@ -16,12 +16,12 @@ public class JsonRpcIdConverter : JsonConverter<IRpcId>
         switch (value)
         {
             case NumberRpcId numberRpcId:
-                writer.WriteNumberValue(numberRpcId.NumberValue);
+                writer.WriteNumberValue(numberRpcId.Value);
                 break;
             case StringRpcId stringRpcId:
-                writer.WriteStringValue(stringRpcId.StringValue);
+                writer.WriteStringValue(stringRpcId.Value);
                 break;
-            case null:
+            case NullRpcId:
                 writer.WriteNullValue();
                 break;
             default:
@@ -37,7 +37,7 @@ public class JsonRpcIdConverter : JsonConverter<IRpcId>
         {
             JsonTokenType.String => new StringRpcId(reader.GetString()!),
             JsonTokenType.Number when reader.TryGetInt64(out var number) => new NumberRpcId(number),
-            JsonTokenType.Null => null,
+            JsonTokenType.Null => new NullRpcId(),
             _ => throw new ArgumentOutOfRangeException(nameof(idType), idType, "Expected string, number or null as Id")
         };
     }

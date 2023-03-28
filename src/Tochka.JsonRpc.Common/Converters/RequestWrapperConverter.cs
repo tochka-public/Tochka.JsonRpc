@@ -21,8 +21,8 @@ public class RequestWrapperConverter : JsonConverter<IRequestWrapper>
         var tokenType = reader.TokenType;
         return tokenType switch
         {
-            JsonTokenType.StartObject => new SingleRequestWrapper { Call = JsonSerializer.Deserialize<IUntypedCall>(ref reader, options)! },
-            JsonTokenType.StartArray => new BatchRequestWrapper { Batch = JsonSerializer.Deserialize<List<IUntypedCall>>(ref reader, options)! },
+            JsonTokenType.StartObject => new SingleRequestWrapper(JsonSerializer.Deserialize<IUntypedCall>(ref reader, options)!),
+            JsonTokenType.StartArray => new BatchRequestWrapper(JsonSerializer.Deserialize<List<IUntypedCall>>(ref reader, options)!),
             _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, "Expected {} or [] as root element")
         };
     }

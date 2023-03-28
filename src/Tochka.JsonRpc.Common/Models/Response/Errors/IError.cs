@@ -2,8 +2,8 @@
 
 public interface IError
 {
-    int Code { get; set; }
+    int Code { get; }
 
     // SHOULD be limited to a concise single sentence.
-    string Message { get; set; }
+    string Message { get; }
 }

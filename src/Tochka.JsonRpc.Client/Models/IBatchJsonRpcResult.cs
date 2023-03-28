@@ -8,9 +8,8 @@ public interface IBatchJsonRpcResult
 {
     T? GetResponseOrThrow<T>(IRpcId? id);
     T? AsResponse<T>(IRpcId? id);
-    bool HasResponse(IRpcId? id);
     bool HasError(IRpcId? id);
-    Error<JsonDocument>? AsUntypedError(IRpcId? id);
-    Error<T>? AsError<T>(IRpcId? id);
+    Error<JsonDocument>? AsAnyError(IRpcId? id);
+    Error<T>? AsTypedError<T>(IRpcId? id);
     Error<ExceptionInfo>? AsErrorWithExceptionInfo(IRpcId? id);
 }

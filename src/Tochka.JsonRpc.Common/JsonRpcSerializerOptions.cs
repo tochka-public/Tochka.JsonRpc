@@ -22,7 +22,6 @@ public static class JsonRpcSerializerOptions
 
             new JsonRpcIdConverter(),
 
-            // responses
             new ResponseWrapperConverter(),
             new ResponseConverter()
         },

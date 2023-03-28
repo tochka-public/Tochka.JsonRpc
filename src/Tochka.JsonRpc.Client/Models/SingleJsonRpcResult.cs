@@ -50,22 +50,19 @@ public class SingleJsonRpcResult : ISingleJsonRpcResult
 
     public bool HasError() => response is UntypedErrorResponse;
 
-    public Error<JsonDocument>? AsUntypedError() => response switch
+    public Error<JsonDocument>? AsAnyError() => response switch
     {
         UntypedErrorResponse untypedErrorResponse => untypedErrorResponse.Error,
         _ => null
     };
 
-    public Error<T>? AsError<T>() => response switch
+    public Error<T>? AsTypedError<T>() => response switch
     {
-        UntypedErrorResponse untypedErrorResponse => new Error<T>
-        {
-            Code = untypedErrorResponse.Error.Code,
-            Message = untypedErrorResponse.Error.Message,
-            Data = Utils.DeserializeErrorData<T>(untypedErrorResponse.Error.Data, headersJsonSerializerOptions, dataJsonSerializerOptions)
-        },
+        UntypedErrorResponse untypedErrorResponse => new Error<T>(untypedErrorResponse.Error.Code,
+            untypedErrorResponse.Error.Message,
+            Utils.DeserializeErrorData<T>(untypedErrorResponse.Error.Data, headersJsonSerializerOptions, dataJsonSerializerOptions)),
         _ => null
     };
 
-    public Error<ExceptionInfo>? AsErrorWithExceptionInfo() => AsError<ExceptionInfo>();
+    public Error<ExceptionInfo>? AsErrorWithExceptionInfo() => AsTypedError<ExceptionInfo>();
 }
