@@ -109,7 +109,7 @@ namespace Tochka.JsonRpc.V1.Client
             }
             context.WithSingle(data);
             var content = CreateHttpContent(data);
-            var httpResponseMessage = await Client.PostAsync((string) null, content, cancellationToken);
+            var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
             context.WithHttpResponse(httpResponseMessage);
             var contentString = await GetContent(httpResponseMessage.Content);
             context.WithHttpContent(httpResponseMessage.Content, contentString);

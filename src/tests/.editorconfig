@@ -1,0 +1,32 @@
+##########################################
+##########################################
+# Скопируйте в папку tests.
+# (подробности см. в документации)
+#
+# По умолчанию этот файл отключает некоторые строгие проверки, потому что они мешаются в тестах
+##########################################
+##########################################
+
+[*.{cs,csx,cake,razor}]
+# allow Test_Foo_Bar method names (with underscores)
+dotnet_diagnostic.CA1707.severity = none
+# ignore NRT warnings for tests
+dotnet_diagnostic.CS8625.severity = none
+dotnet_diagnostic.CS8602.severity = none
+dotnet_diagnostic.CS8604.severity = none
+dotnet_diagnostic.CS8600.severity = none
+dotnet_diagnostic.CS8618.severity = none
+# ignore strict r# checks
+resharper_convert_to_constant_global_highlighting = none
+resharper_convert_to_constant_local_highlighting = none
+resharper_access_to_disposed_closure_highlighting = none
+# ignore other stuff
+dotnet_diagnostic.CA1051.severity = none
+# allow not implement IDispose with disposable fields
+dotnet_diagnostic.CA2000.severity = none
+dotnet_diagnostic.CA1001.severity = none
+
+##########################################
+##########################################
+# ... дописывайте кастомные настройки здесь ...
+resharper_keep_existing_initializer_arrangement = true
