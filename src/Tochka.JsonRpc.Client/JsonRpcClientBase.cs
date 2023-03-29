@@ -52,8 +52,8 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     protected ILogger Log { get; }
     protected IJsonRpcIdGenerator RpcIdGenerator { get; }
 
-    [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-    [SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors", Justification = "It's required to initialize http client")]
+    [SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+    [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor", Justification = "It's required to initialize http client")]
     protected internal JsonRpcClientBase(HttpClient client, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
     {
         Client = client;
