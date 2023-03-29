@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
@@ -6,6 +7,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models;
 
+[PublicAPI]
 public class SingleJsonRpcResult : ISingleJsonRpcResult
 {
     private readonly IJsonRpcCallContext context;

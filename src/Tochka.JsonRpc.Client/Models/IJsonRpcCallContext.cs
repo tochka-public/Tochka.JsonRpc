@@ -9,6 +9,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models
 {
+    [PublicAPI]
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
     public interface IJsonRpcCallContext
     {

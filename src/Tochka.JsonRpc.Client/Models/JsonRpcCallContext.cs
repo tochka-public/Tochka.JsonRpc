@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -15,6 +16,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models
 {
+    [PublicAPI]
     public class JsonRpcCallContext : IJsonRpcCallContext
     {
         public string? RequestUrl { get; private set; }
@@ -36,16 +38,29 @@ namespace Tochka.JsonRpc.Client.Models
 
             if (requestUrl.StartsWith("/", StringComparison.Ordinal))
             {
-                throw new ArgumentException("Request url should not start with '/' to prevent unexpected behavior when joining url parts");
+                throw new ArgumentException("Request url should not start with '/' to prevent unexpected behavior when joining url parts", nameof(requestUrl));
             }
 
             RequestUrl = requestUrl;
         }
 
-        public void WithSingle(IUntypedCall singleCall) => SingleCall = singleCall;
+        public void WithSingle(IUntypedCall singleCall)
+        {
+            if (BatchCall != null)
+            {
+                throw new InvalidOperationException("Can not add single call when batch call is present");
+            }
+
+            SingleCall = singleCall;
+        }
 
         public void WithBatch(List<IUntypedCall> batchCall)
         {
+            if (SingleCall != null)
+            {
+                throw new InvalidOperationException("Can not add batch call when single call is present");
+            }
+
             BatchCall = batchCall;
             ExpectedBatchResponseCount = batchCall.Count(static x => x is UntypedRequest);
         }
@@ -103,9 +118,10 @@ namespace Tochka.JsonRpc.Client.Models
             }
 
             var idsAreEqual = singleResponse.Id.Equals(request.Id);
-            if (!idsAreEqual && singleResponse.Id is not NullRpcId)
+            var responseIdNull = singleResponse.Id is NullRpcId;
+            if (!idsAreEqual && !responseIdNull)
             {
-                throw new JsonRpcException($"JSON Rpc response id is invalid: [{singleResponse.Id}], expected [{request.Id}]", this);
+                throw new JsonRpcException($"JSON Rpc response id is invalid: [{singleResponse.Id}], expected [{request.Id}] or [null]", this);
             }
         }
 

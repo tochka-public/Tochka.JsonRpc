@@ -3,9 +3,9 @@ using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Client.Models
 {
+    [PublicAPI]
     [ExcludeFromCodeCoverage]
     [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Context is required")]
-    [PublicAPI]
     public class JsonRpcException : Exception
     {
         public IJsonRpcCallContext Context { get; }

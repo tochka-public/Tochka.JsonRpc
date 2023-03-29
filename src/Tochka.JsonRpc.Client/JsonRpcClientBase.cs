@@ -35,7 +35,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
 
     /// <inheritdoc />
     /// <remarks>
-    /// Default is <see cref="JsonRpcSerializerOptions.SnakeCase" />
+    /// Default is <see cref="JsonRpcSerializerOptions.Headers" />
     /// </remarks>
     public virtual JsonSerializerOptions HeadersJsonSerializerOptions => JsonRpcSerializerOptions.Headers;
 

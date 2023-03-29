@@ -1,9 +1,11 @@
 ﻿using System.Text.Json;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Client.Models;
 
+[PublicAPI]
 public interface IBatchJsonRpcResult
 {
     T? GetResponseOrThrow<T>(IRpcId? id);

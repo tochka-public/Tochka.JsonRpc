@@ -12,7 +12,7 @@ namespace Tochka.JsonRpc.Client.Settings
         /// <summary>
         /// HTTP endpoint
         /// </summary>
-        public virtual string Url { get; set; } = null!;
+        public virtual string Url { get; init; } = null!;
 
         /// <summary>
         /// Request timeout
@@ -20,7 +20,7 @@ namespace Tochka.JsonRpc.Client.Settings
         /// <remarks>
         /// Default value is 10 seconds
         /// </remarks>
-        public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
+        public virtual TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(10);
     }
 
 }
