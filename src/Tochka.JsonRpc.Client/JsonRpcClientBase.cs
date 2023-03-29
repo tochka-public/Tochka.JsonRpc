@@ -52,6 +52,8 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     protected ILogger Log { get; }
     protected IJsonRpcIdGenerator RpcIdGenerator { get; }
 
+    [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
+    [SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors", Justification = "It's required to initialize http client")]
     protected internal JsonRpcClientBase(HttpClient client, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
     {
         Client = client;
@@ -268,8 +270,13 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// Set HttpClient properties from base options
     /// </summary>
     [ExcludeFromCodeCoverage]
-    protected internal void InitializeClient(HttpClient client, JsonRpcClientOptionsBase options)
+    protected internal virtual void InitializeClient(HttpClient client, JsonRpcClientOptionsBase options)
     {
+        if (!options.Url.EndsWith('/'))
+        {
+            throw new ArgumentException("Base url should not start with '/' to prevent unexpected behavior when joining url parts", nameof(options.Url));
+        }
+
         client.BaseAddress = new Uri(options.Url, UriKind.Absolute);
         client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
         client.Timeout = options.Timeout;
