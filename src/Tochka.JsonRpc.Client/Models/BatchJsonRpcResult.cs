@@ -39,6 +39,8 @@ public class BatchJsonRpcResult : IBatchJsonRpcResult
 
         switch (response)
         {
+            case UntypedResponse { Result: null }:
+                return default;
             case UntypedResponse untypedResponse:
                 return untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions);
             case UntypedErrorResponse untypedErrorResponse:
@@ -54,7 +56,7 @@ public class BatchJsonRpcResult : IBatchJsonRpcResult
         TryGetValue(id, out var response);
         return response switch
         {
-            UntypedResponse untypedResponse => untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions),
+            UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions),
             _ => default
         };
     }

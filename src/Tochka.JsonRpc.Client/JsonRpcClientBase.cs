@@ -198,6 +198,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         context.WithHttpResponse(httpResponseMessage);
         if (context.ExpectedBatchResponseCount == 0)
         {
+            // from specification:
             // "If there are no Response objects contained within the Response array as it is to be sent to the client,
             // the server MUST NOT return an empty Array and should return nothing at all."
             Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Count);

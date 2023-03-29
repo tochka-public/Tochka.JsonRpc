@@ -11,12 +11,10 @@ using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Tests.WebApplication;
 using Tochka.JsonRpc.TestUtils.Integration;
-using Tochka.JsonRpc.V1.Client;
-using Tochka.JsonRpc.V1.Client.Models;
-using Tochka.JsonRpc.V1.Client.Services;
-using Tochka.JsonRpc.V1.Common.Models.Id;
-using Tochka.JsonRpc.V1.Common.Models.Request;
-using Tochka.JsonRpc.V1.Common.Serializers;
+using Tochka.JsonRpc.Client.Models;
+using Tochka.JsonRpc.Client.Services;
+using Tochka.JsonRpc.Common.Models.Id;
+using Tochka.JsonRpc.Common.Models.Request;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
@@ -35,13 +33,10 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock = new Mock<IResponseProvider>();
         requestValidatorMock = new Mock<IRequestValidator>();
         scope = ApplicationFactory.Services.CreateAsyncScope();
-        var snakeCaseSerializer = scope.ServiceProvider.GetRequiredService<SnakeCaseJsonRpcSerializer>();
-        var camelCaseSerializer = scope.ServiceProvider.GetRequiredService<CamelCaseJsonRpcSerializer>();
-        var headerSerializer = scope.ServiceProvider.GetRequiredService<HeaderJsonRpcSerializer>();
         var idGenerator = scope.ServiceProvider.GetRequiredService<IJsonRpcIdGenerator>();
 
-        snakeCaseJsonRpcClient = new SnakeCaseJsonRpcClient(ApiClient, snakeCaseSerializer, headerSerializer, idGenerator);
-        camelCaseJsonRpcClient = new CamelCaseJsonRpcClient(ApiClient, camelCaseSerializer, headerSerializer, idGenerator);
+        snakeCaseJsonRpcClient = new SnakeCaseJsonRpcClient(ApiClient, idGenerator);
+        camelCaseJsonRpcClient = new CamelCaseJsonRpcClient(ApiClient, idGenerator);
     }
 
     protected override void SetupServices(IServiceCollection services)
@@ -49,8 +44,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         base.SetupServices(services);
         services.AddTransient(_ => responseProviderMock.Object);
         services.AddTransient(_ => requestValidatorMock.Object);
-        services.AddSingleton<SnakeCaseJsonRpcSerializer>();
-        services.AddSingleton<CamelCaseJsonRpcSerializer>();
         services.AddJsonRpcClient<SnakeCaseJsonRpcClient>();
         services.AddJsonRpcClient<CamelCaseJsonRpcClient>();
     }
@@ -62,9 +55,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendNotification_SendRequestWithNullData_SerializeSuccessfully()
     {
         var expectedRequestJson = @"{
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": null
+    ""params"": null,
+    ""jsonrpc"": ""2.0""
 }".TrimAllLines();
 
         string actualContentType = null;
@@ -88,7 +81,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Plain;
         var expectedRequestJson = @"{
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
     ""params"": {
         ""boolField"": true,
@@ -99,7 +91,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""nullableField"": null,
         ""notRequiredField"": null,
         ""nestedField"": null
-    }
+    },
+    ""jsonrpc"": ""2.0""
 }".TrimAllLines();
 
         string actualContentType = null;
@@ -123,7 +116,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Plain;
         var expectedRequestJson = @"{
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
     ""params"": {
         ""bool_field"": true,
@@ -134,7 +126,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""nullable_field"": null,
         ""not_required_field"": null,
         ""nested_field"": null
-    }
+    },
+    ""jsonrpc"": ""2.0""
 }".TrimAllLines();
 
         string actualContentType = null;
@@ -158,7 +151,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Nested;
         var expectedRequestJson = @"{
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
     ""params"": {
         ""boolField"": true,
@@ -178,7 +170,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""notRequiredField"": null,
             ""nestedField"": null
         }
-    }
+    },
+    ""jsonrpc"": ""2.0""
 }".TrimAllLines();
 
         string actualContentType = null;
@@ -202,7 +195,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Nested;
         var expectedRequestJson = @"{
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
     ""params"": {
         ""bool_field"": true,
@@ -222,7 +214,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""not_required_field"": null,
             ""nested_field"": null
         }
-    }
+    },
+    ""jsonrpc"": ""2.0""
 }".TrimAllLines();
 
         string actualContentType = null;
@@ -247,14 +240,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
-    ""result"": {{}}
+    ""result"": {{}},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -282,14 +275,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = 123;
         var expectedRequestJson = @$"{{
     ""id"": {id},
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": {id},
-    ""result"": {{}}
+    ""result"": {{}},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -316,14 +309,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var expectedRequestJson = @"{
     ""id"": null,
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {}
+    ""params"": {},
+    ""jsonrpc"": ""2.0""
 }".TrimAllLines();
         var responseBody = JsonDocument.Parse(@"{
-    ""jsonrpc"": ""2.0"",
     ""id"": null,
-    ""result"": {}
+    ""result"": {},
+    ""jsonrpc"": ""2.0""
 }");
 
         string actualContentType = null;
@@ -338,7 +331,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, null, Method, new { }, CancellationToken.None);
+        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new NullRpcId(), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -351,14 +344,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": null
+    ""params"": null,
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
-    ""result"": null
+    ""result"": null,
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -398,14 +391,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {expectedRequestData}
+    ""params"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
-    ""result"": {expectedRequestData}
+    ""result"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}");
         var expectedResponseData = requestData;
 
@@ -446,14 +439,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {expectedRequestData}
+    ""params"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
-    ""result"": {expectedRequestData}
+    ""result"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}");
         var expectedResponseData = requestData;
 
@@ -503,14 +496,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {expectedRequestData}
+    ""params"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
-    ""result"": {expectedRequestData}
+    ""result"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}");
         var expectedResponseData = requestData;
 
@@ -560,14 +553,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {expectedRequestData}
+    ""params"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
-    ""result"": {expectedRequestData}
+    ""result"": {expectedRequestData},
+    ""jsonrpc"": ""2.0""
 }}");
         var expectedResponseData = requestData;
 
@@ -597,14 +590,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($@"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""error"": {{
         ""code"": {errorCode},
@@ -619,7 +611,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""notRequiredField"": null,
             ""nestedField"": null
         }}
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
         var expectedResponseData = TestData.Plain;
 
@@ -652,14 +645,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($@"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""error"": {{
         ""code"": {errorCode},
@@ -674,7 +666,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""notRequiredField"": null,
             ""nestedField"": null
         }}
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
         var expectedResponseData = TestData.Plain;
 
@@ -707,19 +700,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($@"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""error"": {{
         ""code"": {errorCode},
         ""message"": ""{errorMessage}""
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -751,16 +744,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""result"": {{
         ""error"": ""errorValue""
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -788,12 +781,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""error"": {{
         ""code"": 123,
@@ -801,8 +793,47 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""data"": {{
             ""result"": ""resultValue""
         }}
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
+
+        string actualContentType = null;
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
+        responseProviderMock.Setup(static p => p.GetResponse())
+            .Returns(responseBody);
+
+        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+
+        actualContentType.Should().Contain("application/json");
+        actualRequestJson.Should().Be(expectedRequestJson);
+        response.HasError().Should().BeTrue();
+    }
+
+    [Test]
+    public async Task SendRequest_GetErrorResponseWithNullId_DeserializeSuccessfully()
+    {
+        var id = Guid.NewGuid().ToString();
+        var expectedRequestJson = @$"{{
+    ""id"": ""{id}"",
+    ""method"": ""some-method"",
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
+}}".TrimAllLines();
+        var responseBody = JsonDocument.Parse(@"{
+    ""id"": null,
+    ""error"": {
+        ""code"": 123,
+        ""message"": ""errorMessage""
+    },
+    ""jsonrpc"": ""2.0""
+}");
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -829,13 +860,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
-    ""result"": {{}}
+    ""result"": {{}},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -863,13 +894,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
-    ""id"": ""{id}""
+    ""id"": ""{id}"",
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -897,18 +928,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""result"": {{}},
     ""error"": {{
         ""code"": 123,
         ""message"": ""errorMessage""
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -936,9 +967,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
 
         string actualContentType = null;
@@ -966,14 +997,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{Guid.NewGuid().ToString()}"",
-    ""result"": {{}}
+    ""result"": {{}},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -996,19 +1027,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task SendRequest_GetResponseWithNullId_ThrowJsonRpcException()
+    public async Task SendRequest_GetSuccessfulResponseWithNullId_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = @$"{{
     ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0"",
     ""method"": ""some-method"",
-    ""params"": {{}}
+    ""params"": {{}},
+    ""jsonrpc"": ""2.0""
 }}".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": null,
-    ""result"": {{}}
+    ""result"": {{}},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -1037,16 +1068,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {{}}
+        ""params"": {{}},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
-        ""result"": {{}}
+        ""result"": {{}},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
 
@@ -1064,12 +1095,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<object>
-            {
-                Id = new StringRpcId(id),
-                Method = Method,
-                Params = new { }
-            }
+            new Request<object>(new StringRpcId(id), Method, new { })
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1085,16 +1111,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": {id},
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {{}}
+        ""params"": {{}},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": {id},
-        ""result"": {{}}
+        ""result"": {{}},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
 
@@ -1112,12 +1138,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<object>
-            {
-                Id = new NumberRpcId(id),
-                Method = Method,
-                Params = new { }
-            }
+            new Request<object>(new NumberRpcId(id), Method, new { })
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1132,16 +1153,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @"[
     {
         ""id"": null,
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {}
+        ""params"": {},
+        ""jsonrpc"": ""2.0""
     }
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@"[
     {
-        ""jsonrpc"": ""2.0"",
         ""id"": null,
-        ""result"": {}
+        ""result"": {},
+        ""jsonrpc"": ""2.0""
     }
 ]");
 
@@ -1159,12 +1180,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<object>
-            {
-                Id = null,
-                Method = Method,
-                Params = new { }
-            }
+            new Request<object>(new NullRpcId(), Method, new { })
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1191,16 +1207,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
-        ""result"": {expectedRequestData}
+        ""result"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
         var expectedResponseData = requestData;
@@ -1219,12 +1235,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1253,27 +1264,27 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id1}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }},
     {{
         ""id"": ""{id2}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id1}"",
-        ""result"": {expectedRequestData}
+        ""result"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id2}"",
-        ""result"": {expectedRequestData}
+        ""result"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
         var expectedResponseData = requestData;
@@ -1292,18 +1303,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id1),
-                Method = Method,
-                Params = requestData
-            },
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id2),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id1), Method, requestData),
+            new Request<TestData>(new StringRpcId(id2), Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1321,7 +1322,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var requestData = TestData.Plain;
         var expectedRequestJson = @"[
     {
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
         ""params"": {
             ""boolField"": true,
@@ -1332,7 +1332,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
-        }
+        },
+        ""jsonrpc"": ""2.0""
     }
 ]".TrimAllLines();
 
@@ -1350,11 +1351,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Notification<TestData>
-            {
-                Method = Method,
-                Params = requestData
-            }
+            new Notification<TestData>(Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1369,7 +1366,6 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var requestData = TestData.Plain;
         var expectedRequestJson = @"[
     {
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
         ""params"": {
             ""boolField"": true,
@@ -1380,10 +1376,10 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
-        }
+        },
+        ""jsonrpc"": ""2.0""
     },
     {
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
         ""params"": {
             ""boolField"": true,
@@ -1394,7 +1390,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
-        }
+        },
+        ""jsonrpc"": ""2.0""
     }
 ]".TrimAllLines();
 
@@ -1410,16 +1407,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Notification<TestData>
-            {
-                Method = Method,
-                Params = requestData
-            },
-            new Notification<TestData>
-            {
-                Method = Method,
-                Params = requestData
-            }
+            new Notification<TestData>(Method, requestData),
+            new Notification<TestData>(Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1446,19 +1435,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
         ""result"": {expectedRequestData}
     }}
@@ -1479,17 +1467,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id),
-                Method = Method,
-                Params = requestData
-            },
-            new Notification<TestData>
-            {
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id), Method, requestData),
+            new Notification<TestData>(Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1517,22 +1496,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id}"",
         ""error"": {{
             ""code"": {errorCode},
             ""message"": ""{errorMessage}"",
             ""data"": {expectedRequestData}
-        }}
+        }},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
         var expectedResponseData = requestData;
@@ -1551,12 +1530,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1588,37 +1562,37 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id1}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }},
     {{
         ""id"": ""{id2}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id1}"",
         ""error"": {{
             ""code"": {errorCode},
             ""message"": ""{errorMessage}"",
             ""data"": {expectedRequestData}
-        }}
+        }},
+        ""jsonrpc"": ""2.0""
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id2}"",
         ""error"": {{
             ""code"": {errorCode},
             ""message"": ""{errorMessage}"",
             ""data"": {expectedRequestData}
-        }}
+        }},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
         var expectedResponseData = requestData;
@@ -1637,18 +1611,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id1),
-                Method = Method,
-                Params = requestData
-            },
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id2),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id1), Method, requestData),
+            new Request<TestData>(new StringRpcId(id2), Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1685,33 +1649,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id1}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }},
     {{
         ""id"": ""{id2}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id1}"",
         ""error"": {{
             ""code"": {errorCode},
             ""message"": ""{errorMessage}"",
             ""data"": {expectedRequestData}
-        }}
+        }},
+        ""jsonrpc"": ""2.0""
     }},
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{id2}"",
-        ""result"": {expectedRequestData}
+        ""result"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
         var expectedResponseData = requestData;
@@ -1730,18 +1694,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id1),
-                Method = Method,
-                Params = requestData
-            },
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id2),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id1), Method, requestData),
+            new Request<TestData>(new StringRpcId(id2), Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1774,21 +1728,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse(@$"{{
-    ""jsonrpc"": ""2.0"",
     ""id"": ""{id}"",
     ""error"": {{
         ""code"": {errorCode},
         ""message"": ""{errorMessage}"",
         ""data"": {expectedRequestData}
-    }}
+    }},
+    ""jsonrpc"": ""2.0""
 }}");
 
         string actualContentType = null;
@@ -1805,12 +1759,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
         var act = async () => await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 
@@ -1837,16 +1786,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var expectedRequestJson = @$"[
     {{
         ""id"": ""{id}"",
-        ""jsonrpc"": ""2.0"",
         ""method"": ""some-method"",
-        ""params"": {expectedRequestData}
+        ""params"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]".TrimAllLines();
         var responseBody = JsonDocument.Parse(@$"[
     {{
-        ""jsonrpc"": ""2.0"",
         ""id"": ""{Guid.NewGuid().ToString()}"",
-        ""result"": {expectedRequestData}
+        ""result"": {expectedRequestData},
+        ""jsonrpc"": ""2.0""
     }}
 ]");
 
@@ -1864,12 +1813,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var calls = new List<ICall>()
         {
-            new Request<TestData>
-            {
-                Id = new StringRpcId(id),
-                Method = Method,
-                Params = requestData
-            }
+            new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
         var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
 

@@ -34,6 +34,8 @@ public class SingleJsonRpcResult : ISingleJsonRpcResult
         {
             case null:
                 throw new JsonRpcException($"Expected successful response with [{typeof(T).Name}] params, got nothing", context);
+            case UntypedResponse { Result: null }:
+                return default;
             case UntypedResponse untypedResponse:
                 return untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions);
             case UntypedErrorResponse untypedErrorResponse:
@@ -46,7 +48,7 @@ public class SingleJsonRpcResult : ISingleJsonRpcResult
 
     public T? AsResponse<T>() => response switch
     {
-        UntypedResponse untypedResponse => untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions),
+        UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions),
         _ => default
     };
 

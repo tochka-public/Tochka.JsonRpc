@@ -8,7 +8,8 @@ namespace Tochka.JsonRpc.Common.Converters;
 public class ResponseConverter : JsonConverter<IResponse>
 {
     // NOTE: used in client to parse responses, no need for serialization
-    public override void Write(Utf8JsonWriter writer, IResponse value, JsonSerializerOptions options) => throw new InvalidOperationException();
+    public override void Write(Utf8JsonWriter writer, IResponse value, JsonSerializerOptions options) =>
+        throw new InvalidOperationException();
 
     public override IResponse? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
         CheckProperties(reader) switch

@@ -186,6 +186,7 @@ namespace Tochka.JsonRpc.V1.Client
             context.WithHttpResponse(httpResponseMessage);
             if (context.ExpectedBatchResponseCount == 0)
             {
+                // from specification:
                 // "If there are no Response objects contained within the Response array as it is to be sent to the client,
                 // the server MUST NOT return an empty Array and should return nothing at all."
                 log.LogTrace($"Batch count [{data.Count}] success: no response expected");

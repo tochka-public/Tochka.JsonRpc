@@ -113,9 +113,14 @@ public class JsonRpcCallContext : IJsonRpcCallContext
             throw new JsonRpcException("Received response but call was not request or batch", this);
         }
 
-        var idsAreEqual = singleResponse.Id.Equals(request.Id);
-        var responseIdNull = singleResponse.Id is NullRpcId;
-        if (!idsAreEqual && !responseIdNull)
+        // from specification:
+        // "If there was an error in detecting the id in the Request object (e.g. Parse error/Invalid Request), it MUST be Null."
+        if (SingleResponse is UntypedErrorResponse { Id: NullRpcId })
+        {
+            return;
+        }
+
+        if (!singleResponse.Id.Equals(request.Id))
         {
             throw new JsonRpcException($"JSON Rpc response id is invalid: [{singleResponse.Id}], expected [{request.Id}] or [null]", this);
         }

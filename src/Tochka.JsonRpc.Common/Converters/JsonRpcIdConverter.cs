@@ -11,6 +11,8 @@ namespace Tochka.JsonRpc.Common.Converters;
 /// </summary>
 public class JsonRpcIdConverter : JsonConverter<IRpcId>
 {
+    public override bool HandleNull => true;
+
     public override void Write(Utf8JsonWriter writer, IRpcId value, JsonSerializerOptions options)
     {
         switch (value)
@@ -30,7 +32,7 @@ public class JsonRpcIdConverter : JsonConverter<IRpcId>
     }
 
     [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for id property")]
-    public override IRpcId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IRpcId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var idType = reader.TokenType;
         return idType switch

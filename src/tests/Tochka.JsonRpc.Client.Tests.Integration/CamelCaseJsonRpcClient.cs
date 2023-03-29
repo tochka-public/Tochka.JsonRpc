@@ -1,15 +1,17 @@
 ﻿using System.Net.Http;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Tochka.JsonRpc.V1.Client;
-using Tochka.JsonRpc.V1.Client.Services;
-using Tochka.JsonRpc.V1.Common.Serializers;
+using Tochka.JsonRpc.Client.Services;
+using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
 internal class CamelCaseJsonRpcClient : JsonRpcClientBase
 {
-    public CamelCaseJsonRpcClient(HttpClient client, CamelCaseJsonRpcSerializer serializer, HeaderJsonRpcSerializer headerJsonRpcSerializer, IJsonRpcIdGenerator jsonRpcIdGenerator) : base(client, serializer, headerJsonRpcSerializer, new SimpleJsonRpcClientOptions(), jsonRpcIdGenerator, Mock.Of<ILogger>())
+    public CamelCaseJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator) : base(client, new SimpleJsonRpcClientOptions(), jsonRpcIdGenerator, Mock.Of<ILogger>())
     {
     }
+
+    public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.CamelCase;
 }

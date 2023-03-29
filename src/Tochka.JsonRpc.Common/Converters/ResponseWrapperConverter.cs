@@ -13,7 +13,8 @@ namespace Tochka.JsonRpc.Common.Converters;
 public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
 {
     // NOTE: used in client to parse responses, no need for serialization
-    public override void Write(Utf8JsonWriter writer, IResponseWrapper value, JsonSerializerOptions options) => throw new InvalidOperationException();
+    public override void Write(Utf8JsonWriter writer, IResponseWrapper value, JsonSerializerOptions options) =>
+        throw new InvalidOperationException();
 
     [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for response wrappers")]
     public override IResponseWrapper? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
