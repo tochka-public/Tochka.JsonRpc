@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Settings;
@@ -13,7 +12,7 @@ namespace Tochka.JsonRpc.Server.Services
     /// <summary>
     /// Creates errors by specification rules, wraps exceptions depending on options
     /// </summary>
-    internal class JsonRpcErrorFactory : IJsonRpcErrorFactory
+    public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     {
         private readonly ILogger log;
         private readonly JsonRpcOptions options;
