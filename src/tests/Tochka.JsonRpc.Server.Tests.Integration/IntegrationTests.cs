@@ -46,12 +46,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""action_only"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "action_only",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -68,12 +70,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""simple_json_rpc.controller_and_action"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "simple_json_rpc.controller_and_action",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -90,14 +94,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleDefaultWithObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_default"",
-    ""id"": ""123"",
-    ""params"": {{
-        ""data"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_default",
+                "id": "123",
+                "params": {
+                    "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -114,14 +120,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleDefaultWithArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_default"",
-    ""id"": ""123"",
-    ""params"": [
-        {TestData.PlainRequiredSnakeCaseJson}
-    ]
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_default",
+                "id": "123",
+                "params": [
+                    {{TestData.PlainRequiredSnakeCaseJson}}
+                ]
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -138,12 +146,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_object"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_object",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -160,14 +170,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_array"",
-    ""id"": ""123"",
-    ""params"": [
-        {TestData.PlainRequiredSnakeCaseJson}
-    ]
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_array",
+                "id": "123",
+                "params": [
+                    {{TestData.PlainRequiredSnakeCaseJson}}
+                ]
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -184,11 +196,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_NoParams_ProcessSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""no_params"",
-    ""id"": ""123""
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "no_params",
+                "id": "123"
+            }
+            """;
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -199,12 +213,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_NullParamsWithNullParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""null_params"",
-    ""id"": ""123"",
-    ""params"": null
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "null_params",
+                "id": "123",
+                "params": null
+            }
+            """;
         object? expectedRequestData = null;
 
         object? actualRequestData = new { };
@@ -221,11 +237,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_NullParamsWithoutParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""null_params"",
-    ""id"": ""123""
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "null_params",
+                "id": "123"
+            }
+            """;
         object? expectedRequestData = null;
 
         object? actualRequestData = new { };
@@ -242,12 +260,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_DefaultParamsWithEmptyParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""default_params"",
-    ""id"": ""123"",
-    ""params"": {}
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "default_params",
+                "id": "123",
+                "params": {}
+            }
+            """;
         var expectedRequestData = "123";
 
         object? actualRequestData = null;
@@ -265,11 +285,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Doesnt work, but should?")]
     public async Task Notification_DefaultParamsWithoutParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""default_params"",
-    ""id"": ""123""
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "default_params",
+                "id": "123"
+            }
+            """;
         var expectedRequestData = "123";
 
         object? actualRequestData = null;
@@ -286,12 +308,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""snake_case_params"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "snake_case_params",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -308,12 +332,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""camelCaseParams"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredCamelCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "camelCaseParams",
+                "id": "123",
+                "params": {{TestData.PlainRequiredCamelCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -330,12 +356,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""custom_action_route"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "custom_action_route",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -352,12 +380,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""custom_controller_route"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "custom_controller_route",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -374,19 +404,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_StringId_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -406,19 +440,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_IntId_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": 123,
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": 123,
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": 123,
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": 123,
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -438,19 +476,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NullId_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": null,
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": null,
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -470,19 +512,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""action_only"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "action_only",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -502,19 +548,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""simple_json_rpc.controller_and_action"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "simple_json_rpc.controller_and_action",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -534,21 +584,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleDefaultWithObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_default"",
-    ""id"": ""123"",
-    ""params"": {{
-        ""data"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_default",
+                "id": "123",
+                "params": {
+                    "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -568,21 +622,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleDefaultWithArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_default"",
-    ""id"": ""123"",
-    ""params"": [
-        {TestData.PlainRequiredSnakeCaseJson}
-    ]
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_default",
+                "id": "123",
+                "params": [
+                    {{TestData.PlainRequiredSnakeCaseJson}}
+                ]
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -602,19 +660,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_object"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_object",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -634,21 +696,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""binding_style_array"",
-    ""id"": ""123"",
-    ""params"": [
-        {TestData.PlainRequiredSnakeCaseJson}
-    ]
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "binding_style_array",
+                "id": "123",
+                "params": [
+                    {{TestData.PlainRequiredSnakeCaseJson}}
+                ]
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -668,17 +734,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NoParams_ProcessSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""no_params"",
-    ""id"": ""123""
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "no_params",
+                "id": "123"
+            }
+            """;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         responseProviderMock.Setup(static p => p.GetJsonRpcResponse())
             .Returns(responseData);
@@ -694,19 +764,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NullParamsWithNullParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""null_params"",
-    ""id"": ""123"",
-    ""params"": null
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "null_params",
+                "id": "123",
+                "params": null
+            }
+            """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         object? actualRequestData = new { };
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -726,18 +800,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NullParamsWithoutParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""null_params"",
-    ""id"": ""123""
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "null_params",
+                "id": "123"
+            }
+            """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         object? actualRequestData = new { };
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -757,19 +835,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_DefaultParamsWithEmptyParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""default_params"",
-    ""id"": ""123"",
-    ""params"": {}
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "default_params",
+                "id": "123",
+                "params": {}
+            }
+            """;
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -790,18 +872,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Doesnt work, but should?")]
     public async Task Request_DefaultParamsWithoutParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""default_params"",
-    ""id"": ""123""
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "default_params",
+                "id": "123"
+            }
+            """;
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -821,19 +907,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""snake_case_params"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "snake_case_params",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -853,19 +943,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""camelCaseParams"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredCamelCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "camelCaseParams",
+                "id": "123",
+                "params": {{TestData.PlainRequiredCamelCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullCamelCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullCamelCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -885,19 +979,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NestedSnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""snake_case_params"",
-    ""id"": ""123"",
-    ""params"": {TestData.NestedRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "snake_case_params",
+                "id": "123",
+                "params": {{TestData.NestedRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.NestedFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.NestedFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -917,19 +1015,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NestedCamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""camelCaseParams"",
-    ""id"": ""123"",
-    ""params"": {TestData.NestedRequiredCamelCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "camelCaseParams",
+                "id": "123",
+                "params": {{TestData.NestedRequiredCamelCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.NestedFullCamelCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.NestedFullCamelCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -949,32 +1051,36 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_AdditionalParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""array_field"": [
-            1,
-            2,
-            3
-        ],
-        ""nullable_field"": null,
-        ""additional_field"": ""something""
-    }
-}";
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": "123",
+                "params": {
+                    "bool_field": true,
+                    "string_field": "123",
+                    "int_field": 123,
+                    "double_field": 1.23,
+                    "enum_field": "two",
+                    "array_field": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "nullable_field": null,
+                    "additional_field": "something"
+                }
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -994,19 +1100,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""custom_action_route"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "custom_action_route",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1026,19 +1136,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""custom_controller_route"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "custom_controller_route",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"{{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""result"": {TestData.PlainFullSnakeCaseJson}
-}}".TrimAllLines();
+        var expectedResponseJson = $$"""
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "result": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1058,25 +1172,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ThrowException_SerializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""throw_exception"",
-    ""id"": ""123""
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32000,
-        ""message"": ""Server error"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Value does not fall within the expected range."",
-            ""details"": null,
-            ""type"": ""System.ArgumentException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "throw_exception",
+                "id": "123"
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32000,
+                    "message": "Server error",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Value does not fall within the expected range.",
+                        "details": null,
+                        "type": "System.ArgumentException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1089,20 +1207,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ReturnErrorFromFactory_SerializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""return_error_from_factory"",
-    ""id"": ""123""
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32602,
-        ""message"": ""Invalid params"",
-        ""data"": ""errorMessage""
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "return_error_from_factory",
+                "id": "123"
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params",
+                    "data": "errorMessage"
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1115,20 +1237,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ReturnMvcError_SerializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""return_mvc_error"",
-    ""id"": ""123""
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32602,
-        ""message"": ""Invalid params"",
-        ""data"": ""errorMessage""
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "return_mvc_error",
+                "id": "123"
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params",
+                    "data": "errorMessage"
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1141,20 +1267,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ErrorThrowAsResponseException_SerializeSuccessfully()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""error_throw_as_response_exception"",
-    ""id"": ""123""
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32602,
-        ""message"": ""Invalid params"",
-        ""data"": ""errorMessage""
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "error_throw_as_response_exception",
+                "id": "123"
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params",
+                    "data": "errorMessage"
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1167,20 +1297,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_UnknownMethod_ReturnError()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""some_not_existing_method"",
-    ""id"": ""123""
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32601,
-        ""message"": ""Method not found"",
-        ""data"": null
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "some_not_existing_method",
+                "id": "123"
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32601,
+                    "message": "Method not found",
+                    "data": null
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1193,25 +1327,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NoMethod_ReturnError()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32600,
-        ""message"": ""Invalid Request"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Method is null or empty"",
-            ""details"": null,
-            ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32600,
+                    "message": "Invalid Request",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Method is null or empty",
+                        "details": null,
+                        "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1224,26 +1362,30 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_MethodNull_ReturnError()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": null,
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32600,
-        ""message"": ""Invalid Request"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Method is null or empty"",
-            ""details"": null,
-            ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": null,
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32600,
+                    "message": "Invalid Request",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Method is null or empty",
+                        "details": null,
+                        "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1256,26 +1398,30 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_MethodEmpty_ReturnError()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": """",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32600,
-        ""message"": ""Invalid Request"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Method is null or empty"",
-            ""details"": null,
-            ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32600,
+                    "message": "Invalid Request",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Method is null or empty",
+                        "details": null,
+                        "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1288,21 +1434,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_MethodWhiteSpace_ReturnError()
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""2.0"",
-    ""method"": "" "",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32601,
-        ""message"": ""Method not found"",
-        ""data"": null
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": " ",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32601,
+                    "message": "Method not found",
+                    "data": null
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1315,24 +1465,28 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NoRequiredParams_ReturnError()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123""
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32602,
-        ""message"": ""Invalid params"",
-        ""data"": {
-            """": [
-                ""The data field is required.""
-            ]
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": "123"
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params",
+                    "data": {
+                        "": [
+                            "The data field is required."
+                        ]
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1345,28 +1499,32 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_EmptyRequiredParams_ReturnError()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": {}
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32602,
-        ""message"": ""Invalid params"",
-        ""data"": {
-            ""ArrayField"": [
-                ""The ArrayField field is required.""
-            ],
-            ""StringField"": [
-                ""The StringField field is required.""
-            ]
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": "123",
+                "params": {}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params",
+                    "data": {
+                        "ArrayField": [
+                            "The ArrayField field is required."
+                        ],
+                        "StringField": [
+                            "The StringField field is required."
+                        ]
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1379,25 +1537,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_RequiredParamsNull_ReturnError()
     {
-        const string requestJson = @"{
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": null
-}";
-        var expectedResponseJson = @"{
-    ""id"": ""123"",
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32602,
-        ""message"": ""Invalid params"",
-        ""data"": {
-            """": [
-                ""The data field is required.""
-            ]
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = """
+            {
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": "123",
+                "params": null
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": "123",
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params",
+                    "data": {
+                        "": [
+                            "The data field is required."
+                        ]
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1410,26 +1572,30 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_InvalidJsonRpcVersion_ReturnError() // Should id be null?
     {
-        const string requestJson = $@"{{
-    ""jsonrpc"": ""3.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32600,
-        ""message"": ""Invalid Request"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Invalid JSON Rpc version [3.0]"",
-            ""details"": null,
-            ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                "jsonrpc": "3.0",
+                "method": "process_anything",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32600,
+                    "message": "Invalid Request",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Invalid JSON Rpc version [3.0]",
+                        "details": null,
+                        "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1442,27 +1608,31 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_InvalidJson_ReturnError()
     {
-        const string requestJson = $@"{{
-    123
-    ""jsonrpc"": ""2.0"",
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32700,
-        ""message"": ""Parse error"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Invalid character after parsing property name. Expected ':' but got: \"". Path '', line 3, position 4."",
-            ""details"": null,
-            ""type"": ""Newtonsoft.Json.JsonReaderException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                123
+                "jsonrpc": "2.0",
+                "method": "process_anything",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32700,
+                    "message": "Parse error",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Invalid character after parsing property name. Expected ':' but got: \". Path '', line 3, position 4.",
+                        "details": null,
+                        "type": "Newtonsoft.Json.JsonReaderException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1476,20 +1646,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully, but should?")]
     public async Task Request_NoJsonRpc_ReturnError()
     {
-        const string requestJson = $@"{{
-    ""method"": ""process_anything"",
-    ""id"": ""123"",
-    ""params"": {TestData.PlainRequiredSnakeCaseJson}
-}}";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": TODO,
-        ""message"": ""TODO"",
-        ""data"": {TODO}
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            {
+                "method": "process_anything",
+                "id": "123",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": TODO,
+                    "message": "TODO",
+                    "data": {TODO}
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1502,34 +1676,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_StringId_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1549,34 +1727,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_IntId_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": 123,
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": 456,
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": 123,
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": 456,
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": 123,
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": 456,
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": 123,
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": 456,
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1596,23 +1778,27 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NullId_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": null,
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": null,
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": null,
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": null,
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1632,34 +1818,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""action_only"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""action_only"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "action_only",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "action_only",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1679,34 +1869,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""simple_json_rpc.controller_and_action"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""simple_json_rpc.controller_and_action"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "simple_json_rpc.controller_and_action",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "simple_json_rpc.controller_and_action",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1726,38 +1920,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleDefaultWithObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_default"",
-        ""id"": ""123"",
-        ""params"": {{
-            ""data"": {TestData.PlainRequiredSnakeCaseJson}
-        }}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_default"",
-        ""id"": ""456"",
-        ""params"": {{
-            ""data"": {TestData.PlainRequiredSnakeCaseJson}
-        }}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_default",
+                    "id": "123",
+                    "params": {
+                        "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                    }
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_default",
+                    "id": "456",
+                    "params": {
+                        "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                    }
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1777,38 +1975,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleDefaultWithArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_default"",
-        ""id"": ""123"",
-        ""params"": [
-            {TestData.PlainRequiredSnakeCaseJson}
-        ]
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_default"",
-        ""id"": ""456"",
-        ""params"": [
-            {TestData.PlainRequiredSnakeCaseJson}
-        ]
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_default",
+                    "id": "123",
+                    "params": [
+                        {{TestData.PlainRequiredSnakeCaseJson}}
+                    ]
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_default",
+                    "id": "456",
+                    "params": [
+                        {{TestData.PlainRequiredSnakeCaseJson}}
+                    ]
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1828,34 +2030,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_object"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_object"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_object",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_object",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1875,38 +2081,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_array"",
-        ""id"": ""123"",
-        ""params"": [
-            {TestData.PlainRequiredSnakeCaseJson}
-        ]
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""binding_style_array"",
-        ""id"": ""456"",
-        ""params"": [
-            {TestData.PlainRequiredSnakeCaseJson}
-        ]
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_array",
+                    "id": "123",
+                    "params": [
+                        {{TestData.PlainRequiredSnakeCaseJson}}
+                    ]
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "binding_style_array",
+                    "id": "456",
+                    "params": [
+                        {{TestData.PlainRequiredSnakeCaseJson}}
+                    ]
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1926,31 +2136,35 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NoParams_ProcessSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""no_params"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""no_params"",
-        ""id"": ""456""
-    }
-]";
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "no_params",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "no_params",
+                    "id": "456"
+                }
+            ]
+            """;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         responseProviderMock.Setup(static p => p.GetJsonRpcResponse())
             .Returns(responseData);
@@ -1966,34 +2180,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NullParamsWithNullParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""null_params"",
-        ""id"": ""123"",
-        ""params"": null
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""null_params"",
-        ""id"": ""456"",
-        ""params"": null
-    }
-]";
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "null_params",
+                    "id": "123",
+                    "params": null
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "null_params",
+                    "id": "456",
+                    "params": null
+                }
+            ]
+            """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<object?>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -2013,32 +2231,36 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NullParamsWithoutParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""null_params"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""null_params"",
-        ""id"": ""456""
-    }
-]";
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "null_params",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "null_params",
+                    "id": "456"
+                }
+            ]
+            """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<object?>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -2058,34 +2280,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_DefaultParamsWithEmptyParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""default_params"",
-        ""id"": ""123"",
-        ""params"": {}
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""default_params"",
-        ""id"": ""456"",
-        ""params"": {}
-    }
-]";
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "default_params",
+                    "id": "123",
+                    "params": {}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "default_params",
+                    "id": "456",
+                    "params": {}
+                }
+            ]
+            """;
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<object?>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -2106,32 +2332,36 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Doesnt work, but should?")]
     public async Task Batch_DefaultParamsWithoutParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""default_params"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""default_params"",
-        ""id"": ""456""
-    }
-]";
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "default_params",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "default_params",
+                    "id": "456"
+                }
+            ]
+            """;
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<object?>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -2151,34 +2381,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""snake_case_params"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""snake_case_params"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "snake_case_params",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "snake_case_params",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2198,34 +2432,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""camelCaseParams"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredCamelCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""camelCaseParams"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredCamelCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "camelCaseParams",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredCamelCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "camelCaseParams",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullCamelCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullCamelCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullCamelCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2245,34 +2483,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NestedSnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""snake_case_params"",
-        ""id"": ""123"",
-        ""params"": {TestData.NestedRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""snake_case_params"",
-        ""id"": ""456"",
-        ""params"": {TestData.NestedRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "snake_case_params",
+                    "id": "123",
+                    "params": {{TestData.NestedRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "snake_case_params",
+                    "id": "456",
+                    "params": {{TestData.NestedRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.NestedFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.NestedFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.NestedFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.NestedFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2292,34 +2534,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NestedCamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""camelCaseParams"",
-        ""id"": ""123"",
-        ""params"": {TestData.NestedRequiredCamelCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""camelCaseParams"",
-        ""id"": ""456"",
-        ""params"": {TestData.NestedRequiredCamelCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "camelCaseParams",
+                    "id": "123",
+                    "params": {{TestData.NestedRequiredCamelCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "camelCaseParams",
+                    "id": "456",
+                    "params": {{TestData.NestedRequiredCamelCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.NestedFullCamelCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.NestedFullCamelCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.NestedFullCamelCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.NestedFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2339,60 +2585,64 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_AdditionalParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""array_field"": [
-                1,
-                2,
-                3
-            ],
-            ""nullable_field"": null,
-            ""additional_field"": ""something""
-        }
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""array_field"": [
-                1,
-                2,
-                3
-            ],
-            ""nullable_field"": null,
-            ""additional_field"": ""something""
-        }
-    }
-]";
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {
+                        "bool_field": true,
+                        "string_field": "123",
+                        "int_field": 123,
+                        "double_field": 1.23,
+                        "enum_field": "two",
+                        "array_field": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "nullable_field": null,
+                        "additional_field": "something"
+                    }
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "456",
+                    "params": {
+                        "bool_field": true,
+                        "string_field": "123",
+                        "int_field": 123,
+                        "double_field": 1.23,
+                        "enum_field": "two",
+                        "array_field": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "nullable_field": null,
+                        "additional_field": "something"
+                    }
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2412,34 +2662,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""custom_action_route"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""custom_action_route"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "custom_action_route",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "custom_action_route",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2459,34 +2713,38 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""custom_controller_route"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""custom_controller_route"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "custom_controller_route",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "custom_controller_route",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }},
-    {{
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2506,28 +2764,32 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_RequestAndNotification_ReturnOnlyRequestResponse()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $@"[
-    {{
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""result"": {TestData.PlainFullSnakeCaseJson}
-    }}
-]".TrimAllLines();
+        var expectedResponseJson = $$"""
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "result": {{TestData.PlainFullSnakeCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         var actualRequestData = new List<TestData>();
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2547,48 +2809,52 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ThrowException_SerializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""throw_exception"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""throw_exception"",
-        ""id"": ""456""
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32000,
-            ""message"": ""Server error"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Value does not fall within the expected range."",
-                ""details"": null,
-                ""type"": ""System.ArgumentException""
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32000,
-            ""message"": ""Server error"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Value does not fall within the expected range."",
-                ""details"": null,
-                ""type"": ""System.ArgumentException""
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "throw_exception",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "throw_exception",
+                    "id": "456"
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32000,
+                        "message": "Server error",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Value does not fall within the expected range.",
+                            "details": null,
+                            "type": "System.ArgumentException"
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32000,
+                        "message": "Server error",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Value does not fall within the expected range.",
+                            "details": null,
+                            "type": "System.ArgumentException"
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2601,38 +2867,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ReturnErrorFromFactory_SerializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""return_error_from_factory"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""return_error_from_factory"",
-        ""id"": ""456""
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": ""errorMessage""
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": ""errorMessage""
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "return_error_from_factory",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "return_error_from_factory",
+                    "id": "456"
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": "errorMessage"
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": "errorMessage"
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2645,38 +2915,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ReturnMvcError_SerializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""return_mvc_error"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""return_mvc_error"",
-        ""id"": ""456""
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": ""errorMessage""
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": ""errorMessage""
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "return_mvc_error",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "return_mvc_error",
+                    "id": "456"
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": "errorMessage"
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": "errorMessage"
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2689,38 +2963,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ErrorThrowAsResponseException_SerializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""error_throw_as_response_exception"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""error_throw_as_response_exception"",
-        ""id"": ""456""
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": ""errorMessage""
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": ""errorMessage""
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "error_throw_as_response_exception",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "error_throw_as_response_exception",
+                    "id": "456"
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": "errorMessage"
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": "errorMessage"
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2733,38 +3011,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_UnknownMethod_ReturnError()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""some_not_existing_method"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""some_not_existing_method"",
-        ""id"": ""456""
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32601,
-            ""message"": ""Method not found"",
-            ""data"": null
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32601,
-            ""message"": ""Method not found"",
-            ""data"": null
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "some_not_existing_method",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "some_not_existing_method",
+                    "id": "456"
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32601,
+                        "message": "Method not found",
+                        "data": null
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32601,
+                        "message": "Method not found",
+                        "data": null
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2778,48 +3060,52 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Returns NullReferenceException - not like request")]
     public async Task Batch_NoMethod_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Method is null or empty"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Method is null or empty"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Method is null or empty",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Method is null or empty",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2833,50 +3119,54 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Returns NullReferenceException - not like request")]
     public async Task Batch_MethodNull_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": null,
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": null,
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Method is null or empty"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Method is null or empty"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": null,
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": null,
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Method is null or empty",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Method is null or empty",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2890,50 +3180,54 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Returns method not found - not like request")]
     public async Task Batch_MethodEmpty_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": """",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": """",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Method is null or empty"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Method is null or empty"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Method is null or empty",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Method is null or empty",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2946,40 +3240,44 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_MethodWhiteSpace_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": "" "",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""2.0"",
-        ""method"": "" "",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32601,
-            ""message"": ""Method not found"",
-            ""data"": null
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32601,
-            ""message"": ""Method not found"",
-            ""data"": null
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": " ",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": " ",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32601,
+                        "message": "Method not found",
+                        "data": null
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32601,
+                        "message": "Method not found",
+                        "data": null
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -2992,46 +3290,50 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NoRequiredParams_ReturnError()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123""
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""456""
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": {
-                """": [
-                    ""The data field is required.""
-                ]
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": {
-                """": [
-                    ""The data field is required.""
-                ]
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123"
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "456"
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": {
+                            "": [
+                                "The data field is required."
+                            ]
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": {
+                            "": [
+                                "The data field is required."
+                            ]
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -3044,54 +3346,58 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_EmptyRequiredParams_ReturnError()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {}
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""456"",
-        ""params"": {}
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": {
-                ""ArrayField"": [
-                    ""The ArrayField field is required.""
-                ],
-                ""StringField"": [
-                    ""The StringField field is required.""
-                ]
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": {
-                ""ArrayField"": [
-                    ""The ArrayField field is required.""
-                ],
-                ""StringField"": [
-                    ""The StringField field is required.""
-                ]
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "456",
+                    "params": {}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": {
+                            "ArrayField": [
+                                "The ArrayField field is required."
+                            ],
+                            "StringField": [
+                                "The StringField field is required."
+                            ]
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": {
+                            "ArrayField": [
+                                "The ArrayField field is required."
+                            ],
+                            "StringField": [
+                                "The StringField field is required."
+                            ]
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -3104,48 +3410,52 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_RequiredParamsNull_ReturnError()
     {
-        const string requestJson = @"[
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": null
-    },
-    {
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""456"",
-        ""params"": null
-    }
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": {
-                """": [
-                    ""The data field is required.""
-                ]
-            }
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32602,
-            ""message"": ""Invalid params"",
-            ""data"": {
-                """": [
-                    ""The data field is required.""
-                ]
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = """
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": null
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "456",
+                    "params": null
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": {
+                            "": [
+                                "The data field is required."
+                            ]
+                        }
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32602,
+                        "message": "Invalid params",
+                        "data": {
+                            "": [
+                                "The data field is required."
+                            ]
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -3159,50 +3469,54 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully - not like request")]
     public async Task Batch_InvalidJsonRpcVersion_ReturnError() // Should id be null?
     {
-        const string requestJson = $@"[
-    {{
-        ""jsonrpc"": ""3.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""jsonrpc"": ""3.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": null,
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Invalid JSON Rpc version [3.0]"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    },
-    {
-        ""id"": null,
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": -32600,
-            ""message"": ""Invalid Request"",
-            ""data"": {
-                ""internal_http_code"": null,
-                ""message"": ""Invalid JSON Rpc version [3.0]"",
-                ""details"": null,
-                ""type"": ""Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException""
-            }
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "jsonrpc": "3.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "jsonrpc": "3.0",
+                    "method": "process_anything",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": null,
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Invalid JSON Rpc version [3.0]",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                },
+                {
+                    "id": null,
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32600,
+                        "message": "Invalid Request",
+                        "data": {
+                            "internal_http_code": null,
+                            "message": "Invalid JSON Rpc version [3.0]",
+                            "details": null,
+                            "type": "Tochka.JsonRpc.V1.Server.Exceptions.JsonRpcInternalException"
+                        }
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -3215,36 +3529,40 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_InvalidJson_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        123
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        123
-        ""jsonrpc"": ""2.0"",
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"{
-    ""id"": null,
-    ""jsonrpc"": ""2.0"",
-    ""error"": {
-        ""code"": -32700,
-        ""message"": ""Parse error"",
-        ""data"": {
-            ""internal_http_code"": null,
-            ""message"": ""Invalid character after parsing property name. Expected ':' but got: \"". Path '[0]', line 4, position 8."",
-            ""details"": null,
-            ""type"": ""Newtonsoft.Json.JsonReaderException""
-        }
-    }
-}".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    123
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    123
+                    "jsonrpc": "2.0",
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32700,
+                    "message": "Parse error",
+                    "data": {
+                        "internal_http_code": null,
+                        "message": "Invalid character after parsing property name. Expected ':' but got: \". Path '[0]', line 4, position 8.",
+                        "details": null,
+                        "type": "Newtonsoft.Json.JsonReaderException"
+                    }
+                }
+            }
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -3258,38 +3576,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully, but should?")]
     public async Task Batch_NoJsonRpc_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""method"": ""process_anything"",
-        ""id"": ""456"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": TODO,
-            ""message"": ""TODO"",
-            ""data"": {TODO}
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": TODO,
-            ""message"": ""TODO"",
-            ""data"": {TODO}
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "method": "process_anything",
+                    "id": "456",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": TODO,
+                        "message": "TODO",
+                        "data": {TODO}
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": TODO,
+                        "message": "TODO",
+                        "data": {TODO}
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -3303,38 +3625,42 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully, but should?")]
     public async Task Batch_SameId_ReturnError()
     {
-        const string requestJson = $@"[
-    {{
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }},
-    {{
-        ""method"": ""process_anything"",
-        ""id"": ""123"",
-        ""params"": {TestData.PlainRequiredSnakeCaseJson}
-    }}
-]";
-        var expectedResponseJson = @"[
-    {
-        ""id"": ""123"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": TODO,
-            ""message"": ""TODO"",
-            ""data"": {TODO}
-        }
-    },
-    {
-        ""id"": ""456"",
-        ""jsonrpc"": ""2.0"",
-        ""error"": {
-            ""code"": TODO,
-            ""message"": ""TODO"",
-            ""data"": {TODO}
-        }
-    }
-]".TrimAllLines();
+        const string requestJson = $$"""
+            [
+                {
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                },
+                {
+                    "method": "process_anything",
+                    "id": "123",
+                    "params": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            ]
+            """;
+        var expectedResponseJson = """
+            [
+                {
+                    "id": "123",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": TODO,
+                        "message": "TODO",
+                        "data": {TODO}
+                    }
+                },
+                {
+                    "id": "456",
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": TODO,
+                        "message": "TODO",
+                        "data": {TODO}
+                    }
+                }
+            ]
+            """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
