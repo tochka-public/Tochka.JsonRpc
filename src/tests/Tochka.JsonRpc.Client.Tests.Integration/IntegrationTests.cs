@@ -88,6 +88,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""intField"": 123,
         ""doubleField"": 1.23,
         ""enumField"": ""two"",
+        ""arrayField"": [
+            1,
+            2,
+            3
+        ],
         ""nullableField"": null,
         ""notRequiredField"": null,
         ""nestedField"": null
@@ -123,6 +128,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""int_field"": 123,
         ""double_field"": 1.23,
         ""enum_field"": ""two"",
+        ""array_field"": [
+            1,
+            2,
+            3
+        ],
         ""nullable_field"": null,
         ""not_required_field"": null,
         ""nested_field"": null
@@ -158,6 +168,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""intField"": 123,
         ""doubleField"": 1.23,
         ""enumField"": ""two"",
+        ""arrayField"": [
+            1,
+            2,
+            3
+        ],
         ""nullableField"": null,
         ""notRequiredField"": null,
         ""nestedField"": {
@@ -166,6 +181,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""intField"": 456,
             ""doubleField"": 4.56,
             ""enumField"": ""two"",
+            ""arrayField"": [
+                4,
+                5,
+                6
+            ],
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
@@ -202,6 +222,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""int_field"": 123,
         ""double_field"": 1.23,
         ""enum_field"": ""two"",
+        ""array_field"": [
+            1,
+            2,
+            3
+        ],
         ""nullable_field"": null,
         ""not_required_field"": null,
         ""nested_field"": {
@@ -210,6 +235,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""int_field"": 456,
             ""double_field"": 4.56,
             ""enum_field"": ""two"",
+            ""array_field"": [
+                4,
+                5,
+                6
+            ],
             ""nullable_field"": null,
             ""not_required_field"": null,
             ""nested_field"": null
@@ -385,6 +415,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -433,6 +468,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""int_field"": 123,
     ""double_field"": 1.23,
     ""enum_field"": ""two"",
+    ""array_field"": [
+        1,
+        2,
+        3
+    ],
     ""nullable_field"": null,
     ""not_required_field"": null,
     ""nested_field"": null
@@ -481,6 +521,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": {
@@ -489,6 +534,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""intField"": 456,
         ""doubleField"": 4.56,
         ""enumField"": ""two"",
+        ""arrayField"": [
+            4,
+            5,
+            6
+        ],
         ""nullableField"": null,
         ""notRequiredField"": null,
         ""nestedField"": null
@@ -538,6 +588,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""int_field"": 123,
     ""double_field"": 1.23,
     ""enum_field"": ""two"",
+    ""array_field"": [
+        1,
+        2,
+        3
+    ],
     ""nullable_field"": null,
     ""not_required_field"": null,
     ""nested_field"": {
@@ -546,6 +601,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""int_field"": 456,
         ""double_field"": 4.56,
         ""enum_field"": ""two"",
+        ""array_field"": [
+            4,
+            5,
+            6
+        ],
         ""nullable_field"": null,
         ""not_required_field"": null,
         ""nested_field"": null
@@ -607,6 +667,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
+            ""arrayField"": [
+                1,
+                2,
+                3
+            ],
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
@@ -662,6 +727,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""int_field"": 123,
             ""double_field"": 1.23,
             ""enum_field"": ""two"",
+            ""array_field"": [
+                1,
+                2,
+                3
+            ],
             ""nullable_field"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
@@ -1200,6 +1270,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1257,6 +1332,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1329,6 +1409,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
+            ""arrayField"": [
+                1,
+                2,
+                3
+            ],
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
@@ -1373,6 +1458,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
+            ""arrayField"": [
+                1,
+                2,
+                3
+            ],
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
@@ -1387,6 +1477,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""intField"": 123,
             ""doubleField"": 1.23,
             ""enumField"": ""two"",
+            ""arrayField"": [
+                1,
+                2,
+                3
+            ],
             ""nullableField"": null,
             ""notRequiredField"": null,
             ""nestedField"": null
@@ -1428,6 +1523,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1489,6 +1589,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1555,6 +1660,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1642,6 +1752,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1721,6 +1836,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null
@@ -1779,6 +1899,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""intField"": 123,
     ""doubleField"": 1.23,
     ""enumField"": ""two"",
+    ""arrayField"": [
+        1,
+        2,
+        3
+    ],
     ""nullableField"": null,
     ""notRequiredField"": null,
     ""nestedField"": null

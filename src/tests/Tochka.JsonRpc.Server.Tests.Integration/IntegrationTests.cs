@@ -46,19 +46,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""action_only"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -75,19 +68,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""simple_json_rpc.controller_and_action"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -104,21 +90,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleDefaultWithObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_default"",
     ""id"": ""123"",
-    ""params"": {
-        ""data"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
-}";
+    ""params"": {{
+        ""data"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -135,21 +114,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleDefaultWithArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_default"",
     ""id"": ""123"",
     ""params"": [
-        {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
+        {TestData.PlainRequiredSnakeCaseJson}
     ]
-}";
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -166,19 +138,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_object"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -195,21 +160,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_array"",
     ""id"": ""123"",
     ""params"": [
-        {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
+        {TestData.PlainRequiredSnakeCaseJson}
     ]
-}";
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -328,19 +286,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""snake_case_params"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -357,19 +308,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""camelCaseParams"",
     ""id"": ""123"",
-    ""params"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""nullableField"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredCamelCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -386,19 +330,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""custom_action_route"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -415,19 +352,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Notification_CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""custom_controller_route"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
 
         TestData actualRequestData = null;
@@ -444,35 +374,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_StringId_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
-    ""method"": ""snake_case_params"",
+    ""method"": ""process_anything"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -492,35 +406,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_IntId_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
-    ""method"": ""snake_case_params"",
+    ""method"": ""process_anything"",
     ""id"": 123,
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": 123,
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -540,35 +438,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NullId_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
-    ""method"": ""snake_case_params"",
+    ""method"": ""process_anything"",
     ""id"": null,
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -588,35 +470,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""action_only"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -636,35 +502,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""simple_json_rpc.controller_and_action"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -684,37 +534,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleDefaultWithObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_default"",
     ""id"": ""123"",
-    ""params"": {
-        ""data"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
-}";
+    ""params"": {{
+        ""data"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -734,37 +568,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleDefaultWithArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_default"",
     ""id"": ""123"",
     ""params"": [
-        {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
+        {TestData.PlainRequiredSnakeCaseJson}
     ]
-}";
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -784,35 +602,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_object"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -832,37 +634,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""binding_style_array"",
     ""id"": ""123"",
     ""params"": [
-        {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
+        {TestData.PlainRequiredSnakeCaseJson}
     ]
-}";
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -888,20 +674,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     ""id"": ""123""
 }";
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         responseProviderMock.Setup(static p => p.GetJsonRpcResponse())
             .Returns(responseData);
@@ -925,20 +702,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         object? actualRequestData = new { };
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -965,20 +733,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         object? actualRequestData = new { };
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1006,20 +765,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1047,20 +797,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 }";
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1080,35 +821,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""snake_case_params"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1128,35 +853,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""camelCaseParams"",
     ""id"": ""123"",
-    ""params"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""nullableField"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredCamelCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""nullableField"": null,
-        ""notRequiredField"": null,
-        ""nestedField"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullCamelCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1176,52 +885,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NestedSnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""snake_case_params"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""nested_field"": {
-            ""bool_field"": true,
-            ""string_field"": ""456"",
-            ""int_field"": 456,
-            ""double_field"": 4.56,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
-}";
+    ""params"": {TestData.NestedRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": {
-            ""bool_field"": true,
-            ""string_field"": ""456"",
-            ""int_field"": 456,
-            ""double_field"": 4.56,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
-}".TrimAllLines();
+    ""result"": {TestData.NestedFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1241,52 +917,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NestedCamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""camelCaseParams"",
     ""id"": ""123"",
-    ""params"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""nullableField"": null,
-        ""nestedField"": {
-            ""boolField"": true,
-            ""stringField"": ""456"",
-            ""intField"": 456,
-            ""doubleField"": 4.56,
-            ""enumField"": ""two"",
-            ""nullableField"": null
-        }
-    }
-}";
+    ""params"": {TestData.NestedRequiredCamelCaseJson}
+}}";
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""nullableField"": null,
-        ""notRequiredField"": null,
-        ""nestedField"": {
-            ""boolField"": true,
-            ""stringField"": ""456"",
-            ""intField"": 456,
-            ""doubleField"": 4.56,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        }
-    }
-}".TrimAllLines();
+    ""result"": {TestData.NestedFullCamelCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1316,26 +959,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""int_field"": 123,
         ""double_field"": 1.23,
         ""enum_field"": ""two"",
+        ""array_field"": [
+            1,
+            2,
+            3
+        ],
         ""nullable_field"": null,
         ""additional_field"": ""something""
     }
 }";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1355,35 +994,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""custom_action_route"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1403,35 +1026,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": ""custom_controller_route"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"{
+        var expectedResponseJson = $@"{{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
-    ""result"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}".TrimAllLines();
+    ""result"": {TestData.PlainFullSnakeCaseJson}
+}}".TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1586,18 +1193,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_NoMethod_ReturnError()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
@@ -1624,19 +1224,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_MethodNull_ReturnError()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": null,
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
@@ -1663,19 +1256,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_MethodEmpty_ReturnError()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": """",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
@@ -1700,21 +1286,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task Request_MethodWhiteSpace_ReturnError() // Should return "Method is null or empty"?
+    public async Task Request_MethodWhiteSpace_ReturnError()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""2.0"",
     ""method"": "" "",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": ""123"",
     ""jsonrpc"": ""2.0"",
@@ -1779,6 +1358,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         ""code"": -32602,
         ""message"": ""Invalid params"",
         ""data"": {
+            ""ArrayField"": [
+                ""The ArrayField field is required.""
+            ],
             ""StringField"": [
                 ""The StringField field is required.""
             ]
@@ -1828,19 +1410,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_InvalidJsonRpcVersion_ReturnError() // Should id be null?
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""jsonrpc"": ""3.0"",
     ""method"": ""process_anything"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
@@ -1867,20 +1442,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Request_InvalidJson_ReturnError()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     123
     ""jsonrpc"": ""2.0"",
     ""method"": ""process_anything"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
@@ -1908,18 +1476,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully, but should?")]
     public async Task Request_NoJsonRpc_ReturnError()
     {
-        const string requestJson = @"{
+        const string requestJson = $@"{{
     ""method"": ""process_anything"",
     ""id"": ""123"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""nullable_field"": null
-    }
-}";
+    ""params"": {TestData.PlainRequiredSnakeCaseJson}
+}}";
         var expectedResponseJson = @"{
     ""id"": null,
     ""jsonrpc"": ""2.0"",
@@ -1941,65 +1502,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_StringId_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2020,65 +1549,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_IntId_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": 123,
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": 456,
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": 123,
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": 456,
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2099,38 +1596,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NullId_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": null,
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": null,
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2151,65 +1632,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""action_only"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""action_only"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2230,65 +1679,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""simple_json_rpc.controller_and_action"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""simple_json_rpc.controller_and_action"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2309,69 +1726,37 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleDefaultWithObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_default"",
         ""id"": ""123"",
-        ""params"": {
-            ""data"": {
-                ""bool_field"": true,
-                ""string_field"": ""123"",
-                ""int_field"": 123,
-                ""double_field"": 1.23,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
-        }
-    },
-    {
+        ""params"": {{
+            ""data"": {TestData.PlainRequiredSnakeCaseJson}
+        }}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_default"",
         ""id"": ""456"",
-        ""params"": {
-            ""data"": {
-                ""bool_field"": true,
-                ""string_field"": ""123"",
-                ""int_field"": 123,
-                ""double_field"": 1.23,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
-        }
-    }
+        ""params"": {{
+            ""data"": {TestData.PlainRequiredSnakeCaseJson}
+        }}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2392,69 +1777,37 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleDefaultWithArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_default"",
         ""id"": ""123"",
         ""params"": [
-            {
-                ""bool_field"": true,
-                ""string_field"": ""123"",
-                ""int_field"": 123,
-                ""double_field"": 1.23,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
+            {TestData.PlainRequiredSnakeCaseJson}
         ]
-    },
-    {
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_default"",
         ""id"": ""456"",
         ""params"": [
-            {
-                ""bool_field"": true,
-                ""string_field"": ""123"",
-                ""int_field"": 123,
-                ""double_field"": 1.23,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
+            {TestData.PlainRequiredSnakeCaseJson}
         ]
-    }
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2475,65 +1828,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_object"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_object"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2554,69 +1875,37 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_array"",
         ""id"": ""123"",
         ""params"": [
-            {
-                ""bool_field"": true,
-                ""string_field"": ""123"",
-                ""int_field"": 123,
-                ""double_field"": 1.23,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
+            {TestData.PlainRequiredSnakeCaseJson}
         ]
-    },
-    {
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""binding_style_array"",
         ""id"": ""456"",
         ""params"": [
-            {
-                ""bool_field"": true,
-                ""string_field"": ""123"",
-                ""int_field"": 123,
-                ""double_field"": 1.23,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
+            {TestData.PlainRequiredSnakeCaseJson}
         ]
-    }
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -2650,35 +1939,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     }
 ]";
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         responseProviderMock.Setup(static p => p.GetJsonRpcResponse())
@@ -2711,35 +1982,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]";
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<object?>();
@@ -2774,35 +2027,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]";
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<object?>();
@@ -2839,35 +2074,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]";
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<object?>();
@@ -2903,35 +2120,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]";
         var expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<object?>();
@@ -2952,65 +2151,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""snake_case_params"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""snake_case_params"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3031,65 +2198,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""camelCaseParams"",
         ""id"": ""123"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredCamelCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""camelCaseParams"",
         ""id"": ""456"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredCamelCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullCamelCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        }
-    }
+        ""result"": {TestData.PlainFullCamelCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3110,99 +2245,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NestedSnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""snake_case_params"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""nested_field"": {
-                ""bool_field"": true,
-                ""string_field"": ""456"",
-                ""int_field"": 456,
-                ""double_field"": 4.56,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
-        }
-    },
-    {
+        ""params"": {TestData.NestedRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""snake_case_params"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""nested_field"": {
-                ""bool_field"": true,
-                ""string_field"": ""456"",
-                ""int_field"": 456,
-                ""double_field"": 4.56,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null
-            }
-        }
-    }
+        ""params"": {TestData.NestedRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": {
-                ""bool_field"": true,
-                ""string_field"": ""456"",
-                ""int_field"": 456,
-                ""double_field"": 4.56,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null,
-                ""not_required_field"": null,
-                ""nested_field"": null
-            }
-        }
-    },
-    {
+        ""result"": {TestData.NestedFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": {
-                ""bool_field"": true,
-                ""string_field"": ""456"",
-                ""int_field"": 456,
-                ""double_field"": 4.56,
-                ""enum_field"": ""two"",
-                ""nullable_field"": null,
-                ""not_required_field"": null,
-                ""nested_field"": null
-            }
-        }
-    }
+        ""result"": {TestData.NestedFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3223,99 +2292,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_NestedCamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""camelCaseParams"",
         ""id"": ""123"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""nestedField"": {
-                ""boolField"": true,
-                ""stringField"": ""456"",
-                ""intField"": 456,
-                ""doubleField"": 4.56,
-                ""enumField"": ""two"",
-                ""nullableField"": null
-            }
-        }
-    },
-    {
+        ""params"": {TestData.NestedRequiredCamelCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""camelCaseParams"",
         ""id"": ""456"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""nestedField"": {
-                ""boolField"": true,
-                ""stringField"": ""456"",
-                ""intField"": 456,
-                ""doubleField"": 4.56,
-                ""enumField"": ""two"",
-                ""nullableField"": null
-            }
-        }
-    }
+        ""params"": {TestData.NestedRequiredCamelCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": {
-                ""boolField"": true,
-                ""stringField"": ""456"",
-                ""intField"": 456,
-                ""doubleField"": 4.56,
-                ""enumField"": ""two"",
-                ""nullableField"": null,
-                ""notRequiredField"": null,
-                ""nestedField"": null
-            }
-        }
-    },
-    {
+        ""result"": {TestData.NestedFullCamelCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": {
-                ""boolField"": true,
-                ""stringField"": ""456"",
-                ""intField"": 456,
-                ""doubleField"": 4.56,
-                ""enumField"": ""two"",
-                ""nullableField"": null,
-                ""notRequiredField"": null,
-                ""nestedField"": null
-            }
-        }
-    }
+        ""result"": {TestData.NestedFullCamelCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3347,6 +2350,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""int_field"": 123,
             ""double_field"": 1.23,
             ""enum_field"": ""two"",
+            ""array_field"": [
+                1,
+                2,
+                3
+            ],
             ""nullable_field"": null,
             ""additional_field"": ""something""
         }
@@ -3361,6 +2369,11 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""int_field"": 123,
             ""double_field"": 1.23,
             ""enum_field"": ""two"",
+            ""array_field"": [
+                1,
+                2,
+                3
+            ],
             ""nullable_field"": null,
             ""additional_field"": ""something""
         }
@@ -3368,35 +2381,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3417,65 +2412,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""custom_action_route"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""custom_action_route"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3496,65 +2459,33 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""custom_controller_route"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""custom_controller_route"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    {
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }},
+    {{
         ""id"": ""456"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3575,50 +2506,27 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_RequestAndNotification_ReturnOnlyRequestResponse()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = @"[
-    {
+        var expectedResponseJson = $@"[
+    {{
         ""id"": ""123"",
         ""jsonrpc"": ""2.0"",
-        ""result"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    }
+        ""result"": {TestData.PlainFullSnakeCaseJson}
+    }}
 ]".TrimAllLines();
 
         var actualRequestData = new List<TestData>();
@@ -3870,31 +2778,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Returns NullReferenceException - not like request")]
     public async Task Batch_NoMethod_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
@@ -3939,33 +2833,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Returns NullReferenceException - not like request")]
     public async Task Batch_MethodNull_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": null,
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": null,
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
@@ -4010,33 +2890,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Returns method not found - not like request")]
     public async Task Batch_MethodEmpty_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": """",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": """",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
@@ -4078,35 +2944,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task Batch_MethodWhiteSpace_ReturnError() // Should return "Method is null or empty"?
+    public async Task Batch_MethodWhiteSpace_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": "" "",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""2.0"",
         ""method"": "" "",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
@@ -4214,6 +3066,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""code"": -32602,
             ""message"": ""Invalid params"",
             ""data"": {
+                ""ArrayField"": [
+                    ""The ArrayField field is required.""
+                ],
                 ""StringField"": [
                     ""The StringField field is required.""
                 ]
@@ -4227,6 +3082,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             ""code"": -32602,
             ""message"": ""Invalid params"",
             ""data"": {
+                ""ArrayField"": [
+                    ""The ArrayField field is required.""
+                ],
                 ""StringField"": [
                     ""The StringField field is required.""
                 ]
@@ -4301,33 +3159,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully - not like request")]
     public async Task Batch_InvalidJsonRpcVersion_ReturnError() // Should id be null?
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""jsonrpc"": ""3.0"",
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""jsonrpc"": ""3.0"",
         ""method"": ""process_anything"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
@@ -4371,35 +3215,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task Batch_InvalidJson_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         123
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         123
         ""jsonrpc"": ""2.0"",
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"{
     ""id"": null,
@@ -4428,31 +3258,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully, but should?")]
     public async Task Batch_NoJsonRpc_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""method"": ""process_anything"",
         ""id"": ""456"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
@@ -4487,31 +3303,17 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Ignore("Processes successfully, but should?")]
     public async Task Batch_SameId_ReturnError()
     {
-        const string requestJson = @"[
-    {
+        const string requestJson = $@"[
+    {{
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    },
-    {
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }},
+    {{
         ""method"": ""process_anything"",
         ""id"": ""123"",
-        ""params"": {
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""nullable_field"": null
-        }
-    }
+        ""params"": {TestData.PlainRequiredSnakeCaseJson}
+    }}
 ]";
         var expectedResponseJson = @"[
     {
