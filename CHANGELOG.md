@@ -1,3 +1,10 @@
+## [1.0.43](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.42...v1.0.43) (2023-03-30)
+
+
+### Bug Fixes
+
+* JsonRpcErrorFactory class is made public to make it easier to extend the error handling logic without having to implement the entire IJsonRpcErrorFactory ([99b1125](https://github.com/tochka-public/Tochka.JsonRpc/commit/99b11250afbf393ae04e0fb9dbd8c85c555dbd34))
+
 ## [1.0.42](https://github.com/tochka-public/Tochka.JsonRpc/compare/v1.0.41...v1.0.42) (2023-02-02)
 
 
