@@ -15,6 +15,7 @@ using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
+using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 

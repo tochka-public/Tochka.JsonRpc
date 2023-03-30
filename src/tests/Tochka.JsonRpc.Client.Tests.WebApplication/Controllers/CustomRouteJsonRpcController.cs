@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tochka.JsonRpc.TestUtils.Integration;
+using Tochka.JsonRpc.TestUtils;
 using Tochka.JsonRpc.V1.Server.Attributes;
 using Tochka.JsonRpc.V1.Server.Pipeline;
 using Tochka.JsonRpc.V1.Server.Settings;

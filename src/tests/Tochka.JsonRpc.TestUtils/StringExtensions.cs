@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.TestUtils.Integration;
+﻿namespace Tochka.JsonRpc.TestUtils;
 
 public static class StringExtensions
 {
