@@ -445,8 +445,4 @@ internal class DeserializationTests
     // private const string Method = "method";
     // private const string SnakeCaseMethod = "snake_case_method";
     // private const string CamelCaseMethod = "camel_case_method";
-
-    private record ErrorWithResult(string Result);
-
-    private record ResultWithError(string Error);
 }
