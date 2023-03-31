@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.TestUtils.In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Client.Tests.WebApplication", "tests\Tochka.JsonRpc.Client.Tests.WebApplication\Tochka.JsonRpc.Client.Tests.WebApplication.csproj", "{09ED9368-11F5-4F81-8262-AC64CC62840C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server.Tests.Integration", "tests\Tochka.JsonRpc.Server.Tests.Integration\Tochka.JsonRpc.Server.Tests.Integration.csproj", "{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +202,18 @@ Global
 		{09ED9368-11F5-4F81-8262-AC64CC62840C}.Release|x64.Build.0 = Release|Any CPU
 		{09ED9368-11F5-4F81-8262-AC64CC62840C}.Release|x86.ActiveCfg = Release|Any CPU
 		{09ED9368-11F5-4F81-8262-AC64CC62840C}.Release|x86.Build.0 = Release|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Release|x64.Build.0 = Release|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -219,6 +233,7 @@ Global
 		{DD7909CA-200E-4CB8-9EA0-CAA21A74D950} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{2A32E159-8FE1-4984-968B-3AAF1C7933E5} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{09ED9368-11F5-4F81-8262-AC64CC62840C} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
+		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93630835-1CE2-4464-8098-470B7C329D1A}
