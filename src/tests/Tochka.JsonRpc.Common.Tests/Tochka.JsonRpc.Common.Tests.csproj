@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
+    <LangVersion>11</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>
