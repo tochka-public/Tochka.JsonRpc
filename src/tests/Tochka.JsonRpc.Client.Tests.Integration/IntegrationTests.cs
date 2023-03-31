@@ -55,11 +55,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task SendNotification_SendRequestWithNullData_SerializeSuccessfully()
     {
-        var expectedRequestJson = @"{
-    ""method"": ""some-method"",
-    ""params"": null,
-    ""jsonrpc"": ""2.0""
-}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": null
+            }
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -81,25 +83,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendNotification_SendRequestWithPlainDataCamelCase_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequestJson = @"{
-    ""method"": ""some-method"",
-    ""params"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""arrayField"": [
-            1,
-            2,
-            3
-        ],
-        ""nullableField"": null,
-        ""notRequiredField"": null,
-        ""nestedField"": null
-    },
-    ""jsonrpc"": ""2.0""
-}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.PlainFullCamelCaseJson}}
+            }
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -121,25 +111,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendNotification_SendRequestWithPlainDataSnakeCase_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequestJson = @"{
-    ""method"": ""some-method"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""array_field"": [
-            1,
-            2,
-            3
-        ],
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    },
-    ""jsonrpc"": ""2.0""
-}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -161,39 +139,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendNotification_SendRequestWithNestedDataCamelCase_SerializeSuccessfully()
     {
         var requestData = TestData.Nested;
-        var expectedRequestJson = @"{
-    ""method"": ""some-method"",
-    ""params"": {
-        ""boolField"": true,
-        ""stringField"": ""123"",
-        ""intField"": 123,
-        ""doubleField"": 1.23,
-        ""enumField"": ""two"",
-        ""arrayField"": [
-            1,
-            2,
-            3
-        ],
-        ""nullableField"": null,
-        ""notRequiredField"": null,
-        ""nestedField"": {
-            ""boolField"": true,
-            ""stringField"": ""456"",
-            ""intField"": 456,
-            ""doubleField"": 4.56,
-            ""enumField"": ""two"",
-            ""arrayField"": [
-                4,
-                5,
-                6
-            ],
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        }
-    },
-    ""jsonrpc"": ""2.0""
-}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.NestedFullCamelCaseJson}}
+            }
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -215,39 +167,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendNotification_SendRequestWithNestedDataSnakeCase_SerializeSuccessfully()
     {
         var requestData = TestData.Nested;
-        var expectedRequestJson = @"{
-    ""method"": ""some-method"",
-    ""params"": {
-        ""bool_field"": true,
-        ""string_field"": ""123"",
-        ""int_field"": 123,
-        ""double_field"": 1.23,
-        ""enum_field"": ""two"",
-        ""array_field"": [
-            1,
-            2,
-            3
-        ],
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": {
-            ""bool_field"": true,
-            ""string_field"": ""456"",
-            ""int_field"": 456,
-            ""double_field"": 4.56,
-            ""enum_field"": ""two"",
-            ""array_field"": [
-                4,
-                5,
-                6
-            ],
-            ""nullable_field"": null,
-            ""not_required_field"": null,
-            ""nested_field"": null
-        }
-    },
-    ""jsonrpc"": ""2.0""
-}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.NestedFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -269,17 +195,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_SendRequestWithStringId_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {{}},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {}
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -304,17 +234,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_SendRequestWithIntId_SerializeSuccessfully()
     {
         var id = 123;
-        var expectedRequestJson = @$"{{
-    ""id"": {id},
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": {id},
-    ""result"": {{}},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": {{id}},
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": {{id}},
+                "result": {}
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -338,17 +272,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task SendRequest_SendRequestWithNullId_SerializeSuccessfully()
     {
-        var expectedRequestJson = @"{
-    ""id"": null,
-    ""method"": ""some-method"",
-    ""params"": {},
-    ""jsonrpc"": ""2.0""
-}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@"{
-    ""id"": null,
-    ""result"": {},
-    ""jsonrpc"": ""2.0""
-}");
+        var expectedRequestJson = $$"""
+            {
+                "id": null,
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse("""
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "result": {}
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -373,17 +311,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_SendRequestWithNullData_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": null,
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": null,
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": null
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": null
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -410,33 +352,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.PlainFullCamelCaseJson}}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {{TestData.PlainRequiredCamelCaseJson}}
+            }
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -463,33 +394,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""bool_field"": true,
-    ""string_field"": ""123"",
-    ""int_field"": 123,
-    ""double_field"": 1.23,
-    ""enum_field"": ""two"",
-    ""array_field"": [
-        1,
-        2,
-        3
-    ],
-    ""nullable_field"": null,
-    ""not_required_field"": null,
-    ""nested_field"": null
-}";
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.PlainFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {{TestData.PlainRequiredSnakeCaseJson}}
+            }
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -516,47 +436,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Nested;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": {
-        ""boolField"": true,
-        ""stringField"": ""456"",
-        ""intField"": 456,
-        ""doubleField"": 4.56,
-        ""enumField"": ""two"",
-        ""arrayField"": [
-            4,
-            5,
-            6
-        ],
-        ""nullableField"": null,
-        ""notRequiredField"": null,
-        ""nestedField"": null
-    }
-}";
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.NestedFullCamelCaseJson}}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {{TestData.NestedRequiredCamelCaseJson}}
+            }
+            """);
+        var expectedResponseData = TestData.Nested;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -583,47 +478,22 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Nested;
-        var expectedRequestData = @"{
-    ""bool_field"": true,
-    ""string_field"": ""123"",
-    ""int_field"": 123,
-    ""double_field"": 1.23,
-    ""enum_field"": ""two"",
-    ""array_field"": [
-        1,
-        2,
-        3
-    ],
-    ""nullable_field"": null,
-    ""not_required_field"": null,
-    ""nested_field"": {
-        ""bool_field"": true,
-        ""string_field"": ""456"",
-        ""int_field"": 456,
-        ""double_field"": 4.56,
-        ""enum_field"": ""two"",
-        ""array_field"": [
-            4,
-            5,
-            6
-        ],
-        ""nullable_field"": null,
-        ""not_required_field"": null,
-        ""nested_field"": null
-    }
-}";
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {expectedRequestData},
-    ""jsonrpc"": ""2.0""
-}}");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {{TestData.NestedFullSnakeCaseJson}}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {{TestData.NestedRequiredSnakeCaseJson}}
+            }
+            """);
+        var expectedResponseData = TestData.Nested;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -649,37 +519,27 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetErrorWithCamelCaseData_DeserializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse($@"{{
-    ""id"": ""{id}"",
-    ""error"": {{
-        ""code"": {errorCode},
-        ""message"": ""{errorMessage}"",
-        ""data"": {{
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""arrayField"": [
-                1,
-                2,
-                3
-            ],
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        }}
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "error": {
+                    "code": {{errorCode}},
+                    "message": "{{errorMessage}}",
+                    "data": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            }
+            """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -709,37 +569,27 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetErrorWithSnakeCaseData_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse($@"{{
-    ""id"": ""{id}"",
-    ""error"": {{
-        ""code"": {errorCode},
-        ""message"": ""{errorMessage}"",
-        ""data"": {{
-            ""bool_field"": true,
-            ""string_field"": ""123"",
-            ""int_field"": 123,
-            ""double_field"": 1.23,
-            ""enum_field"": ""two"",
-            ""array_field"": [
-                1,
-                2,
-                3
-            ],
-            ""nullable_field"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        }}
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "error": {
+                    "code": {{errorCode}},
+                    "message": "{{errorMessage}}",
+                    "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                }
+            }
+            """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -769,22 +619,26 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetErrorWithoutData_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse($@"{{
-    ""id"": ""{id}"",
-    ""error"": {{
-        ""code"": {errorCode},
-        ""message"": ""{errorMessage}""
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "error": {
+                    "code": {{errorCode}},
+                    "message": "{{errorMessage}}"
+                }
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -813,19 +667,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithErrorInResult_DeserializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {{
-        ""error"": ""errorValue""
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {
+                    "error": "errorValue"
+                }
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -850,23 +708,27 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithResultInError_DeserializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""error"": {{
-        ""code"": 123,
-        ""message"": ""errorMessage"",
-        ""data"": {{
-            ""result"": ""resultValue""
-        }}
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "error": {
+                    "code": 123,
+                    "message": "errorMessage",
+                    "data": {
+                        "result": "resultValue"
+                    }
+                }
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -929,16 +791,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithoutId_ThrowArgumentException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""result"": {{}},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "result": {}
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -963,16 +829,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithoutResultOrError_ThrowArgumentException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}"
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -997,21 +867,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithBothResultAndError_ThrowArgumentException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""result"": {{}},
-    ""error"": {{
-        ""code"": 123,
-        ""message"": ""errorMessage""
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "result": {},
+                "error": {
+                    "code": 123,
+                    "message": "errorMessage"
+                }
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1036,12 +910,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseNot200Code_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1066,17 +942,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetResponseWithDifferentId_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{Guid.NewGuid().ToString()}"",
-    ""result"": {{}},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{Guid.NewGuid().ToString()}}",
+                "result": {}
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1101,17 +981,21 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_GetSuccessfulResponseWithNullId_ThrowJsonRpcException()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"{{
-    ""id"": ""{id}"",
-    ""method"": ""some-method"",
-    ""params"": {{}},
-    ""jsonrpc"": ""2.0""
-}}".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": null,
-    ""result"": {{}},
-    ""jsonrpc"": ""2.0""
-}}");
+        var expectedRequestJson = $$"""
+            {
+                "id": "{{id}}",
+                "jsonrpc": "2.0",
+                "method": "{{Method}}",
+                "params": {}
+            }
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "result": {}
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1136,21 +1020,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWithRequestWithStringId_LinkResponseSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id}"",
-        ""method"": ""some-method"",
-        ""params"": {{}},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id}"",
-        ""result"": {{}},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id}}",
+                    "result": {}
+                }
+            ]
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1179,21 +1067,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWithRequestWithIntId_LinkResponseSuccessfully()
     {
         var id = 123;
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": {id},
-        ""method"": ""some-method"",
-        ""params"": {{}},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": {id},
-        ""result"": {{}},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": {{id}},
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": {{id}},
+                    "result": {}
+                }
+            ]
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1221,21 +1113,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [Test]
     public async Task SendBatch_BatchWithRequestWithNullId_LinkResponseSuccessfully()
     {
-        var expectedRequestJson = @"[
-    {
-        ""id"": null,
-        ""method"": ""some-method"",
-        ""params"": {},
-        ""jsonrpc"": ""2.0""
-    }
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@"[
-    {
-        ""id"": null,
-        ""result"": {},
-        ""jsonrpc"": ""2.0""
-    }
-]");
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": null,
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse("""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": null,
+                    "result": {}
+                }
+            ]
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1265,37 +1161,26 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id}"",
-        ""result"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id}}",
+                    "result": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            ]
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1327,48 +1212,37 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id1 = Guid.NewGuid().ToString();
         var id2 = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id1}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""id"": ""{id2}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id1}"",
-        ""result"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""id"": ""{id2}"",
-        ""result"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id1}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                },
+                {
+                    "id": "{{id2}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id1}}",
+                    "result": {{TestData.PlainRequiredCamelCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id2}}",
+                    "result": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            ]
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1401,27 +1275,15 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWith1Notification_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequestJson = @"[
-    {
-        ""method"": ""some-method"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""arrayField"": [
-                1,
-                2,
-                3
-            ],
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        },
-        ""jsonrpc"": ""2.0""
-    }
-]".TrimAllLines();
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1450,46 +1312,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWithNotifications_SerializeSuccessfully()
     {
         var requestData = TestData.Plain;
-        var expectedRequestJson = @"[
-    {
-        ""method"": ""some-method"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""arrayField"": [
-                1,
-                2,
-                3
-            ],
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        },
-        ""jsonrpc"": ""2.0""
-    },
-    {
-        ""method"": ""some-method"",
-        ""params"": {
-            ""boolField"": true,
-            ""stringField"": ""123"",
-            ""intField"": 123,
-            ""doubleField"": 1.23,
-            ""enumField"": ""two"",
-            ""arrayField"": [
-                1,
-                2,
-                3
-            ],
-            ""nullableField"": null,
-            ""notRequiredField"": null,
-            ""nestedField"": null
-        },
-        ""jsonrpc"": ""2.0""
-    }
-]".TrimAllLines();
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1518,41 +1354,31 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id}"",
-        ""result"": {expectedRequestData}
-    }}
-]");
-        var expectedResponseData = requestData;
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id}}",
+                    "result": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            ]
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1584,43 +1410,32 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id}"",
-        ""error"": {{
-            ""code"": {errorCode},
-            ""message"": ""{errorMessage}"",
-            ""data"": {expectedRequestData}
-        }},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
-        var expectedResponseData = requestData;
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id}}",
+                    "error": {
+                        "code": {{errorCode}},
+                        "message": "{{errorMessage}}",
+                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                    }
+                }
+            ]
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1655,58 +1470,47 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id1 = Guid.NewGuid().ToString();
         var id2 = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id1}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""id"": ""{id2}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id1}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                },
+                {
+                    "id": "{{id2}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id1}"",
-        ""error"": {{
-            ""code"": {errorCode},
-            ""message"": ""{errorMessage}"",
-            ""data"": {expectedRequestData}
-        }},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""id"": ""{id2}"",
-        ""error"": {{
-            ""code"": {errorCode},
-            ""message"": ""{errorMessage}"",
-            ""data"": {expectedRequestData}
-        }},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
-        var expectedResponseData = requestData;
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id1}}",
+                    "error": {
+                        "code": {{errorCode}},
+                        "message": "{{errorMessage}}",
+                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                    }
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id2}}",
+                    "error": {
+                        "code": {{errorCode}},
+                        "message": "{{errorMessage}}",
+                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                    }
+                }
+            ]
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1747,54 +1551,43 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id1 = Guid.NewGuid().ToString();
         var id2 = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id1}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""id"": ""{id2}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id1}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                },
+                {
+                    "id": "{{id2}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{id1}"",
-        ""error"": {{
-            ""code"": {errorCode},
-            ""message"": ""{errorMessage}"",
-            ""data"": {expectedRequestData}
-        }},
-        ""jsonrpc"": ""2.0""
-    }},
-    {{
-        ""id"": ""{id2}"",
-        ""result"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
-        var expectedResponseData = requestData;
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id1}}",
+                    "error": {
+                        "code": {{errorCode}},
+                        "message": "{{errorMessage}}",
+                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                    }
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{id2}}",
+                    "result": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            ]
+            """);
+        var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1831,40 +1624,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse(@$"{{
-    ""id"": ""{id}"",
-    ""error"": {{
-        ""code"": {errorCode},
-        ""message"": ""{errorMessage}"",
-        ""data"": {expectedRequestData}
-    }},
-    ""jsonrpc"": ""2.0""
-}}");
+        var responseBody = JsonDocument.Parse($$"""
+            {
+                "jsonrpc": "2.0",
+                "id": "{{id}}",
+                "error": {
+                    "code": {{errorCode}},
+                    "message": "{{errorMessage}}",
+                    "data": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            }
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1894,36 +1676,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
-        var expectedRequestData = @"{
-    ""boolField"": true,
-    ""stringField"": ""123"",
-    ""intField"": 123,
-    ""doubleField"": 1.23,
-    ""enumField"": ""two"",
-    ""arrayField"": [
-        1,
-        2,
-        3
-    ],
-    ""nullableField"": null,
-    ""notRequiredField"": null,
-    ""nestedField"": null
-}";
-        var expectedRequestJson = @$"[
-    {{
-        ""id"": ""{id}"",
-        ""method"": ""some-method"",
-        ""params"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]".TrimAllLines();
-        var responseBody = JsonDocument.Parse(@$"[
-    {{
-        ""id"": ""{Guid.NewGuid().ToString()}"",
-        ""result"": {expectedRequestData},
-        ""jsonrpc"": ""2.0""
-    }}
-]");
+        var expectedRequestJson = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "jsonrpc": "2.0",
+                    "method": "{{Method}}",
+                    "params": {{TestData.PlainFullCamelCaseJson}}
+                }
+            ]
+            """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": "{{Guid.NewGuid().ToString()}}",
+                    "result": {{TestData.PlainRequiredCamelCaseJson}}
+                }
+            ]
+            """);
 
         string actualContentType = null;
         string actualRequestJson = null;
