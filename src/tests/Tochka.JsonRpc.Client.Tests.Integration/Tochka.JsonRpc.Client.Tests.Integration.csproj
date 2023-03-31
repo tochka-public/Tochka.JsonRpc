@@ -3,37 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-
-<<<<<<< HEAD
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-=======
-        <IsPackable>false</IsPackable>
-
-        <LangVersion>11</LangVersion>
-    </PropertyGroup>
->>>>>>> v2
-
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.10.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="Moq" Version="4.18.4" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
-    <PackageReference Include="coverlet.collector" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj" />
-    <ProjectReference Include="..\Tochka.JsonRpc.Client.Tests.WebApplication\Tochka.JsonRpc.Client.Tests.WebApplication.csproj" />
-    <ProjectReference Include="..\Tochka.JsonRpc.TestUtils.Integration\Tochka.JsonRpc.TestUtils.Integration.csproj" />
-  </ItemGroup>
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <LangVersion>11</LangVersion>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.10.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
@@ -42,6 +15,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj" />
     <ProjectReference Include="..\Tochka.JsonRpc.Client.Tests.WebApplication\Tochka.JsonRpc.Client.Tests.WebApplication.csproj" />
