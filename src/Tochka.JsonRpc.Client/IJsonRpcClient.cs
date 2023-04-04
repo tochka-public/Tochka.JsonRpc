@@ -88,7 +88,7 @@ public interface IJsonRpcClient
     /// <param name="request">JSON Rpc request</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialzed as batch response</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult> SendRequest<TParams>(Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class;
@@ -102,7 +102,7 @@ public interface IJsonRpcClient
     /// <param name="parameters">JSON Rpc params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialzed as batch response</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest<TParams>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
@@ -116,7 +116,7 @@ public interface IJsonRpcClient
     /// <param name="parameters">JSON Rpc params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialzed as batch response</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult> SendRequest<TParams>(string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class;
@@ -131,7 +131,7 @@ public interface IJsonRpcClient
     /// <param name="parameters">JSON Rpc params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialzed as batch response</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest<TParams>(string requestUrl, IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
@@ -146,7 +146,7 @@ public interface IJsonRpcClient
     /// <param name="parameters">JSON Rpc params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialzed as batch response</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest<TParams>(IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
@@ -159,7 +159,7 @@ public interface IJsonRpcClient
     /// <param name="calls">JSON Rpc requests or notifications</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body deserialzed as single response, response count does not match requests in batch</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body deserialized as single response, response count does not match requests in batch</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<IBatchJsonRpcResult?> SendBatch(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken);
@@ -170,26 +170,42 @@ public interface IJsonRpcClient
     /// <param name="calls">JSON Rpc requests or notifications</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
-    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body deserialzed as single response, response count does not match requests in batch</exception>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body deserialized as single response, response count does not match requests in batch</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<IBatchJsonRpcResult?> SendBatch(IEnumerable<ICall> calls, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Send request or notification to given url. Does not check or parse HTTP response
+    /// Send request or notification to given url. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
     /// </summary>
     /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
     /// <param name="call">JSON Rpc request or notification</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Raw HTTP response</returns>
-    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<HttpResponseMessage> Send(string requestUrl, ICall call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Send request or notification to BaseUrl. Does not check or parse HTTP response
+    /// Send request or notification to BaseUrl. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
     /// </summary>
     /// <param name="call">JSON Rpc request or notification</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Raw HTTP response</returns>
     Task<HttpResponseMessage> Send(ICall call, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Send batch of requests or notifications to given url. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
+    /// </summary>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="calls">JSON Rpc requests or notifications</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Raw HTTP response</returns>
+    Task<HttpResponseMessage> Send(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken);
+
+    /// <summary>s
+    ///  Send batch of requests or notifications to BaseUrl. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
+    /// </summary>
+    /// <param name="calls">JSON Rpc requests or notifications</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Raw HTTP response</returns>
+    Task<HttpResponseMessage> Send(IEnumerable<ICall> calls, CancellationToken cancellationToken);
 }

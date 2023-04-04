@@ -10,7 +10,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 namespace Tochka.JsonRpc.Client.Models;
 
 [PublicAPI]
-public class BatchJsonRpcResult : IBatchJsonRpcResult
+public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
 {
     private readonly IJsonRpcCallContext context;
     private readonly JsonSerializerOptions headersJsonSerializerOptions;
@@ -19,7 +19,7 @@ public class BatchJsonRpcResult : IBatchJsonRpcResult
 
     public BatchJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
     {
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
+        this.context = context;
         if (context.SingleResponse != null)
         {
             throw new ArgumentOutOfRangeException(nameof(context), "Expected batch response");
@@ -30,33 +30,28 @@ public class BatchJsonRpcResult : IBatchJsonRpcResult
         this.dataJsonSerializerOptions = dataJsonSerializerOptions;
     }
 
-    public T? GetResponseOrThrow<T>(IRpcId? id)
+    public TResponse? GetResponseOrThrow<TResponse>(IRpcId? id)
     {
         if (!TryGetValue(id, out var response))
         {
-            throw new JsonRpcException($"Expected successful response with id [{id}] and [{typeof(T).Name}] params, got nothing", context);
+            throw new JsonRpcException($"Expected successful response with id [{id}] and [{typeof(TResponse).Name}] params, got nothing", context);
         }
 
-        switch (response)
+        return response switch
         {
-            case UntypedResponse { Result: null }:
-                return default;
-            case UntypedResponse untypedResponse:
-                return untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions);
-            case UntypedErrorResponse untypedErrorResponse:
-                context.WithError(untypedErrorResponse);
-                throw new JsonRpcException($"Expected successful response with id [{id}] and [{typeof(T).Name}] params, got error", context);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name);
-        }
+            UntypedResponse { Result: null } => default,
+            UntypedResponse untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
+            UntypedErrorResponse untypedErrorResponse => throw new JsonRpcException($"Expected successful response with id [{id}] and [{typeof(TResponse).Name}] params, got error", context.WithError(untypedErrorResponse)),
+            _ => throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name)
+        };
     }
 
-    public T? AsResponse<T>(IRpcId? id)
+    public TResponse? AsResponse<TResponse>(IRpcId? id)
     {
         TryGetValue(id, out var response);
         return response switch
         {
-            UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions),
+            UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
             _ => default
         };
     }
@@ -81,14 +76,14 @@ public class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
-    public Error<T>? AsTypedError<T>(IRpcId? id)
+    public Error<TError>? AsTypedError<TError>(IRpcId? id)
     {
         TryGetValue(id, out var response);
         return response switch
         {
-            UntypedErrorResponse untypedErrorResponse => new Error<T>(untypedErrorResponse.Error.Code,
+            UntypedErrorResponse untypedErrorResponse => new Error<TError>(untypedErrorResponse.Error.Code,
                 untypedErrorResponse.Error.Message,
-                Utils.DeserializeErrorData<T>(untypedErrorResponse.Error.Data, headersJsonSerializerOptions, dataJsonSerializerOptions)),
+                Utils.DeserializeErrorData<TError>(untypedErrorResponse.Error.Data, headersJsonSerializerOptions, dataJsonSerializerOptions)),
             _ => null
         };
     }

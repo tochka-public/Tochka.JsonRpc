@@ -25,7 +25,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <remarks>
     /// Default is "Tochka.JsonRpc.Client"
     /// </remarks>
-    public virtual string UserAgent => typeof(JsonRpcClientBase).Namespace!;
+    public virtual string UserAgent => DefaultUserAgent;
 
     /// <inheritdoc />
     /// <remarks>
@@ -52,8 +52,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     protected ILogger Log { get; }
     protected IJsonRpcIdGenerator RpcIdGenerator { get; }
 
-    [SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
-    [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor", Justification = "It's required to initialize http client")]
     protected internal JsonRpcClientBase(HttpClient client, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
     {
         Client = client;
@@ -103,6 +101,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         where TParams : class
     {
         var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
         var request = new Request<TParams>(id, method, parameters);
         return await SendRequestInternal(requestUrl, request, cancellationToken);
     }
@@ -112,6 +111,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         where TParams : class
     {
         var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
         var request = new Request<TParams>(id, method, parameters);
         return await SendRequestInternal(null, request, cancellationToken);
     }
@@ -147,6 +147,14 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<HttpResponseMessage> Send(ICall call, CancellationToken cancellationToken) =>
         await SendInternal(null, call, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<HttpResponseMessage> Send(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
+        await SendInternal(requestUrl, calls, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<HttpResponseMessage> Send(IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
+        await SendInternal(null, calls, cancellationToken);
 
     // internal virtual for mocking in tests
     internal virtual async Task SendNotificationInternal<TParams>(string? requestUrl, Notification<TParams> notification, CancellationToken cancellationToken)
@@ -193,7 +201,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     {
         var context = CreateContext();
         context.WithRequestUrl(requestUrl);
-        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToList();
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
         context.WithBatch(data);
         using var content = CreateHttpContent(data);
         var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
@@ -203,7 +211,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
             // from specification:
             // "If there are no Response objects contained within the Response array as it is to be sent to the client,
             // the server MUST NOT return an empty Array and should return nothing at all."
-            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Count);
+            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Length);
             return null;
         }
 
@@ -214,18 +222,18 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         {
             case BatchResponseWrapper batchResponseWrapper:
                 context.WithBatchResponse(batchResponseWrapper.Responses);
-                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Count, batchResponseWrapper.Responses.Count);
+                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Length, batchResponseWrapper.Responses.Count);
                 return new BatchJsonRpcResult(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
             case SingleResponseWrapper singleResponseWrapper:
                 // "If the batch rpc call itself fails to be recognized as an valid JSON or as an Array with at least one value,
                 // the response from the Server MUST be a single Response object."
                 context.WithSingleResponse(singleResponseWrapper.Response);
                 var message1 = $"Expected batch response, got single, id [{singleResponseWrapper.Response.Id}]";
-                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Count, message1);
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message1);
                 throw new JsonRpcException(message1, context);
             default:
                 var message2 = $"Expected batch response, got [{responseWrapper?.GetType().Name}]";
-                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Count, message2);
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message2);
                 throw new JsonRpcException(message2, context);
         }
     }
@@ -234,6 +242,14 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     internal virtual async Task<HttpResponseMessage> SendInternal(string? requestUrl, ICall call, CancellationToken cancellationToken)
     {
         var data = call.WithSerializedParams(DataJsonSerializerOptions);
+        using var content = CreateHttpContent(data);
+        return await Client.PostAsync(requestUrl, content, cancellationToken);
+    }
+
+    // internal virtual for mocking in tests
+    internal virtual async Task<HttpResponseMessage> SendInternal(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
+    {
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions));
         using var content = CreateHttpContent(data);
         return await Client.PostAsync(requestUrl, content, cancellationToken);
     }
@@ -270,7 +286,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// Set HttpClient properties from base options
     /// </summary>
     [ExcludeFromCodeCoverage]
-    protected internal virtual void InitializeClient(HttpClient client, JsonRpcClientOptionsBase options)
+    private void InitializeClient(HttpClient client, JsonRpcClientOptionsBase options)
     {
         if (!options.Url.EndsWith('/'))
         {
@@ -282,4 +298,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         client.Timeout = options.Timeout;
         Log.LogTrace("Client initialized: url {baseUrl}, user-agent {userAgent}, timeout {timeout}s", client.BaseAddress, client.DefaultRequestHeaders.UserAgent, client.Timeout.TotalSeconds);
     }
+
+    private static readonly string DefaultUserAgent = typeof(JsonRpcClientBase).Namespace!;
 }

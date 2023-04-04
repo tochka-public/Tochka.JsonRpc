@@ -7,10 +7,10 @@ namespace Tochka.JsonRpc.Client.Models;
 [PublicAPI]
 public interface ISingleJsonRpcResult
 {
-    T? GetResponseOrThrow<T>();
-    T? AsResponse<T>();
+    TResponse? GetResponseOrThrow<TResponse>();
+    TResponse? AsResponse<TResponse>();
     bool HasError();
     Error<JsonDocument>? AsAnyError();
-    Error<T>? AsTypedError<T>();
+    Error<TError>? AsTypedError<TError>();
     Error<ExceptionInfo>? AsErrorWithExceptionInfo();
 }

@@ -13,11 +13,11 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 namespace Tochka.JsonRpc.Client.Models;
 
 [PublicAPI]
-public class JsonRpcCallContext : IJsonRpcCallContext
+public sealed class JsonRpcCallContext : IJsonRpcCallContext
 {
     public string? RequestUrl { get; private set; }
     public IUntypedCall? SingleCall { get; private set; }
-    public List<IUntypedCall>? BatchCall { get; private set; }
+    public ICollection<IUntypedCall>? BatchCall { get; private set; }
     public int ExpectedBatchResponseCount { get; private set; }
     public string? HttpResponseInfo { get; private set; }
     public string? HttpContentInfo { get; private set; }
@@ -25,11 +25,11 @@ public class JsonRpcCallContext : IJsonRpcCallContext
     public List<IResponse>? BatchResponse { get; private set; }
     public IError? Error { get; private set; }
 
-    public void WithRequestUrl(string? requestUrl)
+    public IJsonRpcCallContext WithRequestUrl(string? requestUrl)
     {
         if (requestUrl == null)
         {
-            return;
+            return this;
         }
 
         if (requestUrl.StartsWith("/", StringComparison.Ordinal))
@@ -38,9 +38,10 @@ public class JsonRpcCallContext : IJsonRpcCallContext
         }
 
         RequestUrl = requestUrl;
+        return this;
     }
 
-    public void WithSingle(IUntypedCall singleCall)
+    public IJsonRpcCallContext WithSingle(IUntypedCall singleCall)
     {
         if (BatchCall != null)
         {
@@ -48,9 +49,10 @@ public class JsonRpcCallContext : IJsonRpcCallContext
         }
 
         SingleCall = singleCall;
+        return this;
     }
 
-    public void WithBatch(List<IUntypedCall> batchCall)
+    public IJsonRpcCallContext WithBatch(ICollection<IUntypedCall> batchCall)
     {
         if (SingleCall != null)
         {
@@ -59,18 +61,21 @@ public class JsonRpcCallContext : IJsonRpcCallContext
 
         BatchCall = batchCall;
         ExpectedBatchResponseCount = batchCall.Count(static x => x is UntypedRequest);
+        return this;
     }
 
-    public void WithHttpResponse(HttpResponseMessage httpResponseMessage)
+    public IJsonRpcCallContext WithHttpResponse(HttpResponseMessage httpResponseMessage)
     {
         HttpResponseInfo = $"{httpResponseMessage}";
         if (httpResponseMessage.StatusCode != HttpStatusCode.OK)
         {
             throw new JsonRpcException("Expected HTTP code 200", this);
         }
+
+        return this;
     }
 
-    public void WithHttpContent(HttpContent httpContent, string httpContentString)
+    public IJsonRpcCallContext WithHttpContent(HttpContent httpContent, string httpContentString)
     {
         HttpContentInfo = GetStringWithLimit(httpContentString);
         if (httpContent == null)
@@ -83,16 +88,18 @@ public class JsonRpcCallContext : IJsonRpcCallContext
         {
             throw new JsonRpcException($"Bad Content-Length [{contentLength}]", this);
         }
+
+        return this;
     }
 
-    public void WithSingleResponse(IResponse singleResponse)
+    public IJsonRpcCallContext WithSingleResponse(IResponse singleResponse)
     {
+        SingleResponse = singleResponse;
         if (BatchResponse != null)
         {
             throw new InvalidOperationException("Can not add single response when batch response is present");
         }
 
-        SingleResponse = singleResponse;
         if (singleResponse == null)
         {
             throw new JsonRpcException("Could not parse body as JSON Rpc response", this);
@@ -105,7 +112,7 @@ public class JsonRpcCallContext : IJsonRpcCallContext
 
         if (BatchCall != null)
         {
-            return;
+            return this;
         }
 
         if (SingleCall is not UntypedRequest request)
@@ -117,17 +124,20 @@ public class JsonRpcCallContext : IJsonRpcCallContext
         // "If there was an error in detecting the id in the Request object (e.g. Parse error/Invalid Request), it MUST be Null."
         if (SingleResponse is UntypedErrorResponse { Id: NullRpcId })
         {
-            return;
+            return this;
         }
 
         if (!singleResponse.Id.Equals(request.Id))
         {
             throw new JsonRpcException($"JSON Rpc response id is invalid: [{singleResponse.Id}], expected [{request.Id}] or [null]", this);
         }
+
+        return this;
     }
 
-    public void WithBatchResponse(List<IResponse> batchResponse)
+    public IJsonRpcCallContext WithBatchResponse(List<IResponse> batchResponse)
     {
+        BatchResponse = batchResponse;
         if (SingleResponse != null)
         {
             throw new InvalidOperationException("Can not add batch response when single response is present");
@@ -138,7 +148,6 @@ public class JsonRpcCallContext : IJsonRpcCallContext
             throw new InvalidOperationException("Can not add batch response when no response is expected");
         }
 
-        BatchResponse = batchResponse;
         if (batchResponse == null)
         {
             throw new JsonRpcException("Could not parse body as JSON Rpc batch response", this);
@@ -158,9 +167,16 @@ public class JsonRpcCallContext : IJsonRpcCallContext
         {
             throw new JsonRpcException($"Batch JSON Rpc response has item with invalid version, expected [{JsonRpcConstants.Version}]", this);
         }
+
+        return this;
     }
 
-    public void WithError(UntypedErrorResponse untypedErrorResponse) => Error = untypedErrorResponse.Error;
+    public IJsonRpcCallContext WithError(UntypedErrorResponse untypedErrorResponse)
+    {
+       Error = untypedErrorResponse.Error;
+
+       return this;
+    }
 
     [ExcludeFromCodeCoverage]
     public override string ToString()
