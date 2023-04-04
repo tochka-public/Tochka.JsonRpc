@@ -69,7 +69,7 @@ public class ParameterConvention : IParameterModelConvention
 
     internal void ValidateParameter(ParameterModel parameterModel, BindingStyle bindingStyle)
     {
-        var isCollection = V1.Common.Utils.IsCollection(parameterModel.ParameterType);
+        var isCollection = Common.Utils.IsCollection(parameterModel.ParameterType);
         switch (bindingStyle)
         {
             case BindingStyle.Default:

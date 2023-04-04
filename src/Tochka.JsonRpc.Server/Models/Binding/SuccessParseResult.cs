@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace Tochka.JsonRpc.Server.Models.Binding;
 
@@ -10,9 +11,9 @@ public class SuccessParseResult : IParseResult
 {
     public string Key { get; }
 
-    public JToken Value { get; }
+    public JsonElement Value { get; }
 
-    public SuccessParseResult(JToken value, string key)
+    public SuccessParseResult(JsonElement? value, string key)
     {
         Key = key ?? throw new ArgumentNullException(nameof(key));
         Value = value ?? throw new ArgumentNullException(nameof(value));
@@ -20,6 +21,6 @@ public class SuccessParseResult : IParseResult
 
     public override string ToString()
     {
-        return $"Bind value is [{Value.Type}]. Json key [{Key}]";
+        return $"Bind value is [{Value.ValueKind}]. Json key [{Key}]";
     }
 }

@@ -9,14 +9,14 @@ namespace Tochka.JsonRpc.Server.Binding;
 
 public class JsonRpcModelBinder : IModelBinder
 {
-    public Task BindModelAsync(ModelBindingContext context)
+    public Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        var parameterName = context.ModelMetadata.Name;
-        var rpcBindingContext = GetRpcBindingContext(context, parameterName);
-        var parser = context.HttpContext.RequestServices.GetRequiredService<IParamsParser>();
+        var parameterName = bindingContext.ModelMetadata.Name;
+        var rpcBindingContext = GetRpcBindingContext(bindingContext, parameterName);
+        var parser = bindingContext.HttpContext.RequestServices.GetRequiredService<IParamsParser>();
         var result = parser.ParseParams(rpcBindingContext.Call.Params, rpcBindingContext.ParameterMetadata);
-        var parameterBinder = context.HttpContext.RequestServices.GetRequiredService<IParameterBinder>();
-        return parameterBinder.SetResult(context, result, parameterName, rpcBindingContext);
+        var parameterBinder = bindingContext.HttpContext.RequestServices.GetRequiredService<IParameterBinder>();
+        return parameterBinder.SetResult(bindingContext, result, parameterName, rpcBindingContext);
     }
 
     internal JsonRpcBindingContext GetRpcBindingContext(ModelBindingContext context, string parameterName)

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Server.Models;
 using Tochka.JsonRpc.Server.Models.Binding;
@@ -15,32 +16,32 @@ public class ParamsParser : IParamsParser
         this.log = log;
     }
 
-    public IParseResult ParseParams(JToken jsonParams, ParameterMetadata parameterMetadata)
+    public IParseResult ParseParams(JsonDocument jsonParams, ParameterMetadata parameterMetadata)
     {
         var bindingStyle = parameterMetadata.BindingStyle;
-        switch (jsonParams)
+        var jsonValueKind = jsonParams?.RootElement.ValueKind;
+        switch (jsonValueKind)
         {
-            case JObject jObject:
-                return ParseObject(jObject, parameterMetadata.Name.Json, bindingStyle);
-            case JArray jArray:
-                return ParseArray(jArray, parameterMetadata.Index, bindingStyle);
-            case null:
+            case JsonValueKind.Object:
+                return ParseObject(jsonParams, parameterMetadata.Name.Json, bindingStyle);
+            case JsonValueKind.Array:
+                return ParseArray(jsonParams, parameterMetadata.Index, bindingStyle);
+            case JsonValueKind.Null or null:
                 return ParseNull(bindingStyle);
             default:
-                return new ErrorParseResult($"Unsupported root JSON element type: {nameof(jsonParams.Type)} [{jsonParams.Type}]", string.Empty);
+                return new ErrorParseResult($"Unsupported root JSON element type: [{jsonValueKind}]", string.Empty);
         }
     }
 
-    protected internal virtual IParseResult ParseObject(JObject jObject, string jsonProperty, BindingStyle bindingStyle)
+    protected internal virtual IParseResult ParseObject(JsonDocument jsonDocument, string jsonProperty, BindingStyle bindingStyle)
     {
         switch (bindingStyle)
         {
             case BindingStyle.Default:
                 // map keys to args by names
-                if (jObject.ContainsKey(jsonProperty))
+                if (jsonDocument.RootElement.TryGetProperty(jsonProperty, out var value))
                 {
-                    var value = jObject[jsonProperty];
-                    if (value.Type == JTokenType.Null)
+                    if (value.ValueKind == JsonValueKind.Null)
                     {
                         log.LogTrace("Json value for binding [{jsonProperty}] is null", jsonProperty);
                         return new NullParseResult(jsonProperty);
@@ -55,7 +56,7 @@ public class ParamsParser : IParamsParser
             case BindingStyle.Object:
                 // map 1:1 to object
                 log.LogTrace("Binding whole json object to [{jsonProperty}]", jsonProperty);
-                return new SuccessParseResult(jObject, jsonProperty);
+                return new SuccessParseResult(jsonDocument.RootElement, jsonProperty);
             case BindingStyle.Array:
                 log.LogTrace("Can not bind json object to array for [{jsonProperty}]", jsonProperty);
                 return new ErrorParseResult("Can not bind object to collection parameter", jsonProperty);
@@ -65,17 +66,17 @@ public class ParamsParser : IParamsParser
         }
     }
 
-    protected internal virtual IParseResult ParseArray(JArray jArray, int index, BindingStyle bindingStyle)
+    protected internal virtual IParseResult ParseArray(JsonDocument jsonArray, int index, BindingStyle bindingStyle)
     {
         var indexString = index.ToString(CultureInfo.InvariantCulture);
         switch (bindingStyle)
         {
             case BindingStyle.Default:
                 // map array items to args by indices
-                if (index < jArray.Count)
+                if (index < jsonArray.RootElement.GetArrayLength())
                 {
-                    var value = jArray[index];
-                    if (value.Type == JTokenType.Null)
+                    var value = jsonArray.RootElement[index];
+                    if (value.ValueKind == JsonValueKind.Null)
                     {
                         log.LogTrace("Json value for binding by index [{indexString}] is null", indexString);
                         return new NullParseResult(indexString);
@@ -93,7 +94,7 @@ public class ParamsParser : IParamsParser
             case BindingStyle.Array:
                 // map 1:1 to collection
                 log.LogTrace("Binding whole json array to [{indexString}]", indexString);
-                return new SuccessParseResult(jArray, indexString);
+                return new SuccessParseResult(jsonArray.RootElement, indexString);
             default:
                 log.LogWarning("Binding failed for index [{indexString}]", indexString);
                 return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", indexString);
@@ -106,6 +107,7 @@ public class ParamsParser : IParamsParser
         {
             case BindingStyle.Default:
                 log.LogWarning("Binding null to regular parameter failed");
+                // TODO: what if all params have default value?
                 return new ErrorParseResult("Can not bind method arguments from [null] json params", string.Empty);
             case BindingStyle.Object:
             case BindingStyle.Array:

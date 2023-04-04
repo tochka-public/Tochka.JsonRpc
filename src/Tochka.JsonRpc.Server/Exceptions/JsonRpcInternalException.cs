@@ -41,7 +41,7 @@ public class JsonRpcInternalException : Exception
             if (ActionResult != null)
             {
                 sb.AppendLine();
-                sb.Append(CultureInfo.InvariantCulture, $"{nameof(ActionResult)} is [{ActionResult?.GetType().Name}]: [{ActionResult}]");
+                sb.Append(CultureInfo.InvariantCulture, $"{nameof(ActionResult)} is [{ActionResult.GetType().Name}]: [{ActionResult}]");
             }
 
             if (MethodMetadata != null)

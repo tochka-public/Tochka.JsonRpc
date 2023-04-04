@@ -48,7 +48,7 @@ public class ParameterBinder : IParameterBinder
         }
     }
 
-    protected internal virtual Task SetResultSafe(ModelBindingContext context, string parameterName, SuccessParseResult result, JsonSerializer serializer)
+    protected internal virtual Task SetResultSafe(ModelBindingContext context, string parameterName, SuccessParseResult result, JsonSerializerOptions jsonSerializerOptions)
     {
         try
         {
@@ -57,7 +57,7 @@ public class ParameterBinder : IParameterBinder
                 parameterName,
                 result);
 
-            SetDeserializedResult(context, result.Value, serializer);
+            SetDeserializedResult(context, result.Value, jsonSerializerOptions);
         }
         catch (Exception e)
         {
@@ -78,12 +78,12 @@ public class ParameterBinder : IParameterBinder
     /// </summary>
     /// <param name="context"></param>
     /// <param name="json"></param>
-    /// <param name="serializer"></param>
-    protected internal virtual void SetDeserializedResult(ModelBindingContext context, JToken json, JsonSerializer serializer)
+    /// <param name="jsonSerializerOptions"></param>
+    protected internal virtual void SetDeserializedResult(ModelBindingContext context, JsonElement json, JsonSerializerOptions jsonSerializerOptions)
     {
         log.LogTrace("{methodName} deserializing json to [{modelTypeName}]", nameof(SetDeserializedResult), context.ModelMetadata.ModelType.Name);
 
-        context.Result = ModelBindingResult.Success(json.ToObject(context.ModelMetadata.ModelType, serializer));
+        context.Result = ModelBindingResult.Success(json.Deserialize(context.ModelMetadata.ModelType, jsonSerializerOptions));
     }
 
     protected internal virtual Task SetError(ModelBindingContext context, string parameterName, IParseResult parseResult)

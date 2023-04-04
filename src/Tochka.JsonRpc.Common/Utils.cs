@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections;
+using System.Text.Json;
 
 namespace Tochka.JsonRpc.Common;
 
@@ -22,6 +23,8 @@ public static class Utils
             return data.Deserialize<T>(headersJsonSerializerOptions);
         }
     }
+
+    public static bool IsCollection(Type type) => type.GetInterface(nameof(ICollection)) != null;
 
     internal static JsonDocument? SerializeParams<TParams>(TParams data, JsonSerializerOptions serializerOptions)
         where TParams : class?
