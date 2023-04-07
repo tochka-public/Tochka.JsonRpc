@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
@@ -8,12 +9,17 @@ namespace Tochka.JsonRpc.Server;
 public class JsonRpcMiddleware
 {
     private readonly RequestDelegate next;
+    private readonly JsonRpcServerOptions options;
 
-    public JsonRpcMiddleware(RequestDelegate next) => this.next = next;
+    public JsonRpcMiddleware(RequestDelegate next, IOptions<JsonRpcServerOptions> options)
+    {
+        this.next = next;
+        this.options = options.Value;
+    }
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
-        if (!IsJsonRpcRequest(httpContext, JsonRpcConstants.DefaultRoutePrefix))
+        if (!httpContext.IsJsonRpcRequest(options.RoutePrefix))
         {
             await next(httpContext);
             return;
@@ -28,31 +34,5 @@ public class JsonRpcMiddleware
                 await next(httpContext);
                 break;
         }
-    }
-
-    private static bool IsJsonRpcRequest(HttpContext httpContext, PathString jsonRpcPrefix)
-    {
-        if (!httpContext.Request.Path.StartsWithSegments(jsonRpcPrefix))
-        {
-            return false;
-        }
-
-        if (httpContext.Request.Method != HttpMethods.Post)
-        {
-            return false;
-        }
-
-        var contentType = httpContext.Request.GetTypedHeaders().ContentType;
-        if (contentType == null)
-        {
-            return false;
-        }
-
-        if (!contentType.MediaType.Equals(JsonRpcConstants.ContentType, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        return true;
     }
 }

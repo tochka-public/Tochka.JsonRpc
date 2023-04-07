@@ -1,16 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tochka.JsonRpc.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.Configure<MvcOptions>(c => c.Conventions.Add(new JsonRpcActionModelConvention()));
-builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, JsonRpcMatcherPolicy>());
+builder.Services.AddJsonRpcServer();
 
 var app = builder.Build();
 
-app.UseMiddleware<JsonRpcMiddleware>();
+app.UseJsonRpc();
 app.UseRouting();
 app.UseEndpoints(c => c.MapControllers());
 

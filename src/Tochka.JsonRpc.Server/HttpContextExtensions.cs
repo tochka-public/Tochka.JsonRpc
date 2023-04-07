@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 
@@ -26,5 +27,31 @@ internal static class HttpContextExtensions
         }
 
         return new NullRpcId();
+    }
+
+    public static bool IsJsonRpcRequest(this HttpContext httpContext, PathString jsonRpcPrefix)
+    {
+        if (!httpContext.Request.Path.StartsWithSegments(jsonRpcPrefix))
+        {
+            return false;
+        }
+
+        if (httpContext.Request.Method != HttpMethods.Post)
+        {
+            return false;
+        }
+
+        var contentType = httpContext.Request.GetTypedHeaders().ContentType;
+        if (contentType == null)
+        {
+            return false;
+        }
+
+        if (!contentType.MediaType.Equals(JsonRpcConstants.ContentType, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
