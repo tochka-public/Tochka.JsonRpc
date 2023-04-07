@@ -18,8 +18,8 @@ public static class JsonRpcSerializerOptions
         Converters =
         {
             // TODO: server
-            // new RequestWrapperConverter(),
-            // new CallConverter(),
+            new RequestWrapperConverter(),
+            new CallConverter(),
 
             new JsonRpcIdConverter(),
 

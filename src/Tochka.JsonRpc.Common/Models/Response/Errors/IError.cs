@@ -6,4 +6,6 @@ public interface IError
 
     // SHOULD be limited to a concise single sentence.
     string Message { get; }
+
+    object? Data { get; }
 }

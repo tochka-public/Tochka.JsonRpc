@@ -72,6 +72,11 @@ public static class JsonRpcConstants
     public const string DefaultRoute = "/api/jsonrpc";
 
     /// <summary>
+    /// "api/jsonrpc" Default route prefix for JSON Rpc actions
+    /// </summary>
+    public const string DefaultRoutePrefix = "/api/jsonrpc";
+
+    /// <summary>
     /// "application/json" Default content-type expected in JSON Rpc HTTP requests
     /// </summary>
     public const string ContentType = "application/json";
