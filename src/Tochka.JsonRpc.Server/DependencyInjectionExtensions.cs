@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Server;
 
@@ -14,6 +16,11 @@ public static class DependencyInjectionExtensions
         services.Configure(configureOptions);
         services.TryAddConvention<JsonRpcActionModelConvention>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, JsonRpcMatcherPolicy>());
+        services.Configure<MvcOptions>(static options =>
+        {
+            options.OutputFormatters.Insert(0, new SystemTextJsonOutputFormatter(JsonRpcSerializerOptions.Headers));
+            options.Filters.Add<JsonRpcFilter>(int.MaxValue);
+        });
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }

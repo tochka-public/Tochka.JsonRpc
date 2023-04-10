@@ -25,12 +25,13 @@ public class JsonRpcMiddleware
             return;
         }
 
+        // todo process encoding (Encoding.CreateTranscodingStream)
         var body = httpContext.Request.Body;
         var wrapper = await JsonSerializer.DeserializeAsync<IRequestWrapper>(body, JsonRpcSerializerOptions.Headers);
         switch (wrapper)
         {
             case SingleRequestWrapper singleRequestWrapper:
-                httpContext.AddJsonRpcCall(singleRequestWrapper.Call);
+                httpContext.SetJsonRpcCall(singleRequestWrapper.Call);
                 await next(httpContext);
                 break;
         }
