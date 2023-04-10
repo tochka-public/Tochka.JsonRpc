@@ -1,8 +1,8 @@
-﻿using Tochka.JsonRpc.V1.Client.Settings;
+﻿using Tochka.JsonRpc.Client.Settings;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
 internal class SimpleJsonRpcClientOptions : JsonRpcClientOptionsBase
 {
-    public override string Url { get; set; } = "https://localhost/";
+    public override string Url { get; init; } = "https://localhost/";
 }

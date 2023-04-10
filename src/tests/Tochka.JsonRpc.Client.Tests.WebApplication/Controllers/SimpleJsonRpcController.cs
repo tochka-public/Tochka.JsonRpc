@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Tochka.JsonRpc.TestUtils;
 using Tochka.JsonRpc.TestUtils.Integration;
 using Tochka.JsonRpc.V1.Common.Models.Response.Errors;
 using Tochka.JsonRpc.V1.Common.Serializers;
