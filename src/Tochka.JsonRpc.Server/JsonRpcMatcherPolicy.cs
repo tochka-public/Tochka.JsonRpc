@@ -28,7 +28,7 @@ public class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
                 continue;
             }
 
-            var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcActionAttribute>()!;
+            var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>()!;
             var methodMatches = call.Method == jsonRpcMetadata.Method;
             candidates.SetValidity(i, methodMatches);
         }
@@ -38,5 +38,5 @@ public class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
 
     private static bool IsJsonRpcEndpoint(Endpoint endpoint) =>
         endpoint.Metadata.GetMetadata<JsonRpcControllerAttribute>() != null
-        && endpoint.Metadata.GetMetadata<JsonRpcActionAttribute>() != null;
+        && endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>() != null;
 }

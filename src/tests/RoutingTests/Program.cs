@@ -11,4 +11,10 @@ app.UseJsonRpc();
 app.UseRouting();
 app.UseEndpoints(c => c.MapControllers());
 
+var dataSources = app.Services.GetServices<EndpointDataSource>();
+foreach (var endpoint in dataSources.SelectMany(static dataSource => dataSource.Endpoints))
+{
+    Console.WriteLine($"{endpoint.DisplayName} {(endpoint as RouteEndpoint)?.RoutePattern.RawText}");
+}
+
 await app.RunAsync();

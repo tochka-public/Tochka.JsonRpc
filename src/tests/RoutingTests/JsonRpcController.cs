@@ -1,10 +1,9 @@
-﻿using Tochka.JsonRpc.Server;
+﻿using Microsoft.AspNetCore.Mvc;
+using Tochka.JsonRpc.Server;
 
 namespace RoutingTests;
 
 public class JsonRpcController : JsonRpcControllerBase
 {
-    public void ProcessAnything()
-    {
-    }
+    public string ProcessAnything() => "Hello World!";
 }

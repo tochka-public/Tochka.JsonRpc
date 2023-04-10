@@ -1,7 +1,5 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 
@@ -20,31 +18,40 @@ public class JsonRpcActionModelConvention : IActionModelConvention
             return;
         }
 
-        foreach (var actionSelector in action.Selectors)
+        var selectors = action.Selectors.SelectMany(s => CombineRoutes(s, action.Controller)).ToArray();
+        action.Selectors.Clear();
+        foreach (var selector in selectors)
         {
-            AdjustRoutes(actionSelector, action.Controller);
-            if (!actionSelector.EndpointMetadata.Any(static m => m is JsonRpcActionAttribute))
+            if (!selector.EndpointMetadata.Any(static m => m is JsonRpcMethodAttribute))
             {
                 var method = JsonRpcSerializerOptions.Headers.PropertyNamingPolicy!.ConvertName(action.ActionName);
-                actionSelector.EndpointMetadata.Add(new JsonRpcActionAttribute(method));
+                selector.EndpointMetadata.Add(new JsonRpcMethodAttribute(method));
             }
+
+            action.Selectors.Add(selector);
         }
     }
 
-    private void AdjustRoutes(SelectorModel actionSelector, ControllerModel controller)
+    private IEnumerable<SelectorModel> CombineRoutes(SelectorModel actionSelector, ControllerModel controller)
     {
         var routeModels = controller.Selectors
             .Select(controllerSelector =>
                 AttributeRouteModel.CombineAttributeRouteModel(controllerSelector.AttributeRouteModel, actionSelector.AttributeRouteModel)
-                ?? new AttributeRouteModel { Template = options.RoutePrefix });
+                ?? new AttributeRouteModel { Template = options.RoutePrefix })
+            .Select(static m => m.Template!.StartsWith('/')
+                ? m
+                : new AttributeRouteModel(m) { Template = $"/{m.Template}" })
+            .DistinctBy(static rm => rm.Template!.ToLowerInvariant());
 
         foreach (var combinedRouteModel in routeModels)
         {
             var path = new PathString(combinedRouteModel.Template);
             if (!path.StartsWithSegments(options.RoutePrefix))
             {
-                combinedRouteModel.Template = options.RoutePrefix.Add(path);
+                combinedRouteModel.Template = options.RoutePrefix.Add(path).Value;
             }
+
+            yield return new SelectorModel(actionSelector) { AttributeRouteModel = combinedRouteModel };
         }
     }
 }

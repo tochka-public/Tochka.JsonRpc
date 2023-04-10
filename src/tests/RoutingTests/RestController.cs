@@ -2,11 +2,9 @@
 
 namespace RoutingTests;
 
-[Route("[controller]")]
+[Route("/LOL")]
 public class RestController : ControllerBase
 {
-    [HttpGet]
-    [Route("/api")]
-    [Route("/api/check")]
+    [Route("/lol")]
     public string Get() => "Hello World!";
 }
