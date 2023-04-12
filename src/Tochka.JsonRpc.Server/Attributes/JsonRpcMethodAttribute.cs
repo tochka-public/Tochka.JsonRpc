@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Server;
+﻿namespace Tochka.JsonRpc.Server.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class JsonRpcMethodAttribute : Attribute

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Matching;
+using Tochka.JsonRpc.Server.Attributes;
+using Tochka.JsonRpc.Server.Exceptions;
+using Tochka.JsonRpc.Server.Extensions;
 
-namespace Tochka.JsonRpc.Server;
+namespace Tochka.JsonRpc.Server.Routing;
 
 public class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
 {
@@ -19,6 +22,7 @@ public class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
             throw new JsonRpcServerException("Not found json rpc call in http context, may be middleware is missing or registered after routing");
         }
 
+        var validCandidatesExist = false;
         for (var i = 0; i < candidates.Count; i++)
         {
             var candidate = candidates[i];
@@ -31,6 +35,16 @@ public class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
             var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>()!;
             var methodMatches = call.Method == jsonRpcMetadata.Method;
             candidates.SetValidity(i, methodMatches);
+            if (methodMatches)
+            {
+                validCandidatesExist = true;
+            }
+        }
+
+        // hack to distinguish between unknown route (== 404 Not Found) and unknown method (== json rpc error with code -32601)
+        if (!validCandidatesExist)
+        {
+            throw new JsonRpcMethodNotFoundException(call.Method);
         }
 
         return Task.CompletedTask;

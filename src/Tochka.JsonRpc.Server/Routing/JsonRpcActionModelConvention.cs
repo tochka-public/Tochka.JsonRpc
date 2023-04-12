@@ -1,15 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Server.Attributes;
+using Tochka.JsonRpc.Server.Serialization;
+using Tochka.JsonRpc.Server.Settings;
 
-namespace Tochka.JsonRpc.Server;
+namespace Tochka.JsonRpc.Server.Routing;
 
 public class JsonRpcActionModelConvention : IActionModelConvention
 {
+    private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private readonly JsonRpcServerOptions options;
 
-    public JsonRpcActionModelConvention(IOptions<JsonRpcServerOptions> options) => this.options = options.Value;
+    public JsonRpcActionModelConvention(IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options)
+    {
+        this.serializerOptionsProviders = serializerOptionsProviders;
+        this.options = options.Value;
+    }
 
     public void Apply(ActionModel action)
     {
@@ -24,7 +33,7 @@ public class JsonRpcActionModelConvention : IActionModelConvention
         {
             if (!selector.EndpointMetadata.Any(static m => m is JsonRpcMethodAttribute))
             {
-                var method = JsonRpcSerializerOptions.Headers.PropertyNamingPolicy!.ConvertName(action.ActionName);
+                var method = GetMethodName(action, selector);
                 selector.EndpointMetadata.Add(new JsonRpcMethodAttribute(method));
             }
 
@@ -53,5 +62,23 @@ public class JsonRpcActionModelConvention : IActionModelConvention
 
             yield return new SelectorModel(actionSelector) { AttributeRouteModel = combinedRouteModel };
         }
+    }
+
+    private string GetMethodName(ActionModel action, SelectorModel selector)
+    {
+        var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(selector.EndpointMetadata, options, serializerOptionsProviders);
+        var methodStyleMetadata = selector.EndpointMetadata.FirstOrDefault(static m => m is JsonRpcMethodStyleAttribute);
+        var methodStyle = methodStyleMetadata is JsonRpcMethodStyleAttribute methodStyleAttribute
+            ? methodStyleAttribute.MethodStyle
+            : options.DefaultMethodStyle;
+
+        var controllerName = jsonSerializerOptions.PropertyNamingPolicy!.ConvertName(action.Controller.ControllerName);
+        var actionName = jsonSerializerOptions.PropertyNamingPolicy.ConvertName(action.ActionName);
+        return methodStyle switch
+        {
+            JsonRpcMethodStyle.ControllerAndAction => $"{controllerName}.{actionName}",
+            JsonRpcMethodStyle.ActionOnly => actionName,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

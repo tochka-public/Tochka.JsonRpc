@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Server;
+﻿namespace Tochka.JsonRpc.Server.Exceptions;
 
 public class JsonRpcServerException : Exception
 {

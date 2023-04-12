@@ -1,4 +1,4 @@
-﻿namespace Tochka.JsonRpc.Server;
+﻿namespace Tochka.JsonRpc.Server.DependencyInjection;
 
 /// <summary>
 /// A marker class used to determine if all the JsonRpc services were added

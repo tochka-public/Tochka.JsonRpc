@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Tochka.JsonRpc.Server;
+namespace Tochka.JsonRpc.Server.DependencyInjection;
 
 /// <inheritdoc />
 /// <summary>

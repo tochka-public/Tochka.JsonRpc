@@ -6,8 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Server.DependencyInjection;
+using Tochka.JsonRpc.Server.Filters;
+using Tochka.JsonRpc.Server.Routing;
+using Tochka.JsonRpc.Server.Serialization;
+using Tochka.JsonRpc.Server.Services;
+using Tochka.JsonRpc.Server.Settings;
 
-namespace Tochka.JsonRpc.Server;
+namespace Tochka.JsonRpc.Server.Extensions;
 
 public static class DependencyInjectionExtensions
 {
@@ -19,8 +25,13 @@ public static class DependencyInjectionExtensions
         services.Configure<MvcOptions>(static options =>
         {
             options.OutputFormatters.Insert(0, new SystemTextJsonOutputFormatter(JsonRpcSerializerOptions.Headers));
-            options.Filters.Add<JsonRpcFilter>(int.MaxValue);
+            // options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
+            options.Filters.Add<JsonRpcExceptionFilter>(int.MaxValue);
+            options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
+        services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
+        services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
+        services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }
