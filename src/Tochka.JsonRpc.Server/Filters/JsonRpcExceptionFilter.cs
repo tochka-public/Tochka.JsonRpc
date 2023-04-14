@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Services;
 

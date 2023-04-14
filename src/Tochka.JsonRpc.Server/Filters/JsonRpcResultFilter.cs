@@ -37,7 +37,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
             return;
         }
 
-        if (call is not UntypedRequest request)
+        if (call is not UntypedRequest request) // == null
         {
             return;
         }
@@ -82,9 +82,9 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
     private object? GetResult(IActionResult actionResult) => actionResult switch
     {
         ObjectResult { Value: IError error } => error,
-        ObjectResult { StatusCode: < 200 or > 299 } result => errorFactory.HttpError(result.StatusCode.Value, result.Value),
+        ObjectResult { StatusCode: >= 400 } result => errorFactory.HttpError(result.StatusCode.Value, result.Value),
         ObjectResult result => result.Value,
-        StatusCodeResult { StatusCode: < 200 or > 299 } result => errorFactory.HttpError(result.StatusCode, null),
+        StatusCodeResult { StatusCode: >= 400 } result => errorFactory.HttpError(result.StatusCode, null),
         EmptyResult => null,
         _ => actionResult
     };
