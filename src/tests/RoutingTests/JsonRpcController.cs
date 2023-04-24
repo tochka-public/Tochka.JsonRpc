@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Attributes;
@@ -10,7 +11,7 @@ namespace RoutingTests;
 
 public class JsonRpcController : JsonRpcControllerBase
 {
-    public ActionResult<object> ProcessAnything(int intField, string strField) =>
+    public ActionResult<object> ProcessAnything(int intField) =>
         new { LolKek = "Hello World!" };
 
     [JsonRpcSerializerOptions(typeof(CamelCaseJsonSerializerOptionsProvider))]

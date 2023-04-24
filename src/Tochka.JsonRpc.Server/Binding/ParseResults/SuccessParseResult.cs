@@ -2,4 +2,4 @@
 
 namespace Tochka.JsonRpc.Server.Binding.ParseResults;
 
-internal record SuccessParseResult(JsonElement Value) : IParseResult;
+internal record SuccessParseResult(JsonElement Value, string JsonKey) : IParseResult;

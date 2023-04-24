@@ -2,4 +2,5 @@
 
 internal interface IParseResult
 {
+    string JsonKey { get; }
 }

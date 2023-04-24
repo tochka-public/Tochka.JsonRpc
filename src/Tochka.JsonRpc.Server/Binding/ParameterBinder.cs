@@ -13,15 +13,15 @@ internal class ParameterBinder : IParameterBinder
         var parameterName = bindingContext.ModelMetadata.Name!;
         switch (parseResult)
         {
-            case SuccessParseResult successBindResult:
-                SetSuccessResult(bindingContext, parameterName, successBindResult, jsonSerializerOptions);
+            case SuccessParseResult successParseResult:
+                SetSuccessResult(bindingContext, parameterName, successParseResult, jsonSerializerOptions);
                 break;
 
-            case ErrorParseResult errorBindResult:
-                SetError(bindingContext, parameterName, errorBindResult);
+            case ErrorParseResult errorParseResult:
+                SetError(bindingContext, parameterName, $"Error while binding value by JSON key = [{errorParseResult.JsonKey}] - {errorParseResult.Message}");
                 break;
 
-            case NoParseResult noParseResult when parameterMetadata.IsOptional:
+            case NoParseResult when parameterMetadata.IsOptional:
                 // key was not in json but is optional parameter
                 // log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
                 //     nameof(SetNoResult),
@@ -29,12 +29,22 @@ internal class ParameterBinder : IParameterBinder
                 //     noParseResult);
                 break;
 
-            case NoParseResult noBindResult:
-                // key was not in json and is required
-                SetError(bindingContext, parameterName, noBindResult);
+            case NoParseResult noParseResult:
+                // key was not in json and it isn't optional parameter
+                SetError(bindingContext, parameterName, $"Bind value not found (expected JSON key = [{noParseResult.JsonKey}]");
                 break;
 
-            case NullParseResult nullParseResult when bindingContext.ModelMetadata.IsReferenceOrNullableType:
+            case NullParseResult nullParseResult when bindingContext.ModelMetadata is { IsReferenceOrNullableType: true, IsRequired: true }:
+                // json value was null and type can be null but value required
+                // log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
+                //     nameof(SetNullResult),
+                //     parameterName,
+                //     nullParseResult);
+
+                SetError(bindingContext, parameterName, $"Can't bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to required parameter");
+                break;
+
+            case NullParseResult when bindingContext.ModelMetadata is { IsReferenceOrNullableType: true }:
                 // json value was null and type can be null
                 // log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
                 //     nameof(SetNullResult),
@@ -46,7 +56,7 @@ internal class ParameterBinder : IParameterBinder
 
             case NullParseResult nullParseResult:
                 // json value was null and type can not be null
-                var error = new ErrorParseResult($"Can not bind null json value to non-nullable parameter of type [{bindingContext.ModelMetadata.ModelType.Name}]");
+                var error = $"Can't bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to non-nullable parameter of type [{bindingContext.ModelMetadata.ModelType.Name}]";
                 SetError(bindingContext, parameterName, error);
                 break;
 
@@ -76,17 +86,18 @@ internal class ParameterBinder : IParameterBinder
             //     parameterName,
             //     result);
 
-            bindingContext.ModelState.AddModelError(parameterName, $"{parseResult}. {e.GetType().Name}: {e.Message}");
+            var error = $"Error while binding value = [{parseResult.Value}] (JSON key = [{parseResult.JsonKey}]) - {e.GetType().Name}: {e.Message}";
+            SetError(bindingContext, parameterName, error);
         }
     }
 
-    private static void SetError(ModelBindingContext context, string parameterName, IParseResult parseResult)
+    private static void SetError(ModelBindingContext bindingContext, string parameterName, string error)
     {
         // log.LogTrace("{methodName}, parameterName {parameterName}: [{parseResult}]",
         //     nameof(SetError),
         //     parameterName,
         //     parseResult);
         //
-        context.ModelState.AddModelError(parameterName, parseResult.ToString());
+        bindingContext.ModelState.AddModelError(parameterName, error);
     }
 }
