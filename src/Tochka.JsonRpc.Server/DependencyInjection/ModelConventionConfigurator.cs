@@ -13,11 +13,11 @@ namespace Tochka.JsonRpc.Server.DependencyInjection;
 /// and https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0#use-di-services-to-configure-options
 /// </summary>
 [ExcludeFromCodeCoverage]
-internal class ConventionConfigurator<TConvention> : IConfigureOptions<MvcOptions>
+internal class ModelConventionConfigurator<TModelConvention> : IConfigureOptions<MvcOptions>
 {
-    public ConventionConfigurator(TConvention convention) => this.convention = convention;
+    public ModelConventionConfigurator(TModelConvention convention) => this.convention = convention;
 
-    private readonly TConvention convention;
+    private readonly TModelConvention convention;
 
     public void Configure(MvcOptions options)
     {
@@ -36,7 +36,7 @@ internal class ConventionConfigurator<TConvention> : IConfigureOptions<MvcOption
                 options.Conventions.Add(x);
                 return;
             default:
-                throw new InvalidOperationException($"Unsupported convention type: {typeof(TConvention)}");
+                throw new InvalidOperationException($"Unsupported convention type: {typeof(TModelConvention)}");
         }
     }
 }

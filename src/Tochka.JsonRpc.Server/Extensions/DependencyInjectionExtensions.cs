@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
 using Tochka.JsonRpc.Server.Routing;
@@ -21,17 +22,20 @@ public static class DependencyInjectionExtensions
     {
         services.Configure(configureOptions);
         services.TryAddConvention<JsonRpcActionModelConvention>();
+        services.TryAddConvention<JsonRpcParameterModelConvention>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, JsonRpcMatcherPolicy>());
         services.Configure<MvcOptions>(static options =>
         {
             options.OutputFormatters.Insert(0, new SystemTextJsonOutputFormatter(JsonRpcSerializerOptions.Headers));
-            // options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
+            options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
             options.Filters.Add<JsonRpcExceptionFilter>(int.MaxValue);
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
         services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
+        services.AddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
+        services.AddSingleton<IParameterBinder, ParameterBinder>();
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }
@@ -49,7 +53,7 @@ public static class DependencyInjectionExtensions
         where T : class
     {
         serviceCollection.TryAddSingleton<T>();
-        serviceCollection.TryAddEnumerable(new ServiceDescriptor(typeof(IConfigureOptions<MvcOptions>), typeof(ConventionConfigurator<T>), ServiceLifetime.Singleton));
+        serviceCollection.TryAddEnumerable(new ServiceDescriptor(typeof(IConfigureOptions<MvcOptions>), typeof(ModelConventionConfigurator<T>), ServiceLifetime.Singleton));
         return serviceCollection;
     }
 

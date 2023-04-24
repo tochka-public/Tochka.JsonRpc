@@ -4,12 +4,13 @@ using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
+using Tochka.JsonRpc.TestUtils;
 
 namespace RoutingTests;
 
 public class JsonRpcController : JsonRpcControllerBase
 {
-    public ActionResult<object> ProcessAnything() =>
+    public ActionResult<object> ProcessAnything(int intField, string strField) =>
         new { LolKek = "Hello World!" };
 
     [JsonRpcSerializerOptions(typeof(CamelCaseJsonSerializerOptionsProvider))]
