@@ -19,14 +19,20 @@ public class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
         var call = httpContext.GetJsonRpcCall();
         if (call == null)
         {
-            throw new JsonRpcServerException("Not found json rpc call in HttpContext, maybe middleware is missing or registered after routing");
+            // If we got not json rpc request
+            for (var i = 0; i < candidates.Count; i++)
+            {
+                candidates.SetValidity(i, false);
+            }
+
+            return Task.CompletedTask;
         }
 
         var validCandidatesExist = false;
         for (var i = 0; i < candidates.Count; i++)
         {
             var candidate = candidates[i];
-            if (httpContext.Request.Method != HttpMethods.Post || !IsJsonRpcEndpoint(candidate.Endpoint))
+            if (httpContext.Request.Method != HttpMethods.Post) // || !IsJsonRpcEndpoint(candidate.Endpoint))
             {
                 candidates.SetValidity(i, false);
                 continue;

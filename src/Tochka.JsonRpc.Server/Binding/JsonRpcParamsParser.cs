@@ -15,7 +15,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
         {
             JsonValueKind.Object => ParseObject(parameters!.RootElement, parameterMetadata.PropertyName, bindingStyle),
             JsonValueKind.Array => ParseArray(parameters!.RootElement, parameterMetadata.Position, bindingStyle),
-            null => ParseNull(bindingStyle),
+            null => ParseNull(bindingStyle, parameterMetadata),
             _ => new ErrorParseResult($"Unsupported root JSON value kind: [{jsonValueKind}]", string.Empty)
         };
     }
@@ -74,18 +74,21 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
         }
     }
 
-    private static IParseResult ParseNull(BindingStyle bindingStyle)
+    private static IParseResult ParseNull(BindingStyle bindingStyle, JsonRpcParameterMetadata parameterMetadata)
     {
         switch (bindingStyle)
         {
             case BindingStyle.Default:
                 // log.LogWarning("Binding null to regular parameter failed");
-                return new ErrorParseResult("Can not bind method arguments from [null] json params", string.Empty);
+                return new ErrorParseResult("Can not bind method arguments from null or missing json params", string.Empty);
             case BindingStyle.Object:
+                // this is fine
+                // log.LogTrace("Binding null to object or array parameter");
+                return new NoParseResult(parameterMetadata.PropertyName);
             case BindingStyle.Array:
                 // this is fine
                 // log.LogTrace("Binding null to object or array parameter");
-                return new NullParseResult(string.Empty);
+                return new NoParseResult(parameterMetadata.Position.ToString(CultureInfo.InvariantCulture));
             default:
                 // log.LogWarning("Binding null failed");
                 return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", string.Empty);

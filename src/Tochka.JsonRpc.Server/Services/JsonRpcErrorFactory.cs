@@ -57,6 +57,8 @@ namespace Tochka.JsonRpc.Server.Services
         {
             JsonRpcServerException => ServerError(JsonRpcConstants.InternalExceptionCode, WrapExceptions(e)),
             JsonRpcMethodNotFoundException methodException => MethodNotFound(new { methodException.Method }),
+            JsonRpcErrorException errorException => errorException.Error,
+            JsonRpcFormatException => InvalidRequest(WrapExceptions(e)),
             _ => ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e))
         };
 

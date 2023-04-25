@@ -31,7 +31,7 @@ internal class ParameterBinder : IParameterBinder
 
             case NoParseResult noParseResult:
                 // key was not in json and it isn't optional parameter
-                SetError(bindingContext, parameterName, $"Bind value not found (expected JSON key = [{noParseResult.JsonKey}]");
+                SetError(bindingContext, parameterName, $"Bind value not found (expected JSON key = [{noParseResult.JsonKey}])");
                 break;
 
             case NullParseResult nullParseResult when bindingContext.ModelMetadata is { IsReferenceOrNullableType: true, IsRequired: true }:
@@ -41,7 +41,7 @@ internal class ParameterBinder : IParameterBinder
                 //     parameterName,
                 //     nullParseResult);
 
-                SetError(bindingContext, parameterName, $"Can't bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to required parameter");
+                SetError(bindingContext, parameterName, $"Can not bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to required parameter");
                 break;
 
             case NullParseResult when bindingContext.ModelMetadata is { IsReferenceOrNullableType: true }:
@@ -56,7 +56,7 @@ internal class ParameterBinder : IParameterBinder
 
             case NullParseResult nullParseResult:
                 // json value was null and type can not be null
-                var error = $"Can't bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to non-nullable parameter of type [{bindingContext.ModelMetadata.ModelType.Name}]";
+                var error = $"Can not bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to non-nullable parameter of type [{bindingContext.ModelMetadata.ModelType.Name}]";
                 SetError(bindingContext, parameterName, error);
                 break;
 

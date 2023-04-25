@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
@@ -42,10 +43,8 @@ public class JsonRpcMiddleware
             return;
         }
 
-        // what if it is not utf-8?
-        var body = httpContext.Request.Body;
-        var requestWrapper = await JsonSerializer.DeserializeAsync<IRequestWrapper>(body, options.HeadersJsonSerializerOptions);
-        var responseWrapper = await ProcessJsonRpcRequest(httpContext, requestWrapper);
+        var responseWrapper = await ProcessJsonRpcRequest(httpContext);
+
         if (responseWrapper != null)
         {
             httpContext.Response.StatusCode = StatusCodes.Status200OK;
@@ -55,13 +54,29 @@ public class JsonRpcMiddleware
         }
     }
 
-    private async Task<IResponseWrapper?> ProcessJsonRpcRequest(HttpContext httpContext, IRequestWrapper? requestWrapper) =>
-        requestWrapper switch
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected parsing exceptions in json rpc response")]
+    private async Task<IResponseWrapper?> ProcessJsonRpcRequest(HttpContext httpContext)
+    {
+        IRequestWrapper? requestWrapper;
+        try
+        {
+            // what if it is not utf-8?
+            var body = httpContext.Request.Body;
+            requestWrapper = await JsonSerializer.DeserializeAsync<IRequestWrapper>(body, options.HeadersJsonSerializerOptions);
+        }
+        catch (Exception e) when (e is JsonRpcFormatException or JsonException)
+        {
+            var error = WrapParseException(e, new NullRpcId());
+            return new SingleResponseWrapper(error);
+        }
+
+        return requestWrapper switch
         {
             SingleRequestWrapper singleRequestWrapper => await ProcessSingleRequest(httpContext, singleRequestWrapper),
             BatchRequestWrapper batchRequestWrapper => await ProcessBatchRequest(httpContext, batchRequestWrapper),
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
 
     private async Task<IResponseWrapper?> ProcessBatchRequest(HttpContext httpContext, BatchRequestWrapper batchRequestWrapper)
     {
@@ -91,16 +106,42 @@ public class JsonRpcMiddleware
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected exceptions in json rpc response")]
-    private async Task<IResponse?> ProcessCall(HttpContext callHttpContext, ICall call, bool isBatch)
+    private async Task<IResponse?> ProcessCall(HttpContext callHttpContext, JsonDocument untypedCall, bool isBatch)
     {
-        callHttpContext.Features.Set(new JsonRpcFeature
-        {
-            Call = call,
-            IsBatch = isBatch
-        });
+        IUntypedCall? call;
         try
         {
+            call = untypedCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
+        }
+        catch (JsonException e)
+        {
+            return WrapParseException(e, new NullRpcId());
+        }
+        catch (JsonRpcFormatException e)
+        {
+            return WrapException(e, new NullRpcId());
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(call.Method))
+            {
+                throw new JsonRpcFormatException("Method is null or empty");
+            }
+
+            if (call.Jsonrpc != JsonRpcConstants.Version)
+            {
+                throw new JsonRpcFormatException($"Only [{JsonRpcConstants.Version}] version supported. Got [{call.Jsonrpc}]");
+            }
+
+            callHttpContext.Features.Set(new JsonRpcFeature
+            {
+                Call = call,
+                IsBatch = isBatch
+            });
+
             await next(callHttpContext);
+
             var feature = callHttpContext.Features.Get<JsonRpcFeature>();
             if (feature == null)
             {
@@ -111,19 +152,23 @@ public class JsonRpcMiddleware
         }
         catch (Exception e)
         {
-            return WrapException(e, call);
+            return call is not UntypedRequest request
+                ? null
+                : WrapException(e, request.Id);
         }
     }
 
-    private IResponse? WrapException(Exception exception, ICall call)
+    private IResponse WrapException(Exception exception, IRpcId id)
     {
-        if (call is not UntypedRequest request)
-        {
-            return null;
-        }
-
         var error = errorFactory.Exception(exception);
         var untypedError = new Error<JsonDocument>(error.Code, error.Message, JsonSerializer.SerializeToDocument(error.Data, options.HeadersJsonSerializerOptions));
-        return new UntypedErrorResponse(request.Id, untypedError);
+        return new UntypedErrorResponse(id, untypedError);
+    }
+
+    private IResponse WrapParseException(Exception exception, IRpcId id)
+    {
+        var error = errorFactory.ParseError(exception);
+        var untypedError = new Error<JsonDocument>(error.Code, error.Message, JsonSerializer.SerializeToDocument(error.Data, options.HeadersJsonSerializerOptions));
+        return new UntypedErrorResponse(id, untypedError);
     }
 }

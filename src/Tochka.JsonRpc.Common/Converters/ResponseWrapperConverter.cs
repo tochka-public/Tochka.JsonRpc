@@ -19,10 +19,10 @@ public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
         switch (value)
         {
             case SingleResponseWrapper singleResponseWrapper:
-                JsonSerializer.Serialize(writer, singleResponseWrapper, options);
+                JsonSerializer.Serialize(writer, singleResponseWrapper.Response, options);
                 break;
             case BatchResponseWrapper batchResponseWrapper:
-                JsonSerializer.Serialize(writer, batchResponseWrapper, options);
+                JsonSerializer.Serialize(writer, batchResponseWrapper.Responses, options);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);

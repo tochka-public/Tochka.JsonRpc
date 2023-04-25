@@ -43,4 +43,35 @@ public static class Utils
 
         throw new InvalidOperationException($"Expected params [{typeof(TParams).Name}] to be serializable into object or array, got [{jsonValueKind}]");
     }
+
+    // It's for forbidden to use Utf8JsonReader with yield return
+    internal static IEnumerable<string?> GetPropertyNames(ref Utf8JsonReader propertyReader)
+    {
+        var propertyNames = new List<string?>();
+        var initialDepth = propertyReader.CurrentDepth;
+        while (propertyReader.Read())
+        {
+            var tokenType = propertyReader.TokenType;
+            var currentDepth = propertyReader.CurrentDepth;
+            if (tokenType == JsonTokenType.EndObject && currentDepth == initialDepth)
+            {
+                break;
+            }
+
+            if (tokenType is JsonTokenType.StartObject or JsonTokenType.StartArray && currentDepth == initialDepth + 1)
+            {
+                propertyReader.Skip();
+                continue;
+            }
+
+            if (tokenType != JsonTokenType.PropertyName)
+            {
+                continue;
+            }
+
+            propertyNames.Add(propertyReader.GetString());
+        }
+
+        return propertyNames;
+    }
 }

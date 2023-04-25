@@ -15,66 +15,37 @@ public class CallConverter : JsonConverter<IUntypedCall>
         throw new InvalidOperationException();
 
     public override IUntypedCall? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        HasId(reader)
-            ? JsonSerializer.Deserialize<UntypedRequest>(ref reader, options)
-            : JsonSerializer.Deserialize<UntypedNotification>(ref reader, options);
-
-    private static bool HasId(Utf8JsonReader propertyReader)
-    {
-        var initialDepth = propertyReader.CurrentDepth;
-        while (propertyReader.Read())
+        CheckProperties(reader) switch
         {
-            var tokenType = propertyReader.TokenType;
-            var currentDepth = propertyReader.CurrentDepth;
-            if (tokenType == JsonTokenType.EndObject && currentDepth == initialDepth)
-            {
-                break;
-            }
+            { HasMethod: false } => throw new JsonRpcFormatException($"JSON Rpc call does not have [{JsonRpcConstants.MethodProperty}] property"),
+            { HasVersion: false } => throw new JsonRpcFormatException($"JSON Rpc call does not have [{JsonRpcConstants.JsonrpcVersionProperty}] property"),
+            { HasId: false } => JsonSerializer.Deserialize<UntypedNotification>(ref reader, options),
+            _ => JsonSerializer.Deserialize<UntypedRequest>(ref reader, options)
+        };
 
-            if (tokenType is JsonTokenType.StartObject or JsonTokenType.StartArray && currentDepth == initialDepth + 1)
+    private static PropertiesInfo CheckProperties(Utf8JsonReader propertyReader)
+    {
+        var hasId = false;
+        var hasMethod = false;
+        var hasVersion = false;
+        foreach (var propertyName in Utils.GetPropertyNames(ref propertyReader))
+        {
+            switch (propertyName)
             {
-                propertyReader.Skip();
-                continue;
-            }
-
-            if (tokenType != JsonTokenType.PropertyName)
-            {
-                continue;
-            }
-
-            var propertyName = propertyReader.GetString();
-            if (propertyName == JsonRpcConstants.IdProperty)
-            {
-                return true;
+                case JsonRpcConstants.IdProperty:
+                    hasId = true;
+                    break;
+                case JsonRpcConstants.MethodProperty:
+                    hasMethod = true;
+                    break;
+                case JsonRpcConstants.JsonrpcVersionProperty:
+                    hasVersion = true;
+                    break;
             }
         }
 
-        return false;
+        return new PropertiesInfo(hasId, hasMethod, hasVersion);
     }
 
-    // public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-    // {
-    //     var jObject = JObject.Load(reader);
-    //     var idProperty = jObject[JsonRpcConstants.IdProperty];
-    //     var idType = idProperty?.Type;
-    //     switch (idType)
-    //     {
-    //         case JTokenType.String:
-    //         case JTokenType.Integer:
-    //         case JTokenType.Null:
-    //             var idValue = idProperty as JValue;
-    //             var result1 = jObject.ToObject<UntypedRequest>(serializer);
-    //             result1.RawJson = jObject.ToString();
-    //             result1.RawId = idValue;
-    //             return result1;
-    //
-    //         case null:
-    //             var result2 = jObject.ToObject<UntypedNotification>(serializer);
-    //             result2.RawJson = jObject.ToString();
-    //             return result2;
-    //
-    //         default:
-    //             throw new ArgumentOutOfRangeException(nameof(idType), idType, "Expected string, number, null or nothing as Id");
-    //     }
-    // }
+    private record PropertiesInfo(bool HasId, bool HasMethod, bool HasVersion);
 }

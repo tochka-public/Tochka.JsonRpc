@@ -29,10 +29,11 @@ public class ResponseConverter : JsonConverter<IResponse>
         {
             // "Id is REQUIRED. If there was an error in detecting the id in the Request object (e.g. Parse error/Invalid Request), it MUST be Null."
             // (JsonTokenType.Null, not actual null)
-            { HasId: false } => throw new ArgumentException($"JSON Rpc response does not have [{JsonRpcConstants.IdProperty}] property"),
+            { HasId: false } => throw new JsonRpcFormatException($"JSON Rpc response does not have [{JsonRpcConstants.IdProperty}] property"),
+            { HasVersion: false } => throw new JsonRpcFormatException($"JSON Rpc response does not have [{JsonRpcConstants.JsonrpcVersionProperty}] property"),
             { HasResult: true, HasError: false } => JsonSerializer.Deserialize<UntypedResponse>(ref reader, options),
             { HasResult: false, HasError: true } => JsonSerializer.Deserialize<UntypedErrorResponse>(ref reader, options),
-            var properties => throw new ArgumentException($"JSON Rpc response is invalid, expected one of properties. Has [{JsonRpcConstants.ResultProperty}]: {properties.HasResult}. Has [{JsonRpcConstants.ErrorProperty}]: {properties.HasError}")
+            var properties => throw new JsonRpcFormatException($"JSON Rpc response is invalid, expected one of properties. Has [{JsonRpcConstants.ResultProperty}]: {properties.HasResult}. Has [{JsonRpcConstants.ErrorProperty}]: {properties.HasError}")
         };
 
     private static PropertiesInfo CheckProperties(Utf8JsonReader propertyReader)
@@ -40,28 +41,9 @@ public class ResponseConverter : JsonConverter<IResponse>
         var hasId = false;
         var hasError = false;
         var hasResult = false;
-        var initialDepth = propertyReader.CurrentDepth;
-        while (propertyReader.Read())
+        var hasVersion = false;
+        foreach (var propertyName in Utils.GetPropertyNames(ref propertyReader))
         {
-            var tokenType = propertyReader.TokenType;
-            var currentDepth = propertyReader.CurrentDepth;
-            if (tokenType == JsonTokenType.EndObject && currentDepth == initialDepth)
-            {
-                break;
-            }
-
-            if (tokenType is JsonTokenType.StartObject or JsonTokenType.StartArray && currentDepth == initialDepth + 1)
-            {
-                propertyReader.Skip();
-                continue;
-            }
-
-            if (tokenType != JsonTokenType.PropertyName)
-            {
-                continue;
-            }
-
-            var propertyName = propertyReader.GetString();
             switch (propertyName)
             {
                 case JsonRpcConstants.IdProperty:
@@ -73,11 +55,14 @@ public class ResponseConverter : JsonConverter<IResponse>
                 case JsonRpcConstants.ErrorProperty:
                     hasError = true;
                     break;
+                case JsonRpcConstants.JsonrpcVersionProperty:
+                    hasVersion = true;
+                    break;
             }
         }
 
-        return new PropertiesInfo(hasId, hasResult, hasError);
+        return new PropertiesInfo(hasId, hasResult, hasError, hasVersion);
     }
 
-    private record PropertiesInfo(bool HasId, bool HasResult, bool HasError);
+    private record PropertiesInfo(bool HasId, bool HasResult, bool HasError, bool HasVersion);
 }

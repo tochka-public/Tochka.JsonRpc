@@ -1,14 +1,12 @@
 using Tochka.JsonRpc.Client.Tests.WebApplication;
-using Tochka.JsonRpc.V1.Common.Serializers;
-using Tochka.JsonRpc.V1.Server;
-using Tochka.JsonRpc.V1.Server.Pipeline;
-using Tochka.JsonRpc.V1.Server.Settings;
+using Tochka.JsonRpc.Server;
+using Tochka.JsonRpc.Server.Extensions;
+using Tochka.JsonRpc.Server.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-    .AddJsonRpcServer(static options => options.DefaultMethodOptions.MethodStyle = MethodStyle.ActionOnly);
-builder.Services.TryAddJsonRpcSerializer<CamelCaseJsonRpcSerializer>();
+builder.Services.AddControllers();
+builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = JsonRpcMethodStyle.ActionOnly);
 builder.Services.AddScoped<IResponseProvider, SimpleResponseProvider>();
 builder.Services.AddScoped<IRequestValidator, SimpleRequestValidator>();
 
