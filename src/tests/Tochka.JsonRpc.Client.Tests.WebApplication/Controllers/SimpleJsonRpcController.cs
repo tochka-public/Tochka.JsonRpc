@@ -53,7 +53,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         return responseProvider.GetJsonRpcResponse();
     }
 
-    public TestData NullableArrayParams([FromParams(BindingStyle.Array)] List<object?> data)
+    public TestData NullableArrayParams([FromParams(BindingStyle.Array)] List<object?>? data)
     {
         requestValidator.Validate(data);
         return responseProvider.GetJsonRpcResponse();
@@ -71,7 +71,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         return responseProvider.GetJsonRpcResponse();
     }
 
-    public TestData DefaultArrayParams([FromParams(BindingStyle.Array)] List<string?> data = null)
+    public TestData DefaultArrayParams([FromParams(BindingStyle.Array)] List<string?>? data = null)
     {
         requestValidator.Validate(data);
         return responseProvider.GetJsonRpcResponse();

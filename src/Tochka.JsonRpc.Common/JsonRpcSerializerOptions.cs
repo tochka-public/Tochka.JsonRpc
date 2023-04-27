@@ -27,7 +27,7 @@ public static class JsonRpcSerializerOptions
             new ResponseConverter(),
             new UntypedCallMappingConverter()
         },
-        WriteIndented = true
+        WriteIndented = true,
     };
 
     public static JsonSerializerOptions SnakeCase { get; } = new()

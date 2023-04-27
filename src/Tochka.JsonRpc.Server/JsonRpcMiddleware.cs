@@ -106,12 +106,12 @@ public class JsonRpcMiddleware
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected exceptions in json rpc response")]
-    private async Task<IResponse?> ProcessCall(HttpContext callHttpContext, JsonDocument untypedCall, bool isBatch)
+    private async Task<IResponse?> ProcessCall(HttpContext callHttpContext, JsonDocument rawCall, bool isBatch)
     {
         IUntypedCall? call;
         try
         {
-            call = untypedCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
+            call = rawCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
         }
         catch (JsonException e)
         {
@@ -136,8 +136,9 @@ public class JsonRpcMiddleware
 
             callHttpContext.Features.Set(new JsonRpcFeature
             {
+                RawCall = rawCall,
                 Call = call,
-                IsBatch = isBatch
+                IsBatch = isBatch,
             });
 
             await next(callHttpContext);

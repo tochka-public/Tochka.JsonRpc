@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -9,6 +10,9 @@ internal static class HttpContextExtensions
 {
     public static ICall? GetJsonRpcCall(this HttpContext httpContext) =>
         httpContext.Features.Get<JsonRpcFeature>()?.Call;
+
+    public static JsonDocument? GetRawJsonRpcCall(this HttpContext httpContext) =>
+        httpContext.Features.Get<JsonRpcFeature>()?.RawCall;
 
     public static IResponse? GetJsonRpcResponse(this HttpContext httpContext) =>
         httpContext.Features.Get<JsonRpcFeature>()?.Response;

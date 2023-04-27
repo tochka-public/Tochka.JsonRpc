@@ -5,5 +5,5 @@ namespace Tochka.JsonRpc.Server.Binding;
 
 internal interface IJsonRpcParamsParser
 {
-    IParseResult Parse(JsonDocument? parameters, JsonRpcParameterMetadata parameterMetadata);
+    IParseResult Parse(JsonDocument rawCall, JsonDocument? parameters, JsonRpcParameterMetadata parameterMetadata);
 }

@@ -39,13 +39,14 @@ internal class JsonRpcModelBinder : IModelBinder
         }
 
         var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(endpointMetadata, options, serializerOptionsProviders);
+        var rawCall = bindingContext.HttpContext.GetRawJsonRpcCall();
         var call = bindingContext.HttpContext.GetJsonRpcCall();
-        if (call is not IUntypedCall untypedCall) // == null
+        if (rawCall == null || call is not IUntypedCall untypedCall) // == null
         {
             throw new JsonRpcServerException($"Not found json rpc call in HttpContext, maybe middleware is missing");
         }
 
-        var parseResult = parser.Parse(untypedCall.Params, parameterMetadata);
+        var parseResult = parser.Parse(rawCall, untypedCall.Params, parameterMetadata);
         parameterBinder.SetResult(bindingContext, parameterMetadata, parseResult, jsonSerializerOptions);
     }
 }

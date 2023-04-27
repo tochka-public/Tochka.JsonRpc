@@ -26,6 +26,11 @@ public static class JsonRpcConstants
     public const string MethodProperty = "method";
 
     /// <summary>
+    /// "params" JSON property to look for parameters in single request
+    /// </summary>
+    public const string ParamsProperty = "params";
+
+    /// <summary>
     /// "result" JSON property to look for successful response data in single response
     /// </summary>
     public const string ResultProperty = "result";
