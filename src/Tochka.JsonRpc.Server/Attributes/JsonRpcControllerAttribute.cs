@@ -1,6 +1,6 @@
 ﻿namespace Tochka.JsonRpc.Server.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-internal sealed class JsonRpcControllerAttribute : Attribute
+public sealed class JsonRpcControllerAttribute : Attribute
 {
 }

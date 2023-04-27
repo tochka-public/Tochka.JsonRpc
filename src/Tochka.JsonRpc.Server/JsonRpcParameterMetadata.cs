@@ -2,4 +2,4 @@
 
 namespace Tochka.JsonRpc.Server;
 
-internal record JsonRpcParameterMetadata(string PropertyName, int Position, BindingStyle BindingStyle, bool IsOptional);
+public sealed record JsonRpcParameterMetadata(string PropertyName, int Position, BindingStyle BindingStyle, bool IsOptional);

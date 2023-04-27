@@ -4,7 +4,7 @@ using Tochka.JsonRpc.Server.Binding.ParseResults;
 
 namespace Tochka.JsonRpc.Server.Binding;
 
-internal interface IParameterBinder
+public interface IJsonRpcParameterBinder
 {
     void SetResult(ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata, IParseResult parseResult, JsonSerializerOptions jsonSerializerOptions);
 }

@@ -1,3 +1,3 @@
 ﻿namespace Tochka.JsonRpc.Server.Binding.ParseResults;
 
-internal record NoParseResult(string JsonKey) : IParseResult;
+public sealed record NoParseResult(string JsonKey) : IParseResult;

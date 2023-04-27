@@ -35,7 +35,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
-        services.AddSingleton<IParameterBinder, ParameterBinder>();
+        services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }
