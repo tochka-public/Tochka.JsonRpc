@@ -2,7 +2,7 @@
 using Tochka.JsonRpc.TestUtils;
 using Tochka.JsonRpc.TestUtils.Integration;
 
-namespace Tochka.JsonRpc.Client.Tests.WebApplication;
+namespace Tochka.JsonRpc.Tests.WebApplication;
 
 public interface IRequestValidator
 {

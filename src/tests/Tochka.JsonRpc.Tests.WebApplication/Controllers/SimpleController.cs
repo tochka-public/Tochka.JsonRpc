@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Tochka.JsonRpc.Client.Tests.WebApplication.Controllers;
+namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
 public class SimpleController : ControllerBase
 {

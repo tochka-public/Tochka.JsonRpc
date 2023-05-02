@@ -7,7 +7,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
-using Tochka.JsonRpc.Client.Tests.WebApplication;
+using Tochka.JsonRpc.Tests.WebApplication;
 using Tochka.JsonRpc.TestUtils;
 using Tochka.JsonRpc.TestUtils.Integration;
 

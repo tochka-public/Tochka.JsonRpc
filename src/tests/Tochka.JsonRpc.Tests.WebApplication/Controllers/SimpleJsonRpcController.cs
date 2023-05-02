@@ -8,7 +8,7 @@ using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 using Tochka.JsonRpc.TestUtils;
 
-namespace Tochka.JsonRpc.Client.Tests.WebApplication.Controllers;
+namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
 public class SimpleJsonRpcController : JsonRpcControllerBase
 {

@@ -10,9 +10,22 @@ namespace Tochka.JsonRpc.Common.Converters;
 /// </summary>
 public class CallConverter : JsonConverter<IUntypedCall>
 {
-    // NOTE: used in server to parse requests, no need for serialization
-    public override void Write(Utf8JsonWriter writer, IUntypedCall value, JsonSerializerOptions options) =>
-        throw new InvalidOperationException();
+    // System.Text.Json can't serialize derived types:
+    // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    public override void Write(Utf8JsonWriter writer, IUntypedCall value, JsonSerializerOptions options)
+    {
+        switch (value)
+        {
+            case UntypedRequest untypedRequest:
+                JsonSerializer.Serialize(writer, untypedRequest, options);
+                break;
+            case UntypedNotification untypedNotification:
+                JsonSerializer.Serialize(writer, untypedNotification, options);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
+        }
+    }
 
     public override IUntypedCall? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
         CheckProperties(reader) switch

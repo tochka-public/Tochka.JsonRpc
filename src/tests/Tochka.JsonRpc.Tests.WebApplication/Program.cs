@@ -1,4 +1,4 @@
-using Tochka.JsonRpc.Client.Tests.WebApplication;
+using Tochka.JsonRpc.Tests.WebApplication;
 using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Settings;
