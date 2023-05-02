@@ -414,7 +414,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                             ]
                         }
                     },
@@ -427,7 +427,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                             ]
                         }
                     },
@@ -470,7 +470,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                             ]
                         }
                     },
@@ -483,7 +483,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                             ]
                         }
                     },
@@ -695,7 +695,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Can not bind value = [null] by JSON key = [params] to required parameter"
+                                "Can't bind value = [null] by JSON key = [params] to required parameter"
                             ]
                         }
                     },
@@ -708,7 +708,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Can not bind value = [null] by JSON key = [params] to required parameter"
+                                "Can't bind value = [null] by JSON key = [params] to required parameter"
                             ]
                         }
                     },
@@ -873,7 +873,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                             ]
                         }
                     },
@@ -886,7 +886,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                             ]
                         }
                     },
@@ -986,7 +986,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Can not bind value = [null] by JSON key = [params] to required parameter"
+                                "Can't bind value = [null] by JSON key = [params] to required parameter"
                             ]
                         }
                     },
@@ -999,7 +999,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Can not bind value = [null] by JSON key = [params] to required parameter"
+                                "Can't bind value = [null] by JSON key = [params] to required parameter"
                             ]
                         }
                     },
@@ -1100,7 +1100,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                             ]
                         }
                     },
@@ -1113,7 +1113,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                             ]
                         }
                     },
@@ -1211,7 +1211,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                             ]
                         }
                     },
@@ -1224,7 +1224,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                             ]
                         }
                     },
@@ -1267,7 +1267,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                             ]
                         }
                     },
@@ -1280,7 +1280,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                             ]
                         }
                     },
@@ -1602,7 +1602,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                             ]
                         }
                     },
@@ -1615,7 +1615,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                             ]
                         }
                     },
@@ -1769,7 +1769,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                             ]
                         }
                     },
@@ -1782,7 +1782,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                             ]
                         }
                     },
@@ -1880,7 +1880,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                             ]
                         }
                     },
@@ -1893,7 +1893,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                             ]
                         }
                     },
@@ -1936,7 +1936,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                             ]
                         }
                     },
@@ -1949,7 +1949,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                                "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                             ]
                         }
                     },
@@ -2262,7 +2262,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                             ]
                         }
                     },
@@ -2275,7 +2275,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                             ]
                         }
                     },
@@ -2424,7 +2424,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                             ]
                         }
                     },
@@ -2437,7 +2437,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                         "message": "Invalid params",
                         "data": {
                             "data": [
-                                "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                                "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                             ]
                         }
                     },
@@ -3548,7 +3548,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                     "message": "Parse error",
                     "data": {
                         "type": "System.Text.Json.JsonException",
-                        "message": "\u00271\u0027 is an invalid start of a property name. Expected a \u0027\u0022\u0027. Path: $ | LineNumber: 2 | BytePositionInLine: 8.",
+                        "message": "'1' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 8.",
                         "details": null
                     }
                 },
@@ -3606,57 +3606,6 @@ internal class BatchTests : IntegrationTestsBase<Program>
                             "message": "JSON Rpc call does not have [jsonrpc] property",
                             "details": null
                         }
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
-
-        using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcUrl, request);
-        var actualResponseJson = (await response.Content.ReadAsStringAsync()).TrimAllLines();
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        actualResponseJson.Should().Be(expectedResponseJson);
-    }
-
-    [Test]
-    [Ignore("Processes successfully, but should?")]
-    public async Task SameId_ReturnError()
-    {
-        const string requestJson = $$"""
-            [
-                {
-                    "method": "process_anything",
-                    "id": "123",
-                    "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "method": "process_anything",
-                    "id": "123",
-                    "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
-        var expectedResponseJson = """
-            [
-                {
-                    "id": "123",
-                    "error": {
-                        "code": TODO,
-                        "message": "TODO",
-                        "data": {TODO}
-                    },
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "456",
-                    "error": {
-                        "code": TODO,
-                        "message": "TODO",
-                        "data": {TODO}
                     },
                     "jsonrpc": "2.0"
                 }

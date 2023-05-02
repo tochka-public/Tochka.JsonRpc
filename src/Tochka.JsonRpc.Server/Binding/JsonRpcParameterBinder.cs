@@ -45,7 +45,7 @@ internal class JsonRpcParameterBinder : IJsonRpcParameterBinder
             // value required == no `?` for NRT or [Required] attribute
             case NullParseResult nullParseResult when bindingContext.ModelMetadata is { IsReferenceOrNullableType: true, IsRequired: true }:
                 log.LogTrace("[{parameterName}] - can be null, required: {parseResult}", parameterName, nullParseResult);
-                var requiredError = $"Can not bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to required parameter";
+                var requiredError = $"Can't bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to required parameter";
                 SetError(bindingContext, parameterName, requiredError);
                 break;
 
@@ -58,7 +58,7 @@ internal class JsonRpcParameterBinder : IJsonRpcParameterBinder
             // json value was null and type can't be null
             case NullParseResult nullParseResult:
                 log.LogTrace("[{parameterName}]: {parseResult}", parameterName, nullParseResult);
-                var nullError = $"Can not bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to non-nullable parameter of type [{bindingContext.ModelMetadata.ModelType.Name}]";
+                var nullError = $"Can't bind value = [null] by JSON key = [{nullParseResult.JsonKey}] to non-nullable parameter of type [{bindingContext.ModelMetadata.ModelType.Name}]";
                 SetError(bindingContext, parameterName, nullError);
                 break;
 

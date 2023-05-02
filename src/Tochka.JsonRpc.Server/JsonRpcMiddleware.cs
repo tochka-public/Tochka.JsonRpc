@@ -80,6 +80,7 @@ public class JsonRpcMiddleware
         if (responseEncoding.CodePage == Encoding.UTF8.CodePage)
         {
             await JsonSerializer.SerializeAsync(responseBody, responseWrapper, options.HeadersJsonSerializerOptions);
+            return;
         }
 
         await using var transcodingStream = Encoding.CreateTranscodingStream(responseBody, responseEncoding, Encoding.UTF8, true);

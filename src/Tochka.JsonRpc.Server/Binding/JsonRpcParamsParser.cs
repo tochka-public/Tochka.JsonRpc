@@ -53,7 +53,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
 
             case BindingStyle.Array:
                 log.LogTrace("Can't bind json params object to collection for [{jsonProperty}]", jsonProperty);
-                return new ErrorParseResult("Can not bind object to collection parameter", JsonRpcConstants.ParamsProperty);
+                return new ErrorParseResult("Can't bind object to collection parameter", JsonRpcConstants.ParamsProperty);
 
             default:
                 return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", jsonKey);
@@ -85,8 +85,8 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
                 return new SuccessParseResult(value, jsonKey);
 
             case BindingStyle.Object:
-                log.LogWarning("Can not bind json params array to object for argument by index [{index}]", index);
-                return new ErrorParseResult("Can not bind array to object parameter", JsonRpcConstants.ParamsProperty);
+                log.LogWarning("Can't bind json params array to object for argument by index [{index}]", index);
+                return new ErrorParseResult("Can't bind array to object parameter", JsonRpcConstants.ParamsProperty);
 
             // map 1:1 to collection
             case BindingStyle.Array:
@@ -106,7 +106,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
             // can't get properties for binding to arguments from null params
             case BindingStyle.Default:
                 log.LogWarning("Binding null to regular argument failed");
-                return new ErrorParseResult("Can not bind method arguments from null json params", JsonRpcConstants.ParamsProperty);
+                return new ErrorParseResult("Can't bind method arguments from null json params", JsonRpcConstants.ParamsProperty);
 
             // will bind successfully if object can be null
             case BindingStyle.Object:
@@ -130,7 +130,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
         {
             // can't get properties for binding to arguments from missing params
             case BindingStyle.Default:
-                return new ErrorParseResult("Can not bind method arguments from missing json params", JsonRpcConstants.ParamsProperty);
+                return new ErrorParseResult("Can't bind method arguments from missing json params", JsonRpcConstants.ParamsProperty);
 
             // will bind successfully if object has default value specified
             case BindingStyle.Object:

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
+using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -84,8 +85,9 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
         IUntypedCall? call = null;
         try
         {
-            call = DeserializeCall(rawCall);
-            callHttpContext.Features.Set(new JsonRpcFeature
+            call = rawCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
+            ValidateCall(call);
+            callHttpContext.Features.Set<IJsonRpcFeature>(new JsonRpcFeature
             {
                 RawCall = rawCall,
                 Call = call,
@@ -115,10 +117,8 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
         }
     }
 
-    private IUntypedCall DeserializeCall(JsonDocument rawCall)
+    private static void ValidateCall(ICall call)
     {
-        var call = rawCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
-
         if (string.IsNullOrWhiteSpace(call.Method))
         {
             throw new JsonRpcFormatException("Method is null or empty");
@@ -128,7 +128,5 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
         {
             throw new JsonRpcFormatException($"Only [{JsonRpcConstants.Version}] version supported. Got [{call.Jsonrpc}]");
         }
-
-        return call;
     }
 }

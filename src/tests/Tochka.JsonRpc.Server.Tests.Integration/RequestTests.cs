@@ -307,7 +307,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                            "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                         ]
                     }
                 },
@@ -341,7 +341,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                            "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                         ]
                     }
                 },
@@ -482,7 +482,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Can not bind value = [null] by JSON key = [params] to required parameter"
+                            "Can't bind value = [null] by JSON key = [params] to required parameter"
                         ]
                     }
                 },
@@ -589,7 +589,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                            "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                         ]
                     }
                 },
@@ -664,7 +664,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Can not bind value = [null] by JSON key = [params] to required parameter"
+                            "Can't bind value = [null] by JSON key = [params] to required parameter"
                         ]
                     }
                 },
@@ -733,7 +733,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                            "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                         ]
                     }
                 },
@@ -806,7 +806,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                            "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                         ]
                     }
                 },
@@ -840,7 +840,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                            "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                         ]
                     }
                 },
@@ -1054,7 +1054,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                            "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                         ]
                     }
                 },
@@ -1161,7 +1161,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                            "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                         ]
                     }
                 },
@@ -1234,7 +1234,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind method arguments from null json params"
+                            "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                         ]
                     }
                 },
@@ -1268,7 +1268,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind method arguments from missing json params"
+                            "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
                         ]
                     }
                 },
@@ -1489,7 +1489,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind array to object parameter"
+                            "Error while binding value by JSON key = [params] - Can't bind array to object parameter"
                         ]
                     }
                 },
@@ -1599,7 +1599,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value by JSON key = [params] - Can not bind object to collection parameter"
+                            "Error while binding value by JSON key = [params] - Can't bind object to collection parameter"
                         ]
                     }
                 },
@@ -2298,7 +2298,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Parse error",
                     "data": {
                         "type": "System.Text.Json.JsonException",
-                        "message": "\u00271\u0027 is an invalid start of a property name. Expected a \u0027\u0022\u0027. Path: $ | LineNumber: 1 | BytePositionInLine: 4.",
+                        "message": "'1' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 1 | BytePositionInLine: 4.",
                         "details": null
                     }
                 },
