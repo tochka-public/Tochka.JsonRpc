@@ -24,8 +24,6 @@ public static class Utils
         }
     }
 
-    public static bool IsCollection(Type type) => type.GetInterface(nameof(ICollection)) != null;
-
     internal static JsonDocument? SerializeParams<TParams>(TParams data, JsonSerializerOptions serializerOptions)
         where TParams : class?
     {
