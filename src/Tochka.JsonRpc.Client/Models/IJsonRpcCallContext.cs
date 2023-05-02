@@ -13,7 +13,7 @@ public interface IJsonRpcCallContext
 {
     string? RequestUrl { get; }
     IUntypedCall? SingleCall { get; }
-    List<IUntypedCall>? BatchCall { get; }
+    ICollection<IUntypedCall>? BatchCall { get; }
     int ExpectedBatchResponseCount { get; }
     string? HttpResponseInfo { get; }
     string? HttpContentInfo { get; }
@@ -21,14 +21,14 @@ public interface IJsonRpcCallContext
     IResponse? SingleResponse { get; }
     List<IResponse>? BatchResponse { get; }
 
-    void WithRequestUrl(string? requestUrl);
-    void WithSingle(IUntypedCall singleCall);
-    void WithBatch(List<IUntypedCall> batchCall);
-    void WithHttpResponse(HttpResponseMessage httpResponseMessage);
-    void WithHttpContent(HttpContent httpContent, string httpContentString);
-    void WithSingleResponse(IResponse singleResponse);
-    void WithBatchResponse(List<IResponse> batchResponse);
-    void WithError(UntypedErrorResponse untypedErrorResponse);
+    IJsonRpcCallContext WithRequestUrl(string? requestUrl);
+    IJsonRpcCallContext WithSingle(IUntypedCall singleCall);
+    IJsonRpcCallContext WithBatch(ICollection<IUntypedCall> batchCall);
+    IJsonRpcCallContext WithHttpResponse(HttpResponseMessage httpResponseMessage);
+    IJsonRpcCallContext WithHttpContent(HttpContent httpContent, string httpContentString);
+    IJsonRpcCallContext WithSingleResponse(IResponse singleResponse);
+    IJsonRpcCallContext WithBatchResponse(List<IResponse> batchResponse);
+    IJsonRpcCallContext WithError(UntypedErrorResponse untypedErrorResponse);
 
     [UsedImplicitly]
     string ToString();

@@ -8,7 +8,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 namespace Tochka.JsonRpc.Client.Models;
 
 [PublicAPI]
-public class SingleJsonRpcResult : ISingleJsonRpcResult
+public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
 {
     private readonly IJsonRpcCallContext context;
     private readonly JsonSerializerOptions headersJsonSerializerOptions;
@@ -28,27 +28,18 @@ public class SingleJsonRpcResult : ISingleJsonRpcResult
         this.dataJsonSerializerOptions = dataJsonSerializerOptions;
     }
 
-    public T? GetResponseOrThrow<T>()
+    public TResponse? GetResponseOrThrow<TResponse>() => response switch
     {
-        switch (response)
-        {
-            case null:
-                throw new JsonRpcException($"Expected successful response with [{typeof(T).Name}] params, got nothing", context);
-            case UntypedResponse { Result: null }:
-                return default;
-            case UntypedResponse untypedResponse:
-                return untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions);
-            case UntypedErrorResponse untypedErrorResponse:
-                context.WithError(untypedErrorResponse);
-                throw new JsonRpcException($"Expected successful response with [{typeof(T).Name}] params, got error", context);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name);
-        }
-    }
+        null => throw new JsonRpcException($"Expected successful response with [{typeof(TResponse).Name}] params, got nothing", context),
+        UntypedResponse { Result: null } => default,
+        UntypedResponse untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
+        UntypedErrorResponse untypedErrorResponse => throw new JsonRpcException($"Expected successful response with [{typeof(TResponse).Name}] params, got error", context.WithError(untypedErrorResponse)),
+        _ => throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name)
+    };
 
-    public T? AsResponse<T>() => response switch
+    public TResponse? AsResponse<TResponse>() => response switch
     {
-        UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<T>(dataJsonSerializerOptions),
+        UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
         _ => default
     };
 
@@ -60,11 +51,11 @@ public class SingleJsonRpcResult : ISingleJsonRpcResult
         _ => null
     };
 
-    public Error<T>? AsTypedError<T>() => response switch
+    public Error<TError>? AsTypedError<TError>() => response switch
     {
-        UntypedErrorResponse untypedErrorResponse => new Error<T>(untypedErrorResponse.Error.Code,
+        UntypedErrorResponse untypedErrorResponse => new Error<TError>(untypedErrorResponse.Error.Code,
             untypedErrorResponse.Error.Message,
-            Utils.DeserializeErrorData<T>(untypedErrorResponse.Error.Data, headersJsonSerializerOptions, dataJsonSerializerOptions)),
+            Utils.DeserializeErrorData<TError>(untypedErrorResponse.Error.Data, headersJsonSerializerOptions, dataJsonSerializerOptions)),
         _ => null
     };
 

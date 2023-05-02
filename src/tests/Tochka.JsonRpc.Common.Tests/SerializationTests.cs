@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
 using NUnit.Framework;
@@ -1041,6 +1042,78 @@ internal class SerializationTests
     #endregion
 
     #region Batch
+
+    [Test]
+    public void Batch_IEnumerable()
+    {
+        var data = new { };
+        var jsonData = JsonSerializer.SerializeToDocument(data, snakeCaseSerializerOptions);
+        var batch = new List<IUntypedCall>
+        {
+            new UntypedNotification(Method, jsonData)
+        }.AsEnumerable();
+
+        var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
+
+        var expected = $$"""
+            [
+                {
+                    "method": "{{Method}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """.TrimAllLines();
+        serialized.Should().Be(expected);
+    }
+
+    [Test]
+    public void Batch_List()
+    {
+        var data = new { };
+        var jsonData = JsonSerializer.SerializeToDocument(data, snakeCaseSerializerOptions);
+        var batch = new List<IUntypedCall>
+        {
+            new UntypedNotification(Method, jsonData)
+        };
+
+        var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
+
+        var expected = $$"""
+            [
+                {
+                    "method": "{{Method}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """.TrimAllLines();
+        serialized.Should().Be(expected);
+    }
+
+    [Test]
+    public void Batch_Array()
+    {
+        var data = new { };
+        var jsonData = JsonSerializer.SerializeToDocument(data, snakeCaseSerializerOptions);
+        var batch = new IUntypedCall[]
+        {
+            new UntypedNotification(Method, jsonData)
+        };
+
+        var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
+
+        var expected = $$"""
+            [
+                {
+                    "method": "{{Method}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """.TrimAllLines();
+        serialized.Should().Be(expected);
+    }
 
     [Test]
     public void Batch_1Notification()

@@ -3,4 +3,4 @@
 namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
 [ExcludeFromCodeCoverage]
-public record BatchResponseWrapper(List<IResponse> Responses) : IResponseWrapper;
+public sealed record BatchResponseWrapper(List<IResponse> Responses) : IResponseWrapper;

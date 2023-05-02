@@ -8,10 +8,10 @@ namespace Tochka.JsonRpc.Client.Models;
 [PublicAPI]
 public interface IBatchJsonRpcResult
 {
-    T? GetResponseOrThrow<T>(IRpcId? id);
-    T? AsResponse<T>(IRpcId? id);
+    TResponse? GetResponseOrThrow<TResponse>(IRpcId? id);
+    TResponse? AsResponse<TResponse>(IRpcId? id);
     bool HasError(IRpcId? id);
     Error<JsonDocument>? AsAnyError(IRpcId? id);
-    Error<T>? AsTypedError<T>(IRpcId? id);
+    Error<TError>? AsTypedError<TError>(IRpcId? id);
     Error<ExceptionInfo>? AsErrorWithExceptionInfo(IRpcId? id);
 }
