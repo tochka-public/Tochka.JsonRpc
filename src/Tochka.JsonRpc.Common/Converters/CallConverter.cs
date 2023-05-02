@@ -1,12 +1,11 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
 namespace Tochka.JsonRpc.Common.Converters;
 
 /// <summary>
-///     Handle dumb rule of Id present for requests and not present for notifications
+/// Handle dumb rule of Id present for requests and not present for notifications
 /// </summary>
 public class CallConverter : JsonConverter<IUntypedCall>
 {

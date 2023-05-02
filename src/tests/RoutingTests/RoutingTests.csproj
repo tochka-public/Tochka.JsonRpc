@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
-      <ProjectReference Include="..\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
+  </ItemGroup>
 
 </Project>

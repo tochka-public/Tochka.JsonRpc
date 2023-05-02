@@ -1,7 +1,7 @@
-using Tochka.JsonRpc.Tests.WebApplication;
 using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Settings;
+using Tochka.JsonRpc.Tests.WebApplication;
 
 var builder = WebApplication.CreateBuilder(args);
 

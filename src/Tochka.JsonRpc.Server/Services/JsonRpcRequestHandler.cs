@@ -3,15 +3,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
-using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response;
-using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 using Tochka.JsonRpc.Server.Exceptions;
-using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Features;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -91,7 +88,7 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
             {
                 RawCall = rawCall,
                 Call = call,
-                IsBatch = isBatch,
+                IsBatch = isBatch
             });
 
             await next(callHttpContext);

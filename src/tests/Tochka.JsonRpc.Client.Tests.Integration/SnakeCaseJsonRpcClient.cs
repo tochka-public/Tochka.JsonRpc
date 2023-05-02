@@ -9,9 +9,9 @@ namespace Tochka.JsonRpc.Client.Tests.Integration;
 
 internal class SnakeCaseJsonRpcClient : JsonRpcClientBase
 {
+    public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.SnakeCase;
+
     public SnakeCaseJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator) : base(client, new SimpleJsonRpcClientOptions(), jsonRpcIdGenerator, Mock.Of<ILogger>())
     {
     }
-
-    public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.SnakeCase;
 }

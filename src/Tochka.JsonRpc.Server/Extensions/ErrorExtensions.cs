@@ -7,7 +7,7 @@ namespace Tochka.JsonRpc.Server.Extensions;
 public static class ErrorExtensions
 {
     /// <summary>
-    /// Throws special <see cref="JsonRpcErrorException"/> which is converted into response with given code, message and data
+    /// Throws special <see cref="JsonRpcErrorException" /> which is converted into response with given code, message and data
     /// </summary>
     /// <param name="error"></param>
     /// <exception cref="JsonRpcErrorException"></exception>

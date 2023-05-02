@@ -10,5 +10,5 @@ public enum JsonRpcMethodStyle
     /// <summary>
     /// Treat rpc "method" as "action", looking for action in every rpc controller
     /// </summary>
-    ActionOnly,
+    ActionOnly
 }

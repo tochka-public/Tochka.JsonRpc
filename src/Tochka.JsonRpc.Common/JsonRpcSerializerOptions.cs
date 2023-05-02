@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Converters;
-using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.Common;

@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
-using Tochka.JsonRpc.Tests.WebApplication;
-using Tochka.JsonRpc.TestUtils.Integration;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
+using Tochka.JsonRpc.Tests.WebApplication;
 using Tochka.JsonRpc.TestUtils;
+using Tochka.JsonRpc.TestUtils.Integration;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 

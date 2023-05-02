@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Tests.WebApplication;
-using Tochka.JsonRpc.TestUtils;
 using Tochka.JsonRpc.TestUtils.Integration;
 
 namespace Tochka.JsonRpc.Server.Tests.Integration;

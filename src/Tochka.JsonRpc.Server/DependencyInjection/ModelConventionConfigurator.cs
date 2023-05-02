@@ -15,9 +15,9 @@ namespace Tochka.JsonRpc.Server.DependencyInjection;
 [ExcludeFromCodeCoverage]
 internal class ModelConventionConfigurator<TModelConvention> : IConfigureOptions<MvcOptions>
 {
-    public ModelConventionConfigurator(TModelConvention convention) => this.convention = convention;
-
     private readonly TModelConvention convention;
+
+    public ModelConventionConfigurator(TModelConvention convention) => this.convention = convention;
 
     public void Configure(MvcOptions options)
     {

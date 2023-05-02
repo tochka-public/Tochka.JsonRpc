@@ -71,11 +71,6 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
     {
     }
 
-    private static JsonDocument? SerializeData(object? result, JsonSerializerOptions jsonSerializerOptions) =>
-        result == null
-            ? null
-            : JsonSerializer.SerializeToDocument(result, jsonSerializerOptions);
-
     private object? GetResult(IActionResult actionResult) => actionResult switch
     {
         ObjectResult { Value: IError error } => error,
@@ -85,4 +80,9 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
         EmptyResult => null,
         _ => actionResult
     };
+
+    private static JsonDocument? SerializeData(object? result, JsonSerializerOptions jsonSerializerOptions) =>
+        result == null
+            ? null
+            : JsonSerializer.SerializeToDocument(result, jsonSerializerOptions);
 }
