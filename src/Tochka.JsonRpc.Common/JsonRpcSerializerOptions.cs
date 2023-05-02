@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -28,19 +29,22 @@ public static class JsonRpcSerializerOptions
             new UntypedCallMappingConverter()
         },
         WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     public static JsonSerializerOptions SnakeCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicies.SnakeCaseLower) },
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     public static JsonSerializerOptions CamelCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 }
