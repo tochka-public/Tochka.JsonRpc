@@ -5,6 +5,7 @@ using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
+using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 

@@ -5,7 +5,7 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server;
 
-internal class Utils
+public static class Utils
 {
     public static JsonSerializerOptions GetDataJsonSerializerOptions(IEnumerable<object> endpointMetadata, JsonRpcServerOptions serverOptions, IEnumerable<IJsonSerializerOptionsProvider> providers)
     {

@@ -61,7 +61,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
 
         context.HttpContext.SetJsonRpcResponse(response switch
         {
-            IError error => new UntypedErrorResponse(request.Id, SerializeError(error, jsonSerializerOptions)),
+            IError error => new UntypedErrorResponse(request.Id, error.AsUntypedError(jsonSerializerOptions)),
             _ => new UntypedResponse(request.Id, SerializeData(response, jsonSerializerOptions))
         });
         context.Result = new StatusCodeResult(StatusCodes.Status200OK);
@@ -70,9 +70,6 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
     public void OnResultExecuted(ResultExecutedContext context)
     {
     }
-
-    private static Error<JsonDocument> SerializeError(IError error, JsonSerializerOptions jsonSerializerOptions) =>
-        new Error<JsonDocument>(error.Code, error.Message, SerializeData(error.Data, jsonSerializerOptions));
 
     private static JsonDocument? SerializeData(object? result, JsonSerializerOptions jsonSerializerOptions) =>
         result == null

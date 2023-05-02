@@ -17,6 +17,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
+using Tochka.JsonRpc.Server.Features;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -44,11 +45,10 @@ public class JsonRpcMiddleware
         }
 
         var responseWrapper = await ProcessJsonRpcRequest(httpContext);
-
         if (responseWrapper != null)
         {
             httpContext.Response.StatusCode = StatusCodes.Status200OK;
-            // is it ok to always return utf-8?
+            // TODO is it ok to always return utf-8?
             httpContext.Response.ContentType = $"{JsonRpcConstants.ContentType}; charset=utf-8";
             await JsonSerializer.SerializeAsync(httpContext.Response.Body, responseWrapper, options.HeadersJsonSerializerOptions);
         }
@@ -57,33 +57,38 @@ public class JsonRpcMiddleware
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected parsing exceptions in json rpc response")]
     private async Task<IResponseWrapper?> ProcessJsonRpcRequest(HttpContext httpContext)
     {
-        IRequestWrapper? requestWrapper;
         try
         {
-            // what if it is not utf-8?
+            // TODO what if it is not utf-8?
             var body = httpContext.Request.Body;
-            requestWrapper = await JsonSerializer.DeserializeAsync<IRequestWrapper>(body, options.HeadersJsonSerializerOptions);
+            var requestWrapper = await JsonSerializer.DeserializeAsync<IRequestWrapper>(body, options.HeadersJsonSerializerOptions);
+            return requestWrapper switch
+            {
+                SingleRequestWrapper singleRequestWrapper => await ProcessSingleRequest(httpContext, singleRequestWrapper),
+                BatchRequestWrapper batchRequestWrapper => await ProcessBatchRequest(httpContext, batchRequestWrapper),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
-        catch (Exception e) when (e is JsonRpcFormatException or JsonException)
+        catch (Exception e)
         {
-            var error = WrapParseException(e, new NullRpcId());
+            var error = e is JsonException
+                ? WrapParseException(e)
+                : WrapException(e);
             return new SingleResponseWrapper(error);
         }
-
-        return requestWrapper switch
-        {
-            SingleRequestWrapper singleRequestWrapper => await ProcessSingleRequest(httpContext, singleRequestWrapper),
-            BatchRequestWrapper batchRequestWrapper => await ProcessBatchRequest(httpContext, batchRequestWrapper),
-            _ => throw new ArgumentOutOfRangeException()
-        };
     }
 
     private async Task<IResponseWrapper?> ProcessBatchRequest(HttpContext httpContext, BatchRequestWrapper batchRequestWrapper)
     {
+        if (batchRequestWrapper.Calls.Count == 0)
+        {
+            throw new JsonRpcFormatException("Empty batch call");
+        }
+
         var responses = new List<IResponse>();
         foreach (var call in batchRequestWrapper.Calls)
         {
-            var response = await ProcessCall(httpContext, call, true);
+            var response = await ProcessCallSafe(httpContext, call, true);
             if (response != null)
             {
                 responses.Add(response);
@@ -99,41 +104,19 @@ public class JsonRpcMiddleware
 
     private async Task<IResponseWrapper?> ProcessSingleRequest(HttpContext httpContext, SingleRequestWrapper singleRequestWrapper)
     {
-        var response = await ProcessCall(httpContext, singleRequestWrapper.Call, false);
+        var response = await ProcessCallSafe(httpContext, singleRequestWrapper.Call, false);
         return response == null
             ? null
             : new SingleResponseWrapper(response);
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected exceptions in json rpc response")]
-    private async Task<IResponse?> ProcessCall(HttpContext callHttpContext, JsonDocument rawCall, bool isBatch)
+    private async Task<IResponse?> ProcessCallSafe(HttpContext callHttpContext, JsonDocument rawCall, bool isBatch)
     {
-        IUntypedCall? call;
+        IUntypedCall? call = null;
         try
         {
-            call = rawCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
-        }
-        catch (JsonException e)
-        {
-            return WrapParseException(e, new NullRpcId());
-        }
-        catch (JsonRpcFormatException e)
-        {
-            return WrapException(e, new NullRpcId());
-        }
-
-        try
-        {
-            if (string.IsNullOrWhiteSpace(call.Method))
-            {
-                throw new JsonRpcFormatException("Method is null or empty");
-            }
-
-            if (call.Jsonrpc != JsonRpcConstants.Version)
-            {
-                throw new JsonRpcFormatException($"Only [{JsonRpcConstants.Version}] version supported. Got [{call.Jsonrpc}]");
-            }
-
+            call = DeserializeCall(rawCall);
             callHttpContext.Features.Set(new JsonRpcFeature
             {
                 RawCall = rawCall,
@@ -143,33 +126,53 @@ public class JsonRpcMiddleware
 
             await next(callHttpContext);
 
-            var feature = callHttpContext.Features.Get<JsonRpcFeature>();
+            // retrieving it again in case it was replaced during request processing
+            var feature = callHttpContext.Features.Get<IJsonRpcFeature>();
             if (feature == null)
             {
-                throw new JsonRpcServerException($"{nameof(JsonRpcFeature)} not found in HttpContext, it's forbidden to clear it during processing of json rpc call");
+                throw new JsonRpcServerException($"{nameof(IJsonRpcFeature)} not found in HttpContext");
             }
 
             return feature.Response;
         }
         catch (Exception e)
         {
-            return call is not UntypedRequest request
-                ? null
-                : WrapException(e, request.Id);
+            if (call is UntypedNotification)
+            {
+                return null;
+            }
+
+            var request = call as UntypedRequest;
+            return WrapException(e, request?.Id);
         }
     }
 
-    private IResponse WrapException(Exception exception, IRpcId id)
+    private IUntypedCall DeserializeCall(JsonDocument rawCall)
     {
-        var error = errorFactory.Exception(exception);
-        var untypedError = new Error<JsonDocument>(error.Code, error.Message, JsonSerializer.SerializeToDocument(error.Data, options.HeadersJsonSerializerOptions));
-        return new UntypedErrorResponse(id, untypedError);
+        var call = rawCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
+
+        if (string.IsNullOrWhiteSpace(call.Method))
+        {
+            throw new JsonRpcFormatException("Method is null or empty");
+        }
+
+        if (call.Jsonrpc != JsonRpcConstants.Version)
+        {
+            throw new JsonRpcFormatException($"Only [{JsonRpcConstants.Version}] version supported. Got [{call.Jsonrpc}]");
+        }
+
+        return call;
     }
 
-    private IResponse WrapParseException(Exception exception, IRpcId id)
+    private UntypedErrorResponse WrapException(Exception exception, IRpcId? id = null)
+    {
+        var error = errorFactory.Exception(exception);
+        return new UntypedErrorResponse(id ?? new NullRpcId(), error.AsUntypedError(options.HeadersJsonSerializerOptions));
+    }
+
+    private UntypedErrorResponse WrapParseException(Exception exception)
     {
         var error = errorFactory.ParseError(exception);
-        var untypedError = new Error<JsonDocument>(error.Code, error.Message, JsonSerializer.SerializeToDocument(error.Data, options.HeadersJsonSerializerOptions));
-        return new UntypedErrorResponse(id, untypedError);
+        return new UntypedErrorResponse(new NullRpcId(), error.AsUntypedError(options.HeadersJsonSerializerOptions));
     }
 }

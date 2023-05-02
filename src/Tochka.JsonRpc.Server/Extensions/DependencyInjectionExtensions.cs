@@ -24,6 +24,8 @@ public static class DependencyInjectionExtensions
         services.TryAddConvention<JsonRpcActionModelConvention>();
         services.TryAddConvention<JsonRpcParameterModelConvention>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, JsonRpcMatcherPolicy>());
+        services.AddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
+        services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
         services.Configure<MvcOptions>(static options =>
         {
             options.OutputFormatters.Insert(0, new SystemTextJsonOutputFormatter(JsonRpcSerializerOptions.Headers));
@@ -34,8 +36,6 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
         services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
-        services.AddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
-        services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }

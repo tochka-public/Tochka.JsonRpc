@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
+using Tochka.JsonRpc.Server.Metadata;
 
 namespace Tochka.JsonRpc.Server.Binding;
 

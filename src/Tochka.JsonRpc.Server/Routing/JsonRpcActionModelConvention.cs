@@ -9,7 +9,7 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Routing;
 
-public class JsonRpcActionModelConvention : IActionModelConvention
+internal class JsonRpcActionModelConvention : IActionModelConvention
 {
     private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private readonly JsonRpcServerOptions options;

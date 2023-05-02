@@ -4,7 +4,7 @@ using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Server.Settings;
 
-public class JsonRpcServerOptions
+public sealed class JsonRpcServerOptions
 {
     public PathString RoutePrefix { get; set; } = JsonRpcConstants.DefaultRoutePrefix;
     public JsonSerializerOptions HeadersJsonSerializerOptions { get; set; } = JsonRpcSerializerOptions.Headers;

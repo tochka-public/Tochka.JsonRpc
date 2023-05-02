@@ -9,11 +9,11 @@ namespace Tochka.JsonRpc.Server.Services
     public interface IJsonRpcErrorFactory
     {
         /// <summary>
-        /// -32004 Similar to 404
+        /// -32700 Invalid JSON was received by the server. From specification.
         /// </summary>
         /// <param name="errorData"></param>
         /// <returns></returns>
-        IError NotFound(object? errorData);
+        IError ParseError(object? errorData);
 
         /// <summary>
         /// -32600 The JSON sent is not a valid Request object. From specification.
@@ -44,11 +44,19 @@ namespace Tochka.JsonRpc.Server.Services
         IError InternalError(object? errorData);
 
         /// <summary>
-        /// -32700 Invalid JSON was received by the server. From specification.
+        /// [-32099, -32000] JsonRpc server Errors in allowed range
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="errorData"></param>
+        /// <returns></returns>
+        IError ServerError(int code, object? errorData);
+
+        /// <summary>
+        /// -32004 Similar to 404
         /// </summary>
         /// <param name="errorData"></param>
         /// <returns></returns>
-        IError ParseError(object? errorData);
+        IError NotFound(object? errorData);
 
         /// <summary>
         /// JSON Rpc Error response
@@ -66,14 +74,6 @@ namespace Tochka.JsonRpc.Server.Services
         /// <param name="e"></param>
         /// <returns></returns>
         IError Exception(Exception e);
-
-        /// <summary>
-        /// [-32099, -32000] JsonRpc server Errors in allowed range
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="errorData"></param>
-        /// <returns></returns>
-        IError ServerError(int code, object? errorData);
 
         /// <summary>
         /// Map HTTP response codes to pre-defined Errors from JsonRpc specification

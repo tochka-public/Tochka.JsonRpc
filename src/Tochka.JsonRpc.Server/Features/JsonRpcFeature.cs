@@ -2,9 +2,9 @@
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
-namespace Tochka.JsonRpc.Server;
+namespace Tochka.JsonRpc.Server.Features;
 
-internal class JsonRpcFeature
+public class JsonRpcFeature : IJsonRpcFeature
 {
     public JsonDocument? RawCall { get; set; }
     public ICall? Call { get; set; }

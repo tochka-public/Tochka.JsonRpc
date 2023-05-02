@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Server.Attributes;
+using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 

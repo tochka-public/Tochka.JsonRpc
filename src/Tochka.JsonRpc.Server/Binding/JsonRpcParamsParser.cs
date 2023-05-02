@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
+using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Binding;

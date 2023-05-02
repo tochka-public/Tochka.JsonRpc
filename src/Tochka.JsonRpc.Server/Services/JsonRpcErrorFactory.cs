@@ -11,7 +11,7 @@ namespace Tochka.JsonRpc.Server.Services
     /// <summary>
     /// Creates errors by specification rules, wraps exceptions depending on options
     /// </summary>
-    internal class JsonRpcErrorFactory : IJsonRpcErrorFactory
+    public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     {
         private readonly ILogger<JsonRpcErrorFactory> log;
         private readonly JsonRpcServerOptions options;
@@ -23,30 +23,37 @@ namespace Tochka.JsonRpc.Server.Services
         }
 
         /// <inheritdoc />
+        public IError ParseError(object? errorData) =>
+            new Error<object>(-32700, "Parse error", WrapExceptions(errorData));
+
+        /// <inheritdoc />
+        public IError InvalidRequest(object? errorData) =>
+            new Error<object>(-32600, "Invalid Request", WrapExceptions(errorData));
+
+        /// <inheritdoc />
+        public IError MethodNotFound(object? errorData) =>
+            new Error<object>(-32601, "Method not found", WrapExceptions(errorData));
+
+        /// <inheritdoc />
+        public IError InvalidParams(object? errorData) =>
+            new Error<object>(-32602, "Invalid params", WrapExceptions(errorData));
+
+        /// <inheritdoc />
+        public IError InternalError(object? errorData) =>
+            new Error<object>(-32603, "Internal error", WrapExceptions(errorData));
+
+        /// <inheritdoc />
+        public IError ServerError(int code, object? errorData) =>
+            !IsServer(code)
+                ? throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]")
+                : new Error<object>(code, "Server error", WrapExceptions(errorData));
+
+        /// <inheritdoc />
         public virtual IError NotFound(object? errorData) =>
             new Error<object>(-32004, "Not found", WrapExceptions(errorData));
 
         /// <inheritdoc />
-        public virtual IError InvalidRequest(object? errorData) =>
-            new Error<object>(-32600, "Invalid Request", WrapExceptions(errorData));
-
-        /// <inheritdoc />
-        public virtual IError MethodNotFound(object? errorData) =>
-            new Error<object>(-32601, "Method not found", WrapExceptions(errorData));
-
-        /// <inheritdoc />
-        public virtual IError InvalidParams(object? errorData) =>
-            new Error<object>(-32602, "Invalid params", WrapExceptions(errorData));
-
-        /// <inheritdoc />
-        public virtual IError InternalError(object? errorData) =>
-            new Error<object>(-32603, "Internal error", WrapExceptions(errorData));
-
-        /// <inheritdoc />
-        public virtual IError ParseError(object? errorData) =>
-            new Error<object>(-32700, "Parse error", WrapExceptions(errorData));
-
-        /// <inheritdoc />
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
         public virtual IError Error(int code, string message, object? errorData) =>
             IsReserved(code)
                 ? throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another")
@@ -61,12 +68,6 @@ namespace Tochka.JsonRpc.Server.Services
             JsonRpcFormatException => InvalidRequest(WrapExceptions(e)),
             _ => ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e))
         };
-
-        /// <inheritdoc />
-        public virtual IError ServerError(int code, object? errorData) =>
-            !IsServer(code)
-                ? throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]")
-                : new Error<object>(code, "Server error", WrapExceptions(errorData));
 
         /// <inheritdoc />
         public virtual IError HttpError(int httpCode, object? errorData) => httpCode switch
@@ -84,7 +85,7 @@ namespace Tochka.JsonRpc.Server.Services
         /// </summary>
         /// <param name="errorData"></param>
         /// <returns></returns>
-        protected internal virtual object? WrapExceptions(object? errorData)
+        protected virtual object? WrapExceptions(object? errorData)
         {
             if (errorData is not Exception e)
             {
