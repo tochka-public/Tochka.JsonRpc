@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
@@ -30,7 +28,6 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<IJsonRpcExceptionWrapper, JsonRpcExceptionWrapper>();
         services.Configure<MvcOptions>(static options =>
         {
-            options.OutputFormatters.Insert(0, new SystemTextJsonOutputFormatter(JsonRpcSerializerOptions.Headers));
             options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
             options.Filters.Add<JsonRpcExceptionFilter>(int.MaxValue);
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
