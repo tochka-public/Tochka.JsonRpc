@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Tochka.JsonRpc.Server;
+using Tochka.JsonRpc.Server.Attributes;
+using Tochka.JsonRpc.Server.Settings;
 using Tochka.JsonRpc.TestUtils;
-using Tochka.JsonRpc.V1.Server.Attributes;
-using Tochka.JsonRpc.V1.Server.Pipeline;
-using Tochka.JsonRpc.V1.Server.Settings;
 
-namespace Tochka.JsonRpc.Client.Tests.WebApplication.Controllers;
+namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
 [Route("/custom/controller")]
-public class CustomRouteJsonRpcController : JsonRpcController
+public class CustomRouteJsonRpcController : JsonRpcControllerBase
 {
     private readonly IResponseProvider responseProvider;
     private readonly IRequestValidator requestValidator;

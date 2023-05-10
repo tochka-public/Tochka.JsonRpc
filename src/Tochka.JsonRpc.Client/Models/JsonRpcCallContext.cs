@@ -45,7 +45,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
     {
         if (BatchCall != null)
         {
-            throw new InvalidOperationException("Can not add single call when batch call is present");
+            throw new InvalidOperationException("Can't add single call when batch call is present");
         }
 
         SingleCall = singleCall;
@@ -56,7 +56,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
     {
         if (SingleCall != null)
         {
-            throw new InvalidOperationException("Can not add batch call when single call is present");
+            throw new InvalidOperationException("Can't add batch call when single call is present");
         }
 
         BatchCall = batchCall;
@@ -97,7 +97,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         SingleResponse = singleResponse;
         if (BatchResponse != null)
         {
-            throw new InvalidOperationException("Can not add single response when batch response is present");
+            throw new InvalidOperationException("Can't add single response when batch response is present");
         }
 
         if (singleResponse == null)
@@ -140,12 +140,12 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         BatchResponse = batchResponse;
         if (SingleResponse != null)
         {
-            throw new InvalidOperationException("Can not add batch response when single response is present");
+            throw new InvalidOperationException("Can't add batch response when single response is present");
         }
 
         if (ExpectedBatchResponseCount == 0)
         {
-            throw new InvalidOperationException("Can not add batch response when no response is expected");
+            throw new InvalidOperationException("Can't add batch response when no response is expected");
         }
 
         if (batchResponse == null)

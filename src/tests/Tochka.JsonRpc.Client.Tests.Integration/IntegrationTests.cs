@@ -9,14 +9,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
-using Tochka.JsonRpc.Client.Tests.WebApplication;
-using Tochka.JsonRpc.TestUtils.Integration;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
+using Tochka.JsonRpc.Tests.WebApplication;
 using Tochka.JsonRpc.TestUtils;
+using Tochka.JsonRpc.TestUtils.Integration;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
@@ -797,7 +798,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task SendRequest_GetResponseWithoutId_ThrowArgumentException()
+    public async Task SendRequest_GetResponseWithoutId_ThrowJsonRpcFormatException()
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
@@ -829,13 +830,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
-        await act.Should().ThrowAsync<ArgumentException>();
+        await act.Should().ThrowAsync<JsonRpcFormatException>();
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
-    public async Task SendRequest_GetResponseWithoutResultOrError_ThrowArgumentException()
+    public async Task SendRequest_GetResponseWithoutResultOrError_ThrowJsonRpcFormatException()
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
@@ -867,13 +868,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
-        await act.Should().ThrowAsync<ArgumentException>();
+        await act.Should().ThrowAsync<JsonRpcFormatException>();
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
     }
 
     [Test]
-    public async Task SendRequest_GetResponseWithBothResultAndError_ThrowArgumentException()
+    public async Task SendRequest_GetResponseWithBothResultAndError_ThrowJsonRpcFormatException()
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
@@ -912,7 +913,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
-        await act.Should().ThrowAsync<ArgumentException>();
+        await act.Should().ThrowAsync<JsonRpcFormatException>();
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
     }

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Converters;
-using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.Common;
@@ -18,8 +18,8 @@ public static class JsonRpcSerializerOptions
         Converters =
         {
             // TODO: server
-            // new RequestWrapperConverter(),
-            // new CallConverter(),
+            new RequestWrapperConverter(),
+            new CallConverter(),
 
             new JsonRpcIdConverter(),
 
@@ -27,20 +27,23 @@ public static class JsonRpcSerializerOptions
             new ResponseConverter(),
             new UntypedCallMappingConverter()
         },
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     public static JsonSerializerOptions SnakeCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicies.SnakeCaseLower) },
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     public static JsonSerializerOptions CamelCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        WriteIndented = true
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 }

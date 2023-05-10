@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Tochka.JsonRpc.Common.Models.Request.Untyped;
+using System.Text.Json;
 
 namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
 [ExcludeFromCodeCoverage]
-public sealed record BatchRequestWrapper(List<IUntypedCall> Calls) : IRequestWrapper;
+public sealed record BatchRequestWrapper(List<JsonDocument> Calls) : IRequestWrapper;

@@ -40,7 +40,7 @@ public class JsonRpcIdConverter : JsonConverter<IRpcId>
             JsonTokenType.String => new StringRpcId(reader.GetString()!),
             JsonTokenType.Number when reader.TryGetInt64(out var number) => new NumberRpcId(number),
             JsonTokenType.Null => new NullRpcId(),
-            _ => throw new ArgumentOutOfRangeException(nameof(idType), idType, "Expected string, number or null as Id")
+            _ => throw new JsonRpcFormatException($"Expected string, number or null as Id. Got {idType}")
         };
     }
 }

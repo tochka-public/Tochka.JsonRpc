@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Client.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.TestUtils.Integration", "tests\Tochka.JsonRpc.TestUtils.Integration\Tochka.JsonRpc.TestUtils.Integration.csproj", "{2A32E159-8FE1-4984-968B-3AAF1C7933E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Client.Tests.WebApplication", "tests\Tochka.JsonRpc.Client.Tests.WebApplication\Tochka.JsonRpc.Client.Tests.WebApplication.csproj", "{09ED9368-11F5-4F81-8262-AC64CC62840C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Tests.WebApplication", "tests\Tochka.JsonRpc.Tests.WebApplication\Tochka.JsonRpc.Tests.WebApplication.csproj", "{09ED9368-11F5-4F81-8262-AC64CC62840C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server.Tests.Integration", "tests\Tochka.JsonRpc.Server.Tests.Integration\Tochka.JsonRpc.Server.Tests.Integration.csproj", "{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1}"
 EndProject
@@ -43,6 +43,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Common.Tests", "tests\Tochka.JsonRpc.Common.Tests\Tochka.JsonRpc.Common.Tests.csproj", "{8F0A560B-C2A5-43BC-9C7C-2B903EEC8815}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.TestUtils", "tests\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj", "{B10600AB-100A-4396-9073-0013C69783EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server", "Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj", "{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutingTests", "tests\RoutingTests\RoutingTests.csproj", "{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -270,6 +274,30 @@ Global
 		{B10600AB-100A-4396-9073-0013C69783EE}.Release|x64.Build.0 = Release|Any CPU
 		{B10600AB-100A-4396-9073-0013C69783EE}.Release|x86.ActiveCfg = Release|Any CPU
 		{B10600AB-100A-4396-9073-0013C69783EE}.Release|x86.Build.0 = Release|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Debug|x64.Build.0 = Debug|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Debug|x86.Build.0 = Debug|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Release|x64.ActiveCfg = Release|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Release|x64.Build.0 = Release|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Release|x86.ActiveCfg = Release|Any CPU
+		{66B18873-1121-4FFE-BA1A-C096CE7E2DA8}.Release|x86.Build.0 = Release|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Debug|x64.Build.0 = Debug|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Debug|x86.Build.0 = Debug|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Release|x64.ActiveCfg = Release|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Release|x64.Build.0 = Release|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Release|x86.ActiveCfg = Release|Any CPU
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,6 +320,7 @@ Global
 		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{8F0A560B-C2A5-43BC-9C7C-2B903EEC8815} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{B10600AB-100A-4396-9073-0013C69783EE} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
+		{49E4BF3C-BDD8-4E2B-A762-9F21F3C69AF6} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93630835-1CE2-4464-8098-470B7C329D1A}

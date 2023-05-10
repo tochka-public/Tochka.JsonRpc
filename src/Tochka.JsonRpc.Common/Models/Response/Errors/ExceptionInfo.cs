@@ -6,4 +6,4 @@ namespace Tochka.JsonRpc.Common.Models.Response.Errors;
 /// Server-defined details about exceptions and unexpected HTTP codes
 /// </summary>
 [ExcludeFromCodeCoverage]
-public sealed record ExceptionInfo(string Type, string Message, int? InternalHttpCode, object Details);
+public sealed record ExceptionInfo(string Type, string Message, object? Details);

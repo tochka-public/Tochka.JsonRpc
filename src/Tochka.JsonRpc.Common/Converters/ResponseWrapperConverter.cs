@@ -12,12 +12,25 @@ namespace Tochka.JsonRpc.Common.Converters;
 /// </summary>
 public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
 {
-    // NOTE: used in client to parse responses, no need for serialization
-    public override void Write(Utf8JsonWriter writer, IResponseWrapper value, JsonSerializerOptions options) =>
-        throw new InvalidOperationException();
+    // System.Text.Json can't serialize derived types:
+    // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    public override void Write(Utf8JsonWriter writer, IResponseWrapper value, JsonSerializerOptions options)
+    {
+        switch (value)
+        {
+            case SingleResponseWrapper singleResponseWrapper:
+                JsonSerializer.Serialize(writer, singleResponseWrapper.Response, options);
+                break;
+            case BatchResponseWrapper batchResponseWrapper:
+                JsonSerializer.Serialize(writer, batchResponseWrapper.Responses, options);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
+        }
+    }
 
     [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for response wrappers")]
-    public override IResponseWrapper? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IResponseWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var tokenType = reader.TokenType;
         return tokenType switch

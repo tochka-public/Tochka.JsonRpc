@@ -26,6 +26,11 @@ public static class JsonRpcConstants
     public const string MethodProperty = "method";
 
     /// <summary>
+    /// "params" JSON property to look for parameters in single request
+    /// </summary>
+    public const string ParamsProperty = "params";
+
+    /// <summary>
     /// "result" JSON property to look for successful response data in single response
     /// </summary>
     public const string ResultProperty = "result";
@@ -70,6 +75,11 @@ public static class JsonRpcConstants
     /// "api/jsonrpc" Default route for JSON Rpc controllers
     /// </summary>
     public const string DefaultRoute = "/api/jsonrpc";
+
+    /// <summary>
+    /// "api/jsonrpc" Default route prefix for JSON Rpc actions
+    /// </summary>
+    public const string DefaultRoutePrefix = "/api/jsonrpc";
 
     /// <summary>
     /// "application/json" Default content-type expected in JSON Rpc HTTP requests

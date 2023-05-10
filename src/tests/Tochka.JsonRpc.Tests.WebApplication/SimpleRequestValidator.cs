@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using Tochka.JsonRpc.TestUtils;
-using Tochka.JsonRpc.TestUtils.Integration;
+﻿using Tochka.JsonRpc.TestUtils;
 
-namespace Tochka.JsonRpc.Client.Tests.WebApplication;
+namespace Tochka.JsonRpc.Tests.WebApplication;
 
 internal class SimpleRequestValidator : IRequestValidator
 {

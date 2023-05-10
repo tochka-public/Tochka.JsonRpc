@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>11</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>11</LangVersion>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
-        <PackageReference Include="NUnit" Version="3.13.3" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
+  </ItemGroup>
 
 </Project>
