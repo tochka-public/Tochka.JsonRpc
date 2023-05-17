@@ -1041,7 +1041,7 @@ internal class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_NeitherResultNorError_ThrowArgumentException()
+    public void RequestResponse_NeitherResultNorError_ThrowJsonRpcFormatException()
     {
         var id = "123";
         var json = $$"""
@@ -1053,11 +1053,11 @@ internal class DeserializationTests
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
-        act.Should().Throw<ArgumentException>();
+        act.Should().Throw<JsonRpcFormatException>();
     }
 
     [Test]
-    public void RequestResponse_NoId_ThrowArgumentException()
+    public void RequestResponse_NoId_ThrowJsonRpcFormatException()
     {
         var json = """
             {
@@ -1068,7 +1068,7 @@ internal class DeserializationTests
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
-        act.Should().Throw<ArgumentException>();
+        act.Should().Throw<JsonRpcFormatException>();
     }
 
     [Test]
@@ -1084,7 +1084,7 @@ internal class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_UnsupportedIdType_ThrowArgumentOutOfRangeException()
+    public void RequestResponse_UnsupportedIdType_ThrowJsonRpcFormatException()
     {
         var json = """
             {
@@ -1096,7 +1096,7 @@ internal class DeserializationTests
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        act.Should().Throw<JsonRpcFormatException>();
     }
 
     #endregion

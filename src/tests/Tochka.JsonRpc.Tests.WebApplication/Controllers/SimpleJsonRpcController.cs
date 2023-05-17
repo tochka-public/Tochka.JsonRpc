@@ -23,7 +23,18 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         this.jsonRpcErrorFactory = jsonRpcErrorFactory;
     }
 
-    public TestData ProcessAnything([FromParams(BindingStyle.Object)] TestData data, string defaultBinding, [FromQuery] string fromQuery, [FromBody] string fromBody, [FromServices] IResponseProvider rp, CancellationToken token) =>
+    /// <summary>
+    /// some description
+    /// </summary>
+    /// <param name="data">param description</param>
+    /// <returns>returns description</returns>
+    public async Task<TestData> AutoDocExperiments([FromParams(BindingStyle.Object)] RequestData data, string defaultBinding, [FromQuery] string? fromQuery, [FromBody] string? fromBody, [FromServices] IResponseProvider rp, CancellationToken token)
+    {
+        await Task.Delay(1, token);
+        return rp.GetJsonRpcResponse();
+    }
+
+    public TestData ProcessAnything([FromParams(BindingStyle.Object)] TestData data) =>
         Process(data);
 
     [JsonRpcMethodStyle(JsonRpcMethodStyle.ActionOnly)]
@@ -32,11 +43,6 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
     [JsonRpcMethodStyle(JsonRpcMethodStyle.ControllerAndAction)]
     public TestData ControllerAndAction([FromParams(BindingStyle.Object)] TestData data) => Process(data);
 
-    /// <summary>
-    /// some description
-    /// </summary>
-    /// <param name="data">param description</param>
-    /// <returns>returns description</returns>
     public TestData BindingStyleDefault(TestData data) => Process(data);
 
     public TestData BindingStyleObject([FromParams(BindingStyle.Object)] TestData data) => Process(data);
