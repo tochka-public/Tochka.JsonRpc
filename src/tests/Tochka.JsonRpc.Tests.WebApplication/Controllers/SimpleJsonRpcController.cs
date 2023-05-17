@@ -23,7 +23,8 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         this.jsonRpcErrorFactory = jsonRpcErrorFactory;
     }
 
-    public TestData ProcessAnything([FromParams(BindingStyle.Object)] TestData data) => Process(data);
+    public TestData ProcessAnything([FromParams(BindingStyle.Object)] TestData data, string defaultBinding, [FromQuery] string fromQuery, [FromBody] string fromBody, [FromServices] IResponseProvider rp, CancellationToken token) =>
+        Process(data);
 
     [JsonRpcMethodStyle(JsonRpcMethodStyle.ActionOnly)]
     public TestData ActionOnly([FromParams(BindingStyle.Object)] TestData data) => Process(data);
@@ -31,6 +32,11 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
     [JsonRpcMethodStyle(JsonRpcMethodStyle.ControllerAndAction)]
     public TestData ControllerAndAction([FromParams(BindingStyle.Object)] TestData data) => Process(data);
 
+    /// <summary>
+    /// some description
+    /// </summary>
+    /// <param name="data">param description</param>
+    /// <returns>returns description</returns>
     public TestData BindingStyleDefault(TestData data) => Process(data);
 
     public TestData BindingStyleObject([FromParams(BindingStyle.Object)] TestData data) => Process(data);
@@ -84,6 +90,9 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
 
     [JsonRpcSerializerOptions(typeof(CamelCaseJsonSerializerOptionsProvider))]
     public TestData CamelCaseParams([FromParams(BindingStyle.Object)] TestData data) => Process(data);
+
+    [JsonRpcSerializerOptions(typeof(KebabCaseUpperJsonSerializerOptionsProvider))]
+    public TestData KebabCaseUpperCaseParams([FromParams(BindingStyle.Object)] TestData data) => Process(data);
 
     [Route("/custom/action")]
     public TestData CustomActionRoute([FromParams(BindingStyle.Object)] TestData data) => Process(data);

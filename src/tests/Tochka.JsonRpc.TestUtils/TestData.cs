@@ -2,6 +2,10 @@
 
 public record TestData(bool BoolField, string StringField, int IntField, double DoubleField, TestEnum EnumField, int[] ArrayField, string? NullableField, string? NotRequiredField = null, TestData? NestedField = null)
 {
+    public TestData() : this(false, "", 0, 0, TestEnum.One, Array.Empty<int>(), null)
+    {
+    }
+
     #region Plain
 
     public static readonly TestData Plain = new(true,

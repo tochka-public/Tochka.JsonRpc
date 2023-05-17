@@ -33,8 +33,6 @@ public static class DependencyInjectionExtensions
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
-        services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
-        services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }

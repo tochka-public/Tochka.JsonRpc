@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Exceptions;
@@ -27,9 +28,8 @@ public class JsonRpcModelBinder : IModelBinder
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        var endpointMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata;
-        var metadata = endpointMetadata.FirstOrDefault(static m => m is JsonRpcActionParametersMetadata);
-        if (metadata is not JsonRpcActionParametersMetadata actionParametersMetadata) // == null
+        var actionParametersMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
+        if (actionParametersMetadata == null)
         {
             throw new JsonRpcServerException($"{nameof(JsonRpcActionParametersMetadata)} not found in endpoint metadata, it should've been populated in {nameof(JsonRpcParameterModelConvention)} on application start");
         }

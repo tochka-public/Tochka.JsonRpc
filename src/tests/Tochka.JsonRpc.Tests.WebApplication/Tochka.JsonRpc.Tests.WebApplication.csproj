@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +21,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
+    <ProjectReference Include="..\..\Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj" />
     <ProjectReference Include="..\Tochka.JsonRpc.TestUtils.Integration\Tochka.JsonRpc.TestUtils.Integration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>

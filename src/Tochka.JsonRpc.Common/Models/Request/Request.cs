@@ -9,6 +9,11 @@ namespace Tochka.JsonRpc.Common.Models.Request;
 public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string Jsonrpc = JsonRpcConstants.Version) : ICall<TParams>
     where TParams : class
 {
+    // required for autodoc metadata generation
+    internal Request() : this(null!)
+    {
+    }
+
     public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions)
     {
         var serializedParams = Utils.SerializeParams(Params, serializerOptions);
