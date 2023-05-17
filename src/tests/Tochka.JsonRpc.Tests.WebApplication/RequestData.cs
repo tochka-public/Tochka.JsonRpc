@@ -1,8 +1,8 @@
 ﻿namespace Tochka.JsonRpc.Tests.WebApplication;
 
-public record RequestData(int IntField)
+public record RequestData<T>(int IntField, T GenericField)
 {
-    public RequestData() : this(0)
+    public RequestData() : this(default, default)
     {
     }
 }

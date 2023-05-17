@@ -8,6 +8,7 @@ namespace Tochka.JsonRpc.ApiExplorer;
 public class TypeEmitter : ITypeEmitter
 {
     private readonly ModuleBuilder moduleBuilder;
+    private readonly object lockObject = new();
 
     public TypeEmitter()
     {
@@ -18,17 +19,23 @@ public class TypeEmitter : ITypeEmitter
 
     public Type CreateRequestType(string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType)
     {
-        var responseTypeName = $"{methodName} request";
-        var paramsType = GetParamsType($"{methodName} params", baseParamsType, defaultBoundParams);
-        var responseType = typeof(Request<>).MakeGenericType(paramsType);
-        return GenerateTypeWithInfoAttribute(responseTypeName, responseType, serializerOptionsProviderType, methodName);
+        lock (lockObject)
+        {
+            var responseTypeName = $"{methodName} request";
+            var paramsType = GetParamsType($"{methodName} params", baseParamsType, defaultBoundParams);
+            var responseType = typeof(Request<>).MakeGenericType(paramsType);
+            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, serializerOptionsProviderType, methodName);
+        }
     }
 
     public Type CreateResponseType(string methodName, Type resultType, Type? serializerOptionsProviderType)
     {
-        var responseTypeName = $"{methodName} response";
-        var responseType = typeof(Response<>).MakeGenericType(resultType);
-        return GenerateTypeWithInfoAttribute(responseTypeName, responseType, serializerOptionsProviderType, methodName);
+        lock (lockObject)
+        {
+            var responseTypeName = $"{methodName} response";
+            var responseType = typeof(Response<>).MakeGenericType(resultType);
+            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, serializerOptionsProviderType, methodName);
+        }
     }
 
     /// <summary>

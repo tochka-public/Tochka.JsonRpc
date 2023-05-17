@@ -28,7 +28,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
     /// </summary>
     /// <param name="data">param description</param>
     /// <returns>returns description</returns>
-    public async Task<TestData> AutoDocExperiments([FromParams(BindingStyle.Object)] RequestData data, string defaultBinding, [FromQuery] string? fromQuery, [FromBody] string? fromBody, [FromServices] IResponseProvider rp, CancellationToken token)
+    public async Task<TestData> AutoDocExperiments([FromParams(BindingStyle.Object)] RequestData<bool> data, int intField, string defaultBinding, [FromQuery] string? fromQuery, [FromBody] string? fromBody, [FromServices] IResponseProvider rp, CancellationToken token)
     {
         await Task.Delay(1, token);
         return rp.GetJsonRpcResponse();
