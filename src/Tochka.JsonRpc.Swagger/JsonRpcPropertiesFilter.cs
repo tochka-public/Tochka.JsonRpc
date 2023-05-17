@@ -35,8 +35,8 @@ public class JsonRpcPropertiesFilter : ISchemaFilter
         idSchema.Example = new OpenApiString("1");
         idSchema.OneOf = new List<OpenApiSchema>
         {
-            new OpenApiSchema { Type = "string" },
-            new OpenApiSchema { Type = "number" }
+            new() { Type = "string" },
+            new() { Type = "number" }
         };
     }
 

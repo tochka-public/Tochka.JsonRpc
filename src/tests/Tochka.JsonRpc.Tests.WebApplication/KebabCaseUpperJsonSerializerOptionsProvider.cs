@@ -6,7 +6,7 @@ namespace Tochka.JsonRpc.Tests.WebApplication;
 
 internal class KebabCaseUpperJsonSerializerOptionsProvider : IJsonSerializerOptionsProvider
 {
-    public JsonSerializerOptions Options => new JsonSerializerOptions()
+    public JsonSerializerOptions Options => new()
     {
         PropertyNamingPolicy = JsonNamingPolicies.KebabCaseUpper
     };

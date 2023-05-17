@@ -39,7 +39,7 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
 
     public TResponse? AsResponse<TResponse>() => response switch
     {
-        UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
+        UntypedResponse { Result: not null } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
         _ => default
     };
 

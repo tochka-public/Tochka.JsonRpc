@@ -7,10 +7,6 @@ namespace Tochka.JsonRpc.ApiExplorer;
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty", Justification = "This class only required to provide model type")]
 internal class JsonRpcModelMetadata : ModelMetadata
 {
-    public JsonRpcModelMetadata(Type type) : base(ModelMetadataIdentity.ForType(type))
-    {
-    }
-
     public override IReadOnlyDictionary<object, object> AdditionalValues => null!;
     public override ModelPropertyCollection Properties => null!;
     public override string? BinderModelName { get; }
@@ -47,4 +43,8 @@ internal class JsonRpcModelMetadata : ModelMetadata
     public override IReadOnlyList<object> ValidatorMetadata => null!;
     public override Func<object, object?>? PropertyGetter { get; }
     public override Action<object, object?>? PropertySetter { get; }
+
+    public JsonRpcModelMetadata(Type type) : base(ModelMetadataIdentity.ForType(type))
+    {
+    }
 }

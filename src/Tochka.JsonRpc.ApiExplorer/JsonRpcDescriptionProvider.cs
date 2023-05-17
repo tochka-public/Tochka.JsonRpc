@@ -12,12 +12,12 @@ namespace Tochka.JsonRpc.ApiExplorer;
 
 public class JsonRpcDescriptionProvider : IApiDescriptionProvider
 {
+    // need to run after DefaultApiDescriptionProvider to override it's result
+    public int Order => int.MaxValue;
+
     private readonly ITypeEmitter typeEmitter;
 
     public JsonRpcDescriptionProvider(ITypeEmitter typeEmitter) => this.typeEmitter = typeEmitter;
-
-    // need to run after DefaultApiDescriptionProvider to override it's result
-    public int Order => int.MaxValue;
 
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
@@ -51,6 +51,10 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             WrapRequest(description, actionDescriptor, methodMetadata.Method, serializerOptionsProviderType);
             WrapResponse(description, methodMetadata.Method, serializerOptionsProviderType);
         }
+    }
+
+    public void OnProvidersExecuted(ApiDescriptionProviderContext context)
+    {
     }
 
     private void WrapRequest(ApiDescription description, ActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
@@ -126,9 +130,5 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             ModelMetadata = new JsonRpcModelMetadata(responseType),
             Type = responseType
         });
-    }
-
-    public void OnProvidersExecuted(ApiDescriptionProviderContext context)
-    {
     }
 }

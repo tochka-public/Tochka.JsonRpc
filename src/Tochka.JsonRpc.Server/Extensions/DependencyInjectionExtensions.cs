@@ -8,7 +8,6 @@ using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
 using Tochka.JsonRpc.Server.Routing;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 

@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using System.Xml.Linq;
-
-namespace Tochka.JsonRpc.ApiExplorer;
+﻿namespace Tochka.JsonRpc.ApiExplorer;
 
 public interface ITypeEmitter
 {

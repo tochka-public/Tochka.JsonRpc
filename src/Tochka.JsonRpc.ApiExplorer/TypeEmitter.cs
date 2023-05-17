@@ -62,6 +62,23 @@ public class TypeEmitter : ITypeEmitter
         return typeBuilder.CreateType()!;
     }
 
+    /// <summary>
+    /// Create new type with attribute
+    /// </summary>
+    /// <returns></returns>
+    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type? serializerOptionsProviderType, string methodName)
+    {
+        var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseType);
+
+        var attrType = typeof(JsonRpcTypeMetadataAttribute);
+        var attrConstructor = attrType.GetConstructor(new[] { typeof(Type), typeof(string) })!;
+        var attrParams = new object?[] { serializerOptionsProviderType, methodName };
+        var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams);
+        typeBuilder.SetCustomAttribute(attrBuilder);
+
+        return typeBuilder.CreateType()!;
+    }
+
     // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.emit.typebuilder.defineproperty?view=net-6.0
     private static void CreateProperty(TypeBuilder typeBuilder, string propertyName, Type propertyType)
     {
@@ -90,22 +107,5 @@ public class TypeEmitter : ITypeEmitter
         var propertyBuilder = typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
         propertyBuilder.SetGetMethod(getMethodBuilder);
         propertyBuilder.SetSetMethod(setMethodBuilder);
-    }
-
-    /// <summary>
-    /// Create new type with attribute
-    /// </summary>
-    /// <returns></returns>
-    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type? serializerOptionsProviderType, string methodName)
-    {
-        var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseType);
-
-        var attrType = typeof(JsonRpcTypeMetadataAttribute);
-        var attrConstructor = attrType.GetConstructor(new[] { typeof(Type), typeof(string) })!;
-        var attrParams = new object?[] { serializerOptionsProviderType, methodName };
-        var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams);
-        typeBuilder.SetCustomAttribute(attrBuilder);
-
-        return typeBuilder.CreateType()!;
     }
 }
