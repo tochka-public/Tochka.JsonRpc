@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="JsonSchema.Net" Version="4.1.1" />
+      <PackageReference Include="Yoh.Text.Json.NamingPolicies" Version="1.0.0" />
     </ItemGroup>
 
 </Project>
