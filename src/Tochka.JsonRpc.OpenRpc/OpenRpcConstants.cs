@@ -8,6 +8,8 @@ public static class OpenRpcConstants
 {
     public const string DocumentTemplateParameterName = "documentName";
     public const string DefaultDocumentPath = $"openrpc/{{{DocumentTemplateParameterName}}}.json";
+    public const string SpecVersion = "1.2.6";
+    public const string DefaultServerName = "JSON-RPC";
 
     public static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
@@ -15,7 +17,7 @@ public static class OpenRpcConstants
         WriteIndented = true,
         Converters =
         {
-            new JsonStringEnumConverter(JsonNamingPolicies.SnakeCaseLower)
+            new JsonStringEnumConverter(JsonNamingPolicies.KebabCaseLower)
         },
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };

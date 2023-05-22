@@ -12,9 +12,9 @@ public class TypeEmitter : ITypeEmitter
 
     public TypeEmitter()
     {
-        var assemblyName = new AssemblyName(Constants.GeneratedModelsAssemblyId);
+        var assemblyName = new AssemblyName(ApiExplorerConstants.GeneratedModelsAssemblyId);
         var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
-        moduleBuilder = assemblyBuilder.DefineDynamicModule(Constants.GeneratedModelsAssemblyId);
+        moduleBuilder = assemblyBuilder.DefineDynamicModule(ApiExplorerConstants.GeneratedModelsAssemblyId);
     }
 
     public Type CreateRequestType(string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType)

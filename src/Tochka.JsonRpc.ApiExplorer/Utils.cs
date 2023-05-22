@@ -8,12 +8,12 @@ public static class Utils
     {
         if (serializerOptionsProviderType == null)
         {
-            return Constants.DefaultDocumentName;
+            return ApiExplorerConstants.DefaultDocumentName;
         }
 
         var caseName = serializerOptionsProviderType.Name
             .Replace(nameof(IJsonSerializerOptionsProvider)[1..], "")
             .ToLowerInvariant();
-        return $"{Constants.DefaultDocumentName}_{caseName}";
+        return $"{ApiExplorerConstants.DefaultDocumentName}_{caseName}";
     }
 }

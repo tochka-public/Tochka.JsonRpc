@@ -47,6 +47,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
 
             description.HttpMethod = HttpMethods.Post;
             description.RelativePath += $"#{methodMetadata.Method}";
+            description.Properties[ApiExplorerConstants.MethodNameProperty] = methodMetadata.Method;
 
             WrapRequest(description, actionDescriptor, methodMetadata.Method, serializerOptionsProviderType);
             WrapResponse(description, methodMetadata.Method, serializerOptionsProviderType);
@@ -62,17 +63,11 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         description.SupportedRequestFormats.Clear();
         description.SupportedRequestFormats.Add(new ApiRequestFormat { MediaType = JsonRpcConstants.ContentType });
 
-        var parametersMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
-        if (parametersMetadata == null)
-        {
-            // Should not be possible, sanity check
-            return;
-        }
-
-        var jsonRpcParameters = description.ParameterDescriptions
+        var parametersMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>() ?? new JsonRpcActionParametersMetadata();
+        var parametersToRemove = description.ParameterDescriptions
             .Where(p => parametersMetadata.Parameters.ContainsKey(p.Name) || p.Source == BindingSource.Body)
             .ToArray();
-        foreach (var parameterDescription in jsonRpcParameters)
+        foreach (var parameterDescription in parametersToRemove)
         {
             description.ParameterDescriptions.Remove(parameterDescription);
         }

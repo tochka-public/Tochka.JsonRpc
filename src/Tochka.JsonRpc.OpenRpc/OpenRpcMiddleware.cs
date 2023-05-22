@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using Microsoft.Extensions.Options;
@@ -34,8 +35,13 @@ public class OpenRpcMiddleware
             return;
         }
 
-        var host = httpContext.Request.PathBase;
-        var document = documentGenerator.Generate(info, documentName, host);
+        var host = new UriBuilder(httpContext.Request.GetEncodedUrl())
+        {
+            Path = null,
+            Fragment = null,
+            Query = null
+        };
+        var document = documentGenerator.Generate(info, documentName, host.Uri);
         httpContext.Response.StatusCode = StatusCodes.Status200OK;
         httpContext.Response.ContentType = "application/json;charset=utf-8";
         await JsonSerializer.SerializeAsync(httpContext.Response.Body, document, OpenRpcConstants.JsonSerializerOptions);

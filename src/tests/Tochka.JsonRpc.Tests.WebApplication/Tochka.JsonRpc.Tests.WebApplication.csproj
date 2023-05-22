@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj" />
     <ProjectReference Include="..\..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
     <ProjectReference Include="..\..\Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj" />
     <ProjectReference Include="..\Tochka.JsonRpc.TestUtils.Integration\Tochka.JsonRpc.TestUtils.Integration.csproj" />

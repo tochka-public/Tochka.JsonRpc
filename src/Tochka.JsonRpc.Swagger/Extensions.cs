@@ -21,7 +21,7 @@ public static class Extensions
         services.AddSwaggerGen(c =>
         {
             // it's impossible to add same model with different serializers, so we have to create separate documents for each serializer
-            c.SwaggerDoc(Constants.DefaultDocumentName, info);
+            c.SwaggerDoc(ApiExplorerConstants.DefaultDocumentName, info);
             var jsonSerializerOptionsProviders = services
                 .Where(static x => typeof(IJsonSerializerOptionsProvider).IsAssignableFrom(x.ServiceType))
                 .Select(static x => x.ImplementationType)
@@ -47,7 +47,7 @@ public static class Extensions
             c.SchemaFilter<JsonRpcPropertiesFilter>();
 
             // to correctly create request and response models with controller.action binding style
-            c.CustomSchemaIds(static t => t.Assembly.FullName?.StartsWith(Constants.GeneratedModelsAssemblyId, StringComparison.Ordinal) == true
+            c.CustomSchemaIds(static t => t.Assembly.FullName?.StartsWith(ApiExplorerConstants.GeneratedModelsAssemblyId, StringComparison.Ordinal) == true
                 ? t.FullName
                 : t.Name);
 
@@ -67,11 +67,11 @@ public static class Extensions
     }
 
     public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
-        services.AddSwaggerWithJsonRpc(xmlDocAssembly, new OpenApiInfo { Title = Constants.DefaultDocumentTitle, Version = Constants.DefaultDocumentVersion });
+        services.AddSwaggerWithJsonRpc(xmlDocAssembly, new OpenApiInfo { Title = ApiExplorerConstants.DefaultDocumentTitle, Version = ApiExplorerConstants.DefaultDocumentVersion });
 
     public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IApplicationBuilder app, string name)
     {
-        options.SwaggerEndpoint(GetSwaggerDocumentUrl(Constants.DefaultDocumentName), name);
+        options.SwaggerEndpoint(GetSwaggerDocumentUrl(ApiExplorerConstants.DefaultDocumentName), name);
         var jsonSerializerOptionsProviders = app.ApplicationServices.GetRequiredService<IEnumerable<IJsonSerializerOptionsProvider>>();
         foreach (var provider in jsonSerializerOptionsProviders)
         {
@@ -81,11 +81,11 @@ public static class Extensions
     }
 
     public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IApplicationBuilder app) =>
-        options.JsonRpcSwaggerEndpoints(app, Constants.DefaultDocumentTitle);
+        options.JsonRpcSwaggerEndpoints(app, ApiExplorerConstants.DefaultDocumentTitle);
 
     private static bool DocumentSelector(string docName, ApiDescription description)
     {
-        if (docName.StartsWith(Constants.DefaultDocumentName, StringComparison.Ordinal))
+        if (docName.StartsWith(ApiExplorerConstants.DefaultDocumentName, StringComparison.Ordinal))
         {
             return description.GroupName == docName;
         }
