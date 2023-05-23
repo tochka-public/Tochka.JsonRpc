@@ -8,6 +8,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.Server.Serialization;
+using Tochka.JsonRpc.Common;
+using Utils = Tochka.JsonRpc.ApiExplorer.Utils;
 
 namespace Tochka.JsonRpc.Swagger;
 
@@ -98,6 +100,6 @@ public static class Extensions
     private static string GetSwaggerEndpointSuffix(IJsonSerializerOptionsProvider jsonSerializerOptionsProvider)
     {
         var caseName = jsonSerializerOptionsProvider.GetType().Name.Replace(nameof(IJsonSerializerOptionsProvider)[1..], "");
-        return jsonSerializerOptionsProvider.Options.PropertyNamingPolicy?.ConvertName(caseName) ?? caseName;
+        return jsonSerializerOptionsProvider.Options.ConvertName(caseName);
     }
 }

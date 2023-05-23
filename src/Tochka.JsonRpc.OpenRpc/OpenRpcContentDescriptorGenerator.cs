@@ -30,7 +30,7 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
             : Utils.GetJsonSerializerOptions(serializerOptionsProviders, serializerType);
         return new ContentDescriptor
         {
-            Name = serializerOptions.PropertyNamingPolicy?.ConvertName(type.TypeName) ?? type.TypeName,
+            Name = serializerOptions.ConvertName(type.TypeName),
             Schema = schemaGenerator.CreateOrRef(type, methodName, serializerOptions)
         };
     }
@@ -54,7 +54,7 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
             : Utils.GetJsonSerializerOptions(serializerOptionsProviders, serializerType);
         return new ContentDescriptor
         {
-            Name = serializerOptions.PropertyNamingPolicy?.ConvertName(propertyInfo.Name) ?? propertyInfo.Name,
+            Name = serializerOptions.ConvertName(propertyInfo.Name),
             Schema = schemaGenerator.CreateOrRef(propertyInfo.PropertyType, methodName, serializerOptions)
         };
     }
