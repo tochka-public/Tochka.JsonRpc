@@ -3,7 +3,7 @@
 /// <summary>
 /// Allows referencing an external resource for extended documentation.
 /// </summary>
-public sealed record ExternalDocumentation
+public sealed record OpenRpcExternalDocumentation(Uri Url)
 {
     /// <summary>
     /// A verbose explanation of the target documentation. GitHub Flavored Markdown syntax MAY be used for rich text representation.
@@ -13,5 +13,5 @@ public sealed record ExternalDocumentation
     /// <summary>
     /// REQUIRED. The URL for the target documentation. Value MUST be in the format of a URL.
     /// </summary>
-    public Uri Url { get; set; }
+    public Uri Url { get; set; } = Url;
 }

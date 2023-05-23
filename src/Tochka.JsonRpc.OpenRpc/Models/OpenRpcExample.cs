@@ -1,9 +1,9 @@
 ﻿namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
-/// The Example object is an object that defines an example that is intended to match the schema of a given <see cref="ContentDescriptor" />.
+/// The Example object is an object that defines an example that is intended to match the schema of a given <see cref="OpenRpcContentDescriptor" />.
 /// </summary>
-public sealed record Example
+public sealed record OpenRpcExample
 {
     /// <summary>
     /// Canonical name of the example.

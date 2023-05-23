@@ -6,13 +6,13 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// Content Descriptors are objects that do just as they suggest - describe content.
 /// They are reusable ways of describing either parameters or result. They MUST have a schema.
 /// </summary>
-public sealed record ContentDescriptor
+public sealed record OpenRpcContentDescriptor(string Name, JsonSchema Schema)
 {
     /// <summary>
     /// REQUIRED. Name of the content that is being described
     /// If the content described is a method parameter assignable by-name, this field SHALL define the parameter’s key (ie name).
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = Name;
 
     /// <summary>
     /// A short summary of the content that is being described.
@@ -32,7 +32,7 @@ public sealed record ContentDescriptor
     /// <summary>
     /// REQUIRED. Schema that describes the content.
     /// </summary>
-    public JsonSchema Schema { get; set; }
+    public JsonSchema Schema { get; set; } = Schema;
 
     /// <summary>
     /// Specifies that the content is deprecated and SHOULD be transitioned out of usage. Default value is false.

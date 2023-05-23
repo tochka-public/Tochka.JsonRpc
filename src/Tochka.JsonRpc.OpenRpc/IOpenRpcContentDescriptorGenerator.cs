@@ -7,7 +7,7 @@ namespace Tochka.JsonRpc.OpenRpc;
 
 public interface IOpenRpcContentDescriptorGenerator
 {
-    ContentDescriptor GenerateForType(ContextualType type, string methodName, JsonSerializerOptions jsonSerializerOptions);
-    ContentDescriptor GenerateForParameter(ContextualType type, string methodName, JsonRpcParameterMetadata parameterMetadata, JsonSerializerOptions jsonSerializerOptions);
-    ContentDescriptor GenerateForProperty(ContextualPropertyInfo propertyInfo, string methodName, JsonSerializerOptions jsonSerializerOptions);
+    OpenRpcContentDescriptor GenerateForType(ContextualType type, string methodName, JsonSerializerOptions jsonSerializerOptions);
+    OpenRpcContentDescriptor GenerateForParameter(ContextualType type, string methodName, JsonRpcParameterMetadata parameterMetadata, JsonSerializerOptions jsonSerializerOptions);
+    OpenRpcContentDescriptor GenerateForProperty(ContextualPropertyInfo propertyInfo, string methodName, JsonSerializerOptions jsonSerializerOptions);
 }

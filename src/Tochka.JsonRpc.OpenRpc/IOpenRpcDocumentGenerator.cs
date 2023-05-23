@@ -4,5 +4,5 @@ namespace Tochka.JsonRpc.OpenRpc;
 
 public interface IOpenRpcDocumentGenerator
 {
-    Models.OpenRpc Generate(Info info, string documentName, Uri host);
+    Models.OpenRpc Generate(OpenRpcInfo info, string documentName, Uri host);
 }

@@ -14,7 +14,7 @@ namespace Tochka.JsonRpc.OpenRpc;
 
 public static class Extensions
 {
-    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, Info info, Action<OpenRpcOptions> setupAction)
+    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info, Action<OpenRpcOptions> setupAction)
     {
         services.TryAddSingleton<IOpenRpcDocumentGenerator, OpenRpcDocumentGenerator>();
         services.TryAddSingleton<IOpenRpcSchemaGenerator, OpenRpcSchemaGenerator>();
@@ -51,23 +51,21 @@ public static class Extensions
         var assemblyName = xmlDocAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
         var title = $"{assemblyName} {ApiExplorerConstants.DefaultDocumentTitle}".TrimStart();
         var description = xmlDocAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
-        var info = new Info
+        var info = new OpenRpcInfo(title, ApiExplorerConstants.DefaultDocumentVersion)
         {
-            Title = title,
-            Version = ApiExplorerConstants.DefaultDocumentVersion,
             Description = description
         };
 
         return services.AddOpenRpc(xmlDocAssembly, info, setupAction);
     }
 
-    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, Info info) =>
+    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info) =>
         services.AddOpenRpc(xmlDocAssembly, info, static _ => { });
 
     public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
         services.AddOpenRpc(xmlDocAssembly, static _ => { });
 
-    public static void OpenRpcDoc(this OpenRpcOptions options, string name, Info info) =>
+    public static void OpenRpcDoc(this OpenRpcOptions options, string name, OpenRpcInfo info) =>
         options.Docs[name] = info;
 
     public static IApplicationBuilder UseOpenRpc(this IApplicationBuilder app)
@@ -91,11 +89,11 @@ public static class Extensions
         return (methodAttr ?? typeAttr) != null;
     }
 
-    internal static ParamStructure ToParamStructure(this BindingStyle bindingStyle) => bindingStyle switch
+    internal static OpenRpcParamStructure ToParamStructure(this BindingStyle bindingStyle) => bindingStyle switch
     {
-        BindingStyle.Default => ParamStructure.Either,
-        BindingStyle.Object => ParamStructure.ByName,
-        BindingStyle.Array => ParamStructure.ByPosition,
+        BindingStyle.Default => OpenRpcParamStructure.Either,
+        BindingStyle.Object => OpenRpcParamStructure.ByName,
+        BindingStyle.Array => OpenRpcParamStructure.ByPosition,
         _ => throw new ArgumentOutOfRangeException(nameof(bindingStyle), bindingStyle, null)
     };
 

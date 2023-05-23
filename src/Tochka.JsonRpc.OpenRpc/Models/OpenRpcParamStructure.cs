@@ -1,6 +1,6 @@
 ﻿namespace Tochka.JsonRpc.OpenRpc.Models;
 
-public enum ParamStructure
+public enum OpenRpcParamStructure
 {
     Either,
     ByName,

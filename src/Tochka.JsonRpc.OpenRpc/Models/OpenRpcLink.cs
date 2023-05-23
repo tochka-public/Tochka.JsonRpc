@@ -5,12 +5,12 @@
 /// The presence of a link does not guarantee the caller’s ability to successfully invoke it,
 /// rather it provides a known relationship and traversal mechanism between results and other methods.
 /// </summary>
-public sealed record Link
+public sealed record OpenRpcLink(string Name)
 {
     /// <summary>
     /// REQUIRED. Canonical name of the link.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = Name;
 
     /// <summary>
     /// A description of the link. GitHub Flavored Markdown syntax MAY be used for rich text representation.
@@ -38,5 +38,5 @@ public sealed record Link
     /// <summary>
     /// A server object to be used by the target method.
     /// </summary>
-    public Server? Server { get; set; }
+    public OpenRpcServer? Server { get; set; }
 }

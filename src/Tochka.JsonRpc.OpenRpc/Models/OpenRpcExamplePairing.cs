@@ -4,7 +4,7 @@
 /// The Example Pairing object consists of a set of example params and result.
 /// The result is what you can expect from the JSON-RPC service given the exact params.
 /// </summary>
-public sealed record ExamplePairing
+public sealed record OpenRpcExamplePairing
 {
     /// <summary>
     /// Name for the example pairing.
@@ -24,10 +24,10 @@ public sealed record ExamplePairing
     /// <summary>
     /// Example parameters.
     /// </summary>
-    public List<Example>? Params { get; set; }
+    public List<OpenRpcExample>? Params { get; set; }
 
     /// <summary>
     /// Example result. When undefined, the example pairing represents usage of the method as a notification.
     /// </summary>
-    public Example? Result { get; set; }
+    public OpenRpcExample? Result { get; set; }
 }

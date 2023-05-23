@@ -35,11 +35,9 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         this.openRpcOptions = openRpcOptions.Value;
     }
 
-    public Models.OpenRpc Generate(Info info, string documentName, Uri host) =>
-        new()
+    public Models.OpenRpc Generate(OpenRpcInfo info, string documentName, Uri host) =>
+        new(info)
         {
-            Openrpc = OpenRpcConstants.SpecVersion,
-            Info = info,
             Servers = GetServers(host, serverOptions.RoutePrefix),
             Methods = GetMethods(documentName, host),
             Components = new()
@@ -48,22 +46,18 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             }
         };
 
-    private List<Models.Server> GetServers(Uri host, string route)
+    private List<OpenRpcServer> GetServers(Uri host, string route)
     {
         var uriBuilder = new UriBuilder(host) { Path = route };
-        var server = new Models.Server
-        {
-            Name = openRpcOptions.DefaultServerName,
-            Url = uriBuilder.Uri
-        };
+        var server = new OpenRpcServer(openRpcOptions.DefaultServerName, uriBuilder.Uri);
 
-        return new List<Models.Server>
+        return new List<OpenRpcServer>
         {
             server
         };
     }
 
-    private List<Method> GetMethods(string documentName, Uri host) =>
+    private List<OpenRpcMethod> GetMethods(string documentName, Uri host) =>
         apiDescriptionsProvider.ApiDescriptionGroups.Items
             .SelectMany(static g => g.Items)
             .Where(d => !openRpcOptions.IgnoreObsoleteActions || d.IsObsoleteTransitive())
@@ -73,7 +67,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             .OrderBy(static m => m.Name)
             .ToList();
 
-    private Method GetMethod(ApiDescription apiDescription, Uri host)
+    private OpenRpcMethod GetMethod(ApiDescription apiDescription, Uri host)
     {
         var methodInfo = (apiDescription.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo;
         var parametersMetadata = apiDescription.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
@@ -83,9 +77,8 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             ? serverOptions.DefaultDataJsonSerializerOptions
             : Utils.GetJsonSerializerOptions(jsonSerializerOptionsProviders, jsonSerializerOptionsProviderType);
         var methodName = (string) apiDescription.Properties[ApiExplorerConstants.MethodNameProperty];
-        return new Method
+        return new OpenRpcMethod(methodName)
         {
-            Name = methodName,
             Summary = methodInfo?.GetXmlDocsSummary(),
             Description = methodInfo?.GetXmlDocsRemarks(),
             Params = GetMethodParams(apiDescription, methodName, parametersMetadata, jsonSerializerOptions).ToList(),
@@ -96,7 +89,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         };
     }
 
-    private IEnumerable<ContentDescriptor> GetMethodParams(ApiDescription apiDescription, string methodName, JsonRpcActionParametersMetadata? parametersMetadata, JsonSerializerOptions jsonSerializerOptions)
+    private IEnumerable<OpenRpcContentDescriptor> GetMethodParams(ApiDescription apiDescription, string methodName, JsonRpcActionParametersMetadata? parametersMetadata, JsonSerializerOptions jsonSerializerOptions)
     {
         // there must be only one body parameter with Request<T> type
         var requestType = apiDescription.ParameterDescriptions.Single(static x => x.Source == BindingSource.Body).Type;
@@ -126,7 +119,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         }
     }
 
-    private ContentDescriptor GetResultContentDescriptor(ApiDescription apiDescription, string methodName, JsonSerializerOptions jsonSerializerOptions)
+    private OpenRpcContentDescriptor GetResultContentDescriptor(ApiDescription apiDescription, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         // there must be only one response type with Response<T> type
         var responseType = apiDescription.SupportedResponseTypes.Single().Type!;
@@ -135,7 +128,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         return contentDescriptorGenerator.GenerateForType(bodyType, methodName, jsonSerializerOptions);
     }
 
-    private List<Models.Server>? GetMethodServers(ApiDescription apiDescription, Uri host)
+    private List<OpenRpcServer>? GetMethodServers(ApiDescription apiDescription, Uri host)
     {
         var route = apiDescription.RelativePath?.Split('#').First();
 
@@ -147,7 +140,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         return GetServers(host, route);
     }
 
-    private static ParamStructure GetParamsStructure(JsonRpcActionParametersMetadata? parametersMetadata)
+    private static OpenRpcParamStructure GetParamsStructure(JsonRpcActionParametersMetadata? parametersMetadata)
     {
         var bindingStyles = parametersMetadata?.Parameters.Values
                 .Select(static p => p.BindingStyle)
@@ -157,30 +150,30 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
 
         return bindingStyles.Count switch
         {
-            0 => ParamStructure.Either,
+            0 => OpenRpcParamStructure.Either,
             1 => bindingStyles.Single().ToParamStructure(),
             _ => CombineBindingStyles(bindingStyles)
         };
     }
 
     // mixed binding is bad but it's up to user to try this out
-    private static ParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)
+    private static OpenRpcParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)
     {
         var hasArrayBinding = bindingStyles.Contains(BindingStyle.Array);
         var hasObjectBinding = bindingStyles.Contains(BindingStyle.Object);
         if (hasArrayBinding && !hasObjectBinding)
         {
             // if 'array' is present, 'default' binding works, 'object' binding does not
-            return ParamStructure.ByPosition;
+            return OpenRpcParamStructure.ByPosition;
         }
 
         if (hasObjectBinding && !hasArrayBinding)
         {
             // if 'object' is present, 'default' binding works, 'array' binding does not
-            return ParamStructure.ByName;
+            return OpenRpcParamStructure.ByName;
         }
 
         // both 'object' and 'array' binding will not work but we have to return something valid
-        return ParamStructure.Either;
+        return OpenRpcParamStructure.Either;
     }
 }

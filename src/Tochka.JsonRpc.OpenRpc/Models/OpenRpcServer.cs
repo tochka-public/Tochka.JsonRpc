@@ -3,17 +3,17 @@
 /// <summary>
 /// An object representing a Server.
 /// </summary>
-public sealed record Server
+public sealed record OpenRpcServer(string Name, Uri Url)
 {
     /// <summary>
     /// REQUIRED. A name to be used as the canonical name for the server.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = Name;
 
     /// <summary>
     /// REQUIRED. A URL to the target host.
     /// </summary>
-    public Uri Url { get; set; }
+    public Uri Url { get; set; } = Url;
 
     /// <summary>
     /// A short summary of what the server is.
@@ -28,5 +28,5 @@ public sealed record Server
     /// <summary>
     /// A map between a variable name and its value. The value is passed into the Runtime Expression to produce a server URL.
     /// </summary>
-    public Dictionary<string, ServerVariable>? Variables { get; set; }
+    public Dictionary<string, OpenRpcServerVariable>? Variables { get; set; }
 }

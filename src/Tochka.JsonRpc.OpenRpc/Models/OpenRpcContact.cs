@@ -3,7 +3,7 @@
 /// <summary>
 /// Contact information for the exposed API.
 /// </summary>
-public sealed record Contact
+public sealed record OpenRpcContact
 {
     /// <summary>
     /// The identifying name of the contact person/organization.
