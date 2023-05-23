@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.OpenRpc.Models;
-using Tochka.JsonRpc.Server.Settings;
+using Tochka.JsonRpc.OpenRpc.Services;
 
 namespace Tochka.JsonRpc.OpenRpc;
 
@@ -80,22 +79,6 @@ public static class Extensions
         var requestDelegate = endpoints.CreateApplicationBuilder().UseOpenRpc().Build();
         return endpoints.MapGet(options.DocumentPath, requestDelegate);
     }
-
-    internal static bool IsObsoleteTransitive(this ApiDescription description)
-    {
-        var methodInfo = (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo;
-        var methodAttr = methodInfo?.GetCustomAttribute<ObsoleteAttribute>();
-        var typeAttr = methodInfo?.DeclaringType?.GetCustomAttribute<ObsoleteAttribute>();
-        return (methodAttr ?? typeAttr) != null;
-    }
-
-    internal static OpenRpcParamStructure ToParamStructure(this BindingStyle bindingStyle) => bindingStyle switch
-    {
-        BindingStyle.Default => OpenRpcParamStructure.Either,
-        BindingStyle.Object => OpenRpcParamStructure.ByName,
-        BindingStyle.Array => OpenRpcParamStructure.ByPosition,
-        _ => throw new ArgumentOutOfRangeException(nameof(bindingStyle), bindingStyle, null)
-    };
 
     private static void EnsureRequiredServicesRegistered(IServiceProvider services)
     {

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -14,7 +15,7 @@ using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 using Utils = Tochka.JsonRpc.Server.Utils;
 
-namespace Tochka.JsonRpc.OpenRpc;
+namespace Tochka.JsonRpc.OpenRpc.Services;
 
 public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
 {
@@ -60,7 +61,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     private List<OpenRpcMethod> GetMethods(string documentName, Uri host) =>
         apiDescriptionsProvider.ApiDescriptionGroups.Items
             .SelectMany(static g => g.Items)
-            .Where(d => !openRpcOptions.IgnoreObsoleteActions || d.IsObsoleteTransitive())
+            .Where(d => !openRpcOptions.IgnoreObsoleteActions || IsObsoleteTransitive(d))
             .Where(static d => d.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
             .Where(d => openRpcOptions.DocInclusionPredicate(documentName, d))
             .Select(d => GetMethod(d, host))
@@ -83,7 +84,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             Description = methodInfo?.GetXmlDocsRemarks(),
             Params = GetMethodParams(apiDescription, methodName, parametersMetadata, jsonSerializerOptions).ToList(),
             Result = GetResultContentDescriptor(apiDescription, methodName, jsonSerializerOptions),
-            Deprecated = apiDescription.IsObsoleteTransitive(),
+            Deprecated = IsObsoleteTransitive(apiDescription),
             Servers = GetMethodServers(apiDescription, host),
             ParamStructure = GetParamsStructure(parametersMetadata)
         };
@@ -151,10 +152,26 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         return bindingStyles.Count switch
         {
             0 => OpenRpcParamStructure.Either,
-            1 => bindingStyles.Single().ToParamStructure(),
+            1 => ToParamStructure(bindingStyles.Single()),
             _ => CombineBindingStyles(bindingStyles)
         };
     }
+
+    private static bool IsObsoleteTransitive(ApiDescription description)
+    {
+        var methodInfo = (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo;
+        var methodAttr = methodInfo?.GetCustomAttribute<ObsoleteAttribute>();
+        var typeAttr = methodInfo?.DeclaringType?.GetCustomAttribute<ObsoleteAttribute>();
+        return (methodAttr ?? typeAttr) != null;
+    }
+
+    private static OpenRpcParamStructure ToParamStructure(BindingStyle bindingStyle) => bindingStyle switch
+    {
+        BindingStyle.Default => OpenRpcParamStructure.Either,
+        BindingStyle.Object => OpenRpcParamStructure.ByName,
+        BindingStyle.Array => OpenRpcParamStructure.ByPosition,
+        _ => throw new ArgumentOutOfRangeException(nameof(bindingStyle), bindingStyle, null)
+    };
 
     // mixed binding is bad but it's up to user to try this out
     private static OpenRpcParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)

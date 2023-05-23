@@ -3,7 +3,7 @@ using Namotion.Reflection;
 using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.Server.Metadata;
 
-namespace Tochka.JsonRpc.OpenRpc;
+namespace Tochka.JsonRpc.OpenRpc.Services;
 
 public interface IOpenRpcContentDescriptorGenerator
 {

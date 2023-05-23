@@ -5,7 +5,7 @@ using Json.Schema.Generation;
 using Namotion.Reflection;
 using Tochka.JsonRpc.Common;
 
-namespace Tochka.JsonRpc.OpenRpc;
+namespace Tochka.JsonRpc.OpenRpc.Services;
 
 public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 {

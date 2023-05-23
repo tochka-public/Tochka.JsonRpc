@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using Microsoft.Extensions.Options;
+using Tochka.JsonRpc.OpenRpc.Services;
 
 namespace Tochka.JsonRpc.OpenRpc;
 
