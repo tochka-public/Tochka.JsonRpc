@@ -1,7 +1,6 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Tochka.JsonRpc.OpenRpc;
-using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
@@ -17,13 +16,6 @@ builder.Services.AddScoped<IRequestValidator, SimpleRequestValidator>();
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, KebabCaseUpperJsonSerializerOptionsProvider>();
-builder.Services.AddSingleton<IOpenRpcDocumentGenerator, OpenRpcDocumentGenerator>();
-builder.Services.AddSingleton<IOpenRpcSchemaGenerator, OpenRpcSchemaGenerator>();
-builder.Services.AddSingleton<IOpenRpcContentDescriptorGenerator, OpenRpcContentDescriptorGenerator>();
-builder.Services.Configure<OpenRpcOptions>(c =>
-{
-    c.Docs["openrpc"] = new Info() { Title = "openrpc", Version = "v1" };
-});
 
 builder.Services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly());
 builder.Services.AddSwaggerGen(c =>
@@ -31,9 +23,10 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("rest", new OpenApiInfo { Title = "RESTful API", Version = "v1" });
 });
 
+builder.Services.AddOpenRpc(Assembly.GetExecutingAssembly());
+
 var app = builder.Build();
 
-app.UseMiddleware<OpenRpcMiddleware>();
 app.UseSwaggerUI(c =>
 {
     c.JsonRpcSwaggerEndpoints(app);
@@ -45,6 +38,7 @@ app.UseEndpoints(c =>
 {
     c.MapControllers();
     c.MapSwagger();
+    c.MapOpenRpc();
 });
 
 await app.RunAsync();

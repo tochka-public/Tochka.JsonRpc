@@ -15,13 +15,20 @@ namespace Tochka.JsonRpc.Swagger;
 
 public static class Extensions
 {
-    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenApiInfo info)
+    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenApiInfo info, Action<SwaggerGenOptions> setupAction)
     {
-        services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
         services.TryAddTransient<ISchemaGenerator, JsonRpcSchemaGenerator>();
         services.TryAddSingleton<ITypeEmitter, TypeEmitter>();
+        if (services.All(static x => x.ImplementationType != typeof(JsonRpcDescriptionProvider)))
+        {
+            // add by interface if not present
+            services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
+        }
+
         services.AddSwaggerGen(c =>
         {
+            setupAction(c);
+
             // it's impossible to add same model with different serializers, so we have to create separate documents for each serializer
             c.SwaggerDoc(ApiExplorerConstants.DefaultDocumentName, info);
             var jsonSerializerOptionsProviders = services
@@ -68,8 +75,30 @@ public static class Extensions
         return services;
     }
 
+    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, Action<SwaggerGenOptions> setupAction)
+    {
+        // returns assembly name, not what Rider shows in Csproj>Properties>Nuget>Title
+        var assemblyName = xmlDocAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
+        var title = $"{assemblyName} {ApiExplorerConstants.DefaultDocumentTitle}".TrimStart();
+        var description = xmlDocAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
+        var info = new OpenApiInfo
+        {
+            Title = title,
+            Version = ApiExplorerConstants.DefaultDocumentVersion,
+            Description = description
+        };
+
+        return services.AddSwaggerWithJsonRpc(xmlDocAssembly, info, setupAction);
+    }
+
+    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenApiInfo info) =>
+        services.AddSwaggerWithJsonRpc(xmlDocAssembly,
+            info,
+            static _ => { });
+
     public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
-        services.AddSwaggerWithJsonRpc(xmlDocAssembly, new OpenApiInfo { Title = ApiExplorerConstants.DefaultDocumentTitle, Version = ApiExplorerConstants.DefaultDocumentVersion });
+        services.AddSwaggerWithJsonRpc(xmlDocAssembly,
+            static _ => { });
 
     public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IApplicationBuilder app, string name)
     {

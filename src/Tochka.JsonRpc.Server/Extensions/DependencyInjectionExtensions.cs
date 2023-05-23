@@ -57,7 +57,7 @@ public static class DependencyInjectionExtensions
     {
         if (services.GetService<JsonRpcMarkerService>() == null)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException($"Unable to find the required services. Please add all the required services by calling '{nameof(IServiceCollection)}.{nameof(AddJsonRpcServer)}' in the application startup code.");
         }
     }
 }
