@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Tochka.JsonRpc.OpenRpc.Models;
+﻿using Tochka.JsonRpc.OpenRpc.Models;
 
 namespace Tochka.JsonRpc.OpenRpc;
 

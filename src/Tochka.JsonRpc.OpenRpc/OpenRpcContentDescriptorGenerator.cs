@@ -1,14 +1,9 @@
-﻿using System.Reflection;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Json.Schema.Generation;
-using Microsoft.Extensions.Options;
 using Namotion.Reflection;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.Server.Metadata;
-using Tochka.JsonRpc.Server.Serialization;
-using Tochka.JsonRpc.Server.Settings;
-using Utils = Tochka.JsonRpc.Server.Utils;
 
 namespace Tochka.JsonRpc.OpenRpc;
 

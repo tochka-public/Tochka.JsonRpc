@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿namespace Tochka.JsonRpc.OpenRpc.Models;
 
 public enum ParamStructure
 {

@@ -1,7 +1,7 @@
 ﻿namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
-/// The Example object is an object that defines an example that is intended to match the schema of a given <see cref="ContentDescriptor"/>.
+/// The Example object is an object that defines an example that is intended to match the schema of a given <see cref="ContentDescriptor" />.
 /// </summary>
 public sealed record Example
 {
@@ -29,7 +29,7 @@ public sealed record Example
 
     /// <summary>
     /// A URL that points to the literal example.
-    ///This provides the capability to reference examples that cannot easily be included in JSON documents.
+    /// This provides the capability to reference examples that cannot easily be included in JSON documents.
     /// The value field and externalValue field are mutually exclusive.
     /// </summary>
     public Uri? ExternalValue { get; set; }

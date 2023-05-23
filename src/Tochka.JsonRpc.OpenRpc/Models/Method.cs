@@ -34,14 +34,14 @@ public sealed record Method
     /// <summary>
     /// REQUIRED. A list of parameters that are applicable for this method.
     /// The list MUST NOT include duplicated parameters and therefore require name to be unique.
-    /// The list can use the Reference Object to link to parameters that are defined by the <see cref="ContentDescriptor"/> Object.
+    /// The list can use the Reference Object to link to parameters that are defined by the <see cref="ContentDescriptor" /> Object.
     /// All optional params (content descriptor objects with “required”: false) MUST be positioned after all required params in the list.
     /// </summary>
     public List<ContentDescriptor> Params { get; set; }
 
     /// <summary>
     /// The description of the result returned by the method.
-    /// If defined, it MUST be a <see cref="ContentDescriptor"/> or Reference Object.
+    /// If defined, it MUST be a <see cref="ContentDescriptor" /> or Reference Object.
     /// If undefined, the method MUST only be used as a notification.
     /// </summary>
     public ContentDescriptor? Result { get; set; }
@@ -52,7 +52,7 @@ public sealed record Method
     public bool? Deprecated { get; set; }
 
     /// <summary>
-    /// An alternative <see cref="Server"/> array to service this method.
+    /// An alternative <see cref="Server" /> array to service this method.
     /// If an alternative servers array is specified at the Root level, it will be overridden by this value.
     /// </summary>
     public List<Server>? Servers { get; set; }
@@ -77,7 +77,7 @@ public sealed record Method
     public ParamStructure? ParamStructure { get; set; }
 
     /// <summary>
-    /// Array of Example Pairing Object where each example includes a valid params-to-result <see cref="ContentDescriptor"/> pairing.
+    /// Array of Example Pairing Object where each example includes a valid params-to-result <see cref="ContentDescriptor" /> pairing.
     /// </summary>
     public List<ExamplePairing>? Examples { get; set; }
 }

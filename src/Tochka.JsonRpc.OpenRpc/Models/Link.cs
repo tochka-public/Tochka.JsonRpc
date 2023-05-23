@@ -24,7 +24,7 @@ public sealed record Link
 
     /// <summary>
     /// The name of an existing, resolvable OpenRPC method, as defined with a unique method.
-    /// This field MUST resolve to a unique <see cref="Method"/> Object. As opposed to Open Api, Relative method values ARE NOT permitted.
+    /// This field MUST resolve to a unique <see cref="Method" /> Object. As opposed to Open Api, Relative method values ARE NOT permitted.
     /// </summary>
     public string? Method { get; set; }
 

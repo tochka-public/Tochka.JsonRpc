@@ -20,8 +20,8 @@ public sealed record OpenRpc
     public Info Info { get; set; }
 
     /// <summary>
-    /// An array of <see cref="Server"/> Objects, which provide connectivity information to a target server.
-    /// If the servers property is not provided, or is an empty array, the default value would be a <see cref="Server"/> Object with a url value of localhost.
+    /// An array of <see cref="Server" /> Objects, which provide connectivity information to a target server.
+    /// If the servers property is not provided, or is an empty array, the default value would be a <see cref="Server" /> Object with a url value of localhost.
     /// </summary>
     public List<Server>? Servers { get; set; }
 
