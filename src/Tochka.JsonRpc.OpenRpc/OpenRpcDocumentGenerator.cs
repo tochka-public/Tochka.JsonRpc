@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using Json.Schema;
-using Json.Schema.Generation;
-using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -12,7 +10,9 @@ using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
+using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
+using Utils = Tochka.JsonRpc.Server.Utils;
 
 namespace Tochka.JsonRpc.OpenRpc;
 
@@ -21,21 +21,22 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     private readonly IApiDescriptionGroupCollectionProvider apiDescriptionsProvider;
     private readonly IOpenRpcSchemaGenerator schemaGenerator;
     private readonly IOpenRpcContentDescriptorGenerator contentDescriptorGenerator;
+    private readonly IEnumerable<IJsonSerializerOptionsProvider> jsonSerializerOptionsProviders;
     private readonly JsonRpcServerOptions serverOptions;
     private readonly OpenRpcOptions openRpcOptions;
 
-    public OpenRpcDocumentGenerator(IApiDescriptionGroupCollectionProvider apiDescriptionsProvider, IOpenRpcSchemaGenerator schemaGenerator, IOpenRpcContentDescriptorGenerator contentDescriptorGenerator, IOptions<JsonRpcServerOptions> serverOptions, IOptions<OpenRpcOptions> openRpcOptions)
+    public OpenRpcDocumentGenerator(IApiDescriptionGroupCollectionProvider apiDescriptionsProvider, IOpenRpcSchemaGenerator schemaGenerator, IOpenRpcContentDescriptorGenerator contentDescriptorGenerator, IEnumerable<IJsonSerializerOptionsProvider> jsonSerializerOptionsProviders, IOptions<JsonRpcServerOptions> serverOptions, IOptions<OpenRpcOptions> openRpcOptions)
     {
         this.apiDescriptionsProvider = apiDescriptionsProvider;
         this.schemaGenerator = schemaGenerator;
         this.contentDescriptorGenerator = contentDescriptorGenerator;
+        this.jsonSerializerOptionsProviders = jsonSerializerOptionsProviders;
         this.serverOptions = serverOptions.Value;
         this.openRpcOptions = openRpcOptions.Value;
     }
 
-    public Models.OpenRpc Generate(Info info, string documentName, Uri host)
-    {
-        return new Models.OpenRpc
+    public Models.OpenRpc Generate(Info info, string documentName, Uri host) =>
+        new()
         {
             Openrpc = OpenRpcConstants.SpecVersion,
             Info = info,
@@ -46,7 +47,6 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
                 Schemas = schemaGenerator.GetAllSchemas()
             }
         };
-    }
 
     private List<Models.Server> GetServers(Uri host, string route)
     {
@@ -78,59 +78,61 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         var methodInfo = (apiDescription.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo;
         var parametersMetadata = apiDescription.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
         var serializerMetadata = apiDescription.ActionDescriptor.EndpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
-        var serializerOptionsProviderType = serializerMetadata?.ProviderType;
+        var jsonSerializerOptionsProviderType = serializerMetadata?.ProviderType;
+        var jsonSerializerOptions = jsonSerializerOptionsProviderType == null
+            ? serverOptions.DefaultDataJsonSerializerOptions
+            : Utils.GetJsonSerializerOptions(jsonSerializerOptionsProviders, jsonSerializerOptionsProviderType);
         var methodName = (string) apiDescription.Properties[ApiExplorerConstants.MethodNameProperty];
         return new Method
         {
             Name = methodName,
             Summary = methodInfo?.GetXmlDocsSummary(),
             Description = methodInfo?.GetXmlDocsRemarks(),
-            Params = GetMethodParams(apiDescription, methodName, parametersMetadata, serializerOptionsProviderType).ToList(),
-            Result = GetResultContentDescriptor(apiDescription, methodName, serializerOptionsProviderType),
+            Params = GetMethodParams(apiDescription, methodName, parametersMetadata, jsonSerializerOptions).ToList(),
+            Result = GetResultContentDescriptor(apiDescription, methodName, jsonSerializerOptions),
             Deprecated = apiDescription.IsObsoleteTransitive(),
             Servers = GetMethodServers(apiDescription, host),
             ParamStructure = GetParamsStructure(parametersMetadata)
         };
     }
 
-    // ReSharper disable once UnusedParameter.Local
-    private IEnumerable<ContentDescriptor> GetMethodParams(ApiDescription apiDescription, string methodName, JsonRpcActionParametersMetadata? parametersMetadata, Type? serializerOptionsProviderType)
+    private IEnumerable<ContentDescriptor> GetMethodParams(ApiDescription apiDescription, string methodName, JsonRpcActionParametersMetadata? parametersMetadata, JsonSerializerOptions jsonSerializerOptions)
     {
         // there must be only one body parameter with Request<T> type
         var requestType = apiDescription.ParameterDescriptions.Single(static x => x.Source == BindingSource.Body).Type;
         // unpack Request<T>
         var bodyType = requestType.BaseType!.GenericTypeArguments.Single();
-        var isCollection = typeof(ICollection).IsAssignableFrom(bodyType);
 
-        if (isCollection)
+        var isCollection = typeof(IEnumerable).IsAssignableFrom(bodyType);
+        var itemType = bodyType.GetEnumerableItemType();
+        if (isCollection && itemType != null)
         {
-            var itemType = bodyType.GetEnumerableItemType()!.ToContextualType();
-            yield return contentDescriptorGenerator.GenerateForType(itemType, methodName, serializerOptionsProviderType);
+            yield return contentDescriptorGenerator.GenerateForType(itemType.ToContextualType(), methodName, jsonSerializerOptions);
 
             yield break;
         }
 
         foreach (var propertyInfo in bodyType.GetProperties())
         {
+            var property = propertyInfo.ToContextualProperty();
             if (parametersMetadata?.Parameters.TryGetValue(propertyInfo.Name, out var parameterMetadata) == true)
             {
-                yield return contentDescriptorGenerator.GenerateForParameter(parameterMetadata.Type.ToContextualType(), methodName, serializerOptionsProviderType, parameterMetadata);
+                yield return contentDescriptorGenerator.GenerateForParameter(property.PropertyType, methodName, parameterMetadata, jsonSerializerOptions);
             }
             else
             {
-                yield return contentDescriptorGenerator.GenerateForProperty(propertyInfo, methodName, serializerOptionsProviderType);
+                yield return contentDescriptorGenerator.GenerateForProperty(property, methodName, jsonSerializerOptions);
             }
         }
     }
 
-    // ReSharper disable once UnusedParameter.Local
-    private ContentDescriptor GetResultContentDescriptor(ApiDescription apiDescription, string methodName, Type? serializerOptionsProviderType)
+    private ContentDescriptor GetResultContentDescriptor(ApiDescription apiDescription, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         // there must be only one response type with Response<T> type
         var responseType = apiDescription.SupportedResponseTypes.Single().Type!;
         // unpack Response<T>
         var bodyType = responseType.BaseType!.GenericTypeArguments.Single().ToContextualType();
-        return contentDescriptorGenerator.GenerateForType(bodyType, methodName, serializerOptionsProviderType);
+        return contentDescriptorGenerator.GenerateForType(bodyType, methodName, jsonSerializerOptions);
     }
 
     private List<Models.Server>? GetMethodServers(ApiDescription apiDescription, Uri host)
