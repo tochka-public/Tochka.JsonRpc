@@ -15,9 +15,9 @@ public static class Extensions
 {
     public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info, Action<OpenRpcOptions> setupAction)
     {
-        services.TryAddSingleton<IOpenRpcDocumentGenerator, OpenRpcDocumentGenerator>();
-        services.TryAddSingleton<IOpenRpcSchemaGenerator, OpenRpcSchemaGenerator>();
-        services.TryAddSingleton<IOpenRpcContentDescriptorGenerator, OpenRpcContentDescriptorGenerator>();
+        services.TryAddTransient<IOpenRpcDocumentGenerator, OpenRpcDocumentGenerator>();
+        services.TryAddTransient<IOpenRpcSchemaGenerator, OpenRpcSchemaGenerator>();
+        services.TryAddTransient<IOpenRpcContentDescriptorGenerator, OpenRpcContentDescriptorGenerator>();
         services.TryAddSingleton<ITypeEmitter, TypeEmitter>();
         if (services.All(static x => x.ImplementationType != typeof(JsonRpcDescriptionProvider)))
         {
