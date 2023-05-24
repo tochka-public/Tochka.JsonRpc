@@ -17,7 +17,6 @@ public static class JsonRpcSerializerOptions
         PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
         Converters =
         {
-            // TODO: server
             new RequestWrapperConverter(),
             new CallConverter(),
 
