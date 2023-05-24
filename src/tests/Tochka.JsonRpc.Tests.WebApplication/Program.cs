@@ -11,34 +11,39 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = JsonRpcMethodStyle.ActionOnly);
+
+// "business logic"
 builder.Services.AddScoped<IResponseProvider, SimpleResponseProvider>();
 builder.Services.AddScoped<IRequestValidator, SimpleRequestValidator>();
+
+// custom serializers for requests
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, KebabCaseUpperJsonSerializerOptionsProvider>();
 
-builder.Services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly());
-builder.Services.AddSwaggerGen(c =>
+
+builder.Services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly()); // swagger for json-rpc
+builder.Services.AddSwaggerGen(static c => // swagger for REST
 {
     c.SwaggerDoc("rest", new OpenApiInfo { Title = "RESTful API", Version = "v1" });
 });
 
-builder.Services.AddOpenRpc(Assembly.GetExecutingAssembly());
+builder.Services.AddOpenRpc(Assembly.GetExecutingAssembly()); // OpenRpc
 
 var app = builder.Build();
 
 app.UseSwaggerUI(c =>
 {
-    c.JsonRpcSwaggerEndpoints(app);
-    c.SwaggerEndpoint("/swagger/rest/swagger.json", "RESTful");
+    c.JsonRpcSwaggerEndpoints(app); // register json-rpc in swagger UI
+    c.SwaggerEndpoint("/swagger/rest/swagger.json", "RESTful"); // register REST in swagger UI
 });
 app.UseJsonRpc();
 app.UseRouting();
 app.UseEndpoints(c =>
 {
     c.MapControllers();
-    c.MapSwagger();
-    c.MapOpenRpc();
+    c.MapSwagger(); // swagger routing, alternative - UseSwagger()
+    c.MapOpenRpc(); // OpenRpc routing, alternative - UseOpenRpc()
 });
 
 await app.RunAsync();
