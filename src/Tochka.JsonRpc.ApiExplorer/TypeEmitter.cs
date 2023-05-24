@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
+using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
@@ -8,10 +9,12 @@ namespace Tochka.JsonRpc.ApiExplorer;
 public class TypeEmitter : ITypeEmitter
 {
     private readonly ModuleBuilder moduleBuilder;
+    private readonly ILogger<TypeEmitter> log;
     private readonly object lockObject = new();
 
-    public TypeEmitter()
+    public TypeEmitter(ILogger<TypeEmitter> log)
     {
+        this.log = log;
         var assemblyName = new AssemblyName(ApiExplorerConstants.GeneratedModelsAssemblyId);
         var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
         moduleBuilder = assemblyBuilder.DefineDynamicModule(ApiExplorerConstants.GeneratedModelsAssemblyId);
@@ -47,10 +50,11 @@ public class TypeEmitter : ITypeEmitter
         // Can't inherit from sealed, don't want to deal with valuetypes, default public constructor required
         if (baseParamsType.IsSealed || baseParamsType.IsValueType || baseParamsType.GetConstructor(Type.EmptyTypes) == null)
         {
-            // if (defaultBoundParams.Count > 0)
-            // {
-            //     log.LogWarning("Can not inherit from {}, ignored {} extra properties", baseParamsType.Name, defaultBoundParams.Count);
-            // }
+            if (defaultBoundParams.Count > 0)
+            {
+                log.LogWarning("Can not inherit from {baseParamsType}, ignored {defaultBoundParamsCount} extra properties", baseParamsType.Name, defaultBoundParams.Count);
+            }
+
             return baseParamsType;
         }
 

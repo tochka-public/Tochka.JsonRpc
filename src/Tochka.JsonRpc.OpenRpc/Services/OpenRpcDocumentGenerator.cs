@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Namotion.Reflection;
 using Tochka.JsonRpc.ApiExplorer;
@@ -25,13 +26,15 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     private readonly IEnumerable<IJsonSerializerOptionsProvider> jsonSerializerOptionsProviders;
     private readonly JsonRpcServerOptions serverOptions;
     private readonly OpenRpcOptions openRpcOptions;
+    private readonly ILogger<OpenRpcDocumentGenerator> log;
 
-    public OpenRpcDocumentGenerator(IApiDescriptionGroupCollectionProvider apiDescriptionsProvider, IOpenRpcSchemaGenerator schemaGenerator, IOpenRpcContentDescriptorGenerator contentDescriptorGenerator, IEnumerable<IJsonSerializerOptionsProvider> jsonSerializerOptionsProviders, IOptions<JsonRpcServerOptions> serverOptions, IOptions<OpenRpcOptions> openRpcOptions)
+    public OpenRpcDocumentGenerator(IApiDescriptionGroupCollectionProvider apiDescriptionsProvider, IOpenRpcSchemaGenerator schemaGenerator, IOpenRpcContentDescriptorGenerator contentDescriptorGenerator, IEnumerable<IJsonSerializerOptionsProvider> jsonSerializerOptionsProviders, IOptions<JsonRpcServerOptions> serverOptions, IOptions<OpenRpcOptions> openRpcOptions, ILogger<OpenRpcDocumentGenerator> log)
     {
         this.apiDescriptionsProvider = apiDescriptionsProvider;
         this.schemaGenerator = schemaGenerator;
         this.contentDescriptorGenerator = contentDescriptorGenerator;
         this.jsonSerializerOptionsProviders = jsonSerializerOptionsProviders;
+        this.log = log;
         this.serverOptions = serverOptions.Value;
         this.openRpcOptions = openRpcOptions.Value;
     }
@@ -141,7 +144,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         return GetServers(host, route);
     }
 
-    private static OpenRpcParamStructure GetParamsStructure(JsonRpcActionParametersMetadata? parametersMetadata)
+    private OpenRpcParamStructure GetParamsStructure(JsonRpcActionParametersMetadata? parametersMetadata)
     {
         var bindingStyles = parametersMetadata?.Parameters.Values
                 .Select(static p => p.BindingStyle)
@@ -155,6 +158,28 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             1 => ToParamStructure(bindingStyles.Single()),
             _ => CombineBindingStyles(bindingStyles)
         };
+    }
+
+    // mixed binding is bad but it's up to user to try this out
+    private OpenRpcParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)
+    {
+        var hasArrayBinding = bindingStyles.Contains(BindingStyle.Array);
+        var hasObjectBinding = bindingStyles.Contains(BindingStyle.Object);
+        if (hasArrayBinding && !hasObjectBinding)
+        {
+            // if 'array' is present, 'default' binding works, 'object' binding does not
+            return OpenRpcParamStructure.ByPosition;
+        }
+
+        if (hasObjectBinding && !hasArrayBinding)
+        {
+            // if 'object' is present, 'default' binding works, 'array' binding does not
+            return OpenRpcParamStructure.ByName;
+        }
+
+        // both 'object' and 'array' binding will not work but we have to return something valid
+        log.LogWarning("Both Array and Object binding styles in method params - this will work unexpectedly");
+        return OpenRpcParamStructure.Either;
     }
 
     private static bool IsObsoleteTransitive(ApiDescription description)
@@ -172,25 +197,4 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         BindingStyle.Array => OpenRpcParamStructure.ByPosition,
         _ => throw new ArgumentOutOfRangeException(nameof(bindingStyle), bindingStyle, null)
     };
-
-    // mixed binding is bad but it's up to user to try this out
-    private static OpenRpcParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)
-    {
-        var hasArrayBinding = bindingStyles.Contains(BindingStyle.Array);
-        var hasObjectBinding = bindingStyles.Contains(BindingStyle.Object);
-        if (hasArrayBinding && !hasObjectBinding)
-        {
-            // if 'array' is present, 'default' binding works, 'object' binding does not
-            return OpenRpcParamStructure.ByPosition;
-        }
-
-        if (hasObjectBinding && !hasArrayBinding)
-        {
-            // if 'object' is present, 'default' binding works, 'array' binding does not
-            return OpenRpcParamStructure.ByName;
-        }
-
-        // both 'object' and 'array' binding will not work but we have to return something valid
-        return OpenRpcParamStructure.Either;
-    }
 }

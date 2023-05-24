@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
@@ -16,8 +17,13 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     public int Order => int.MaxValue;
 
     private readonly ITypeEmitter typeEmitter;
+    private readonly ILogger<JsonRpcDescriptionProvider> log;
 
-    public JsonRpcDescriptionProvider(ITypeEmitter typeEmitter) => this.typeEmitter = typeEmitter;
+    public JsonRpcDescriptionProvider(ITypeEmitter typeEmitter, ILogger<JsonRpcDescriptionProvider> log)
+    {
+        this.typeEmitter = typeEmitter;
+        this.log = log;
+    }
 
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
@@ -30,6 +36,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             if (methodMetadata == null)
             {
                 // Should not be possible, sanity check
+                log.LogWarning("JsonRpcController action [{actionName}] without JsonRpcMethodAttribute, this shouldn't be possible!", description.ActionDescriptor.DisplayName);
                 context.Results.Remove(description);
                 continue;
             }
@@ -37,6 +44,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             if (description.ActionDescriptor is not ControllerActionDescriptor actionDescriptor)
             {
                 // Should not be possible, sanity check
+                log.LogWarning("Expected descriptor of action [{actionName}] to be ControllerActionDescriptor, but got {descriptorType}", description.ActionDescriptor.DisplayName, description.ActionDescriptor.GetType().Name);
                 continue;
             }
 

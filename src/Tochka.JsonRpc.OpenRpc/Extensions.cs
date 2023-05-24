@@ -36,7 +36,7 @@ public static class Extensions
         if (!File.Exists(xmlPath))
         {
             // check to enforce users set up their projects properly
-            throw new FileNotFoundException("Swagger requires generated XML doc file! Add <GenerateDocumentationFile>true</GenerateDocumentationFile> to your csproj or disable Swagger integration", xmlPath);
+            throw new FileNotFoundException("OpenRpc requires generated XML doc file! Add <GenerateDocumentationFile>true</GenerateDocumentationFile> to your csproj or disable OpenRpc integration", xmlPath);
         }
 
         services.AddSingleton<OpenRpcMarkerService>();
