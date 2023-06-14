@@ -51,7 +51,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         TryGetValue(id, out var response);
         return response switch
         {
-            UntypedResponse { Result: { } } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
+            UntypedResponse { Result: not null } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
             _ => default
         };
     }

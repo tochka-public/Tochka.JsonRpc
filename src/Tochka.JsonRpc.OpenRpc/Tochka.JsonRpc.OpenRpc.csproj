@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tochka.JsonRpc.ApiExplorer\Tochka.JsonRpc.ApiExplorer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" Version="4.1.1" />
+    <PackageReference Include="JsonSchema.Net.Generation" Version="3.2.0" />
+    <PackageReference Include="Namotion.Reflection" Version="2.1.2" />
+    <PackageReference Include="Yoh.Text.Json.NamingPolicies" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

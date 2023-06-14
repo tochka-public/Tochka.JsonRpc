@@ -176,7 +176,7 @@ public interface IJsonRpcClient
     Task<IBatchJsonRpcResult?> SendBatch(IEnumerable<ICall> calls, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Send request or notification to given url. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
+    /// Send request or notification to given url. Returns raw <see cref="HttpResponseMessage" /> without any checks or parsing
     /// </summary>
     /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
     /// <param name="call">JSON Rpc request or notification</param>
@@ -185,7 +185,7 @@ public interface IJsonRpcClient
     Task<HttpResponseMessage> Send(string requestUrl, ICall call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Send request or notification to BaseUrl. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
+    /// Send request or notification to BaseUrl. Returns raw <see cref="HttpResponseMessage" /> without any checks or parsing
     /// </summary>
     /// <param name="call">JSON Rpc request or notification</param>
     /// <param name="cancellationToken"></param>
@@ -193,7 +193,7 @@ public interface IJsonRpcClient
     Task<HttpResponseMessage> Send(ICall call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Send batch of requests or notifications to given url. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
+    /// Send batch of requests or notifications to given url. Returns raw <see cref="HttpResponseMessage" /> without any checks or parsing
     /// </summary>
     /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
     /// <param name="calls">JSON Rpc requests or notifications</param>
@@ -201,8 +201,8 @@ public interface IJsonRpcClient
     /// <returns>Raw HTTP response</returns>
     Task<HttpResponseMessage> Send(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken);
 
-    /// <summary>s
-    ///  Send batch of requests or notifications to BaseUrl. Returns raw <see cref="HttpResponseMessage"/> without any checks or parsing
+    /// <summary>
+    /// Send batch of requests or notifications to BaseUrl. Returns raw <see cref="HttpResponseMessage" /> without any checks or parsing
     /// </summary>
     /// <param name="calls">JSON Rpc requests or notifications</param>
     /// <param name="cancellationToken"></param>

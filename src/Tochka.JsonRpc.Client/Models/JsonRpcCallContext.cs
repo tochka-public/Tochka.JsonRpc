@@ -173,9 +173,9 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
 
     public IJsonRpcCallContext WithError(UntypedErrorResponse untypedErrorResponse)
     {
-       Error = untypedErrorResponse.Error;
+        Error = untypedErrorResponse.Error;
 
-       return this;
+        return this;
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Options;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
@@ -65,10 +66,8 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
     private string GetMethodName(ActionModel action, SelectorModel selector)
     {
         var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(selector.EndpointMetadata, options, serializerOptionsProviders);
-        var methodStyleMetadata = selector.EndpointMetadata.FirstOrDefault(static m => m is JsonRpcMethodStyleAttribute);
-        var methodStyle = methodStyleMetadata is JsonRpcMethodStyleAttribute methodStyleAttribute
-            ? methodStyleAttribute.MethodStyle
-            : options.DefaultMethodStyle;
+        var methodStyleAttribute = selector.EndpointMetadata.Get<JsonRpcMethodStyleAttribute>();
+        var methodStyle = methodStyleAttribute?.MethodStyle ?? options.DefaultMethodStyle;
 
         var controllerName = jsonSerializerOptions.PropertyNamingPolicy!.ConvertName(action.Controller.ControllerName);
         var actionName = jsonSerializerOptions.PropertyNamingPolicy.ConvertName(action.ActionName);

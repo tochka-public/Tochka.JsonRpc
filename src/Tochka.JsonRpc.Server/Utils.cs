@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
@@ -9,13 +10,10 @@ public static class Utils
 {
     public static JsonSerializerOptions GetDataJsonSerializerOptions(IEnumerable<object> endpointMetadata, JsonRpcServerOptions serverOptions, IEnumerable<IJsonSerializerOptionsProvider> providers)
     {
-        var serializerOptionsMetadata = endpointMetadata.FirstOrDefault(static m => m is JsonRpcSerializerOptionsAttribute);
-        if (serializerOptionsMetadata is not JsonRpcSerializerOptionsAttribute serializerOptionsAttribute)
-        {
-            return serverOptions.DefaultDataJsonSerializerOptions;
-        }
-
-        return GetJsonSerializerOptions(providers, serializerOptionsAttribute.ProviderType);
+        var serializerOptionsAttribute = endpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
+        return serializerOptionsAttribute == null
+            ? serverOptions.DefaultDataJsonSerializerOptions
+            : GetJsonSerializerOptions(providers, serializerOptionsAttribute.ProviderType);
     }
 
     public static JsonSerializerOptions GetJsonSerializerOptions(IEnumerable<IJsonSerializerOptionsProvider> providers, Type providerType)

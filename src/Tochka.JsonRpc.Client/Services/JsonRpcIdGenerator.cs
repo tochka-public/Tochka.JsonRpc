@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Tochka.JsonRpc.Common.Models.Id;
+﻿using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Client.Services;
 

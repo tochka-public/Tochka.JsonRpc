@@ -8,7 +8,6 @@ using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
 using Tochka.JsonRpc.Server.Routing;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -33,8 +32,6 @@ public static class DependencyInjectionExtensions
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
-        services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
-        services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }
@@ -60,7 +57,7 @@ public static class DependencyInjectionExtensions
     {
         if (services.GetService<JsonRpcMarkerService>() == null)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException($"Unable to find the required services. Please add all the required services by calling '{nameof(IServiceCollection)}.{nameof(AddJsonRpcServer)}' in the application startup code.");
         }
     }
 }
