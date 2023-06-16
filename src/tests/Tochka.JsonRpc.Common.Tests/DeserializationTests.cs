@@ -1072,7 +1072,7 @@ internal class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_RootElementNotObject_ThrowArgumentOutOfRangeException()
+    public void RequestResponse_RootElementNotObject_ThrowJsonRpcFormatException()
     {
         var json = """
             123
@@ -1080,7 +1080,7 @@ internal class DeserializationTests
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        act.Should().Throw<JsonRpcFormatException>();
     }
 
     [Test]
