@@ -16,7 +16,7 @@ public class RequestWrapperConverter : JsonConverter<IRequestWrapper>
         throw new InvalidOperationException();
 
     [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for request wrappers")]
-    public override IRequestWrapper? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IRequestWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var tokenType = reader.TokenType;
         return tokenType switch
