@@ -73,7 +73,7 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
         var actionName = jsonSerializerOptions.PropertyNamingPolicy.ConvertName(action.ActionName);
         return methodStyle switch
         {
-            JsonRpcMethodStyle.ControllerAndAction => $"{controllerName}.{actionName}",
+            JsonRpcMethodStyle.ControllerAndAction => $"{controllerName}{JsonRpcConstants.ControllerMethodSeparator}{actionName}",
             JsonRpcMethodStyle.ActionOnly => actionName,
             _ => throw new ArgumentOutOfRangeException()
         };

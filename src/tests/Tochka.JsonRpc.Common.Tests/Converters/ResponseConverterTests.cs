@@ -11,7 +11,8 @@ using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Common.Tests.Converters;
 
-public class ResponseConverterTests
+[TestFixture]
+internal class ResponseConverterTests
 {
     [Test]
     public void Serialize_UntypedResponse()

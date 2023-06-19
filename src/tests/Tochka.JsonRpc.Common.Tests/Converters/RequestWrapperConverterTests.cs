@@ -6,7 +6,8 @@ using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
 namespace Tochka.JsonRpc.Common.Tests.Converters;
 
-public class RequestWrapperConverterTests
+[TestFixture]
+internal class RequestWrapperConverterTests
 {
     [Test]
     public void Serialize_Throw()

@@ -7,7 +7,8 @@ using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Common.Tests.Converters;
 
-public class JsonRpcIdConverterTests
+[TestFixture]
+internal class JsonRpcIdConverterTests
 {
     [Test]
     public void Serialize_Number()
