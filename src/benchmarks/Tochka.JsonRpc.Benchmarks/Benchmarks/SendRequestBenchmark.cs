@@ -2,16 +2,14 @@
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using EdjCase.JsonRpc.Client;
+using EdjCase.JsonRpc.Common;
 using Moq;
 using RichardSzalay.MockHttp;
+using Tochka.JsonRpc.TestUtils;
 using OldId = Tochka.JsonRpc.V1.Common.Models.Id.StringRpcId;
 using NewId = Tochka.JsonRpc.Common.Models.Id.StringRpcId;
-using OldRequest = Tochka.JsonRpc.V1.Common.Models.Request;
-using OldResponse = Tochka.JsonRpc.V1.Common.Models.Response;
-using NewRequest = Tochka.JsonRpc.Common.Models.Request;
-using NewResponse = Tochka.JsonRpc.Common.Models.Response;
 
-namespace Tochka.JsonRpc.Benchmarks;
+namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
 
 [MemoryDiagnoser]
 public class SendRequestBenchmark
@@ -33,7 +31,7 @@ public class SendRequestBenchmark
 
     private readonly OldId oldId = new(Id.ToString());
     private readonly NewId newId = new(Id.ToString());
-    private readonly EdjCase.JsonRpc.Common.RpcId edjCaseId = new(Id.ToString());
+    private readonly RpcId edjCaseId = new(Id.ToString());
 
     private TestData data;
     private Dictionary<string, object?> edjCaseData;
@@ -48,16 +46,16 @@ public class SendRequestBenchmark
     {
         handlerMock = new MockHttpMessageHandler();
         handlerMock.When($"{Constants.BaseUrl}big")
-            .Respond(_ => new StringContent(Responses.GetBigResponse(Id), Encoding.UTF8, "application/json"));
+            .Respond(static _ => new StringContent(Responses.GetBigResponse(Id), Encoding.UTF8, "application/json"));
         handlerMock.When($"{Constants.BaseUrl}nested")
-            .Respond(_ => new StringContent(Responses.GetNestedResponse(Id), Encoding.UTF8, "application/json"));
+            .Respond(static _ => new StringContent(Responses.GetNestedResponse(Id), Encoding.UTF8, "application/json"));
         handlerMock.When($"{Constants.BaseUrl}plain")
-            .Respond(_ => new StringContent(Responses.GetPlainResponse(Id), Encoding.UTF8, "application/json"));
+            .Respond(static _ => new StringContent(Responses.GetPlainResponse(Id), Encoding.UTF8, "application/json"));
 
         oldClient = new OldJsonRpcClient(handlerMock.ToHttpClient());
         newClient = new NewJsonRpcClient(handlerMock.ToHttpClient());
         var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-        httpClientFactoryMock.Setup(f => f.CreateClient(It.IsAny<string>()))
+        httpClientFactoryMock.Setup(static f => f.CreateClient(It.IsAny<string>()))
             .Returns(handlerMock.ToHttpClient());
         edjCaseClient = RpcClient.Builder(new Uri(Constants.BaseUrl)).Build();
         var edjCaseTransportClient = edjCaseClient.GetType().GetProperty("transportClient", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(edjCaseClient);

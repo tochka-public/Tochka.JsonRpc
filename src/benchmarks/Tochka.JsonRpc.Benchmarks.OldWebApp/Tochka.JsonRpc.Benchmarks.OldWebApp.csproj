@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
+    <ProjectReference Include="..\..\tests\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
+    <ProjectReference Include="..\..\v1\Tochka.JsonRpc.V1.Server\Tochka.JsonRpc.V1.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>

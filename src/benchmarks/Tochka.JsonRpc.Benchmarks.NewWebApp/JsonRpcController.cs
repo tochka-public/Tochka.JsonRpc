@@ -1,4 +1,5 @@
 ﻿using Tochka.JsonRpc.Server;
+using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Benchmarks.NewWebApp;
 

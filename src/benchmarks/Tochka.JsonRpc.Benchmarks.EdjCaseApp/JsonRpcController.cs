@@ -1,4 +1,5 @@
 ﻿using EdjCase.JsonRpc.Router;
+using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Benchmarks.EdjCaseApp;
 

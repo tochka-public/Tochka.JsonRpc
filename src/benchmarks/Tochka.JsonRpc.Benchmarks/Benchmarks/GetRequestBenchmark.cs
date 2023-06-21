@@ -4,31 +4,24 @@ using Tochka.JsonRpc.Benchmarks.EdjCaseApp;
 using Tochka.JsonRpc.Benchmarks.NewWebApp;
 using Tochka.JsonRpc.Benchmarks.OldWebApp;
 
-namespace Tochka.JsonRpc.Benchmarks;
+namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
 
 [MemoryDiagnoser]
 public class GetRequestBenchmark
 {
+    [ParamsSource(nameof(RequestValues))]
+    public string Request { get; set; }
+
     private HttpClient newClient;
     private HttpClient oldClient;
     private HttpClient edjCaseClient;
 
-    [ParamsSource(nameof(RequestValues))]
-    public string Request { get; set; }
-
-    public static IEnumerable<string> RequestValues => new[]
-    {
-        plainRequest
-        // new StringContent(requestJson, Encoding.UTF8, "application/json"),
-        // new StringContent(requestJson, Encoding.UTF8, "application/json"),
-    };
-
     [GlobalSetup]
     public void Setup()
     {
-        var newFactory = new NewApplicationFactory().WithWebHostBuilder(_ => { });
-        var oldFactory = new OldApplicationFactory().WithWebHostBuilder(_ => { });
-        var edjCaseFactory = new EdjCaseApplicationFactory().WithWebHostBuilder(_ => { });
+        var newFactory = new NewApplicationFactory().WithWebHostBuilder(static _ => { });
+        var oldFactory = new OldApplicationFactory().WithWebHostBuilder(static _ => { });
+        var edjCaseFactory = new EdjCaseApplicationFactory().WithWebHostBuilder(static _ => { });
         newClient = newFactory.CreateClient();
         oldClient = oldFactory.CreateClient();
         edjCaseClient = edjCaseFactory.CreateClient();
@@ -55,7 +48,7 @@ public class GetRequestBenchmark
         return await edjCaseClient.PostAsync("api/jsonrpc", request);
     }
 
-    private const string plainRequest = """
+    private const string PlainRequest = """
         {
             "jsonrpc": "2.0",
             "method": "process",
@@ -77,4 +70,9 @@ public class GetRequestBenchmark
             }
         }
         """;
+
+    public static IEnumerable<string> RequestValues => new[]
+    {
+        PlainRequest
+    };
 }

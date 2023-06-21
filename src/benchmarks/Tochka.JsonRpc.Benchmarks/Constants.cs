@@ -1,6 +1,6 @@
 ﻿namespace Tochka.JsonRpc.Benchmarks;
 
-internal class Constants
+internal static class Constants
 {
     public const string BaseUrl = "https://for_tests.localhost/";
 }

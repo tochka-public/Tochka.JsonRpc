@@ -1,21 +1,13 @@
 ﻿using System.Net;
 using BenchmarkDotNet.Attributes;
 using RichardSzalay.MockHttp;
+using Tochka.JsonRpc.TestUtils;
 
-namespace Tochka.JsonRpc.Benchmarks;
+namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
 
-[MemoryDiagnoser()]
+[MemoryDiagnoser]
 public class SendNotificationBenchmark
 {
-    private const string Method = "method";
-
-    public static IEnumerable<TestData> DataValues => new[]
-    {
-        TestData.Big,
-        TestData.Nested,
-        TestData.Plain
-    };
-
     [ParamsSource(nameof(DataValues))]
     public TestData Data { get; set; }
 
@@ -38,4 +30,13 @@ public class SendNotificationBenchmark
 
     [Benchmark]
     public async Task Old() => await oldClient.SendNotification(Method, Data, CancellationToken.None);
+
+    private const string Method = "method";
+
+    public static IEnumerable<TestData> DataValues => new[]
+    {
+        TestData.Big,
+        TestData.Nested,
+        TestData.Plain
+    };
 }

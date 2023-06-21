@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\v1\Tochka.JsonRpc.V1.Server\Tochka.JsonRpc.V1.Server.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Tochka.JsonRpc.Benchmarks</_Parameter1>
     </AssemblyAttribute>
@@ -20,7 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EdjCase.JsonRpc.Router" Version="5.1.9" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\tests\Tochka.JsonRpc.TestUtils\Tochka.JsonRpc.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>
