@@ -30,7 +30,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         this.dataJsonSerializerOptions = dataJsonSerializerOptions;
     }
 
-    public TResponse? GetResponseOrThrow<TResponse>(IRpcId? id)
+    public TResponse? GetResponseOrThrow<TResponse>(IRpcId id)
     {
         if (!TryGetValue(id, out var response))
         {
@@ -46,7 +46,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
-    public TResponse? AsResponse<TResponse>(IRpcId? id)
+    public TResponse? AsResponse<TResponse>(IRpcId id)
     {
         TryGetValue(id, out var response);
         return response switch
@@ -56,7 +56,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
-    public bool HasError(IRpcId? id)
+    public bool HasError(IRpcId id)
     {
         if (!TryGetValue(id, out var response))
         {
@@ -66,7 +66,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         return response is UntypedErrorResponse;
     }
 
-    public Error<JsonDocument>? AsAnyError(IRpcId? id)
+    public Error<JsonDocument>? AsAnyError(IRpcId id)
     {
         TryGetValue(id, out var response);
         return response switch
@@ -76,7 +76,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
-    public Error<TError>? AsTypedError<TError>(IRpcId? id)
+    public Error<TError>? AsTypedError<TError>(IRpcId id)
     {
         TryGetValue(id, out var response);
         return response switch
@@ -88,13 +88,14 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
-    public Error<ExceptionInfo>? AsErrorWithExceptionInfo(IRpcId? id) => AsTypedError<ExceptionInfo>(id);
+    [ExcludeFromCodeCoverage]
+    public Error<ExceptionInfo>? AsErrorWithExceptionInfo(IRpcId id) => AsTypedError<ExceptionInfo>(id);
 
-    private bool TryGetValue(IRpcId? id, [NotNullWhen(true)] out IResponse? response) =>
-        responses.TryGetValue(id ?? NullId, out response);
+    [ExcludeFromCodeCoverage]
+    private bool TryGetValue(IRpcId id, [NotNullWhen(true)] out IResponse? response) =>
+        responses.TryGetValue(id, out response);
 
+    [ExcludeFromCodeCoverage]
     private static Dictionary<IRpcId, IResponse> CreateDictionary(IEnumerable<IResponse>? items) =>
         items?.ToDictionary(static x => x.Id, static x => x) ?? new Dictionary<IRpcId, IResponse>();
-
-    private static readonly IRpcId NullId = new NullRpcId();
 }

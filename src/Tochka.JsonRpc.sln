@@ -52,6 +52,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Swagger", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.OpenRpc", "Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj", "{D59B163E-BDD4-468F-94B6-962EDD6F8A3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Client.Tests", "tests\Tochka.JsonRpc.Client.Tests\Tochka.JsonRpc.Client.Tests.csproj", "{1E2ACA54-4929-44B5-8956-34225FD4A071}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -326,6 +328,18 @@ Global
 		{D59B163E-BDD4-468F-94B6-962EDD6F8A3E}.Release|x64.Build.0 = Release|Any CPU
 		{D59B163E-BDD4-468F-94B6-962EDD6F8A3E}.Release|x86.ActiveCfg = Release|Any CPU
 		{D59B163E-BDD4-468F-94B6-962EDD6F8A3E}.Release|x86.Build.0 = Release|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Debug|x64.Build.0 = Debug|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Release|x64.ActiveCfg = Release|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Release|x64.Build.0 = Release|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E2ACA54-4929-44B5-8956-34225FD4A071}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -348,6 +362,7 @@ Global
 		{1B72ABB5-420B-4DEF-91D0-58A8CE95D5B1} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{8F0A560B-C2A5-43BC-9C7C-2B903EEC8815} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{B10600AB-100A-4396-9073-0013C69783EE} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
+		{1E2ACA54-4929-44B5-8956-34225FD4A071} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93630835-1CE2-4464-8098-470B7C329D1A}

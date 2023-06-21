@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tochka.JsonRpc.Client.Services;
@@ -8,6 +9,7 @@ namespace Tochka.JsonRpc.Client;
 [PublicAPI]
 public static class Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static IHttpClientBuilder AddJsonRpcClient<TClient, TImplementation>(this IServiceCollection services)
         where TClient : class, IJsonRpcClient
         where TImplementation : JsonRpcClientBase, TClient =>
@@ -22,6 +24,7 @@ public static class Extensions
         return builder;
     }
 
+    [ExcludeFromCodeCoverage]
     public static IHttpClientBuilder AddJsonRpcClient<TClient>(this IServiceCollection services)
         where TClient : JsonRpcClientBase =>
         AddJsonRpcClient<TClient>(services, static (_, _) => { });
