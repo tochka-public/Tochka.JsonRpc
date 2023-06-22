@@ -1,5 +1,8 @@
-﻿namespace Tochka.JsonRpc.ApiExplorer;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Tochka.JsonRpc.ApiExplorer;
+
+[ExcludeFromCodeCoverage]
 public static class ApiExplorerConstants
 {
     public const string GeneratedModelsAssemblyId = "JsonRpcGeneratedModelTypes";

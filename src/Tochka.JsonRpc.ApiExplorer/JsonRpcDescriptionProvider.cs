@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -28,23 +29,25 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
         var existingDescriptions = context.Results
-            .Where(static x => x.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute));
+            .Where(static x => x.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
+            .ToArray();
 
         foreach (var description in existingDescriptions)
         {
-            var methodMetadata = description.ActionDescriptor.EndpointMetadata.Get<JsonRpcMethodAttribute>();
+            if (description.ActionDescriptor is not ControllerActionDescriptor actionDescriptor)
+            {
+                // Should not be possible, sanity check
+                log.LogWarning("Expected descriptor of action [{actionName}] to be ControllerActionDescriptor, but got {descriptorType}", description.ActionDescriptor.DisplayName, description.ActionDescriptor.GetType().Name);
+                context.Results.Remove(description);
+                continue;
+            }
+
+            var methodMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcMethodAttribute>();
             if (methodMetadata == null)
             {
                 // Should not be possible, sanity check
                 log.LogWarning("JsonRpcController action [{actionName}] without JsonRpcMethodAttribute, this shouldn't be possible!", description.ActionDescriptor.DisplayName);
                 context.Results.Remove(description);
-                continue;
-            }
-
-            if (description.ActionDescriptor is not ControllerActionDescriptor actionDescriptor)
-            {
-                // Should not be possible, sanity check
-                log.LogWarning("Expected descriptor of action [{actionName}] to be ControllerActionDescriptor, but got {descriptorType}", description.ActionDescriptor.DisplayName, description.ActionDescriptor.GetType().Name);
                 continue;
             }
 
@@ -62,6 +65,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public void OnProvidersExecuted(ApiDescriptionProviderContext context)
     {
     }
@@ -83,7 +87,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         var requestType = GetRequestType(parametersMetadata, methodName, serializerOptionsProviderType);
         description.ParameterDescriptions.Add(new ApiParameterDescription
         {
-            Name = "params",
+            Name = JsonRpcConstants.ParamsProperty,
             Source = BindingSource.Body,
             IsRequired = true,
             ModelMetadata = new JsonRpcModelMetadata(requestType),
