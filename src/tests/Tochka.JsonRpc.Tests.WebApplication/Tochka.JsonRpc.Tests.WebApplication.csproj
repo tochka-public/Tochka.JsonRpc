@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
+    <Description>description for tests</Description>
   </PropertyGroup>
 
   <ItemGroup>

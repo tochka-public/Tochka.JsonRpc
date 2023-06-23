@@ -21,7 +21,6 @@ builder.Services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSeria
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, CamelCaseJsonSerializerOptionsProvider>();
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, KebabCaseUpperJsonSerializerOptionsProvider>();
 
-
 builder.Services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly()); // swagger for json-rpc
 builder.Services.AddSwaggerGen(static c => // swagger for REST
 {
@@ -34,7 +33,7 @@ var app = builder.Build();
 
 app.UseSwaggerUI(c =>
 {
-    c.JsonRpcSwaggerEndpoints(app); // register json-rpc in swagger UI
+    c.JsonRpcSwaggerEndpoints(app.Services); // register json-rpc in swagger UI
     c.SwaggerEndpoint("/swagger/rest/swagger.json", "RESTful"); // register REST in swagger UI
 });
 app.UseJsonRpc();
