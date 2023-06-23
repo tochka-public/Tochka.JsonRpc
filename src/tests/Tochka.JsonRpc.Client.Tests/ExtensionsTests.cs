@@ -15,7 +15,7 @@ namespace Tochka.JsonRpc.Client.Tests;
 internal class ExtensionsTests
 {
     [Test]
-    public void AddJsonRpcClientWithInterface_RegistersServices()
+    public void AddJsonRpcClientWithInterface_RegisterServices()
     {
         var services = new ServiceCollection();
 
@@ -28,7 +28,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClientWithInterface_PreservesUserServices()
+    public void AddJsonRpcClientWithInterface_PreserveUserServices()
     {
         var services = new ServiceCollection();
         var idGeneratorMock = Mock.Of<IJsonRpcIdGenerator>();
@@ -41,7 +41,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClientWithInterface_CallsConfigure()
+    public void AddJsonRpcClientWithInterface_CallConfigure()
     {
         var services = new ServiceCollection();
         var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
@@ -55,7 +55,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClientWithInterface_WorksWithoutConfigure()
+    public void AddJsonRpcClientWithInterface_WorkWithoutConfigure()
     {
         var services = new ServiceCollection();
         services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
@@ -66,7 +66,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClient_RegistersServices()
+    public void AddJsonRpcClient_RegisterServices()
     {
         var services = new ServiceCollection();
 
@@ -79,7 +79,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClient_PreservesUserServices()
+    public void AddJsonRpcClient_PreserveUserServices()
     {
         var services = new ServiceCollection();
         var idGeneratorMock = Mock.Of<IJsonRpcIdGenerator>();
@@ -92,7 +92,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClient_CallsConfigure()
+    public void AddJsonRpcClient_CallConfigure()
     {
         var services = new ServiceCollection();
         var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
@@ -106,7 +106,7 @@ internal class ExtensionsTests
     }
 
     [Test]
-    public void AddJsonRpcClient_WorksWithoutConfigure()
+    public void AddJsonRpcClient_WorkWithoutConfigure()
     {
         var services = new ServiceCollection();
         services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
