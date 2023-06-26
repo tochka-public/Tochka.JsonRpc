@@ -1,8 +1,11 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// Allows referencing an external resource for extended documentation.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpcExternalDocumentation(Uri Url)
 {
     /// <summary>

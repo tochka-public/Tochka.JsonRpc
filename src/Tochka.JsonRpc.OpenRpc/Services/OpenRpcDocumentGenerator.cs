@@ -114,7 +114,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             var property = propertyInfo.ToContextualProperty();
             if (parametersMetadata?.Parameters.TryGetValue(propertyInfo.Name, out var parameterMetadata) == true)
             {
-                yield return contentDescriptorGenerator.GenerateForParameter(property.PropertyType, methodName, parameterMetadata, jsonSerializerOptions);
+                yield return contentDescriptorGenerator.GenerateForParameter(property, methodName, parameterMetadata, jsonSerializerOptions);
             }
             else
             {

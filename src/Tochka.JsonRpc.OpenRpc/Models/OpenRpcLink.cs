@@ -1,10 +1,13 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// The Link object represents a possible design-time link for a result.
 /// The presence of a link does not guarantee the caller’s ability to successfully invoke it,
 /// rather it provides a known relationship and traversal mechanism between results and other methods.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpcLink(string Name)
 {
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
@@ -58,9 +59,11 @@ public static class Extensions
         return services.AddOpenRpc(xmlDocAssembly, info, setupAction);
     }
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info) =>
         services.AddOpenRpc(xmlDocAssembly, info, static _ => { });
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
         services.AddOpenRpc(xmlDocAssembly, static _ => { });
 

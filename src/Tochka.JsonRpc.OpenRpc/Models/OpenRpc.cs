@@ -1,10 +1,13 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// This is the root object of the OpenRPC document.
 /// The contents of this object represent a whole OpenRPC document.
 /// How this object is constructed or stored is outside the scope of the OpenRPC Specification.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpc(OpenRpcInfo Info)
 {
     /// <summary>
