@@ -70,7 +70,7 @@ public static class Extensions
     public static void OpenRpcDoc(this OpenRpcOptions options, string name, OpenRpcInfo info) =>
         options.Docs[name] = info;
 
-    [ExcludeFromCodeCoverage(Justification = "UseMiddleware almost impossible to test")]
+    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
     public static IApplicationBuilder UseOpenRpc(this IApplicationBuilder app)
     {
         EnsureRequiredServicesRegistered(app.ApplicationServices);

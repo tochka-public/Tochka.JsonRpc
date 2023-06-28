@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -67,6 +68,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
         context.Result = new StatusCodeResult(StatusCodes.Status200OK);
     }
 
+    [ExcludeFromCodeCoverage]
     public void OnResultExecuted(ResultExecutedContext context)
     {
     }

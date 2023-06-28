@@ -2,6 +2,7 @@
 
 namespace Tochka.JsonRpc.Server.Exceptions;
 
+[ExcludeFromCodeCoverage]
 [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Method is required")]
 public class JsonRpcMethodNotFoundException : Exception
 {

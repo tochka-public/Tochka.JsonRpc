@@ -1,7 +1,9 @@
-﻿using Tochka.JsonRpc.Server.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using Tochka.JsonRpc.Server.Serialization;
 
 namespace Tochka.JsonRpc.Server.Attributes;
 
+[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class JsonRpcSerializerOptionsAttribute : Attribute
 {

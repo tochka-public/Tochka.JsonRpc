@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Swagger.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.OpenRpc.Tests.Integration", "tests\Tochka.JsonRpc.OpenRpc.Tests.Integration\Tochka.JsonRpc.OpenRpc.Tests.Integration.csproj", "{C8016388-2BDB-4271-BCD9-009983D32D38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tochka.JsonRpc.Server.Tests", "tests\Tochka.JsonRpc.Server.Tests\Tochka.JsonRpc.Server.Tests.csproj", "{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -410,6 +412,18 @@ Global
 		{C8016388-2BDB-4271-BCD9-009983D32D38}.Release|x64.Build.0 = Release|Any CPU
 		{C8016388-2BDB-4271-BCD9-009983D32D38}.Release|x86.ActiveCfg = Release|Any CPU
 		{C8016388-2BDB-4271-BCD9-009983D32D38}.Release|x86.Build.0 = Release|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Release|x64.Build.0 = Release|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -438,6 +452,7 @@ Global
 		{E0F9AF57-75E5-4CF1-8CDB-244EC504C901} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{C3E58C91-0B32-4488-A52A-1A94D3262323} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 		{C8016388-2BDB-4271-BCD9-009983D32D38} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
+		{E3ECCE3A-BBC9-4E1D-B8BB-B757BFBCEFEF} = {760AE7BD-53FC-40E8-867B-57C5677090F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93630835-1CE2-4464-8098-470B7C329D1A}
