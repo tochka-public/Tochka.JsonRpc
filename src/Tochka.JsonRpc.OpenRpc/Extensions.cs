@@ -70,12 +70,14 @@ public static class Extensions
     public static void OpenRpcDoc(this OpenRpcOptions options, string name, OpenRpcInfo info) =>
         options.Docs[name] = info;
 
+    [ExcludeFromCodeCoverage(Justification = "UseMiddleware almost impossible to test")]
     public static IApplicationBuilder UseOpenRpc(this IApplicationBuilder app)
     {
         EnsureRequiredServicesRegistered(app.ApplicationServices);
         return app.UseMiddleware<OpenRpcMiddleware>();
     }
 
+    [ExcludeFromCodeCoverage(Justification = "MapGet almost impossible to test")]
     public static IEndpointConventionBuilder MapOpenRpc(this IEndpointRouteBuilder endpoints)
     {
         var options = endpoints.ServiceProvider.GetRequiredService<IOptions<OpenRpcOptions>>().Value;

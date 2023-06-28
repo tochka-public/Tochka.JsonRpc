@@ -61,6 +61,33 @@ internal class ExtensionsTests
     }
 
     [Test]
+    public void AddSwaggerWithJsonRpc_OtherDescriptionProviderAlreadyRegistered_RegisterJsonRpcProvider()
+    {
+        var services = new ServiceCollection();
+        var info = new OpenApiInfo();
+        var setup = new Mock<Action<SwaggerGenOptions>>();
+        services.AddTransient<IApiDescriptionProvider, DefaultApiDescriptionProvider>();
+
+        services.AddSwaggerWithJsonRpc(Mock.Of<Assembly>(), info, setup.Object);
+
+        services.Should().Contain(static s => s.ImplementationType == typeof(DefaultApiDescriptionProvider));
+        services.Should().Contain(static s => s.ImplementationType == typeof(JsonRpcDescriptionProvider));
+    }
+
+    [Test]
+    public void AddSwaggerWithJsonRpc_JsonRpcDescriptionProviderAlreadyRegistered_DontRegisterAgain()
+    {
+        var services = new ServiceCollection();
+        var info = new OpenApiInfo();
+        var setup = new Mock<Action<SwaggerGenOptions>>();
+        services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
+
+        services.AddSwaggerWithJsonRpc(Mock.Of<Assembly>(), info, setup.Object);
+
+        services.Where(static s => s.ImplementationType == typeof(JsonRpcDescriptionProvider)).Should().HaveCount(1);
+    }
+
+    [Test]
     public void AddSwaggerWithJsonRpc_CallSetupAction()
     {
         var services = new ServiceCollection();
