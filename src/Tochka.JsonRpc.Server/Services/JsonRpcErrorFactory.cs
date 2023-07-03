@@ -85,7 +85,8 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     /// </summary>
     /// <param name="errorData"></param>
     /// <returns></returns>
-    protected virtual object? WrapExceptions(object? errorData)
+    // internal for tests, protected for customization
+    protected internal virtual object? WrapExceptions(object? errorData)
     {
         if (errorData is not Exception e)
         {
@@ -103,7 +104,7 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
             log.LogTrace("Wrap exception without details [{exceptionTypeName}]", e.GetType().Name);
         }
 
-        return new ExceptionInfo(e.GetType().FullName ?? e.GetType().Name, e.Message, details);
+        return new ExceptionInfo(GetExceptionTypeName(e), e.Message, details);
     }
 
     /// <summary>
@@ -129,4 +130,7 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     /// <returns></returns>
     [ExcludeFromCodeCoverage]
     protected static bool IsServer(int code) => code is >= -32099 and <= -32000;
+
+    [ExcludeFromCodeCoverage(Justification = "FullName == null is probably impossible case, left it for sanity")]
+    private static string GetExceptionTypeName(Exception exception) => exception.GetType().FullName ?? exception.GetType().Name;
 }
