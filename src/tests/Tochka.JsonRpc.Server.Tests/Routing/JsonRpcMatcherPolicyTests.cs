@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -22,11 +22,10 @@ internal class JsonRpcMatcherPolicyTests
     [SetUp]
     public void Setup() => matcherPolicy = new JsonRpcMatcherPolicy();
 
-    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
     [Test]
     public void ApplyAsync_NoEndpoints_ReturnFalse()
     {
-        var endpoints = new List<Endpoint>();
+        var endpoints = Array.Empty<Endpoint>();
 
         var result = matcherPolicy.AppliesToEndpoints(endpoints);
 
