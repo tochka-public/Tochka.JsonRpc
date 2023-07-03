@@ -1,8 +1,11 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// An object representing a Server.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpcServer(string Name, Uri Url)
 {
     /// <summary>

@@ -37,7 +37,7 @@ public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
         {
             JsonTokenType.StartObject => new SingleResponseWrapper(JsonSerializer.Deserialize<IResponse>(ref reader, options)!),
             JsonTokenType.StartArray => new BatchResponseWrapper(JsonSerializer.Deserialize<List<IResponse>>(ref reader, options)!),
-            _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, "Expected {} or [] as root element")
+            _ => throw new JsonRpcFormatException($"Expected {{}} or [] as root element. Got {tokenType}")
         };
     }
 }

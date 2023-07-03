@@ -1,5 +1,8 @@
-﻿namespace Tochka.JsonRpc.Server.Attributes;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Tochka.JsonRpc.Server.Attributes;
+
+[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class JsonRpcMethodAttribute : Attribute
 {

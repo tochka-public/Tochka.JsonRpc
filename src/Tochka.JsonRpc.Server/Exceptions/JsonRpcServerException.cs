@@ -1,5 +1,8 @@
-﻿namespace Tochka.JsonRpc.Server.Exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Tochka.JsonRpc.Server.Exceptions;
+
+[ExcludeFromCodeCoverage]
 public class JsonRpcServerException : Exception
 {
     public JsonRpcServerException()

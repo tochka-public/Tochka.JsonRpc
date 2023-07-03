@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Client.Settings;
 
@@ -6,12 +7,13 @@ namespace Tochka.JsonRpc.Client.Settings;
 /// Base class for JSON Rpc client with sane default values
 /// </summary>
 [PublicAPI]
+[ExcludeFromCodeCoverage]
 public abstract class JsonRpcClientOptionsBase
 {
     /// <summary>
     /// HTTP endpoint
     /// </summary>
-    public virtual string Url { get; init; } = null!;
+    public virtual string Url { get; set; } = null!;
 
     /// <summary>
     /// Request timeout
@@ -19,5 +21,5 @@ public abstract class JsonRpcClientOptionsBase
     /// <remarks>
     /// Default value is 10 seconds
     /// </remarks>
-    public virtual TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(10);
+    public virtual TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
 }

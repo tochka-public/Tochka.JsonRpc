@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Tochka.JsonRpc.OpenRpc.Models;
 
 namespace Tochka.JsonRpc.OpenRpc;
 
+[ExcludeFromCodeCoverage]
 public sealed class OpenRpcOptions
 {
     public string DocumentPath { get; set; } = OpenRpcConstants.DefaultDocumentPath;

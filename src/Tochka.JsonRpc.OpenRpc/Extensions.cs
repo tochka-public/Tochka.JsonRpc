@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
@@ -58,21 +59,25 @@ public static class Extensions
         return services.AddOpenRpc(xmlDocAssembly, info, setupAction);
     }
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info) =>
         services.AddOpenRpc(xmlDocAssembly, info, static _ => { });
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
         services.AddOpenRpc(xmlDocAssembly, static _ => { });
 
     public static void OpenRpcDoc(this OpenRpcOptions options, string name, OpenRpcInfo info) =>
         options.Docs[name] = info;
 
+    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
     public static IApplicationBuilder UseOpenRpc(this IApplicationBuilder app)
     {
         EnsureRequiredServicesRegistered(app.ApplicationServices);
         return app.UseMiddleware<OpenRpcMiddleware>();
     }
 
+    [ExcludeFromCodeCoverage(Justification = "MapGet almost impossible to test")]
     public static IEndpointConventionBuilder MapOpenRpc(this IEndpointRouteBuilder endpoints)
     {
         var options = endpoints.ServiceProvider.GetRequiredService<IOptions<OpenRpcOptions>>().Value;

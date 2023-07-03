@@ -1,8 +1,11 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// Contact information for the exposed API.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpcContact
 {
     /// <summary>

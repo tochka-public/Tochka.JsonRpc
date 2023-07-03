@@ -23,8 +23,7 @@ public static class JsonRpcSerializerOptions
             new JsonRpcIdConverter(),
 
             new ResponseWrapperConverter(),
-            new ResponseConverter(),
-            new UntypedCallMappingConverter()
+            new ResponseConverter()
         },
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,8 +8,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Tochka.JsonRpc.ApiExplorer;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Server.Serialization;
 using Utils = Tochka.JsonRpc.ApiExplorer.Utils;
 
 namespace Tochka.JsonRpc.Swagger;
@@ -56,9 +57,7 @@ public static class Extensions
             c.SchemaFilter<JsonRpcPropertiesFilter>();
 
             // to correctly create request and response models with controller.action binding style
-            c.CustomSchemaIds(static t => t.Assembly.FullName?.StartsWith(ApiExplorerConstants.GeneratedModelsAssemblyId, StringComparison.Ordinal) == true
-                ? t.FullName
-                : t.Name);
+            c.CustomSchemaIds(SchemaIdSelector);
 
             var xmlFile = $"{xmlDocAssembly.GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -91,19 +90,21 @@ public static class Extensions
         return services.AddSwaggerWithJsonRpc(xmlDocAssembly, info, setupAction);
     }
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenApiInfo info) =>
         services.AddSwaggerWithJsonRpc(xmlDocAssembly,
             info,
             static _ => { });
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
         services.AddSwaggerWithJsonRpc(xmlDocAssembly,
             static _ => { });
 
-    public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IApplicationBuilder app, string name)
+    public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IServiceProvider services, string name)
     {
         options.SwaggerEndpoint(GetSwaggerDocumentUrl(ApiExplorerConstants.DefaultDocumentName), name);
-        var jsonSerializerOptionsProviders = app.ApplicationServices.GetRequiredService<IEnumerable<IJsonSerializerOptionsProvider>>();
+        var jsonSerializerOptionsProviders = services.GetRequiredService<IEnumerable<IJsonSerializerOptionsProvider>>();
         foreach (var provider in jsonSerializerOptionsProviders)
         {
             var documentName = Utils.GetDocumentName(provider.GetType());
@@ -111,10 +112,12 @@ public static class Extensions
         }
     }
 
-    public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IApplicationBuilder app) =>
-        options.JsonRpcSwaggerEndpoints(app, ApiExplorerConstants.DefaultDocumentTitle);
+    [ExcludeFromCodeCoverage]
+    public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IServiceProvider services) =>
+        options.JsonRpcSwaggerEndpoints(services, ApiExplorerConstants.DefaultDocumentTitle);
 
-    private static bool DocumentSelector(string docName, ApiDescription description)
+    // internal for tests
+    internal static bool DocumentSelector(string docName, ApiDescription description)
     {
         if (docName.StartsWith(ApiExplorerConstants.DefaultDocumentName, StringComparison.Ordinal))
         {
@@ -124,8 +127,16 @@ public static class Extensions
         return description.GroupName == null || description.GroupName == docName;
     }
 
+    // internal for tests
+    internal static string SchemaIdSelector(Type type) =>
+        type.Assembly.FullName?.StartsWith(ApiExplorerConstants.GeneratedModelsAssemblyId, StringComparison.Ordinal) == true
+            ? type.FullName!
+            : type.Name;
+
+    [ExcludeFromCodeCoverage]
     private static string GetSwaggerDocumentUrl(string docName) => $"/swagger/{docName}/swagger.json";
 
+    [ExcludeFromCodeCoverage]
     private static string GetSwaggerEndpointSuffix(IJsonSerializerOptionsProvider jsonSerializerOptionsProvider)
     {
         var caseName = jsonSerializerOptionsProvider.GetType().Name.Replace(nameof(IJsonSerializerOptionsProvider)[1..], "");

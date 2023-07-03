@@ -1,4 +1,5 @@
-﻿using Json.Schema;
+﻿using System.Diagnostics.CodeAnalysis;
+using Json.Schema;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
@@ -7,6 +8,7 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// All objects defined within the components object will have no effect on the API
 /// unless they are explicitly referenced from properties outside the components object.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpcComponents
 {
     /// <summary>

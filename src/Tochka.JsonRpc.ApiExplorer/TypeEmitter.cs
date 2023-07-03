@@ -26,8 +26,14 @@ public class TypeEmitter : ITypeEmitter
         {
             var responseTypeName = $"{methodName} request";
             var paramsType = GetParamsType($"{methodName} params", baseParamsType, defaultBoundParams);
+            if (paramsType.IsValueType)
+            {
+                log.LogWarning("Params type can't be value type, got {paramsType}, using object instead", paramsType.Name);
+                paramsType = typeof(object);
+            }
+
             var responseType = typeof(Request<>).MakeGenericType(paramsType);
-            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, serializerOptionsProviderType, methodName);
+            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, paramsType, serializerOptionsProviderType, methodName);
         }
     }
 
@@ -37,7 +43,7 @@ public class TypeEmitter : ITypeEmitter
         {
             var responseTypeName = $"{methodName} response";
             var responseType = typeof(Response<>).MakeGenericType(resultType);
-            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, serializerOptionsProviderType, methodName);
+            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, resultType, serializerOptionsProviderType, methodName);
         }
     }
 
@@ -47,8 +53,12 @@ public class TypeEmitter : ITypeEmitter
     /// <returns></returns>
     private Type GetParamsType(string name, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams)
     {
-        // Can't inherit from sealed, don't want to deal with valuetypes, default public constructor required
-        if (baseParamsType.IsSealed || baseParamsType.IsValueType || baseParamsType.GetConstructor(Type.EmptyTypes) == null)
+        // Can't inherit from non-public or nested or sealed, don't want to deal with valuetypes, default public constructor required
+        if (!baseParamsType.IsPublic
+            || baseParamsType.IsNested
+            || baseParamsType.IsSealed
+            || baseParamsType.IsValueType
+            || baseParamsType.GetConstructor(Type.EmptyTypes) == null)
         {
             if (defaultBoundParams.Count > 0)
             {
@@ -77,8 +87,14 @@ public class TypeEmitter : ITypeEmitter
     /// Create new type with attribute
     /// </summary>
     /// <returns></returns>
-    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type? serializerOptionsProviderType, string methodName)
+    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type innerType, Type? serializerOptionsProviderType, string methodName)
     {
+        if (!innerType.IsPublic || innerType.IsNested)
+        {
+            log.LogWarning("Can not add attribute to type with {innerType} property, ignored serializerOptionsProvider's type and method name", innerType.Name);
+            return baseType;
+        }
+
         var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseType);
 
         var attrType = typeof(JsonRpcTypeMetadataAttribute);

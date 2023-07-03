@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -29,6 +31,13 @@ public class JsonRpcSchemaGenerator : ISchemaGenerator
         var serializerOptions = typeMetadata?.SerializerOptionsProviderType == null
             ? options.DefaultDataJsonSerializerOptions
             : Utils.GetJsonSerializerOptions(serializerOptionsProviders, typeMetadata.SerializerOptionsProviderType);
+        return UseDefaultGenerator(modelType, schemaRepository, memberInfo, parameterInfo, routeInfo, serializerOptions);
+    }
+
+    // internal virtual for mocking in tests
+    [ExcludeFromCodeCoverage]
+    internal virtual OpenApiSchema UseDefaultGenerator(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo, ParameterInfo? parameterInfo, ApiParameterRouteInfo? routeInfo, JsonSerializerOptions serializerOptions)
+    {
         var schemaGenerator = new SchemaGenerator(generatorOptions, new JsonSerializerDataContractResolver(serializerOptions));
         return schemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo, routeInfo);
     }

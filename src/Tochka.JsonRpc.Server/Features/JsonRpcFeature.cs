@@ -1,9 +1,11 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
 namespace Tochka.JsonRpc.Server.Features;
 
+[ExcludeFromCodeCoverage]
 public class JsonRpcFeature : IJsonRpcFeature
 {
     public JsonDocument? RawCall { get; set; }
