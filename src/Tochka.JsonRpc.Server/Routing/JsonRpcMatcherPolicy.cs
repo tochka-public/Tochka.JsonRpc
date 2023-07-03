@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Matching;
 using Tochka.JsonRpc.Common.Models.Request;
@@ -10,6 +11,7 @@ namespace Tochka.JsonRpc.Server.Routing;
 
 internal class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
 {
+    [ExcludeFromCodeCoverage]
     public override int Order => 0;
 
     public bool AppliesToEndpoints(IReadOnlyList<Endpoint> endpoints) =>
@@ -25,7 +27,7 @@ internal class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
             return Task.CompletedTask;
         }
 
-        var validCandidatesExist = ValidateCandidates(candidates, call, httpContext);
+        var validCandidatesExist = ValidateCandidates(candidates, call);
         if (!validCandidatesExist)
         {
             // hack to distinguish between unknown route (== 404 Not Found) and unknown method (== json rpc error with code -32601)
@@ -47,18 +49,12 @@ internal class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
         }
     }
 
-    private static bool ValidateCandidates(CandidateSet candidates, ICall call, HttpContext httpContext)
+    private static bool ValidateCandidates(CandidateSet candidates, ICall call)
     {
         var validCandidatesExist = false;
         for (var i = 0; i < candidates.Count; i++)
         {
             var candidate = candidates[i];
-            if (httpContext.Request.Method != HttpMethods.Post)
-            {
-                candidates.SetValidity(i, false);
-                continue;
-            }
-
             var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>()!;
             var methodMatches = call.Method == jsonRpcMetadata.Method;
             candidates.SetValidity(i, methodMatches);
