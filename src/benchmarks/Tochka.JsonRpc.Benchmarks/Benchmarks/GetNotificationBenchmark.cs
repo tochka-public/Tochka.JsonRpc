@@ -1,8 +1,10 @@
 ﻿using System.Text;
 using BenchmarkDotNet.Attributes;
+using Tochka.JsonRpc.Benchmarks.Data;
 using Tochka.JsonRpc.Benchmarks.EdjCaseApp;
 using Tochka.JsonRpc.Benchmarks.NewWebApp;
 using Tochka.JsonRpc.Benchmarks.OldWebApp;
+using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
 
@@ -48,30 +50,12 @@ public class GetNotificationBenchmark
         return await edjCaseClient.PostAsync("api/jsonrpc", request);
     }
 
-    private const string PlainNotification = """
-        {
-            "jsonrpc": "2.0",
-            "method": "process",
-            "params": {
-                "data": {
-                    "bool_field": true,
-                    "string_field": "123",
-                    "int_field": 123,
-                    "double_field": 1.23,
-                    "enum_field": "two",
-                    "array_field": [
-                        1,
-                        2,
-                        3
-                    ],
-                    "nullable_field": null
-                }
-            }
-        }
-        """;
+    private const string Method = "process";
 
-    public static IEnumerable<string> NotificationValues => new[]
+    public static IEnumerable<string> NotificationValues { get; } = new[]
     {
-        PlainNotification
+        Requests.GetNotification(Method, TestData.Plain),
+        Requests.GetNotification(Method, TestData.Nested),
+        Requests.GetNotification(Method, TestData.Big)
     };
 }

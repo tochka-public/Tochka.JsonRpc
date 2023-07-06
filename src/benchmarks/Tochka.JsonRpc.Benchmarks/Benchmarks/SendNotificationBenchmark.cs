@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using BenchmarkDotNet.Attributes;
 using RichardSzalay.MockHttp;
+using Tochka.JsonRpc.Benchmarks.Data;
 using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
@@ -33,10 +34,5 @@ public class SendNotificationBenchmark
 
     private const string Method = "method";
 
-    public static IEnumerable<TestData> DataValues => new[]
-    {
-        TestData.Big,
-        TestData.Nested,
-        TestData.Plain
-    };
+    public static IEnumerable<TestData> DataValues { get; } = Requests.AllDataValues;
 }

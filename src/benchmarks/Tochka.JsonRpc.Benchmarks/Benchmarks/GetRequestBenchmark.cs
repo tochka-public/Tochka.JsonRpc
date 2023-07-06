@@ -1,8 +1,11 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using BenchmarkDotNet.Attributes;
+using Tochka.JsonRpc.Benchmarks.Data;
 using Tochka.JsonRpc.Benchmarks.EdjCaseApp;
 using Tochka.JsonRpc.Benchmarks.NewWebApp;
 using Tochka.JsonRpc.Benchmarks.OldWebApp;
+using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
 
@@ -48,31 +51,15 @@ public class GetRequestBenchmark
         return await edjCaseClient.PostAsync("api/jsonrpc", request);
     }
 
-    private const string PlainRequest = """
-        {
-            "jsonrpc": "2.0",
-            "method": "process",
-            "id": "123",
-            "params": {
-                "data": {
-                    "bool_field": true,
-                    "string_field": "123",
-                    "int_field": 123,
-                    "double_field": 1.23,
-                    "enum_field": "two",
-                    "array_field": [
-                        1,
-                        2,
-                        3
-                    ],
-                    "nullable_field": null
-                }
-            }
-        }
-        """;
+    private const string Method = "process";
 
-    public static IEnumerable<string> RequestValues => new[]
+    [SuppressMessage("ReSharper", "StaticMemberInitializerReferesToMemberBelow")]
+    public static IEnumerable<string> RequestValues { get; } = new[]
     {
-        PlainRequest
+        Requests.GetRequest(Id, Method, TestData.Plain),
+        Requests.GetRequest(Id, Method, TestData.Nested),
+        Requests.GetRequest(Id, Method, TestData.Big)
     };
+
+    private static readonly Guid Id = Guid.NewGuid();
 }

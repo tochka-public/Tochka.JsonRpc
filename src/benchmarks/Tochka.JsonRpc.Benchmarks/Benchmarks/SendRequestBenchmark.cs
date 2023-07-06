@@ -1,10 +1,14 @@
-﻿using System.Reflection;
+﻿using System.Net.Http.Json;
+using System.Reflection;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using EdjCase.JsonRpc.Client;
 using EdjCase.JsonRpc.Common;
 using Moq;
 using RichardSzalay.MockHttp;
+using Tochka.JsonRpc.Benchmarks.Data;
+using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.TestUtils;
 using OldId = Tochka.JsonRpc.V1.Common.Models.Id.StringRpcId;
 using NewId = Tochka.JsonRpc.Common.Models.Id.StringRpcId;
@@ -26,7 +30,7 @@ public class SendRequestBenchmark
         }
     }
 
-    [ParamsSource(nameof(ResponseValues))]
+    [ParamsSource(nameof(ResponseKeys))]
     public string Response { get; set; }
 
     private readonly OldId oldId = new(Id.ToString());
@@ -45,12 +49,12 @@ public class SendRequestBenchmark
     public void Setup()
     {
         handlerMock = new MockHttpMessageHandler();
-        handlerMock.When($"{Constants.BaseUrl}big")
-            .Respond(static _ => new StringContent(Responses.GetBigResponse(Id), Encoding.UTF8, "application/json"));
-        handlerMock.When($"{Constants.BaseUrl}nested")
-            .Respond(static _ => new StringContent(Responses.GetNestedResponse(Id), Encoding.UTF8, "application/json"));
-        handlerMock.When($"{Constants.BaseUrl}plain")
-            .Respond(static _ => new StringContent(Responses.GetPlainResponse(Id), Encoding.UTF8, "application/json"));
+        handlerMock.When($"{Constants.BaseUrl}{Responses.BigKey}")
+            .Respond(static _ => new StringContent(BigResponse, Encoding.UTF8, "application/json"));
+        handlerMock.When($"{Constants.BaseUrl}{Responses.NestedKey}")
+            .Respond(static _ => new StringContent(NestedResponse, Encoding.UTF8, "application/json"));
+        handlerMock.When($"{Constants.BaseUrl}{Responses.PlainKey}")
+            .Respond(static _ => new StringContent(PlainResponse, Encoding.UTF8, "application/json"));
 
         oldClient = new OldJsonRpcClient(handlerMock.ToHttpClient());
         newClient = new NewJsonRpcClient(handlerMock.ToHttpClient());
@@ -70,6 +74,15 @@ public class SendRequestBenchmark
     }
 
     [Benchmark]
+    public async Task<TestData?> NewSimple()
+    {
+        var request = new Request<TestData>(newId, Method, Data);
+        var response = await newClient.Send(Response, request, CancellationToken.None);
+        var responseModel = await response.Content.ReadFromJsonAsync<SimpleResponse<TestData>>(JsonRpcSerializerOptions.SnakeCase, CancellationToken.None);
+        return responseModel.Result;
+    }
+
+    [Benchmark]
     public async Task<TestData> Old()
     {
         var response = await oldClient.SendRequest(Response, oldId, Method, Data, CancellationToken.None);
@@ -86,19 +99,11 @@ public class SendRequestBenchmark
 
     private const string Method = "method";
 
-    public static IEnumerable<TestData> DataValues => new[]
-    {
-        TestData.Big,
-        TestData.Nested,
-        TestData.Plain
-    };
-
-    public static IEnumerable<string> ResponseValues => new[]
-    {
-        "big",
-        "nested",
-        "plain"
-    };
+    public static IEnumerable<string> ResponseKeys { get; } = Responses.AllKeys;
+    public static IEnumerable<TestData> DataValues { get; } = Requests.AllDataValues;
 
     private static readonly Guid Id = Guid.NewGuid();
+    private static readonly string PlainResponse = Responses.GetResponse(Id, TestData.Plain);
+    private static readonly string NestedResponse = Responses.GetResponse(Id, TestData.Nested);
+    private static readonly string BigResponse = Responses.GetResponse(Id, TestData.Big);
 }
