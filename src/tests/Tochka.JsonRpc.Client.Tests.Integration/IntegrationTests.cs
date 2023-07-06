@@ -1165,7 +1165,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
-        response.HasError(null).Should().BeFalse();
+        response.HasError(new NullRpcId()).Should().BeFalse();
     }
 
     [Test]

@@ -1,9 +1,11 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Server.Settings;
 
+[ExcludeFromCodeCoverage]
 public sealed class JsonRpcServerOptions
 {
     public PathString RoutePrefix { get; set; } = JsonRpcConstants.DefaultRoutePrefix;

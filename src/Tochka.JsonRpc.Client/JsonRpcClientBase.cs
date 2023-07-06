@@ -25,18 +25,21 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <remarks>
     /// Default is "Tochka.JsonRpc.Client"
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     public virtual string UserAgent => DefaultUserAgent;
 
     /// <inheritdoc />
     /// <remarks>
     /// Default is <see cref="JsonRpcSerializerOptions.SnakeCase" />
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     public virtual JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.SnakeCase;
 
     /// <inheritdoc />
     /// <remarks>
     /// Default is <see cref="JsonRpcSerializerOptions.Headers" />
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     public virtual JsonSerializerOptions HeadersJsonSerializerOptions => JsonRpcSerializerOptions.Headers;
 
     /// <summary>
@@ -45,6 +48,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <remarks>
     /// Default is <see cref="System.Text.Encoding.UTF8" />
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     protected internal virtual Encoding Encoding => Encoding.UTF8;
 
     protected internal HttpClient Client { get; }
@@ -290,7 +294,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     {
         if (!options.Url.EndsWith('/'))
         {
-            throw new ArgumentException("Base url should not start with '/' to prevent unexpected behavior when joining url parts", nameof(options.Url));
+            throw new ArgumentException("Base url should end with '/' to prevent unexpected behavior when joining url parts", nameof(options.Url));
         }
 
         client.BaseAddress = new Uri(options.Url, UriKind.Absolute);

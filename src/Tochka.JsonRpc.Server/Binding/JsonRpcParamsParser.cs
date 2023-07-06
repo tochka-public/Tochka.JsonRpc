@@ -47,7 +47,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
             // map 1:1 to object
             case BindingStyle.Object:
                 log.LogTrace("Binding whole json params object to [{jsonProperty}]", jsonProperty);
-                return new SuccessParseResult(json, jsonKey);
+                return new SuccessParseResult(json, JsonRpcConstants.ParamsProperty);
 
             case BindingStyle.Array:
                 log.LogTrace("Can't bind json params object to collection for [{jsonProperty}]", jsonProperty);
@@ -89,7 +89,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
             // map 1:1 to collection
             case BindingStyle.Array:
                 log.LogTrace("Binding whole json params array to [{index}]", index);
-                return new SuccessParseResult(json, jsonKey);
+                return new SuccessParseResult(json, JsonRpcConstants.ParamsProperty);
 
             default:
                 log.LogWarning("Binding failed for argument by index [{index}]", index);

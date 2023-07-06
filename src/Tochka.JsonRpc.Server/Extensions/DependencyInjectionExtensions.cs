@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,8 +37,10 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddJsonRpcServer(this IServiceCollection services) => services.AddJsonRpcServer(static _ => { });
 
+    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
     public static IApplicationBuilder UseJsonRpc(this IApplicationBuilder app)
     {
         EnsureRequiredServicesRegistered(app.ApplicationServices);

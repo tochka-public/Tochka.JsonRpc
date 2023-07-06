@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -17,7 +18,7 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
 
     public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
     {
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
+        this.context = context;
         if (context.BatchResponse != null)
         {
             throw new ArgumentOutOfRangeException(nameof(context), "Expected single response");
@@ -59,5 +60,6 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
         _ => null
     };
 
+    [ExcludeFromCodeCoverage]
     public Error<ExceptionInfo>? AsErrorWithExceptionInfo() => AsTypedError<ExceptionInfo>();
 }

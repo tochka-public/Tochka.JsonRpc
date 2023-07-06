@@ -1,5 +1,8 @@
-﻿namespace Tochka.JsonRpc.Common;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Tochka.JsonRpc.Common;
+
+[ExcludeFromCodeCoverage]
 public class JsonRpcFormatException : Exception
 {
     public JsonRpcFormatException()

@@ -50,7 +50,8 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             }
         };
 
-    private List<OpenRpcServer> GetServers(Uri host, string route)
+    // internal virtual for mocking in tests
+    internal virtual List<OpenRpcServer> GetServers(Uri host, string route)
     {
         var uriBuilder = new UriBuilder(host) { Path = route };
         var server = new OpenRpcServer(openRpcOptions.DefaultServerName, uriBuilder.Uri);
@@ -61,17 +62,19 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         };
     }
 
-    private List<OpenRpcMethod> GetMethods(string documentName, Uri host) =>
+    // internal virtual for mocking in tests
+    internal virtual List<OpenRpcMethod> GetMethods(string documentName, Uri host) =>
         apiDescriptionsProvider.ApiDescriptionGroups.Items
             .SelectMany(static g => g.Items)
-            .Where(d => !openRpcOptions.IgnoreObsoleteActions || IsObsoleteTransitive(d))
+            .Where(d => !openRpcOptions.IgnoreObsoleteActions || !IsObsoleteTransitive(d))
             .Where(static d => d.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
             .Where(d => openRpcOptions.DocInclusionPredicate(documentName, d))
             .Select(d => GetMethod(d, host))
             .OrderBy(static m => m.Name)
             .ToList();
 
-    private OpenRpcMethod GetMethod(ApiDescription apiDescription, Uri host)
+    // internal virtual for mocking in tests
+    internal virtual OpenRpcMethod GetMethod(ApiDescription apiDescription, Uri host)
     {
         var methodInfo = (apiDescription.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo;
         var parametersMetadata = apiDescription.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
@@ -93,12 +96,13 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         };
     }
 
-    private IEnumerable<OpenRpcContentDescriptor> GetMethodParams(ApiDescription apiDescription, string methodName, JsonRpcActionParametersMetadata? parametersMetadata, JsonSerializerOptions jsonSerializerOptions)
+    // internal virtual for mocking in tests
+    internal virtual IEnumerable<OpenRpcContentDescriptor> GetMethodParams(ApiDescription apiDescription, string methodName, JsonRpcActionParametersMetadata? parametersMetadata, JsonSerializerOptions jsonSerializerOptions)
     {
-        // there must be only one body parameter with Request<T> type
+        // there must be only one body parameter with Request<T> type or inherited from it
         var requestType = apiDescription.ParameterDescriptions.Single(static x => x.Source == BindingSource.Body).Type;
         // unpack Request<T>
-        var bodyType = requestType.BaseType!.GenericTypeArguments.Single();
+        var bodyType = requestType.BaseType!.GenericTypeArguments.FirstOrDefault() ?? requestType.GenericTypeArguments.Single();
 
         var isCollection = typeof(IEnumerable).IsAssignableFrom(bodyType);
         var itemType = bodyType.GetEnumerableItemType();
@@ -114,7 +118,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             var property = propertyInfo.ToContextualProperty();
             if (parametersMetadata?.Parameters.TryGetValue(propertyInfo.Name, out var parameterMetadata) == true)
             {
-                yield return contentDescriptorGenerator.GenerateForParameter(property.PropertyType, methodName, parameterMetadata, jsonSerializerOptions);
+                yield return contentDescriptorGenerator.GenerateForParameter(property, methodName, parameterMetadata, jsonSerializerOptions);
             }
             else
             {
@@ -123,16 +127,18 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         }
     }
 
-    private OpenRpcContentDescriptor GetResultContentDescriptor(ApiDescription apiDescription, string methodName, JsonSerializerOptions jsonSerializerOptions)
+    // internal virtual for mocking in tests
+    internal virtual OpenRpcContentDescriptor GetResultContentDescriptor(ApiDescription apiDescription, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
-        // there must be only one response type with Response<T> type
+        // there must be only one response type with Response<T> type or inherited from it
         var responseType = apiDescription.SupportedResponseTypes.Single().Type!;
         // unpack Response<T>
-        var bodyType = responseType.BaseType!.GenericTypeArguments.Single().ToContextualType();
-        return contentDescriptorGenerator.GenerateForType(bodyType, methodName, jsonSerializerOptions);
+        var bodyType = responseType.BaseType!.GenericTypeArguments.FirstOrDefault() ?? responseType.GenericTypeArguments.Single();
+        return contentDescriptorGenerator.GenerateForType(bodyType.ToContextualType(), methodName, jsonSerializerOptions);
     }
 
-    private List<OpenRpcServer>? GetMethodServers(ApiDescription apiDescription, Uri host)
+    // internal virtual for mocking in tests
+    internal virtual List<OpenRpcServer>? GetMethodServers(ApiDescription apiDescription, Uri host)
     {
         var route = apiDescription.RelativePath?.Split('#').First();
 
@@ -144,7 +150,8 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         return GetServers(host, route);
     }
 
-    private OpenRpcParamStructure GetParamsStructure(JsonRpcActionParametersMetadata? parametersMetadata)
+    // internal virtual for mocking in tests
+    internal virtual OpenRpcParamStructure GetParamsStructure(JsonRpcActionParametersMetadata? parametersMetadata)
     {
         var bindingStyles = parametersMetadata?.Parameters.Values
                 .Select(static p => p.BindingStyle)
@@ -161,7 +168,8 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     }
 
     // mixed binding is bad but it's up to user to try this out
-    private OpenRpcParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)
+    // internal virtual for mocking in tests
+    internal virtual OpenRpcParamStructure CombineBindingStyles(IReadOnlySet<BindingStyle> bindingStyles)
     {
         var hasArrayBinding = bindingStyles.Contains(BindingStyle.Array);
         var hasObjectBinding = bindingStyles.Contains(BindingStyle.Object);

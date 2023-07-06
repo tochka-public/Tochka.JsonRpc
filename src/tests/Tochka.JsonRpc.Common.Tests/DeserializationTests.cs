@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
 using Tochka.JsonRpc.Common.Models.Id;
+using Tochka.JsonRpc.Common.Models.Request.Untyped;
+using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
@@ -25,81 +28,320 @@ internal class DeserializationTests
     [Test]
     public void Notification_EmptyObjectParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": {},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedParams = notification.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
+        deserializedParams.Should().NotBeNull();
     }
 
     [Test]
     public void Notification_EmptyArrayParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": [],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedArray = notification.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(Array.Empty<TestData>());
+        var deserializedList = notification.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData>());
     }
 
     [Test]
     public void Notification_NullParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": null,
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedNotification(method, null);
+        notification.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Notification_NoParams()
     {
-    }
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "jsonrpc": "2.0"
+            }
+            """;
 
-    [Test]
-    public void Notification_SnakeCaseMethod()
-    {
-    }
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
-    [Test]
-    public void Notification_CamelCaseMethod()
-    {
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedNotification(method, null);
+        notification.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Notification_PrimitiveTypeParams()
     {
+        var method = "method";
+        var parameter = 123;
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": {{parameter}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedParams = notification.Params.Deserialize<int>(snakeCaseSerializerOptions);
+        deserializedParams.Should().Be(parameter);
     }
 
     [Test]
     public void Notification_PrimitiveTypeArrayParams()
     {
+        var method = "method";
+        var parameter = 123;
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": [
+                    {{parameter}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedArray = notification.Params.Deserialize<int[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { parameter });
+        var deserializedList = notification.Params.Deserialize<List<int>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<int> { parameter });
     }
 
     [Test]
     public void Notification_PlainSnakeCaseObjectParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedParams = notification.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Plain);
     }
 
     [Test]
     public void Notification_PlainCamelCaseObjectParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": {{TestData.PlainRequiredCamelCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedParams = notification.Params.Deserialize<TestData>(camelCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Plain);
     }
 
     [Test]
     public void Notification_PlainSnakeCaseArrayParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.PlainRequiredSnakeCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var expectedResult = TestData.Plain;
+        var deserializedArray = notification.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = notification.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     [Test]
     public void Notification_PlainCamelCaseArrayParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.PlainRequiredCamelCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var expectedResult = TestData.Plain;
+        var deserializedArray = notification.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = notification.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     [Test]
     public void Notification_NestedSnakeCaseObjectParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": {{TestData.NestedRequiredSnakeCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedParams = notification.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Nested);
     }
 
     [Test]
     public void Notification_NestedCamelCaseObjectParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": {{TestData.NestedRequiredCamelCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var deserializedParams = notification.Params.Deserialize<TestData>(camelCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Nested);
     }
 
     [Test]
     public void Notification_NestedSnakeCaseArrayParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.NestedRequiredSnakeCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var expectedResult = TestData.Nested;
+        var deserializedArray = notification.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = notification.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     [Test]
     public void Notification_NestedCamelCaseArrayParams()
     {
+        var method = "method";
+        var json = $$"""
+            {
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.NestedRequiredCamelCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        notification.Method.Should().Be(method);
+        var expectedResult = TestData.Nested;
+        var deserializedArray = notification.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = notification.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     #endregion
@@ -109,96 +351,422 @@ internal class DeserializationTests
     [Test]
     public void Request_EmptyObjectParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": {},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedParams = request.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
+        deserializedParams.Should().NotBeNull();
     }
 
     [Test]
     public void Request_EmptyArrayParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": [],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedArray = request.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(Array.Empty<TestData>());
+        var deserializedList = request.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData>());
     }
 
     [Test]
     public void Request_NullParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": null,
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, null);
+        request.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Request_NoParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, null);
+        request.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Request_IntId()
     {
+        var method = "method";
+        var id = 123;
+        var json = $$"""
+            {
+                "id": {{id}},
+                "method": "{{method}}",
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new NumberRpcId(id), method, null);
+        request.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Request_StringId()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, null);
+        request.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Request_NullId()
     {
-    }
+        var method = "method";
+        var json = $$"""
+            {
+                "id": null,
+                "method": "{{method}}",
+                "jsonrpc": "2.0"
+            }
+            """;
 
-    [Test]
-    public void Request_SnakeCaseMethod()
-    {
-    }
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
-    [Test]
-    public void Request_CamelCaseMethod()
-    {
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new NullRpcId(), method, null);
+        request.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public void Request_PrimitiveTypeParams()
     {
+        var method = "method";
+        var id = "123";
+        var parameter = 123;
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": {{parameter}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedParams = request.Params.Deserialize<int>(snakeCaseSerializerOptions);
+        deserializedParams.Should().Be(parameter);
     }
 
     [Test]
     public void Request_PrimitiveTypeArrayParams()
     {
+        var method = "method";
+        var id = "123";
+        var parameter = 123;
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": [
+                    {{parameter}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedArray = request.Params.Deserialize<int[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { parameter });
+        var deserializedList = request.Params.Deserialize<List<int>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<int> { parameter });
     }
 
     [Test]
     public void Request_PlainSnakeCaseObjectParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedParams = request.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Plain);
     }
 
     [Test]
     public void Request_PlainCamelCaseObjectParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": {{TestData.PlainRequiredCamelCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedParams = request.Params.Deserialize<TestData>(camelCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Plain);
     }
 
     [Test]
     public void Request_PlainSnakeCaseArrayParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.PlainRequiredSnakeCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var expectedResult = TestData.Plain;
+        var deserializedArray = request.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = request.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     [Test]
     public void Request_PlainCamelCaseArrayParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.PlainRequiredCamelCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var expectedResult = TestData.Plain;
+        var deserializedArray = request.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = request.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     [Test]
     public void Request_NestedSnakeCaseObjectParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": {{TestData.NestedRequiredSnakeCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedParams = request.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Nested);
     }
 
     [Test]
     public void Request_NestedCamelCaseObjectParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": {{TestData.NestedRequiredCamelCaseJson}},
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var deserializedParams = request.Params.Deserialize<TestData>(camelCaseSerializerOptions);
+        deserializedParams.Should().BeEquivalentTo(TestData.Nested);
     }
 
     [Test]
     public void Request_NestedSnakeCaseArrayParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.NestedRequiredSnakeCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var expectedResult = TestData.Nested;
+        var deserializedArray = request.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = request.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     [Test]
     public void Request_NestedCamelCaseArrayParams()
     {
+        var method = "method";
+        var id = "123";
+        var json = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": [
+                    {{TestData.NestedRequiredCamelCaseJson}}
+                ],
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
+        request.Should().BeEquivalentTo(expected, AssertionOptions);
+        var expectedResult = TestData.Nested;
+        var deserializedArray = request.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
+        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
+        var deserializedList = request.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
+        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
     #endregion
@@ -263,10 +831,8 @@ internal class DeserializationTests
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
-        var expected = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), AnyJsonDocument));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var response = (UntypedResponse) ((SingleResponseWrapper) deserialized).Response;
-        response.Result.Should().BeNull();
+        var expected = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), null));
+        deserialized.Should().BeEquivalentTo(expected);
     }
 
     [Test]
@@ -1072,7 +1638,7 @@ internal class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_RootElementNotObject_ThrowArgumentOutOfRangeException()
+    public void RequestResponse_RootElementNotObject_ThrowJsonRpcFormatException()
     {
         var json = """
             123
@@ -1080,7 +1646,7 @@ internal class DeserializationTests
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        act.Should().Throw<JsonRpcFormatException>();
     }
 
     [Test]
@@ -1106,26 +1672,160 @@ internal class DeserializationTests
     [Test]
     public void Batch_1Notification()
     {
+        var method = "method";
+        var json = $$"""
+            [
+                {
+                    "method": "{{method}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<BatchRequestWrapper>();
+        var calls = ((BatchRequestWrapper) deserialized).Calls
+            .Select(c => c.Deserialize<IUntypedCall>(headersJsonSerializerOptions));
+        var expectedCalls = new List<IUntypedCall>
+        {
+            new UntypedNotification(method, AnyJsonDocument)
+        };
+        calls.Should().BeEquivalentTo(expectedCalls, AssertionOptions);
     }
 
     [Test]
     public void Batch_OnlyNotifications()
     {
+        var method1 = "method1";
+        var method2 = "method2";
+        var json = $$"""
+            [
+                {
+                    "method": "{{method1}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                },
+                {
+                    "method": "{{method2}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<BatchRequestWrapper>();
+        var calls = ((BatchRequestWrapper) deserialized).Calls
+            .Select(c => c.Deserialize<IUntypedCall>(headersJsonSerializerOptions));
+        var expectedCalls = new List<IUntypedCall>
+        {
+            new UntypedNotification(method1, AnyJsonDocument),
+            new UntypedNotification(method2, AnyJsonDocument)
+        };
+        calls.Should().BeEquivalentTo(expectedCalls, AssertionOptions);
     }
 
     [Test]
     public void Batch_1Request()
     {
+        var id = "123";
+        var method = "method";
+        var json = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "method": "{{method}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<BatchRequestWrapper>();
+        var calls = ((BatchRequestWrapper) deserialized).Calls
+            .Select(c => c.Deserialize<IUntypedCall>(headersJsonSerializerOptions));
+        var expectedCalls = new List<IUntypedCall>
+        {
+            new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument)
+        };
+        calls.Should().BeEquivalentTo(expectedCalls, AssertionOptions);
     }
 
     [Test]
     public void Batch_OnlyRequests()
     {
+        var id1 = "123";
+        var id2 = "456";
+        var method1 = "method1";
+        var method2 = "method2";
+        var json = $$"""
+            [
+                {
+                    "id": "{{id1}}",
+                    "method": "{{method1}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                },
+                {
+                    "id": "{{id2}}",
+                    "method": "{{method2}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<BatchRequestWrapper>();
+        var calls = ((BatchRequestWrapper) deserialized).Calls
+            .Select(c => c.Deserialize<IUntypedCall>(headersJsonSerializerOptions));
+        var expectedCalls = new List<IUntypedCall>
+        {
+            new UntypedRequest(new StringRpcId(id1), method1, AnyJsonDocument),
+            new UntypedRequest(new StringRpcId(id2), method2, AnyJsonDocument)
+        };
+        calls.Should().BeEquivalentTo(expectedCalls, AssertionOptions);
     }
 
     [Test]
     public void Batch_NotificationsAndRequests()
     {
+        var id1 = "123";
+        var method1 = "method1";
+        var method2 = "method2";
+        var json = $$"""
+            [
+                {
+                    "id": "{{id1}}",
+                    "method": "{{method1}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                },
+                {
+                    "method": "{{method2}}",
+                    "params": {},
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<BatchRequestWrapper>();
+        var calls = ((BatchRequestWrapper) deserialized).Calls
+            .Select(c => c.Deserialize<IUntypedCall>(headersJsonSerializerOptions));
+        var expectedCalls = new List<IUntypedCall>
+        {
+            new UntypedRequest(new StringRpcId(id1), method1, AnyJsonDocument),
+            new UntypedNotification(method2, AnyJsonDocument)
+        };
+        calls.Should().BeEquivalentTo(expectedCalls, AssertionOptions);
     }
 
     #endregion

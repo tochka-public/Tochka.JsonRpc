@@ -1454,7 +1454,7 @@ internal class RequestTests : IntegrationTestsBase<Program>
                     "message": "Invalid params",
                     "data": {
                         "data": [
-                            "Error while binding value = [{}] (JSON key = [params.data]) - JsonException: The JSON value could not be converted to System.String. Path: $ | LineNumber: 0 | BytePositionInLine: 1."
+                            "Error while binding value = [{}] (JSON key = [params]) - JsonException: The JSON value could not be converted to System.String. Path: $ | LineNumber: 0 | BytePositionInLine: 1."
                         ]
                     }
                 },

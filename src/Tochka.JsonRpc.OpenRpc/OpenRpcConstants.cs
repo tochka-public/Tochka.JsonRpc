@@ -1,9 +1,11 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.OpenRpc;
 
+[ExcludeFromCodeCoverage]
 public static class OpenRpcConstants
 {
     public const string DocumentTemplateParameterName = "documentName";

@@ -13,6 +13,8 @@
     <PackageProjectUrl>https://tochka-public.github.io/Tochka.JsonRpc</PackageProjectUrl>
     <Authors>Tochka</Authors>
     <Product>Tochka.JsonRpc</Product>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

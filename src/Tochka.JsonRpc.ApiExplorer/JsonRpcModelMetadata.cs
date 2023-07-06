@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Tochka.JsonRpc.ApiExplorer;
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty", Justification = "This class only required to provide model type")]
+[ExcludeFromCodeCoverage]
 internal class JsonRpcModelMetadata : ModelMetadata
 {
     public override IReadOnlyDictionary<object, object> AdditionalValues => null!;

@@ -43,7 +43,8 @@ public class JsonRpcModelBinder : IModelBinder
         await SetResult(parseResult, bindingContext, parameterMetadata);
     }
 
-    protected virtual Task<IParseResult> Parse(ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
+    // internal for tests, protected for customization
+    protected internal virtual Task<IParseResult> Parse(ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
     {
         var rawCall = bindingContext.HttpContext.GetRawJsonRpcCall();
         var call = bindingContext.HttpContext.GetJsonRpcCall();
@@ -56,7 +57,8 @@ public class JsonRpcModelBinder : IModelBinder
         return Task.FromResult(parseResult);
     }
 
-    protected virtual Task SetResult(IParseResult parseResult, ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
+    // internal for tests, protected for customization
+    protected internal virtual Task SetResult(IParseResult parseResult, ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
     {
         var endpointMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata;
         var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(endpointMetadata, options, serializerOptionsProviders);

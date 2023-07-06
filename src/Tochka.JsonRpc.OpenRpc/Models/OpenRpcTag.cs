@@ -1,9 +1,12 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// Adds metadata to a single tag that is used by the Method Object.
 /// It is not mandatory to have a Tag Object per tag defined in the Method Object instances.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record OpenRpcTag(string Name)
 {
     /// <summary>

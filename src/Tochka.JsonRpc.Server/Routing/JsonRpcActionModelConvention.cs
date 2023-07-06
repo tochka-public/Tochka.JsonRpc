@@ -26,7 +26,10 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
             return;
         }
 
-        var selectors = action.Selectors.SelectMany(s => CombineRoutes(s, action.Controller)).ToArray();
+        var selectors = action.Selectors
+            .SelectMany(s => CombineRoutes(s, action.Controller))
+            .DistinctBy(static s => s.AttributeRouteModel!.Template!.ToLowerInvariant())
+            .ToArray();
         action.Selectors.Clear();
         foreach (var selector in selectors)
         {
@@ -48,8 +51,7 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
                 ?? new AttributeRouteModel { Template = options.RoutePrefix })
             .Select(static m => m.Template!.StartsWith('/')
                 ? m
-                : new AttributeRouteModel(m) { Template = $"/{m.Template}" })
-            .DistinctBy(static rm => rm.Template!.ToLowerInvariant());
+                : new AttributeRouteModel(m) { Template = $"/{m.Template}" });
 
         foreach (var combinedRouteModel in routeModels)
         {
@@ -73,7 +75,7 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
         var actionName = jsonSerializerOptions.PropertyNamingPolicy.ConvertName(action.ActionName);
         return methodStyle switch
         {
-            JsonRpcMethodStyle.ControllerAndAction => $"{controllerName}.{actionName}",
+            JsonRpcMethodStyle.ControllerAndAction => $"{controllerName}{JsonRpcConstants.ControllerMethodSeparator}{actionName}",
             JsonRpcMethodStyle.ActionOnly => actionName,
             _ => throw new ArgumentOutOfRangeException()
         };
