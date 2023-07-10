@@ -4,7 +4,7 @@ There are two different autodocumentation standards:
 
 * [Swagger/OpenAPI](https://swagger.io/)
   * designed for REST
-  * well-known and wiredpread
+  * well-known and widespread
   * has a lot of tools, libraries, code generators, UIs, etc.
 * [OpenRPC](https://open-rpc.org/)
   * designed specifically for JSON Rpc
@@ -21,28 +21,42 @@ Swagger support is based on [Swashbuckle.AspNetCore](https://github.com/domaindr
 
 ### Usage
 
-Install [Tochka.JsonRpc.Swagger](https://www.nuget.org/packages/Tochka.JsonRpc.Swagger/) and add one line to `Startup.cs`:
+Install [Tochka.JsonRpc.Swagger](https://www.nuget.org/packages/Tochka.JsonRpc.Swagger/) and add couple of lines to `Program.cs`:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddControllers();
+builder.Services.AddJsonRpcServer();
+builder.Services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly()); // <-- add this
+
+var app = builder.Build();
+
+app.UseSwaggerUI(c => c.JsonRpcSwaggerEndpoints(app.Services)); // <-- add this if you also need UI
+app.UseJsonRpc();
+app.UseRouting();
+app.UseEndpoints(static c =>
 {
-    services.AddMvc()
-        .AddJsonRpcServer()
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-    services.AddSwaggerWithJsonRpc(Assembly.GetExecutingAssembly());  // <-- add this
-}
+    c.MapControllers();
+    c.MapSwagger(); //  <-- add this, alternative - UseSwagger()
+});
 ```
 
-> Important note: this extension method makes a lot of assumptions to greatly simplify things for common scenarios. If you need to customize your Swagger documents, Swagger UI, or opt-out of reading XMLdoc, write your own code! Use sources of this method as reference.
+> Important note: this extension methods make a lot of assumptions to greatly simplify things for common scenarios. If you need to customize your Swagger documents, Swagger UI, or opt-out of reading XMLdoc, write your own code! Use sources of this method as reference.
 
 You will also need to [enable XMLdoc generation](https://docs.microsoft.com/en-us/dotnet/csharp/codedoc) in your .csproj and you'll want to suppress warning `1591`. Without XML, app will throw exceptions on all requests!
 
 What you will get in your app:
 
 * UI is available at `/swagger` endpoint. Note the drop-down document list on top right.
-* Swagger document for regular REST actions is at `/swagger/rest/swagger.json`
+* Swagger document for regular REST actions can be also added in config for `UseSwaggerUI()`:
+```cs
+app.UseSwaggerUI(c =>
+{
+    c.JsonRpcSwaggerEndpoints(app.Services); // JSON Rpc
+    c.SwaggerEndpoint("/swagger/rest/swagger.json", "RESTful"); // REST
+});
+```
 * Document for JSON Rpc methods is at `/swagger/jsonrpc/swagger.json`
-* If you have more than one `JsonRpcSerializer`, there will be more documents, eg. `/swagger/jsonrpc_camelcase/swagger.json`
+* If you have `IJsonSerializerOptionsProvider`s in DI, there will be more documents, eg. `/swagger/jsonrpc_camelcase/swagger.json` (naming based on provider's class name, see [`GetDocumentName`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.ApiExplorer/Utils.cs) for info)
 
 ### Details
 
@@ -50,8 +64,10 @@ All dirty tricks are explained here.
 
 ### Fixing URLs
 
-All JSON Rpc requests go to one endpoint url (eg. `/api/jsonrpc`) and always via POST. For Swagger this is just one "method" with different parameters and return values.
-We patch internal metadata about actions, so they appear as different methods in Swagger document, just by appending JSON Rpc `method` after an anchor `#`.  See the example:
+All JSON Rpc requests usually go to one endpoint url (eg. `/api/jsonrpc`) and always via POST. For Swagger this is just one "method" with different parameters and return values.
+We patch internal metadata about actions, so they appear as different methods in Swagger document, just by appending JSON Rpc `method` after an anchor `#`.
+This way swagger treats them as different urls, but sending request via swagger ui still works. Combination of url + method must be unique.
+See the example:
 
 <table>
 <tr>
@@ -88,9 +104,9 @@ Imagine this in your app:
 
 If we want all these actions in one Swagger document, we also need different schemas for their responses, because from JSON schema point of view, they are different types. But this is same type in our code!
 
-> JSON schema generaion is based only on C# types. Only one schema is generated for a type.
+> JSON schema generation is based only on C# types. Only one schema is generated for a type.
 
-Unless we separate these three actions onto three different Swagger documents, each with its own JSON schema! That's why we generate different Swagger documents by default: one for REST, and one for each JsonRpcSerializer registered in services.
+Unless we separate these three actions onto three different Swagger documents, each with its own JSON schema! That's why we generate different Swagger documents by default: one for each `IJsonSerializerOptionsProvider` registered in services.
 
 ---
 
@@ -105,17 +121,22 @@ OpenRPC is like Swagger but handles JSON Rpc specifics better:
 
 ### Usage
 
-Install [Tochka.JsonRpc.OpenRpc](https://www.nuget.org/packages/Tochka.JsonRpc.OpenRpc/) and add two lines to `Startup.cs`:
+Install [Tochka.JsonRpc.OpenRpc](https://www.nuget.org/packages/Tochka.JsonRpc.OpenRpc/) and add couple of lines to `Program.cs`:
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
+builder.Services.AddControllers();
+builder.Services.AddJsonRpcServer();
+builder.Services.AddOpenRpc(Assembly.GetExecutingAssembly()); // <-- add this
+
+var app = builder.Build();
+
+app.UseJsonRpc();
+app.UseRouting();
+app.UseEndpoints(static c =>
 {
-    services.AddMvc()
-        .AddJsonRpcServer()
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-    services.AddOpenRpc(Assembly.GetExecutingAssembly());  // <-- add this
-    services.AddDefaultOpenRpcDocument(Assembly.GetExecutingAssembly());  // <-- add this
-}
+    c.MapControllers();
+    c.MapOpenRpc(); //  <-- add this, alternative - UseOpenRpc()
+});
 ```
 
 > Important note: this extension method is intended for common scenarios. If you need multiple OpenRPC documents or opt-out of reading XMLdoc, write your own code! Use sources of this method as reference.
@@ -124,7 +145,7 @@ You will also need to [enable XMLdoc generation](https://docs.microsoft.com/en-u
 
 What you will get in your app:
 
-* OpenRPC document at `/openrpc/jsonrpc.json`
+* OpenRPC document at `/openrpc/jsonrpc.json` (you can use it to build UI on [OpenRPC Playground](https://playground.open-rpc.org/))
 
 ### Details
 
