@@ -1,29 +1,30 @@
 # Server/Configuration
 
-There are two ways to configure library behavior: `Startup` options lambda and attributes for controllers/actions/parameters.
+There are two ways to configure library behavior: `Program.cs` options lambda and attributes for controllers/actions/parameters.
+
 *It is also possible to replace or inherit services used to process requests, but this is not described here.*
 
 > Check [Examples](examples) page to see how options affect requests/responses
 
 ## Startup options
 
-`.AddJsonRpcServer()` supports an overload to set up `JsonRpcOptions`.
+`.AddJsonRpcServer()` supports an overload to set up `JsonRpcServerOptions`.
 
 ```cs
-    services.AddMvc()
-        .AddJsonRpcServer(options => {
-            options.AllowRawResponses = true;
-            options.DefaultMethodOptions.Route = "/api/test";
-        });
+builder.Services.AddJsonRpcServer(static options =>
+{
+    options.AllowRawResponses = true;
+    options.RoutePrefix = "/api/test";
+});
 ```
 
-### JsonRpcOptions
+### JsonRpcServerOptions
 
 #### AllowRawResponses
 
 > Default: `false`
 
-> If `true`, server is allowed to return non JSON Rpc responses, like HTTP redirects, 400 and 500 errors, binary content, etc.
+> If `true`, server is allowed to return non JSON Rpc responses, like HTTP redirects, binary content, etc.
 
 ASP.Net Core actions/filters return `IActionResult` with HTTP code, content, etc.
 We are trying to convert them to response which is always `200 OK` and serialize any content to JSON Rpc response.
@@ -56,77 +57,68 @@ For all other results:
 
 Exceptions thrown by this library, middleware, or user code, are intercepted and serialized as JSON Rpc error response with `ExceptionInfo` object.
 
-`ExceptionInfo` always has exception message, exception type name, may have internal HTTP status code.
+`ExceptionInfo` always has exception message and exception type name.
 If this is `true`, it will also have exception's `.ToString()` with all the details.
 
 You may not want this enabled in production environment.
 
-#### BatchHandling
+#### DefaultMethodStyle
 
-> Default: `BatchHandling.Sequential`
-
-> Currently batches can be handled only sequentially. This is planned to be extended with `Parallel` or something like that.
-
-#### DefaultMethodOptions
-
-> Routing and parsing options, see `JsonRpcMethodOptions` below.
-
-#### HeaderSerializer
-
-> Default: `typeof(HeaderJsonRpcSerializer)`
-
-> Do not change this, because request/response "header" object format is fixed and does not imply any changes.
-
-### JsonRpcMethodOptions
-
-#### Route
-
-> Default: `JsonRpcConstants.DefaultRoute` which is `"/api/jsonrpc"`
-
-> This is the default route for all controllers/actions inherited from `JsonRpcController`.
-
-It can be overridden with framework's `RouteAttribute` like usual.
-
-Limitations:
-* Conventional routing is not supported
-* Routes should start with `/`
-* Route tokens like `[controller]` currently do not work
-
-#### MethodStyle
-
-> Default: `MethodStyle.ControllerAndAction`
+> Default: `JsonRpcMethodStyle.ControllerAndAction`
 
 > Rules how JSON Rpc `method` property is matched to controllers/actions
 
 * `ControllerAndAction`: treat `method` as `controller.action`. Values like `foo.bar` are matched to `FooController.Bar`
 * `ActionOnly`: treat `method` as `action`. Values like `bar` are matched to `Bar` action in any JsonRpcController
 
-Serialization of names is handled by `RequestSerializer`, see below and [Serialization](serialization) for more info.
+Serialization of names is handled by `DataJsonSerializerOptions`, see below and [Serialization](serialization) for more info.
 
-It can be overridden by `JsonRpcMethodStyleAttribute`
+It can be overridden by `JsonRpcMethodStyleAttribute` or ignored if custom method value if defined using `JsonRpcMethodAttribute`
 
-#### RequestSerializer
+#### DefaultDataJsonSerializerOptions
 
-> Default: `typeof(SnakeCaseJsonRpcSerializer)`
+> Default: `JsonRpcSerializerOptions.SnakeCase`
 
-> How request/notification `params` and response `result`/`error` should be serialized/deserialized
+> How request/notification `params` and `method` and response `result`/`error` should be serialized/deserialized
 
 You can serialize content in a way different from JSON Rpc "header" object.
-There are `SnakeCaseJsonRpcSerializer` and `CamelCaseJsonRpcSerializer` in `Tochka.JsonRpc.Common` package.
+There are `JsonRpcSerializerOptions.SnakeCase` and `JsonRpcSerializerOptions.CamelCase` in `Tochka.JsonRpc.Common` package.
 See [Serialization](serialization) for more info.
 
-It can be overridden by `JsonRpcSerializerAttribute`
+It can be overridden by `JsonRpcSerializerOptionsAttribute` by using implementation of `IJsonSerializerOptionsProvider` interface registered in DI
 
+#### HeadersJsonSerializerOptions
+
+> Default: `JsonRpcSerializerOptions.Headers`
+
+> Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.
+
+#### RoutePrefix
+
+> Default: `JsonRpcConstants.DefaultRoutePrefix` which is `"/api/jsonrpc"`
+
+> This is the default route prefix for all controllers/actions inherited from `JsonRpcControllerBase`.
+
+All JSON Rpc handlers must have same route prefix to distinguish them from REST when you use both APIs in same project. If prefix not defined explicitly in handler's route, it will be added automatically (for handlers without defined route, prefix will be set as full route)
+
+Route can be overridden with framework's `RouteAttribute` like usual, and prefix will be added if it's not in route already
+
+* Should start with `/`
+* Prefix can be set as `"/"` to get rid of it
 
 ## Attributes
 
+#### JsonRpcSerializerOptionsAttribute
+
+> Override `DefaultDataJsonSerializerOptions` on any controller/action. See details above for `IJsonSerializerOptionsProvider` and [Serialization](serialization).
+
 #### JsonRpcMethodStyleAttribute
 
-> Override default `MethodStyle` on any controller/action. See details above for `MethodStyle`.
+> Override `DefaultMethodStyle` on any controller/action. See details above for `DefaultMethodStyle`.
 
-#### JsonRpcSerializerAttribute
+#### JsonRpcMethodAttribute
 
-> Override default `RequestSerializer` on any controller/action. See details above for `RequestSerializer` and [Serialization](serialization).
+> Define custom `method` value on any action, ignoring `DefaultMethodStyle` and `JsonRpcMethodStyleAttribute`. See details above for `DefaultMethodStyle`.
 
 #### FromParamsAttribute
 
