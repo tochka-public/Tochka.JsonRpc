@@ -7,22 +7,22 @@ By default, `params` from request/notification are bound to action arguments:
 ```json
 {
     "id": 1,
-    "jsonrpc": "2.0",
     "method": "foo",
     "params": {
         "bar": 1,
         "baz": "test"
-    }
+    },
+    "jsonrpc": "2.0"
 }
 ```
 
 ```cs
-public void Foo(int bar, string baz){}
+public void Foo(int bar, string baz) {}
 ```
 
 ### Argument names
 
-Params are deserialized using `RequestSerializer` from global options or from `JsonRpcSerializerAttribute` if specified.
+Params are deserialized using `DefaultDataJsonSerializerOptions` from global options or from `JsonRpcSerializerOptionsAttribute` if specified.
 You can write regular C# *camelCase* argument names and they will be populated from *snake_case* request `params`.
 If your request params are *camelCase*/*PascalCase* or have objects which require special handling, see [Serialization](serialization).
 
@@ -32,12 +32,9 @@ If your request params are *camelCase*/*PascalCase* or have objects which requir
 You may want to bind whole `params` into one model, if you have a lot of properties or just for clarity:
 
 ```cs
-public class MyData{
-    public int Bar {get; set;}
-    public string Baz {get; set;}
-}
+public record MyData(int Bar, string Baz);
 
-public void Foo(MyData data){}
+public void Foo(MyData data) {}
 ```
 
 But there's a catch:
@@ -52,20 +49,20 @@ Another scenario: you may want to bind JSON array from `params` to a collection 
 ```json
 {
     "id": 1,
-    "jsonrpc": "2.0",
     "method": "foo",
     "params": [
         "a",
         "b",
         "c"
-    ]
+    ],
+    "jsonrpc": "2.0"
 }
 ```
 
 ```cs
-public void Foo(List<object> data){}
-public void Foo(List<string> data){}
-public void Foo(params string[] data){}
+public void Foo(List<object> data) {}
+public void Foo(List<string> data) {}
+public void Foo(params string[] data) {}
 ```
 
 ## FromParamsAttribute
@@ -77,7 +74,7 @@ This behavior is not globally configurable because it limits JSON Rpc spec suppo
 ### Bind params object to model
 
 ```cs
-public void Foo([FromParams(BindingStyle.Object)]MyData data){}
+public void Foo([FromParams(BindingStyle.Object)] MyData data) {}
 ```
 
 Attempt to send request/notification to this method with `params` **array** will result in error.
@@ -85,7 +82,7 @@ Attempt to send request/notification to this method with `params` **array** will
 ### Bind params array to collection
 
 ```cs
-public void Foo([FromParams(BindingStyle.Array)]List<object> data){}
+public void Foo([FromParams(BindingStyle.Array)] List<object> data) {}
 ```
 
 Attempt to send request/notification to this method with `params` **object** will result in error.
@@ -95,8 +92,8 @@ Attempt to send request/notification to this method with `params` **object** wil
 If you want to bind arguments from other sources or mix with `FromParamsAttribute`, it will work, but all possible combinations are not tested. Use with care:
 
 ```cs
-public void Foo(int bar, string baz, [FromServices]ILogger log){}
-public void Foo(int bar, string baz, CancellationToken token){}
-public void Foo(int bar, string baz, [FromQuery] string id){}
-public void Foo([FromParams(BindingStyle.Object)]MyData data, [FromQuery] string id){}
+public void Foo(int bar, string baz, [FromServices] ILogger log) {}
+public void Foo(int bar, string baz, CancellationToken token) {}
+public void Foo(int bar, string baz, [FromQuery] string id) {}
+public void Foo([FromParams(BindingStyle.Object)] MyData data, [FromQuery] string id) {}
 ```
