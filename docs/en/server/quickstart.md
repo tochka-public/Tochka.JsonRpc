@@ -4,32 +4,28 @@
 
 Install nuget package `Tochka.JsonRpc.Server`.
 
-Register it in `Startup.cs` and set compatibility version. Note that `.AddJsonRpcServer()` is an extension of `IMvcBuilder`, not `IServiceCollection`. Add middleware as early as possible.
+Register standard ASP.NET Core Controllers (`AddControllers()`) and this library services (`AddJsonRpcServer()`) in `Program.cs`. Add middleware (`UseJsonRpc()`) as early as possible. Add Endpoint routing to controllers (`app.UseEndpoints(static c => c.MapControllers())`)
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddMvc()
-        .AddJsonRpcServer()  // <-- add this
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
-}
+var builder = WebApplication.CreateBuilder(args);
 
-public void Configure(IApplicationBuilder app)
-{
-    app.UseMiddleware<JsonRpcMiddleware>();  // <-- add this
-    app.UseMvc();  // <-- this is required obviously because we work on top of MVC
-}
+builder.Services.AddControllers(); // <-- Register controllers (same as for REST)
+builder.Services.AddJsonRpcServer(); // <-- Register this library services
+
+var app = builder.Build();
+
+app.UseJsonRpc(); // <-- Add middleware
+app.UseEndpoints(static c => c.MapControllers()) // <-- Add endpoint routing (same as for REST)
+
+await app.RunAsync();
 ```
 
-Write your API controller as usual, but instead of inheriting from `Controller`, inherit from `JsonRpcController`. To make it work, you don't need any attributes, special naming or constructors.
+Write your API controller as usual, but instead of inheriting from `ControllerBase`, inherit from `JsonRpcControllerBase`. To make it work, you don't need any attributes, special naming or constructors.
 
 ```cs
-public class EchoController : JsonRpcController
+public class EchoController : JsonRpcControllerBase
 {
-    public string ToLower(string value)
-    {
-        return value.ToLower();
-    }
+    public string ToLower(string value) => value.ToLowerInvariant();
 }
 ```
 
@@ -56,11 +52,11 @@ Content-Type: application/json
 ```json
 {
     "id": 1,
-    "jsonrpc": "2.0",
     "method": "echo.to_lower",
     "params": {
         "value": "TEST"
-    }
+    },
+    "jsonrpc": "2.0"
 }
 ```
 
@@ -74,8 +70,8 @@ Content-Type: application/json; charset=utf-8
 ```json
 {
     "id": 1,
-    "jsonrpc": "2.0",
-    "result": "test"
+    "result": "test",
+    "jsonrpc": "2.0"
 }
 ```
 
