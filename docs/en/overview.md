@@ -1,7 +1,7 @@
 # Overview
 
 This is a set of packages to help make JSON Rpc 2.0 APIs like you used to with ASP.Net Core (MVC/REST).
-You only couple of lines in `Program.cs`, and a different base class for your controllers.
+You only need couple of lines in `Program.cs`, and a different base class for your controllers.
 
 **Note:** in this doc, JSON Rpc protocol is mentioned without version, implying `2.0`.
 
@@ -10,7 +10,7 @@ You only couple of lines in `Program.cs`, and a different base class for your co
 
 [Server Quickstart](server/quickstart)
 
-Client Quickstart (writing in progress)
+[Client Quickstart](client/quickstart)
 
 
 ## Key features
@@ -30,7 +30,7 @@ Client Quickstart (writing in progress)
 * Client is intended to be helpful when diagnosing errors
 * Other middlewares can inspect raw and typed JSON Rpc request/response data
 * Lightweight extensibility: common models and utils are not tied to client or server packages
-* Autodocumentation support: Swagger/OpenAPI and [OpenRPC](https://open-rpc.org/)
+* Autodocumentation support: [Swagger/OpenAPI](https://swagger.io/) and [OpenRPC](https://open-rpc.org/)
 
 
 ## Limitations and things to improve
@@ -40,6 +40,7 @@ and fine-tune experience after release when we have some real-world usage feedba
 
 * Currently tested only with ASP.Net Core `6.0`
 * Batches are currently handled in sequential fashion
+* Float `id` isn't supported
 
 
 ## Nuget Packages

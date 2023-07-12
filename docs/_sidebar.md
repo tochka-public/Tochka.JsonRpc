@@ -10,10 +10,26 @@
     - [Errors](/en/server/errors)
     - [Utils](/en/server/utils)
     - [Autodocs](/en/server/autodocs)
-  - Client (writing in progress)
-    - ...
+  - Client
+    - [Quickstart](/en/client/quickstart)
+    - [Examples](/en/client/examples)
+    - [Configuration](/en/client/configuration)
+    - [Serialization](/en/client/serialization)
+    - [Responses](/en/client/responses)
 - Russian (в процессе написания)
   - ...
+- Old versions (before 2.0)
+  - [Overview](/v1/en/overview)
+  - Server
+    - [Quickstart](/v1/en/server/quickstart)
+    - [Examples](/v1/en/server/examples)
+    - [Configuration](/v1/en/server/configuration)
+    - [Binding](/v1/en/server/binding)
+    - [Serialization](/v1/en/server/serialization)
+    - [Batches](/v1/en/server/batches)
+    - [Errors](/v1/en/server/errors)
+    - [Utils](/v1/en/server/utils)
+    - [Autodocs](/v1/en/server/autodocs)
 - **Links**
   - [Readme ➪](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
   - [Nuget ➪](https://www.nuget.org/profiles/tochka-public)

@@ -62,11 +62,11 @@ app.UseSwaggerUI(c =>
 
 All dirty tricks are explained here.
 
-### Fixing URLs
+#### Fixing URLs
 
 All JSON Rpc requests usually go to one endpoint url (eg. `/api/jsonrpc`) and always via POST. For Swagger this is just one "method" with different parameters and return values.
 We patch internal metadata about actions, so they appear as different methods in Swagger document, just by appending JSON Rpc `method` after an anchor `#`.
-This way swagger treats them as different urls, but sending request via swagger ui still works. Combination of url + method must be unique.
+This way swagger treats them as different urls, but sending request via swagger UI still works. Combination of url + method must be unique.
 See the example:
 
 <table>
@@ -88,11 +88,11 @@ See the example:
 </tr>
 </table>
 
-### Fixing requests and responses
+#### Fixing requests and responses
 
 Second thing to patch is metadata about parameters and return values, because we need Swagger to properly generate JSON schemas for every request and response with `id`, `jsonrpc`, `method` properties. Oh, and remember how `params` can be an array or an object? We try our best to fit something into schema. Implementation involves code generation at runtime, so details are not explained here for simplicity.
 
-### Dealing with different JSON serializers
+#### Dealing with different JSON serializers
 
 Last trick is to correctly generate JSON schemas according to your serialization rules (see [serialization](serialization)).
 
@@ -149,14 +149,14 @@ What you will get in your app:
 
 ### Details
 
-### Where are multiple documents?
+#### Where are multiple documents?
 
 Compared to Swagger, here we have better control of JSON schema generation, so there is no need to generate different documents for different serializers.
 
-### Dealing with URLs
+#### Dealing with URLs
 
 If some of your methods are routed to a URL other than default, eg. with `RouteAttribute`, their description will have a `servers` property with this URL, which by specification overrides top-level `servers`.
 
-### Missing features
+#### Missing features
 
 There was no obvious way to provide information about examples, tags, errors or documentation links from C# code or XMLdoc. These features would require attributes or special "examples providers" types and reflection. This complicates things and was not required for initial release.

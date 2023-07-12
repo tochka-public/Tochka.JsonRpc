@@ -2,6 +2,8 @@
 
 Here are examples for different scenarios. Common things like default HTTP headers, constructors, options implementations, registering services in DI are omitted.
 
+> For details beyond basic usage check [Configuration](configuration) page
+
 ## Request, Notification, Batch with default configuration
 
 Examples of basic JSON Rpc calls with default configuration

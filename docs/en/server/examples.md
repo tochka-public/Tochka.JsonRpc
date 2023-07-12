@@ -1406,7 +1406,9 @@ public void ThrowException() =>
 
 ```cs
 public IError Error() =>
-    jsonRpcErrorFactory.Error(1, "error with custom data", new MyData(1, "baz"));
+    jsonRpcErrorFactory.Error(123,
+        "error with custom data",
+        new MyData(456, "baz"));
 ```
 
 </td>
@@ -1417,10 +1419,10 @@ public IError Error() =>
 {
     "id": 1,
     "error": {
-        "code": 1,
+        "code": 123,
         "message": "error with custom data",
         "data": {
-            "bar": 1,
+            "bar": 456,
             "baz": "baz"
         }
     },
@@ -1482,7 +1484,7 @@ no difference
 
 ```cs
 public IActionResult MvcError() =>
-    this.BadRequest(new MyData(1, "baz"));
+    this.BadRequest(new MyData(123, "baz"));
 ```
 
 </td>
@@ -1496,7 +1498,7 @@ public IActionResult MvcError() =>
         "code": -32602,
         "message": "Invalid params",
         "data": {
-            "bar": 1,
+            "bar": 123,
             "baz": "baz"
         }
     },
@@ -1639,7 +1641,9 @@ public IError WrapHttpErrorManually()
 
 ```cs
 public IError ManuallyCreateError() =>
-    new Error<MyData>(1, "error with custom data", new MyData(1, "baz"));
+    new Error<MyData>(123,
+        "error with custom data",
+        new MyData(456, "baz"));
 ```
 
 </td>
@@ -1650,10 +1654,10 @@ public IError ManuallyCreateError() =>
 {
     "id": 1,
     "error": {
-        "code": 1,
+        "code": 123,
         "message": "error with custom data",
         "data": {
-            "bar": 1,
+            "bar": 456,
             "baz": "baz"
         }
     },
@@ -1677,7 +1681,9 @@ no difference
 ```cs
 public void ThrowErrorAsException()
 {
-    var error = jsonRpcErrorFactory.Error(1, "error with custom data", new MyData(1, "baz"));
+    var error = jsonRpcErrorFactory.Error(123,
+        "error with custom data",
+        new MyData(456, "baz"));
     error.ThrowAsException();
 }
 ```
@@ -1690,10 +1696,10 @@ public void ThrowErrorAsException()
 {
     "id": 1,
     "error": {
-        "code": 1,
+        "code": 123,
         "message": "error with custom data",
         "data": {
-            "bar": 1,
+            "bar": 456,
             "baz": "baz"
         }
     },

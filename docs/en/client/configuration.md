@@ -48,7 +48,7 @@ See [Serialization](serialization) for more info.
 
 > `JsonSerializerOptions` used to serialize and deserialize JSON Rpc "headers": `id`, `jsonrpc`, etc.
 
-**Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.**
+Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.
 
 See [Serialization](serialization) for more info.
 
@@ -70,13 +70,13 @@ You can configure it to achieve custom logic for sending requests
 
 For example, you can override this method in case responses from API have not JSON Rpc format or additional data
 
-**Changing this not recommended, because JSON Rpc responses must have fixed format.**
+Changing this not recommended, because JSON Rpc responses must have fixed format.
 
 ### CreateHttpContent(...)
 
 > Logic of serializing request and wrapping it in `HttpContent` with encoding and Content-Type
 
-**Changing this not recommended, because JSON Rpc requests must have fixed format.**
+Changing this not recommended, because JSON Rpc requests must have fixed format.
 
 ### GetContent(...)
 

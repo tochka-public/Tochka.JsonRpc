@@ -92,7 +92,7 @@ It can be overridden by `JsonRpcSerializerOptionsAttribute` by using implementat
 
 > `JsonSerializerOptions` used to serialize and deserialize JSON Rpc "headers": `id`, `jsonrpc`, etc.
 
-**Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.**
+Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.
 
 ### RoutePrefix
 
