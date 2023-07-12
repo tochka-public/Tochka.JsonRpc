@@ -18,9 +18,7 @@ builder.Services.AddJsonRpcServer(static options =>
 });
 ```
 
-### JsonRpcServerOptions
-
-#### AllowRawResponses
+### AllowRawResponses
 
 > Default: `false`
 
@@ -49,7 +47,7 @@ For all other results:
 
 **Note:** Batches will **break** if this option is enabled and one of requests returns non-json data! See [Batches](batches).
 
-#### DetailedResponseExceptions
+### DetailedResponseExceptions
 
 > Default: `false`
 
@@ -62,7 +60,7 @@ If this is `true`, it will also have exception's `.ToString()` with all the deta
 
 You may not want this enabled in production environment.
 
-#### DefaultMethodStyle
+### DefaultMethodStyle
 
 > Default: `JsonRpcMethodStyle.ControllerAndAction`
 
@@ -75,25 +73,28 @@ Serialization of names is handled by `DataJsonSerializerOptions`, see below and 
 
 It can be overridden by `JsonRpcMethodStyleAttribute` or ignored if custom method value if defined using `JsonRpcMethodAttribute`
 
-#### DefaultDataJsonSerializerOptions
+### DefaultDataJsonSerializerOptions
 
 > Default: `JsonRpcSerializerOptions.SnakeCase`
 
-> How request/notification `params` and `method` and response `result`/`error` should be serialized/deserialized
+> `JsonSerializerOptions` used to serialize `params` and `method` and deserialize `result` or `error.data`
 
 You can serialize content in a way different from JSON Rpc "header" object.
 There are `JsonRpcSerializerOptions.SnakeCase` and `JsonRpcSerializerOptions.CamelCase` in `Tochka.JsonRpc.Common` package.
+
 See [Serialization](serialization) for more info.
 
 It can be overridden by `JsonRpcSerializerOptionsAttribute` by using implementation of `IJsonSerializerOptionsProvider` interface registered in DI
 
-#### HeadersJsonSerializerOptions
+### HeadersJsonSerializerOptions
 
 > Default: `JsonRpcSerializerOptions.Headers`
 
-> Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.
+> `JsonSerializerOptions` used to serialize and deserialize JSON Rpc "headers": `id`, `jsonrpc`, etc.
 
-#### RoutePrefix
+**Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.**
+
+### RoutePrefix
 
 > Default: `JsonRpcConstants.DefaultRoutePrefix` which is `"/api/jsonrpc"`
 
@@ -108,19 +109,19 @@ Route can be overridden with framework's `RouteAttribute` like usual, and prefix
 
 ## Attributes
 
-#### JsonRpcSerializerOptionsAttribute
+### JsonRpcSerializerOptionsAttribute
 
 > Override `DefaultDataJsonSerializerOptions` on any controller/action. See details above for `IJsonSerializerOptionsProvider` and [Serialization](serialization).
 
-#### JsonRpcMethodStyleAttribute
+### JsonRpcMethodStyleAttribute
 
 > Override `DefaultMethodStyle` on any controller/action. See details above for `DefaultMethodStyle`.
 
-#### JsonRpcMethodAttribute
+### JsonRpcMethodAttribute
 
 > Define custom `method` value on any action, ignoring `DefaultMethodStyle` and `JsonRpcMethodStyleAttribute`. See details above for `DefaultMethodStyle`.
 
-#### FromParamsAttribute
+### FromParamsAttribute
 
 > Override default parameter binding behavior which is `BindingStyle.Default`
 

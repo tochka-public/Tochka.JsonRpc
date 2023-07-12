@@ -179,7 +179,7 @@ Change json serialization options to use other naming policy or custom converter
 
 You can use one of predefined values from `JsonRpcSerializerOptions` class or create your own `JsonSerializerOptions`.
 
-> This options won't affect JSON Rpc "headers" (id, method, params) - their serialization logic configured by `HeadersJsonSerializerOptions` and it's not recommended to change it
+> This options won't affect JSON Rpc "headers" (id, method, jsonrpc) - their serialization logic configured by `HeadersJsonSerializerOptions` and it's not recommended to change it
 
 ```cs
 public class MyJsonRpcClient
