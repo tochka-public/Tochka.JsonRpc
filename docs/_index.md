@@ -6,4 +6,4 @@ JSON RPC 2.0 integration into ASP.NET Core MVC
 
 ## Документация на русском (в процессе написания)
 
-## [Old versions (before 2.0) docs](/v1/en/overview)
+## [Old versions (1.x)](/v1/en/overview)

@@ -5,7 +5,7 @@
 There are some utilities to work with JSON Rpc request/response objects in pipeline.
 In case you need to obtain request `id` or manipulate data in any way.
 
-See examples: [access extra information](examples?id=access-extra-information)
+See examples: [Examples#Access Extra Information](examples?id=access-extra-information)
 
 ## HttpContext.GetJsonRpcCall
 
@@ -28,4 +28,4 @@ You should do logging yourself, but as a reference implementation there are:
 * [`JsonRpcRequestLoggingMiddleware`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Pipeline/JsonRpcRequestLoggingMiddleware.cs) to log raw JSON requests
 * [`JsonRpcResultLoggingFilter`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Pipeline/JsonRpcResultLoggingFilter.cs) to log serialized response data
 
-See examples for usage: [logging](examples?id=logging)
+See examples for usage: [Examples#Logging](examples?id=logging)

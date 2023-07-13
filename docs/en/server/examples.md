@@ -482,9 +482,9 @@ Override routing with global setting or attribute
 <details>
 <summary>Expand</summary>
 
-> All JSON Rpc handlers must have same route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix not defined explicitly in handler's route, it will be added automatically (for handlers without defined route, prefix will be set as full route)
+All JSON Rpc handlers must have some route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
 
-Change default route and override it with custom route in controller or action
+How to change default route and override it with custom route in controller or action:
 > `Program.cs`
 ```cs
 builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/public_api");
@@ -631,12 +631,12 @@ Content-Type: application/json; charset=utf-8
 
 ## Method
 
-Change how `method` property is matched to controllers and actions
+Change how `method` property is matched to controllers and actions. Request's `method` property can be sent in different formats depending on global setting: as `controller.action` or as `action`. It's also can be set manually with `JsonRpcMethodAttribute`.
+
 <details>
 <summary>Expand</summary>
 
-Request's `method` property can be sent in different formats depending on global setting: as `controller.action` or as `action`.
-It's also can be set manually with `JsonRpcMethodAttribute`
+
 > `Program.cs`
 ```cs
 builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = /* JsonRpcMethodStyle.ControllerAndAction or JsonRpcMethodStyle.ActionOnly */);
@@ -1257,9 +1257,7 @@ public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data
 
 public void Foo2(int? bar, string baz = "default_value")
 {
-    // "params" can have:
-    // "bar": null
-    // and omit baz entirely
+    // Request "params" can have nullable "bar" and omit "baz" property entirely
 }
 ```
 
@@ -1270,7 +1268,7 @@ public void Foo2(int? bar, string baz = "default_value")
 <details>
 <summary>Expand</summary>
 
-Several extension methods to `HttpContext` are added for convenience (useful for additional custom middlewares and filters)
+Several extension methods to `HttpContext` are added for convenience. Useful for additional custom middlewares and filters.
 
 Get JSON Rpc call object:
 ```cs
@@ -1306,7 +1304,7 @@ if (isBatch)
 }
 ```
 
-Manually set response (caution: may be overwritten later by filters)
+Manually set response. Warning: may be overwritten later by filters!
 ```cs
 var response = new UntypedResponse(request.Id, result)
 
@@ -1325,13 +1323,13 @@ See [errors documentation](errors) first.
 Consider actions in this controller. Below are examples of their output. HTTP headers are omitted, response is always `200 OK`.
 
 ```cs
+public record MyData(int Bar, string Baz);
+
 public class FailController : JsonRpcControllerBase
 {
-    public record MyData(int Bar, string Baz);
-
     private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
-
     public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+    // see methods in examples below
 }
 ```
 

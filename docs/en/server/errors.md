@@ -1,14 +1,16 @@
 # Server/Errors
 
-Error handling is difficult. Here is what library does and what you can do. Also see [errors and exceptions](examples?id=errors-and-exceptions) in examples.
+Error handling is difficult. Here is what library does and what you can do. Also see [Examples#Errors and Exceptions](examples?id=errors-and-exceptions) in examples.
 
 ## Return error manually
 
-You can return `IError` object. For convenience, there is an `IJsonRpcErrorFactory` service,
+Return `IError` object from action in case of failures. For convenience, there is an `IJsonRpcErrorFactory` service,
 which follows JSON Rpc spec (some predefined errors, checks for reserved error codes)
 and hides exception details as configured in global options.
 
-> `IJsonRpcErrorFactory` checks if data passed to any of methods is an `Exception` and creates `ExceptionInfo` instead.
+Best way to use it is the **same as with REST** controllers: action return type should be `IActionResult`/`IActionResult<T>`/`ObjectResult<T>`.
+
+> `IJsonRpcErrorFactory` checks if data passed to any of its methods is an `Exception` and creates `ExceptionInfo` instead, because exceptions are not always serializable to JSON.
 
 ## Return bad HTTP code
 
@@ -24,10 +26,7 @@ You can customize wrapping logic by changing `IJsonRpcErrorFactory` implementati
 ## Return custom error but keep controller return type
 
 Imagine if you have clean controller signature like `public User GetUser(int id) {}`.
-Sometimes you need to return JSON Rpc errors with given code, message and data, like `-10, "user not found", {id: 1}`.
-
-* Throwing regular exceptions won't help because they are wrapped into ServerError (they are treated as unexpected exceptions).
-* You don't want to return `IActionResult` for some reason
+Sometimes you need to return JSON Rpc errors with given code, message and data, like `-10, "user not found", {id: 1}`. Throwing regular exceptions won't help because they are wrapped into `ServerError` (they are treated as unexpected exceptions).
 
 Use `IError.ThrowAsException` or throw `JsonRpcErrorException` directly:
 
@@ -38,6 +37,8 @@ errorFactory.Error(-10, "user not found", new { id = 1 }).ThrowAsException();
 errorFactory.Error(-10, "users not found", new List<string> { "user1", "user2" }).ThrowAsException();
 throw new JsonRpcErrorException(new Error<T>(...));
 ```
+
+This approach is not recommended because there is no reason to avoid `IActionResult`/`IActionResult<T>`/`ObjectResult<T>` in method signatures.
 
 ## Early pipeline exceptions
 

@@ -71,18 +71,18 @@ You may not want this enabled in production environment.
 
 Serialization of names is handled by `DataJsonSerializerOptions`, see below and [Serialization](serialization) for more info.
 
-It can be overridden by `JsonRpcMethodStyleAttribute` or ignored if custom method value if defined using `JsonRpcMethodAttribute`
+It can be overridden by `JsonRpcMethodStyleAttribute` or ignored if custom method name is defined with `JsonRpcMethodAttribute`
 
 ### DefaultDataJsonSerializerOptions
 
 > Default: `JsonRpcSerializerOptions.SnakeCase`
 
-> `JsonSerializerOptions` used to serialize `params` and `method` and deserialize `result` or `error.data`
+> `JsonSerializerOptions` for serialization of `params` and `method` and deserialization of `result` or `error.data`
 
-You can serialize content in a way different from JSON Rpc "header" object.
-There are `JsonRpcSerializerOptions.SnakeCase` and `JsonRpcSerializerOptions.CamelCase` in `Tochka.JsonRpc.Common` package.
+You can serialize **content** differently from JSON Rpc "header" object.
+For typical use cases, there are `JsonRpcSerializerOptions.SnakeCase` and `JsonRpcSerializerOptions.CamelCase` in `Tochka.JsonRpc.Common` package.
 
-See [Serialization](serialization) for more info.
+See [Serialization](serialization) for usage details.
 
 It can be overridden by `JsonRpcSerializerOptionsAttribute` by using implementation of `IJsonSerializerOptionsProvider` interface registered in DI
 
@@ -90,7 +90,7 @@ It can be overridden by `JsonRpcSerializerOptionsAttribute` by using implementat
 
 > Default: `JsonRpcSerializerOptions.Headers`
 
-> `JsonSerializerOptions` used to serialize and deserialize JSON Rpc "headers": `id`, `jsonrpc`, etc.
+> `JsonSerializerOptions` for serialization/deserialization of JSON Rpc "headers": `id`, `jsonrpc`, etc.
 
 Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.
 
@@ -100,12 +100,12 @@ Changing this not recommended, because request/response "header" object format i
 
 > This is the default route prefix for all controllers/actions inherited from `JsonRpcControllerBase`.
 
-All JSON Rpc handlers must have same route prefix to distinguish them from REST when you use both APIs in same project. If prefix not defined explicitly in handler's route, it will be added automatically (for handlers without defined route, prefix will be set as full route)
+All JSON Rpc handlers must have some route prefix to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
 
-Route can be overridden with framework's `RouteAttribute` like usual, and prefix will be added if it's not in route already
+Route can be overridden with framework's `RouteAttribute` like usual, and global prefix will be added if custom route doesn't start with it.
 
 * Should start with `/`
-* Prefix can be set as `"/"` to get rid of it
+* Prefix can be set to `"/"` to get rid of it
 
 ## Attributes
 

@@ -56,7 +56,7 @@ app.UseSwaggerUI(c =>
 });
 ```
 * Document for JSON Rpc methods is at `/swagger/jsonrpc/swagger.json`
-* If you have `IJsonSerializerOptionsProvider`s in DI, there will be more documents, eg. `/swagger/jsonrpc_camelcase/swagger.json` (naming based on provider's class name, see [`GetDocumentName`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.ApiExplorer/Utils.cs) for info)
+* If you have multiple `IJsonSerializerOptionsProvider` implementations registered in DI, there will be more documents, eg. `/swagger/jsonrpc_camelcase/swagger.json` (naming based on provider's class name, see [`GetDocumentName`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.ApiExplorer/Utils.cs) for info)
 
 ### Details
 
@@ -106,7 +106,7 @@ If we want all these actions in one Swagger document, we also need different sch
 
 > JSON schema generation is based only on C# types. Only one schema is generated for a type.
 
-Unless we separate these three actions onto three different Swagger documents, each with its own JSON schema! That's why we generate different Swagger documents by default: one for each `IJsonSerializerOptionsProvider` registered in services.
+Unless we separate these three actions onto three different Swagger documents, each with its own JSON schema! That's why we generate different Swagger documents by default: one for each `IJsonSerializerOptionsProvider` registered in services, and a separate one for REST.
 
 ---
 

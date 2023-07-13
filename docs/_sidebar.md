@@ -18,7 +18,7 @@
     - [Responses](/en/client/responses)
 - Russian (в процессе написания)
   - ...
-- Old versions (before 2.0)
+- Old versions (1.x)
   - [Overview](/v1/en/overview)
   - Server
     - [Quickstart](/v1/en/server/quickstart)

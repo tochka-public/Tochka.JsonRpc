@@ -2,9 +2,12 @@
 
 ## Installation
 
-Install nuget package `Tochka.JsonRpc.Server`.
+Install nuget package `Tochka.JsonRpc.Server`. Then, in `Program.cs`:
 
-Register standard ASP.NET Core Controllers (`AddControllers()`) and this library services (`AddJsonRpcServer()`) in `Program.cs`. Add middleware (`UseJsonRpc()`) as early as possible. Add Endpoint routing to controllers (`app.UseRouting()` and `app.UseEndpoints(static c => c.MapControllers())`)
+* Register default ASP.NET Core Controllers as usual: `AddControllers()`
+* Add required services `AddJsonRpcServer()`
+* Add middleware as early as possible: `UseJsonRpc()`
+* Add Endpoint Routing to controllers as you do normally: `app.UseRouting()` and `app.UseEndpoints(static c => c.MapControllers())`
 
 ```cs
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +24,7 @@ app.UseEndpoints(static c => c.MapControllers()) // <-- Add endpoints (same as f
 await app.RunAsync();
 ```
 
-Write your API controller as usual, but instead of inheriting from `ControllerBase`, inherit from `JsonRpcControllerBase`. To make it work, you don't need any attributes, special naming or constructors.
+Write your API controller as if it was REST, but instead of inheriting from `ControllerBase`, inherit from `JsonRpcControllerBase`. To make it work, you don't need any attributes, special naming or constructors.
 
 ```cs
 public class EchoController : JsonRpcControllerBase
@@ -80,7 +83,7 @@ Content-Type: application/json; charset=utf-8
 </tr>
 </table>
 
-That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like normal.
+That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like with regular controllers.
 Check out other pages for more advanced usage:
 
 - [Examples](examples)

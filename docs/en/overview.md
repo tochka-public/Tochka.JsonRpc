@@ -1,6 +1,6 @@
 # Overview
 
-This is a set of packages to help make JSON Rpc 2.0 APIs like you used to with ASP.Net Core (MVC/REST).
+This is a set of packages to help build JSON Rpc 2.0 APIs like you are used to with ASP.Net Core (MVC/REST).
 You only need couple of lines in `Program.cs`, and a different base class for your controllers.
 
 **Note:** in this doc, JSON Rpc protocol is mentioned without version, implying `2.0`.
@@ -28,7 +28,7 @@ You only need couple of lines in `Program.cs`, and a different base class for yo
 * Supports returning non-json data if needed, eg. to redirect browser or send binary file
 * Batches use the pipeline like separate requests would do, so authentication and other middlewares/filters work independently
 * Client is intended to be helpful when diagnosing errors
-* Other middlewares can inspect raw and typed JSON Rpc request/response data
+* Raw and typed JSON Rpc request/response data is accessible to middlewares and controllers
 * Lightweight extensibility: common models and utils are not tied to client or server packages
 * Autodocumentation support: [Swagger/OpenAPI](https://swagger.io/) and [OpenRPC](https://open-rpc.org/)
 
@@ -38,7 +38,7 @@ You only need couple of lines in `Program.cs`, and a different base class for yo
 Some features are planned, but not implemented yet. The initial goal was just to make things work,
 and fine-tune experience after release when we have some real-world usage feedback.
 
-* Currently tested only with ASP.Net Core `6.0`
+* Currently tested only with ASP.Net Core `6.0`. Version 1.x is obsolete and has low performance, but works for `2.2-6.0`
 * Batches are currently handled in sequential fashion
 * Float `id` isn't supported
 

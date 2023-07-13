@@ -3,7 +3,7 @@
 There are some utilities to work with JSON Rpc request/response objects in pipeline.
 In case you need to obtain request `id` or manipulate data in any way.
 
-See examples: [access extra information](examples?id=access-extra-information)
+See examples: [Examples#Access extra information](examples?id=access-extra-information)
 
 ## HttpContext.GetJsonRpcCall()
 
@@ -33,7 +33,7 @@ Use this to check if this call is part of batch request.
 
 ## HttpContext.SetJsonRpcResponse(IResponse response)
 
-Use this to set response manually. Caution: it may be overwritten later by filters
+Use this to set response manually. Warning: it may be overwritten later by filters
 
 ## IJsonRpcFeature
 

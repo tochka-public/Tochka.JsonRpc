@@ -129,7 +129,7 @@ var response = await myClient.CreateUsers(new[] { "user_login1", "user_login2" }
 
 ## Receive raw data in response
 
-Don't parse and validate response and just return it
+Return raw response without parsing or validation
 
 <details>
 <summary>Expand</summary>
@@ -150,7 +150,7 @@ public async Task<byte[]> GetFile(string name, CancellationToken token)
 
 ## Configure HttpClient (eg. Authorization headers)
 
-Configure internal HttpClient used to send requests
+Configure internal `HttpClient` used to send requests
 
 <details>
 <summary>Expand</summary>
@@ -174,14 +174,14 @@ public class MyJsonRpcClient
 
 ## Configure params serialization and result deserialization
 
-Change json serialization options to use other naming policy or custom converters
+Change JSON serialization options to use other naming policy or custom converters
 
 <details>
 <summary>Expand</summary>
 
 You can use one of predefined values from `JsonRpcSerializerOptions` class or create your own `JsonSerializerOptions`.
 
-> This options won't affect JSON Rpc "headers" (id, method, jsonrpc) - their serialization logic configured by `HeadersJsonSerializerOptions` and it's not recommended to change it
+> This options won't affect JSON Rpc "headers" (id, method, jsonrpc) - their serialization logic configured by `HeadersJsonSerializerOptions` and it's not recommended to change it!
 
 ```cs
 public class MyJsonRpcClient
