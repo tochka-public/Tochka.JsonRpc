@@ -9,6 +9,10 @@ using Tochka.JsonRpc.Server.Extensions;
 
 namespace Tochka.JsonRpc.Server.Routing;
 
+/// <inheritdoc cref="IEndpointSelectorPolicy" />
+/// <summary>
+/// <see cref="MatcherPolicy" /> for JSON-RPC endpoints
+/// </summary>
 internal class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
 {
     [ExcludeFromCodeCoverage]

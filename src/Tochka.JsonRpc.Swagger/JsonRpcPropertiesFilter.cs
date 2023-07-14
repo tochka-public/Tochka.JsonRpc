@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using JetBrains.Annotations;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -10,6 +11,10 @@ using Tochka.JsonRpc.Common.Models.Response;
 
 namespace Tochka.JsonRpc.Swagger;
 
+/// <summary>
+/// Schema filter to fix JSON-RPC protocol properties ("headers") that could be broken by data serializer options
+/// </summary>
+[PublicAPI]
 public class JsonRpcPropertiesFilter : ISchemaFilter
 {
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)

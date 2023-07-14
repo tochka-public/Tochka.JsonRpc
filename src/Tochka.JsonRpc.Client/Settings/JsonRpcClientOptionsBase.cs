@@ -4,19 +4,19 @@ using JetBrains.Annotations;
 namespace Tochka.JsonRpc.Client.Settings;
 
 /// <summary>
-/// Base class for JSON Rpc client with sane default values
+/// Base class for JSON Rpc client options
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public abstract class JsonRpcClientOptionsBase
 {
     /// <summary>
-    /// HTTP endpoint
+    /// Base HTTP endpoint URL
     /// </summary>
     public virtual string Url { get; set; } = null!;
 
     /// <summary>
-    /// Request timeout
+    /// HTTP request timeout
     /// </summary>
     /// <remarks>
     /// Default value is 10 seconds

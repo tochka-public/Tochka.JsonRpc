@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Text.Json;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -10,14 +11,16 @@ using Namotion.Reflection;
 using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.OpenRpc.Models;
+using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
-using Utils = Tochka.JsonRpc.Server.Utils;
 
 namespace Tochka.JsonRpc.OpenRpc.Services;
 
+/// <inheritdoc />
+[PublicAPI]
 public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
 {
     private readonly IApiDescriptionGroupCollectionProvider apiDescriptionsProvider;
@@ -82,7 +85,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         var jsonSerializerOptionsProviderType = serializerMetadata?.ProviderType;
         var jsonSerializerOptions = jsonSerializerOptionsProviderType == null
             ? serverOptions.DefaultDataJsonSerializerOptions
-            : Utils.GetJsonSerializerOptions(jsonSerializerOptionsProviders, jsonSerializerOptionsProviderType);
+            : ServerUtils.GetJsonSerializerOptions(jsonSerializerOptionsProviders, jsonSerializerOptionsProviderType);
         var methodName = (string) apiDescription.Properties[ApiExplorerConstants.MethodNameProperty];
         return new OpenRpcMethod(methodName)
         {

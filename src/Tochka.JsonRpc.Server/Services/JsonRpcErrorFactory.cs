@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -8,9 +9,8 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Services;
 
-/// <summary>
-/// Creates errors by specification rules, wraps exceptions depending on options
-/// </summary>
+/// <inheritdoc />
+[PublicAPI]
 public class JsonRpcErrorFactory : IJsonRpcErrorFactory
 {
     private readonly ILogger<JsonRpcErrorFactory> log;
@@ -22,44 +22,35 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
         this.options = options.Value;
     }
 
-    /// <inheritdoc />
     public IError ParseError(object? errorData) =>
         new Error<object>(-32700, "Parse error", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public IError InvalidRequest(object? errorData) =>
         new Error<object>(-32600, "Invalid Request", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public IError MethodNotFound(object? errorData) =>
         new Error<object>(-32601, "Method not found", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public IError InvalidParams(object? errorData) =>
         new Error<object>(-32602, "Invalid params", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public IError InternalError(object? errorData) =>
         new Error<object>(-32603, "Internal error", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public IError ServerError(int code, object? errorData) =>
         !IsServer(code)
             ? throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]")
             : new Error<object>(code, "Server error", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public virtual IError NotFound(object? errorData) =>
         new Error<object>(-32004, "Not found", WrapExceptions(errorData));
 
-    /// <inheritdoc />
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
     public virtual IError Error(int code, string message, object? errorData) =>
         IsReserved(code)
             ? throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another")
             : new Error<object>(code, message, WrapExceptions(errorData));
 
-    /// <inheritdoc />
     public virtual IError Exception(Exception e) => e switch
     {
         JsonRpcServerException => ServerError(JsonRpcConstants.InternalExceptionCode, WrapExceptions(e)),
@@ -69,7 +60,6 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
         _ => ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e))
     };
 
-    /// <inheritdoc />
     public virtual IError HttpError(int httpCode, object? errorData) => httpCode switch
     {
         400 or 422 => InvalidParams(errorData),
@@ -83,8 +73,7 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     /// <summary>
     /// Hide stack trace if detailed response disabled, avoid serializing exceptions directly
     /// </summary>
-    /// <param name="errorData"></param>
-    /// <returns></returns>
+    /// <param name="errorData">error.data that could be exception</param>
     // internal for tests, protected for customization
     protected internal virtual object? WrapExceptions(object? errorData)
     {
@@ -108,23 +97,22 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     }
 
     /// <summary>
-    /// Codes reserved in specification
+    /// Check if code is reserved in specification
     /// </summary>
-    /// <param name="code"></param>
+    /// <param name="code">error.code</param>
     /// <returns></returns>
     [ExcludeFromCodeCoverage]
     protected static bool IsReserved(int code) => code is >= -32768 and <= -32000;
 
     /// <summary>
-    /// Codes explicitly defined in specification
+    /// Check if code is explicitly defined in specification
     /// </summary>
-    /// <param name="code"></param>
-    /// <returns></returns>
+    /// <param name="code">error.code</param>
     [ExcludeFromCodeCoverage]
     protected static bool IsSpecial(int code) => code is -32700 or -32600 or -32601 or -32602 or -32603;
 
     /// <summary>
-    /// Codes reserved for server implementation in specification
+    /// Check if code is reserved for server implementation in specification
     /// </summary>
     /// <param name="code"></param>
     /// <returns></returns>

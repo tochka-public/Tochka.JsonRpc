@@ -13,6 +13,9 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server;
 
+/// <summary>
+/// Middleware to process JSON-RPC calls
+/// </summary>
 public class JsonRpcMiddleware
 {
     private readonly RequestDelegate next;

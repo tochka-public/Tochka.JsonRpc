@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
@@ -8,8 +9,9 @@ namespace Tochka.JsonRpc.Common.Converters;
 
 /// <inheritdoc />
 /// <summary>
-/// Handle dumb rule of response being single on some batch errors
+/// Deserialize response to single or batch from object/array
 /// </summary>
+[PublicAPI]
 public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
 {
     // System.Text.Json can't serialize derived types:

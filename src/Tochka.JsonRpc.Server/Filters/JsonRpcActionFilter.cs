@@ -5,6 +5,10 @@ using Tochka.JsonRpc.Server.Extensions;
 
 namespace Tochka.JsonRpc.Server.Filters;
 
+/// <inheritdoc />
+/// <summary>
+/// Filter for JSON-RPC actions to return <see cref="BadRequestObjectResult" /> if model binding failed
+/// </summary>
 internal class JsonRpcActionFilter : IActionFilter
 {
     // if model binding failed

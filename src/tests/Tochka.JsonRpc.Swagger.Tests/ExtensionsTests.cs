@@ -359,7 +359,7 @@ internal class ExtensionsTests
         var typeMock = new Mock<Type>();
         var fullName = "full.name";
         typeMock.Setup(static t => t.Assembly.FullName)
-            .Returns($"{ApiExplorerConstants.GeneratedModelsAssemblyId}.{fullName}")
+            .Returns($"{ApiExplorerConstants.GeneratedModelsAssemblyName}.{fullName}")
             .Verifiable();
         typeMock.Setup(static t => t.FullName)
             .Returns(fullName)

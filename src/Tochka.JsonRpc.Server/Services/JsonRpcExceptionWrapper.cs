@@ -6,6 +6,7 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Services;
 
+/// <inheritdoc />
 internal class JsonRpcExceptionWrapper : IJsonRpcExceptionWrapper
 {
     private readonly IJsonRpcErrorFactory errorFactory;

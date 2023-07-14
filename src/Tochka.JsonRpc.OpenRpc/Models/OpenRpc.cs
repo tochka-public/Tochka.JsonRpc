@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
@@ -7,6 +8,7 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// The contents of this object represent a whole OpenRPC document.
 /// How this object is constructed or stored is outside the scope of the OpenRPC Specification.
 /// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpc(OpenRpcInfo Info)
 {

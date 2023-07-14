@@ -9,6 +9,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models;
 
+/// <inheritdoc />
 [PublicAPI]
 public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
 {

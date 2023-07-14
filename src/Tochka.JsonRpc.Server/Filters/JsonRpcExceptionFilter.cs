@@ -5,6 +5,10 @@ using Tochka.JsonRpc.Server.Services;
 
 namespace Tochka.JsonRpc.Server.Filters;
 
+/// <inheritdoc />
+/// <summary>
+/// Filter for JSON-RPC actions to convert exceptions to JSON-RPC error
+/// </summary>
 internal class JsonRpcExceptionFilter : IExceptionFilter
 {
     private readonly IJsonRpcErrorFactory errorFactory;

@@ -13,6 +13,7 @@ using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
 namespace Tochka.JsonRpc.Client;
 
+/// <inheritdoc />
 /// <summary>
 /// Base class for JSON Rpc clients
 /// </summary>
@@ -51,9 +52,19 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     [ExcludeFromCodeCoverage]
     protected internal virtual Encoding Encoding => Encoding.UTF8;
 
+    /// <summary>
+    /// <see cref="HttpClient" /> used to send HTTP requests
+    /// </summary>
     protected internal HttpClient Client { get; }
 
+    /// <summary>
+    /// Logger provided in constructor
+    /// </summary>
     protected ILogger Log { get; }
+
+    /// <summary>
+    /// Service to generate id for requests
+    /// </summary>
     protected IJsonRpcIdGenerator RpcIdGenerator { get; }
 
     protected internal JsonRpcClientBase(HttpClient client, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
@@ -64,17 +75,14 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         InitializeClient(client, options);
     }
 
-    /// <inheritdoc />
     public virtual async Task SendNotification<TParams>(string requestUrl, Notification<TParams> notification, CancellationToken cancellationToken)
         where TParams : class =>
         await SendNotificationInternal(requestUrl, notification, cancellationToken);
 
-    /// <inheritdoc />
     public async Task SendNotification<TParams>(Notification<TParams> notification, CancellationToken cancellationToken)
         where TParams : class =>
         await SendNotificationInternal(null, notification, cancellationToken);
 
-    /// <inheritdoc />
     public async Task SendNotification<TParams>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
     {
@@ -82,7 +90,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         await SendNotificationInternal(requestUrl, notification, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task SendNotification<TParams>(string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
     {
@@ -90,17 +97,14 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         await SendNotificationInternal(null, notification, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task<ISingleJsonRpcResult> SendRequest<TParams>(string requestUrl, Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class =>
         await SendRequestInternal(requestUrl, request, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<ISingleJsonRpcResult> SendRequest<TParams>(Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class =>
         await SendRequestInternal(null, request, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<ISingleJsonRpcResult> SendRequest<TParams>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
     {
@@ -110,7 +114,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         return await SendRequestInternal(requestUrl, request, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task<ISingleJsonRpcResult> SendRequest<TParams>(string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
     {
@@ -120,7 +123,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         return await SendRequestInternal(null, request, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task<ISingleJsonRpcResult> SendRequest<TParams>(string requestUrl, IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
     {
@@ -128,7 +130,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         return await SendRequestInternal(requestUrl, request, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task<ISingleJsonRpcResult> SendRequest<TParams>(IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
     {
@@ -136,27 +137,21 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         return await SendRequestInternal(null, request, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(requestUrl, calls, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(null, calls, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<HttpResponseMessage> Send(string requestUrl, ICall call, CancellationToken cancellationToken) =>
         await SendInternal(requestUrl, call, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<HttpResponseMessage> Send(ICall call, CancellationToken cancellationToken) =>
         await SendInternal(null, call, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<HttpResponseMessage> Send(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendInternal(requestUrl, calls, cancellationToken);
 
-    /// <inheritdoc />
     public async Task<HttpResponseMessage> Send(IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendInternal(null, calls, cancellationToken);
 

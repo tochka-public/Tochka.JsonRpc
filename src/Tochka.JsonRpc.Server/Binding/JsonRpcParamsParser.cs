@@ -7,6 +7,7 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Binding;
 
+/// <inheritdoc />
 internal class JsonRpcParamsParser : IJsonRpcParamsParser
 {
     private readonly ILogger<JsonRpcParamsParser> log;

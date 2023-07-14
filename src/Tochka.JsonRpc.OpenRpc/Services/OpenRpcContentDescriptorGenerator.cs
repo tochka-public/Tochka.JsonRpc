@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using JetBrains.Annotations;
 using Namotion.Reflection;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.OpenRpc.Models;
@@ -7,6 +8,8 @@ using Tochka.JsonRpc.Server.Metadata;
 
 namespace Tochka.JsonRpc.OpenRpc.Services;
 
+/// <inheritdoc />
+[PublicAPI]
 public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenerator
 {
     private readonly IOpenRpcSchemaGenerator schemaGenerator;

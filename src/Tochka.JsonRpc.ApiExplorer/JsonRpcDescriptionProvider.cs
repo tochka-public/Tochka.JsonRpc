@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -12,6 +13,11 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.ApiExplorer;
 
+/// <inheritdoc />
+/// <summary>
+/// ApiDescriptionProvider that overrides default description for JSON-RPC API
+/// </summary>
+[PublicAPI]
 public class JsonRpcDescriptionProvider : IApiDescriptionProvider
 {
     // need to run after DefaultApiDescriptionProvider to override it's result
@@ -54,7 +60,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             var serializerMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
             var serializerOptionsProviderType = serializerMetadata?.ProviderType;
 
-            description.GroupName = Utils.GetDocumentName(serializerOptionsProviderType);
+            description.GroupName = ApiExplorerUtils.GetDocumentName(serializerOptionsProviderType);
 
             description.HttpMethod = HttpMethods.Post;
             description.RelativePath += $"#{methodMetadata.Method}";

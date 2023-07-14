@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -11,6 +13,11 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Binding;
 
+/// <inheritdoc />
+/// <summary>
+/// <see cref="IModelBinder" /> for JSON-RPC parameters
+/// </summary>
+[PublicAPI]
 public class JsonRpcModelBinder : IModelBinder
 {
     private readonly IJsonRpcParamsParser paramsParser;
@@ -43,6 +50,12 @@ public class JsonRpcModelBinder : IModelBinder
         await SetResult(parseResult, bindingContext, parameterMetadata);
     }
 
+    /// <summary>
+    /// Parse JSON-RPC parameters using <see cref="IJsonRpcParamsParser" />
+    /// </summary>
+    /// <param name="bindingContext">Context with information for model binding and validation</param>
+    /// <param name="parameterMetadata">Metadata for parameter to parse</param>
+    /// <exception cref="JsonRpcServerException">If raw or parsed JSON-RPC call is missing from <see cref="HttpContext" /></exception>
     // internal for tests, protected for customization
     protected internal virtual Task<IParseResult> Parse(ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
     {
@@ -57,11 +70,17 @@ public class JsonRpcModelBinder : IModelBinder
         return Task.FromResult(parseResult);
     }
 
+    /// <summary>
+    /// Bind parameter parse result to action arguments using <see cref="IJsonRpcParameterBinder" />
+    /// </summary>
+    /// <param name="parseResult">JSON-RPC parameter parse result</param>
+    /// <param name="bindingContext">Context with information for model binding and validation</param>
+    /// <param name="parameterMetadata">Metadata for parameter to bind</param>
     // internal for tests, protected for customization
     protected internal virtual Task SetResult(IParseResult parseResult, ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
     {
         var endpointMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata;
-        var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(endpointMetadata, options, serializerOptionsProviders);
+        var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(endpointMetadata, options, serializerOptionsProviders);
         parameterBinder.SetResult(bindingContext, parameterMetadata, parseResult, jsonSerializerOptions);
         return Task.CompletedTask;
     }

@@ -1,17 +1,22 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Tochka.JsonRpc.ApiExplorer;
+using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
-using Utils = Tochka.JsonRpc.Server.Utils;
 
 namespace Tochka.JsonRpc.Swagger;
 
+/// <summary>
+/// Schema generator to use data serializer options for models serialization
+/// </summary>
+[PublicAPI]
 public class JsonRpcSchemaGenerator : ISchemaGenerator
 {
     private readonly SchemaGeneratorOptions generatorOptions;
@@ -30,7 +35,7 @@ public class JsonRpcSchemaGenerator : ISchemaGenerator
         var typeMetadata = modelType.GetCustomAttribute<JsonRpcTypeMetadataAttribute>();
         var serializerOptions = typeMetadata?.SerializerOptionsProviderType == null
             ? options.DefaultDataJsonSerializerOptions
-            : Utils.GetJsonSerializerOptions(serializerOptionsProviders, typeMetadata.SerializerOptionsProviderType);
+            : ServerUtils.GetJsonSerializerOptions(serializerOptionsProviders, typeMetadata.SerializerOptionsProviderType);
         return UseDefaultGenerator(modelType, schemaRepository, memberInfo, parameterInfo, routeInfo, serializerOptions);
     }
 

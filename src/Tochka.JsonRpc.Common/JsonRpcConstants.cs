@@ -1,7 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common;
 
+/// <summary>
+/// All common JSON-RPC constants
+/// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public static class JsonRpcConstants
 {
@@ -51,7 +56,7 @@ public static class JsonRpcConstants
     public const int ExceptionCode = -32000;
 
     /// <summary>
-    /// -32001 Server Error. Usually caused by JsonRpcInternalException.
+    /// -32001 Server Error. Usually caused by JsonRpcInternalException.<br />
     /// May indicate that you are trying to return HTTP code or ActionResult not supported or disabled by your configuration, or an internal bug.
     /// </summary>
     public const int InternalExceptionCode = -32001;

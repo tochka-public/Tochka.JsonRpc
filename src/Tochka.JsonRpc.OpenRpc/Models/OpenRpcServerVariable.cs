@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// An object representing a Server Variable for server URL template substitution.
 /// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcServerVariable(string Default)
 {

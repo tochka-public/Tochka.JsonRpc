@@ -8,6 +8,10 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Routing;
 
+/// <inheritdoc />
+/// <summary>
+/// <see cref="IActionModelConvention" /> to configure routing for JSON-RPC endpoints
+/// </summary>
 internal class JsonRpcActionModelConvention : IActionModelConvention
 {
     private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
@@ -67,7 +71,7 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
 
     private string GetMethodName(ActionModel action, SelectorModel selector)
     {
-        var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(selector.EndpointMetadata, options, serializerOptionsProviders);
+        var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(selector.EndpointMetadata, options, serializerOptionsProviders);
         var methodStyleAttribute = selector.EndpointMetadata.Get<JsonRpcMethodStyleAttribute>();
         var methodStyle = methodStyleAttribute?.MethodStyle ?? options.DefaultMethodStyle;
 
