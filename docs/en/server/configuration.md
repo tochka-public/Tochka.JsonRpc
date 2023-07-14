@@ -100,7 +100,7 @@ Changing this not recommended, because request/response "header" object format i
 
 > This is the default route prefix for all controllers/actions inherited from `JsonRpcControllerBase`.
 
-All JSON Rpc handlers must have some route prefix to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
+All JSON Rpc handlers must have same route prefix to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
 
 Route can be overridden with framework's `RouteAttribute` like usual, and global prefix will be added if custom route doesn't start with it.
 

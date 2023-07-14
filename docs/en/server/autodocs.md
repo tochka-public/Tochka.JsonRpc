@@ -106,7 +106,7 @@ If we want all these actions in one Swagger document, we also need different sch
 
 > JSON schema generation is based only on C# types. Only one schema is generated for a type.
 
-Unless we separate these three actions onto three different Swagger documents, each with its own JSON schema! That's why we generate different Swagger documents by default: one for each `IJsonSerializerOptionsProvider` registered in services, and a separate one for REST.
+Unless we separate these three actions onto three different Swagger documents, each with its own JSON schema! That's why we generate different Swagger documents by default: one for each `IJsonSerializerOptionsProvider` registered in services. If you have REST, you also need to add separate document for it.
 
 ---
 

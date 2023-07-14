@@ -482,7 +482,7 @@ Override routing with global setting or attribute
 <details>
 <summary>Expand</summary>
 
-All JSON Rpc handlers must have some route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
+All JSON Rpc handlers must have same route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
 
 How to change default route and override it with custom route in controller or action:
 > `Program.cs`
