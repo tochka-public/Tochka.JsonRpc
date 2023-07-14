@@ -6,7 +6,7 @@ Here are examples for different scenarios. Common things like default HTTP heade
 
 ## Request, Notification, Batch with default configuration
 
-Examples of basic JSON Rpc calls with default configuration
+Examples of basic JSON-RPC calls with default configuration
 
 <details>
 <summary>Expand</summary>
@@ -17,7 +17,7 @@ Examples of basic JSON Rpc calls with default configuration
         Client's method
     </td>
     <td>
-        Sended JSON Rpc call 
+        Sended JSON-RPC call 
     </td>
 </tr>
 
@@ -181,7 +181,7 @@ Change JSON serialization options to use other naming policy or custom converter
 
 You can use one of predefined values from `JsonRpcSerializerOptions` class or create your own `JsonSerializerOptions`.
 
-> This options won't affect JSON Rpc "headers" (id, method, jsonrpc) - their serialization logic configured by `HeadersJsonSerializerOptions` and it's not recommended to change it!
+> This options won't affect JSON-RPC "headers" (id, method, jsonrpc) - their serialization logic configured by `HeadersJsonSerializerOptions` and it's not recommended to change it!
 
 ```cs
 public class MyJsonRpcClient

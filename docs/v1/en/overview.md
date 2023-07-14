@@ -1,4 +1,4 @@
-> # **THIS IS DOCS FOR VERSIONS BEFORE 2.0**
+> # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
 # Overview
 

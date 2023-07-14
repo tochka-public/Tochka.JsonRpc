@@ -5,7 +5,7 @@ Error handling is difficult. Here is what library does and what you can do. Also
 ## Return error manually
 
 Return `IError` object from action in case of failures. For convenience, there is an `IJsonRpcErrorFactory` service,
-which follows JSON Rpc spec (some predefined errors, checks for reserved error codes)
+which follows JSON-RPC spec (some predefined errors, checks for reserved error codes)
 and hides exception details as configured in global options.
 
 Best way to use it is the **same as with REST** controllers: action return type should be `IActionResult`/`IActionResult<T>`/`ObjectResult<T>`.
@@ -19,14 +19,14 @@ If the code is 4xx or 5xx, it will be converted with `IJsonRpcErrorFactory.HttpE
 
 ## Exceptions
 
-Exceptions thrown by action or filter are wrapped into JSON Rpc error responses with `IJsonRpcErrorFactory.Exception`
+Exceptions thrown by action or filter are wrapped into JSON-RPC error responses with `IJsonRpcErrorFactory.Exception`
 
 You can customize wrapping logic by changing `IJsonRpcErrorFactory` implementation in DI or creating custom `IExceptionFilter` which converts exception to error and stores it in `Result`, similar to [`JsonRpcExceptionFilter`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Filters/JsonRpcExceptionFilter.cs).
 
 ## Return custom error but keep controller return type
 
 Imagine if you have clean controller signature like `public User GetUser(int id) {}`.
-Sometimes you need to return JSON Rpc errors with given code, message and data, like `-10, "user not found", {id: 1}`. Throwing regular exceptions won't help because they are wrapped into `ServerError` (they are treated as unexpected exceptions).
+Sometimes you need to return JSON-RPC errors with given code, message and data, like `-10, "user not found", {id: 1}`. Throwing regular exceptions won't help because they are wrapped into `ServerError` (they are treated as unexpected exceptions).
 
 Use `IError.ThrowAsException` or throw `JsonRpcErrorException` directly:
 
@@ -42,7 +42,7 @@ This approach is not recommended because there is no reason to avoid `IActionRes
 
 ## Early pipeline exceptions
 
-Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON Rpc error responses, but serialized differently,
+Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON-RPC error responses, but serialized differently,
 because there it is not known yet which serializer to use. See [Serialization](/docs/en/server/serialization).
 
 ## Exceptions thrown by middleware before `JsonRpcMiddleware`

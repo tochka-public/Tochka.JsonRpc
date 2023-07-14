@@ -7,7 +7,7 @@ There are two different autodocumentation standards:
   * well-known and widespread
   * has a lot of tools, libraries, code generators, UIs, etc.
 * [OpenRPC](https://open-rpc.org/)
-  * designed specifically for JSON Rpc
+  * designed specifically for JSON-RPC
   * barely known
   * has very few tools
 
@@ -17,7 +17,7 @@ We support both via two different nuget packages. They do similar things: collec
 
 Swagger support is based on [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) and also includes its UI.
 
-> Please note that Swagger is designed for REST APIs and does not work for JSON Rpc without dirty tricks. Expect some features or advanced scenarios to be broken.
+> Please note that Swagger is designed for REST APIs and does not work for JSON-RPC without dirty tricks. Expect some features or advanced scenarios to be broken.
 
 ### Usage
 
@@ -51,11 +51,11 @@ What you will get in your app:
 ```cs
 app.UseSwaggerUI(c =>
 {
-    c.JsonRpcSwaggerEndpoints(app.Services); // JSON Rpc
+    c.JsonRpcSwaggerEndpoints(app.Services); // JSON-RPC
     c.SwaggerEndpoint("/swagger/rest/swagger.json", "RESTful"); // REST
 });
 ```
-* Document for JSON Rpc methods is at `/swagger/jsonrpc/swagger.json`
+* Document for JSON-RPC methods is at `/swagger/jsonrpc/swagger.json`
 * If you have multiple `IJsonSerializerOptionsProvider` implementations registered in DI, there will be more documents, eg. `/swagger/jsonrpc_camelcase/swagger.json` (naming based on provider's class name, see [`GetDocumentName`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.ApiExplorer/Utils.cs) for info)
 
 ### Details
@@ -64,15 +64,15 @@ All dirty tricks are explained here.
 
 #### Fixing URLs
 
-All JSON Rpc requests usually go to one endpoint url (eg. `/api/jsonrpc`) and always via POST. For Swagger this is just one "method" with different parameters and return values.
-We patch internal metadata about actions, so they appear as different methods in Swagger document, just by appending JSON Rpc `method` after an anchor `#`.
+All JSON-RPC requests usually go to one endpoint url (eg. `/api/jsonrpc`) and always via POST. For Swagger this is just one "method" with different parameters and return values.
+We patch internal metadata about actions, so they appear as different methods in Swagger document, just by appending JSON-RPC `method` after an anchor `#`.
 This way swagger treats them as different urls, but sending request via swagger UI still works. Combination of url + method must be unique.
 See the example:
 
 <table>
 <tr>
     <td>
-        JSON Rpc method
+        JSON-RPC method
     </td>
     <td>
         Swagger representation
@@ -99,8 +99,8 @@ Last trick is to correctly generate JSON schemas according to your serialization
 Imagine this in your app:
 
 * REST action which returns object of `ResponseData` type, serialized in camelCase
-* JSON Rpc action which returns same `ResponseData` type, only now it's serialized in snake_case
-* maybe another JSON Rpc action which also returns this type, but it's serialized in PascalCase
+* JSON-RPC action which returns same `ResponseData` type, only now it's serialized in snake_case
+* maybe another JSON-RPC action which also returns this type, but it's serialized in PascalCase
 
 If we want all these actions in one Swagger document, we also need different schemas for their responses, because from JSON schema point of view, they are different types. But this is same type in our code!
 
@@ -112,7 +112,7 @@ Unless we separate these three actions onto three different Swagger documents, e
 
 ## OpenRPC
 
-OpenRPC is like Swagger but handles JSON Rpc specifics better:
+OpenRPC is like Swagger but handles JSON-RPC specifics better:
 
 * methods are recognized by actual `method` property, not by URLs
 * there is a way to specify if method supports `params` as array, object or both

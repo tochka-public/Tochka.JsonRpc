@@ -1,13 +1,13 @@
 # Server/Serialization
 
-In this library, JSON Rpc request/notification/response objects are called **"headers"**, and their serialization is
+In this library, JSON-RPC request/notification/response objects are called **"headers"**, and their serialization is
 handled separately from params/result/error objects. You can control how your data is serialized without worrying about headers.
 
 **Note:** in this document, both serialization and **de**serialization are referred to as **serialization** for simplicity.
 
 ## Headers serialization
 
-JSON Rpc spec has some oddities, which do not fit well into strong static typing and automatic converters like System.Text.Json:
+JSON-RPC spec has some oddities, which do not fit well into strong static typing and automatic converters like System.Text.Json:
 
 * Request `id` property can be number, string or null and should be returned in Response exactly the same 
 * If `id` is omitted, it is a Notification

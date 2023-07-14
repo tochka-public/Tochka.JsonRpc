@@ -46,7 +46,7 @@ See [Serialization](serialization) for more info.
 
 > Default: `JsonRpcSerializerOptions.Headers`
 
-> `JsonSerializerOptions` used to serialize and deserialize JSON Rpc "headers": `id`, `jsonrpc`, etc.
+> `JsonSerializerOptions` used to serialize and deserialize JSON-RPC "headers": `id`, `jsonrpc`, etc.
 
 Changing this is not recommended, because request/response "header" object format is fixed and does not imply any changes.
 
@@ -68,15 +68,15 @@ You can configure it to achieve custom logic for sending requests
 
 > Logic of parsing HTTP response body
 
-For example, you can override this method if responses from API violate JSON Rpc protocol or have additional data.
+For example, you can override this method if responses from API violate JSON-RPC protocol or have additional data.
 
-Changing this not recommended, because JSON Rpc responses must have fixed format.
+Changing this not recommended, because JSON-RPC responses must have fixed format.
 
 ### CreateHttpContent(...)
 
 > Logic of serializing request and wrapping it in `HttpContent` with encoding and Content-Type
 
-Changing this not recommended, because JSON Rpc requests must have fixed format.
+Changing this not recommended, because JSON-RPC requests must have fixed format.
 
 ### GetContent(...)
 

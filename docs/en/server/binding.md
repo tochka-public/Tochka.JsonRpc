@@ -39,7 +39,7 @@ public void Foo(MyData data) {}
 
 But there's a catch:
 
-> JSON Rpc spec allows `params` in two forms: object `{}` or array `[]`.
+> JSON-RPC spec allows `params` in two forms: object `{}` or array `[]`.
 
 Binding JSON object to .net object is easy, but it's impossible to bind an array: we don't know property names from request array,
 and CLR has no metadata about property order in type definition.
@@ -69,7 +69,7 @@ public void Foo(params string[] data) {}
 
 Scenarios mentioned above are covered with an attribute, but you will have to rely on `params` type: always JSON array or object.
 Use it only if you are sure that your clients serialize requests as you expect.
-This behavior is not globally configurable because it limits JSON Rpc spec support.
+This behavior is not globally configurable because it limits JSON-RPC spec support.
 
 ### Bind params object to model
 

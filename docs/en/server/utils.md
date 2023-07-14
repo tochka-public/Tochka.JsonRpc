@@ -1,13 +1,13 @@
 # Server/Utils
 
-There are some utilities to work with JSON Rpc request/response objects in pipeline.
+There are some utilities to work with JSON-RPC request/response objects in pipeline.
 In case you need to obtain request `id` or manipulate data in any way.
 
 See examples: [Examples#Access extra information](examples?id=access-extra-information)
 
 ## HttpContext.GetJsonRpcCall()
 
-Use this to get JSON Rpc request or notification.
+Use this to get JSON-RPC request or notification.
 
 Some clarifications:
 
@@ -16,11 +16,11 @@ Some clarifications:
 
 ## HttpContext.GetRawJsonRpcCall()
 
-Use this to get raw JSON Rpc call as `JsonDocument`.
+Use this to get raw JSON-RPC call as `JsonDocument`.
 
 ## HttpContext.GetJsonRpcResponse()
 
-Use this to get JSON Rpc response.
+Use this to get JSON-RPC response.
 
 Some clarifications:
 

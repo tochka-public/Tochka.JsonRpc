@@ -6,7 +6,7 @@ Here are examples for different scenarios. Common things like default HTTP heade
 
 ## Request, Notification, Batch with default configuration
 
-Examples of basic JSON Rpc calls with default configuration
+Examples of basic JSON-RPC calls with default configuration
 <details>
 <summary>Expand</summary>
 
@@ -39,7 +39,7 @@ public class EchoController : JsonRpcControllerBase
 
 <td valign="top">
 
-JSON Rpc Request
+JSON-RPC Request
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -78,7 +78,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-JSON Rpc Notification
+JSON-RPC Notification
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -109,7 +109,7 @@ Content-Length: 0
 
 <td valign="top">
 
-JSON Rpc Batch
+JSON-RPC Batch
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -298,7 +298,7 @@ Location: https://google.com
 
 <td valign="top">
 
-JSON Rpc Batch
+JSON-RPC Batch
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -319,7 +319,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-JSON Rpc Error
+JSON-RPC Error
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -482,7 +482,7 @@ Override routing with global setting or attribute
 <details>
 <summary>Expand</summary>
 
-All JSON Rpc handlers must have same route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
+All JSON-RPC handlers must have same route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
 
 How to change default route and override it with custom route in controller or action:
 > `Program.cs`
@@ -1270,7 +1270,7 @@ public void Foo2(int? bar, string baz = "default_value")
 
 Several extension methods to `HttpContext` are added for convenience. Useful for additional custom middlewares and filters.
 
-Get JSON Rpc call object:
+Get JSON-RPC call object:
 ```cs
 var call = HttpContext.GetJsonRpcCall();
 
@@ -1286,7 +1286,7 @@ var rawCall = HttpContext.GetRawJsonRpcCall();
 Console.WriteLine(rawCall.RootElement);
 ```
 
-Get JSON Rpc response object:
+Get JSON-RPC response object:
 ```cs
 var call = HttpContext.GetJsonRpcResponse();
 
