@@ -40,7 +40,7 @@ app.UseEndpoints(static c =>
 });
 ```
 
-> Important note: this extension methods make a lot of assumptions to greatly simplify things for common scenarios. If you need to customize your Swagger documents, Swagger UI, or opt-out of reading XMLdoc, write your own code! Use sources of this method as reference.
+> Important note: these extension methods make a lot of assumptions to greatly simplify things for common scenarios. If you need to customize your Swagger documents, Swagger UI, or opt-out of reading XMLdoc, write your own code! Use sources of these methods as reference.
 
 You will also need to [enable XMLdoc generation](https://docs.microsoft.com/en-us/dotnet/csharp/codedoc) in your .csproj and you'll want to suppress warning `1591`. Without XML, app will throw exceptions on all requests!
 
@@ -66,7 +66,7 @@ All dirty tricks are explained here.
 
 All JSON-RPC requests usually go to one endpoint url (eg. `/api/jsonrpc`) and always via POST. For Swagger this is just one "method" with different parameters and return values.
 We patch internal metadata about actions, so they appear as different methods in Swagger document, just by appending JSON-RPC `method` after an anchor `#`.
-This way swagger treats them as different urls, but sending request via swagger UI still works. Combination of url + method must be unique.
+This way Swagger treats them as different urls, but sending request via Swagger UI still works. Combination of url + method must be unique.
 See the example:
 
 <table>
@@ -94,7 +94,7 @@ Second thing to patch is metadata about parameters and return values, because we
 
 #### Dealing with different JSON serializers
 
-Last trick is to correctly generate JSON schemas according to your serialization rules (see [serialization](serialization)).
+Last trick is to correctly generate JSON schemas according to your serialization rules (see [Serialization](serialization)).
 
 Imagine this in your app:
 
@@ -139,7 +139,7 @@ app.UseEndpoints(static c =>
 });
 ```
 
-> Important note: this extension method is intended for common scenarios. If you need multiple OpenRPC documents or opt-out of reading XMLdoc, write your own code! Use sources of this method as reference.
+> Important note: these extension methods is intended for common scenarios. If you need multiple OpenRPC documents or opt-out of reading XMLdoc, write your own code! Use sources of these methods as reference.
 
 You will also need to [enable XMLdoc generation](https://docs.microsoft.com/en-us/dotnet/csharp/codedoc) in your .csproj and you'll want to suppress warning `1591`. Without XML, app will throw exceptions on all requests!
 

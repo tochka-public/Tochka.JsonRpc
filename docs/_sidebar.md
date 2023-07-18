@@ -16,8 +16,24 @@
     - [Configuration](/en/client/configuration)
     - [Serialization](/en/client/serialization)
     - [Responses](/en/client/responses)
-- Russian (в процессе написания)
-  - ...
+- Русский
+  - [Обзор](/ru/overview)
+  - Сервер
+    - [Краткое руководство](/ru/server/quickstart)
+    - [Примеры](/ru/server/examples)
+    - [Конфигурация](/ru/server/configuration)
+    - [Привязка моделей](/ru/server/binding)
+    - [Сериализация](/ru/server/serialization)
+    - [Батчи](/ru/server/batches)
+    - [Ошибки](/ru/server/errors)
+    - [Вспомогательные методы](/ru/server/utils)
+    - [Автодокументация](/ru/server/autodocs)
+  - Клиент
+    - [Краткое руководство](/ru/client/quickstart)
+    - [Примеры](/ru/client/examples)
+    - [Конфигурация](/ru/client/configuration)
+    - [Сериализация](/ru/client/serialization)
+    - [Ответы](/ru/client/responses)
 - Old versions (1.x)
   - [Overview](/v1/en/overview)
   - Server

@@ -5,7 +5,7 @@
 Install nuget package `Tochka.JsonRpc.Server`. Then, in `Program.cs`:
 
 * Register default ASP.NET Core Controllers as usual: `AddControllers()`
-* Add required services `AddJsonRpcServer()`
+* Add required services: `AddJsonRpcServer()`
 * Add middleware as early as possible: `UseJsonRpc()`
 * Add Endpoint Routing to controllers as you do normally: `app.UseRouting()` and `app.UseEndpoints(static c => c.MapControllers())`
 

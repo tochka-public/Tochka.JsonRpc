@@ -1,14 +1,14 @@
-# Server/Examples
+# Сервер/Примеры
 
-Here are examples for different scenarios. Common things like default HTTP headers, creating/building/running application instance, registering/mapping controllers are omitted.
+Здесь представлены примеры для различных сценариев. Типичные подробности, вроде HTTP заголовков, создания/запуска приложения и регистрации контроллеров опущены для простоты.
 
-> For details beyond basic usage check [Configuration](configuration) page
+> Для деталей о более продвинутом использовании смотрите страницу [Конфигурация](configuration)
 
-## Request, Notification, Batch with default configuration
+##  Запрос, Уведомление, Батч с настройками по умолчанию
 
-Examples of basic JSON-RPC calls with default configuration
+Примеры базовых JSON-RPC вызовов с настройками по умолчанию
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
 > `Program.cs`
 ```cs
@@ -28,10 +28,10 @@ public class EchoController : JsonRpcControllerBase
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Response
+        Ответ
     </td>
 </tr>
 
@@ -39,7 +39,7 @@ public class EchoController : JsonRpcControllerBase
 
 <td valign="top">
 
-JSON-RPC Request
+JSON-RPC Запрос
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -58,7 +58,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Normal response
+Стандартный ответ
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -78,7 +78,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-JSON-RPC Notification
+JSON-RPC Уведомление
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -96,7 +96,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-No response content by specification
+Ответ отсутствует согласно спецификации
 ```http
 HTTP/1.1 200 OK
 Content-Length: 0
@@ -109,7 +109,7 @@ Content-Length: 0
 
 <td valign="top">
 
-JSON-RPC Batch
+JSON-RPC Батч
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -153,7 +153,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Responses for all items, except for notifications
+Ответы для всех вызовов кроме уведомлений
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -188,9 +188,9 @@ Content-Type: application/json; charset=utf-8
 
 ## AllowRawResponses
 
-Break protocol a bit and return bytes, HTTP codes, etc.
+Небольшое нарушение протокола для возврата байтов, HTTP кодов ответа и т.п.
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
 > `Program.cs`
 ```cs
@@ -216,10 +216,10 @@ public class DataController : JsonRpcControllerBase
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Response
+        Ответ
     </td>
 </tr>
 
@@ -227,7 +227,7 @@ public class DataController : JsonRpcControllerBase
 
 <td valign="top">
 
-GetBytes Request
+Запрос GetBytes
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -246,7 +246,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Unmodified bytes in response
+Неизмененные байты в ответе
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
@@ -265,7 +265,7 @@ Content-Length: 100
 
 <td valign="top">
 
-RedirectTo Request
+Запрос RedirectTo
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -298,7 +298,7 @@ Location: https://google.com
 
 <td valign="top">
 
-JSON-RPC Batch
+JSON-RPC Батч
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -319,7 +319,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-JSON-RPC Error
+JSON-RPC Ошибка
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -352,13 +352,13 @@ Content-Type: application/json; charset=utf-8
 
 ## DetailedResponseExceptions
 
-Hide or reveal exception information
+Скрытие или предоставление информации об исключениях
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
 > `Program.cs`
 ```cs
-builder.Services.AddJsonRpcServer(static options => options.DetailedResponseExceptions = /* true or false */);
+builder.Services.AddJsonRpcServer(static options => options.DetailedResponseExceptions = /* true или false */);
 
 app.UseJsonRpc();
 ```
@@ -374,10 +374,10 @@ public class ErrorController : JsonRpcControllerBase
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Response
+        Ответ
     </td>
 </tr>
 
@@ -385,7 +385,7 @@ public class ErrorController : JsonRpcControllerBase
 
 <td valign="top">
 
-Request
+Запрос
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -402,7 +402,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-No details when `DetailedResponseExceptions` is **false**
+details равно null, если `DetailedResponseExceptions` равен **false**
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -430,7 +430,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Request
+Запрос
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -447,7 +447,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`exception.ToString()` in details when `DetailedResponseExceptions` is **true**
+`exception.ToString()` в поле details, если `DetailedResponseExceptions` равен **true**
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -476,15 +476,15 @@ Content-Type: application/json; charset=utf-8
 </details>
 
 
-## Routes
+## Маршрутизация
 
-Override routing with global setting or attribute
+Переопределение маршрутизации через глобальную настройку или атрибут
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
-All JSON-RPC handlers must have same route prefix (`/api/jsonrpc` by default) to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
+Все обработчики JSON-RPC должны иметь одинаковый префикс адреса (по умолчанию `/api/jsonrpc`), чтобы отличать их от REST запросов, если оба API используются в одном проекте. Если префикс не указан явно в адресе обработчика, то он будет добавлен автоматически. Для обработчиков, у которых адрес не указан вручную, префикс будет использоваться как полный адрес (без части `/controllerName`).
 
-How to change default route and override it with custom route in controller or action:
+Изменение адреса по умолчанию и переопределение его для контроллера или метода:
 > `Program.cs`
 ```cs
 builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/public_api");
@@ -494,12 +494,12 @@ app.UseJsonRpc();
 
 > `UsersController.cs`
 ```cs
-/* [Route] override is also possible here */
+/* Переопределение через [Route] также доступно здесь */
 public class UsersController : JsonRpcControllerBase
 {
     public List<string> GetNames() => new() { "Alice", "Bob" };
 
-    [Route("/admin_api")] // add user to DB and return ID
+    [Route("/admin_api")] // добавить пользователя в БД и вернуть ID
     public Guid Create(string name) => Guid.NewGuid();
 }
 ```
@@ -507,10 +507,10 @@ public class UsersController : JsonRpcControllerBase
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Response
+        Ответ
     </td>
 </tr>
 
@@ -518,7 +518,7 @@ public class UsersController : JsonRpcControllerBase
 
 <td valign="top">
 
-Request to GetNames at default route
+Запрос GetNames по адресу по умолчанию
 ```http
 POST /public_api HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -535,7 +535,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Normal response
+Обычный ответ
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -558,7 +558,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Request to Create at overridden route without prefix
+Запрос Create на переопределенный адрес без установленного префикса
 ```http
 POST /admin_api HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -577,7 +577,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-404 Error response
+Ответ с ошибкой 404
 ```http
 HTTP/1.1 404 Not Found
 Content-Length: 0
@@ -590,7 +590,7 @@ Content-Length: 0
 
 <td valign="top">
 
-Request to Create at overridden route with prefix
+Запрос Create на переопределенный адрес с установленным префиксом
 ```http
 POST /public_api/admin_api HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -609,7 +609,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Normal response
+Обычный ответ
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -631,25 +631,25 @@ Content-Type: application/json; charset=utf-8
 
 ## Method
 
-Change how `method` property is matched to controllers and actions. Request's `method` property can be sent in different formats depending on global setting: as `controller.action` or as `action`. It's also can be set manually with `JsonRpcMethodAttribute`.
+Изменение привязки поля `method` к контроллерам и методам. Поле `method` из запроса может быть отправлено в разных форматах в зависимости от глобальной настройки: как `controller.action` или как `action`. Также можно вручную установить значение через `JsonRpcMethodAttribute`.
 
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
 
 > `Program.cs`
 ```cs
-builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = /* JsonRpcMethodStyle.ControllerAndAction or JsonRpcMethodStyle.ActionOnly */);
+builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = /* JsonRpcMethodStyle.ControllerAndAction или JsonRpcMethodStyle.ActionOnly */);
 
 app.UseJsonRpc();
 ```
 
 > `EchoController.cs`
 ```cs
-/* [JsonRpcMethodStyle] override is also possible here */
+/* Переопределение через [JsonRpcMethodStyle] также доступно здесь */
 public class EchoController : JsonRpcControllerBase
 {
-    /* [JsonRpcMethodStyle] or [JsonRpcMethod] override is also possible here */
+    /* Переопределение через [JsonRpcMethodStyle] или [JsonRpcMethod] также доступно здесь */
     public string ToLower(string value) => value.ToLowerInvariant();
 
     [JsonRpcMethod("to upper")]
@@ -660,10 +660,10 @@ public class EchoController : JsonRpcControllerBase
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Response
+        Ответ
     </td>
 </tr>
 
@@ -671,7 +671,7 @@ public class EchoController : JsonRpcControllerBase
 
 <td valign="top">
 
-Request with method with `controller.action` (`JsonRpcMethodStyle.ControllerAndAction`)
+Запрос со значением method в виде `controller.action` (`JsonRpcMethodStyle.ControllerAndAction`)
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -690,7 +690,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Response from `EchoController.ToLower`
+Ответ от `EchoController.ToLower`
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -710,7 +710,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Request with method with `action` (`JsonRpcMethodStyle.ActionOnly`)
+Запрос со значением method в виде `action` (`JsonRpcMethodStyle.ActionOnly`)
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -729,7 +729,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Response from `EchoController.ToLower`
+Ответ от `EchoController.ToLower`
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -749,7 +749,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Request with custom method name (set by `JsonRpcMethodAttribute`)
+Запрос с установленным вручную значением method (установлено через `JsonRpcMethodAttribute`)
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -789,20 +789,21 @@ Content-Type: application/json; charset=utf-8
 </details>
 
 
-## Serialization
+## Сериализация
 
-Change default JSON serialization options or override it for controller/action. See [Serialization](serialization) for details.
+Изменение настроек сериализации JSON по умолчанию или их переопределение для контроллера/метода. Смотрите страницу [Сериализация](serialization) для подробностей.
+
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
-Note how changing serialization affects `params` and `method`.
+Обратите внимание как сериализация влияет на поля `params` и `method`.
 > `Program.cs`
 ```cs
-// you can also use predefined options from JsonRpcSerializerOptions class
+// Вы также можете использовать настройки из класса JsonRpcSerializerOptions
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 builder.Services.AddJsonRpcServer(options => options.DefaultDataJsonSerializerOptions = jsonSerializerOptions);
 
-// options provider to use in JsonRpcSerializerOptionsAttribute
+// Провайдер настроек для использования в JsonRpcSerializerOptionsAttribute
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
 
 app.UseJsonRpc();
@@ -810,7 +811,7 @@ app.UseJsonRpc();
 
 > `SimpleCalcController.cs`
 ```cs
-/* [JsonRpcSerializerOptions] override is also possible here */
+/* Переопределение через [JsonRpcSerializerOptions] также доступно здесь */
 public class SimpleCalcController : JsonRpcControllerBase
 {
     public object SubtractIntegers(int firstValue, int secondValue) => new
@@ -820,7 +821,7 @@ public class SimpleCalcController : JsonRpcControllerBase
         firstMinusSecond = firstValue - secondValue
     };
 
-    // IMPORTANT: SnakeCaseJsonSerializerOptionsProvider must be registered in DI as IJsonSerializerOptionsProvider
+    // ВАЖНО: SnakeCaseJsonSerializerOptionsProvider Должен быть зарегистрирован в DI как IJsonSerializerOptionsProvider
     [JsonRpcSerializerOptions(typeof(SnakeCaseJsonSerializerOptionsProvider))]
     public object AddIntegers(int firstValue, int secondValue) => new
     {
@@ -834,10 +835,10 @@ public class SimpleCalcController : JsonRpcControllerBase
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Response
+        Ответ
     </td>
 </tr>
 
@@ -845,7 +846,7 @@ public class SimpleCalcController : JsonRpcControllerBase
 
 <td valign="top">
 
-Request with camelCase
+Запрос с camelCase
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -865,7 +866,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Response with camelCase
+Ответ с camelCase
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -889,7 +890,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Request with snake_case
+Запрос со snake_case
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -909,7 +910,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Response with snake_case
+Ответ со snake_case
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -934,21 +935,20 @@ Content-Type: application/json; charset=utf-8
 </details>
 
 
-## Binding
+## Привязка моделей
 
-Change how `params` are bound to method arguments. See [Binding](binding) for details.
-
+Изменение привязки поля `params` к аргументам метода. Смотрите [Привязка моделей](binding) для подробностей.
 
 <details>
-<summary>Default behavior: params are bound to method arguments. Params can be [] or {} by specification</summary>
+<summary>Поведение по умолчанию: params привязывается к аргументам метода. Значение поля params может быть [] или {} согласно спецификации</summary>
 
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Action method
+        Метод
     </td>
 </tr>
 
@@ -956,7 +956,7 @@ Change how `params` are bound to method arguments. See [Binding](binding) for de
 
 <td valign="top">
 
-Request has object with two properties
+В запросе объект с двумя полями
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -976,7 +976,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`params` are bound to method arguments by names
+`params` привязывается к аргументам метода по именам
 ```cs
 public void Foo(int bar, string baz)
 {
@@ -992,7 +992,7 @@ public void Foo(int bar, string baz)
 
 <td valign="top">
 
-Request has array with two items
+В запросе массив с двумя элементами
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -1012,7 +1012,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`params` are bound to method arguments by indices
+`params` привязывается к аргументам метода по индексам
 ```cs
 public void Foo(int bar, string baz)
 {
@@ -1030,15 +1030,15 @@ public void Foo(int bar, string baz)
 
 
 <details>
-<summary>Bind whole params object into one model, eg. when model has lots of properties</summary>
+<summary>Привязка всего объекта params к одной модели, например, когда в модели много полей</summary>
 
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Action method
+        Метод
     </td>
 </tr>
 
@@ -1046,7 +1046,7 @@ public void Foo(int bar, string baz)
 
 <td valign="top">
 
-Request has object with two properties
+В запросе объект с двумя полями
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -1066,7 +1066,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`params` are bound to single method argument
+`params` привязывается к одному аргументу метода
 ```cs
 public record Data(int Bar, string Baz);
 
@@ -1084,7 +1084,7 @@ public void Foo([FromParams(BindingStyle.Object)] Data data)
 
 <td valign="top">
 
-Request has array with two items
+В запросе массив с двумя элементами
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -1104,13 +1104,13 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Error because array items can not be bound to object properties
+Ошибка, потому что элементы массива не могут быть привязаны к полям объекта
 ```cs
 public record Data(int Bar, string Baz);
 
 public void Foo([FromParams(BindingStyle.Object)] Data data)
 {
-    // does not work for `params` array
+    // не работает для массива `params`
 }
 ```
 ```json
@@ -1139,15 +1139,15 @@ public void Foo([FromParams(BindingStyle.Object)] Data data)
 
 
 <details>
-<summary>Bind params array into one collection, eg. when request has variable count of parameters</summary>
+<summary>Привязка всего массива params к одной коллекции, например, когда в запросе может быть неопределенное количество параметров</summary>
 
 <table>
 <tr>
     <td>
-        Request
+        Запрос
     </td>
     <td>
-        Action method
+        Метод
     </td>
 </tr>
 
@@ -1155,7 +1155,7 @@ public void Foo([FromParams(BindingStyle.Object)] Data data)
 
 <td valign="top">
 
-Request has object with two properties
+В запросе объект с двумя полями
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -1175,11 +1175,11 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Error because object properties can not be bound to array items
+Ошибка, потому что поля объекта не могут быть привязаны к элементам массива
 ```cs
 public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 {
-    // does not work for `params` object
+    //  не работает для объекта `params`
 }
 ```
 ```json
@@ -1205,7 +1205,7 @@ public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 
 <td valign="top">
 
-Request has array with two items
+В запросе массив с двумя элементами
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -1225,7 +1225,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Array items are bound to collection
+Элементы массива привязываются к коллекции
 ```cs
 public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 {
@@ -1244,33 +1244,33 @@ public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 
 
 <details>
-<summary>Mix different binding sources</summary>
+<summary>Использование сразу нескольких источников</summary>
 
-Also try default params, object, dynamic and custom serialization...
+Также попробуйте значения по умолчанию, object, dynamic и собственную сериализацию...
 ```cs
 public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices] ICustomService service, CancellationToken token)
 {
-    // bar, baz are bound by default
-    // data is bound with specified behavior
-    // service and token are bound by framework as usual
+    // bar, baz привязываются по умолчанию
+    // data привязывается согласно указанному поведению
+    // service и token привязываются фреймворком
 }
 
 public void Foo2(int? bar, string baz = "default_value")
 {
-    // Request "params" can have nullable "bar" and omit "baz" property entirely
+    // В запросе "params" может содержать nullable "bar" и полностью опустить поле "baz"
 }
 ```
 
 </details>
 
-## Access extra information
+## Доступ к дополнительной информации
 
 <details>
-<summary>Expand</summary>
+<summary>Развернуть</summary>
 
-Several extension methods to `HttpContext` are added for convenience. Useful for additional custom middlewares and filters.
+Для удобства добавлено несколько методов расширения для `HttpContext`. Полезно для использования в мидлварях и фильтрах.
 
-Get JSON-RPC call object:
+Получение объекта JSON-RPC вызова:
 ```cs
 var call = HttpContext.GetJsonRpcCall();
 
@@ -1279,14 +1279,14 @@ var method = call.Method;
 var parameters = call.Params
 ```
 
-Get raw JSON-RPC call as `JsonDocument`:
+Получение сырого JSON-RPC вызова в виде `JsonDocument`:
 ```cs
 var rawCall = HttpContext.GetRawJsonRpcCall();
 
 Console.WriteLine(rawCall.RootElement);
 ```
 
-Get JSON-RPC response object:
+Получение объекта JSON-RPC ответа:
 ```cs
 var call = HttpContext.GetJsonRpcResponse();
 
@@ -1294,7 +1294,7 @@ var id = (call as UntypedResponse)?.Id;
 var result = call.Result
 ```
 
-Check if this call is part of batch request:
+Проверка, является ли текущий вызов частью батч запроса:
 ```cs
 var isBatch = HttpContext.JsonRpcRequestIsBatch();
 
@@ -1304,7 +1304,7 @@ if (isBatch)
 }
 ```
 
-Manually set response. Warning: may be overwritten later by filters!
+Ручная установка ответа. Осторожно: он может быть позже перезаписан фильтрами!
 ```cs
 var response = new UntypedResponse(request.Id, result)
 
@@ -1313,14 +1313,14 @@ HttpContext.SetJsonRpcResponse(response);
 
 </details>
 
-## Errors and exceptions
+## Ошибки и исключения
 
-See [Errors](errors) first.
+Для начала посмотрите [Ошибки](errors).
 
 <details>
-<summary>Different ways to return an error from Action</summary>
+<summary>Разные способы вернуть ошибку из метода</summary>
 
-Consider actions in this controller. Below are examples of their output. HTTP headers are omitted, response is always `200 OK`.
+Рассмотрим методы в данном контроллере. Ниже представлены примеры результатов их работы. HTTP заголовки опущены, код ответа всегда `200 OK`.
 
 ```cs
 public record MyData(int Bar, string Baz);
@@ -1329,20 +1329,20 @@ public class FailController : JsonRpcControllerBase
 {
     private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
     public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
-    // see methods in examples below
+    // методы представлены в примерах ниже
 }
 ```
 
 <table>
 <tr>
     <td>
-        Action
+        Метод
     </td>
     <td>
-        Response without DetailedResponseExceptions
+        Запрос без DetailedResponseExceptions
     </td>
     <td>
-        Response with DetailedResponseExceptions
+        Запрос с DetailedResponseExceptions
     </td>
 </tr>
 
@@ -1432,7 +1432,7 @@ public IError Error() =>
 
 <td valign="top">
 
-no difference
+без отличий
 
 </td>
 </tr>
@@ -1445,7 +1445,7 @@ no difference
 public IError PredefinedError()
 {
     return jsonRpcErrorFactory.InvalidParams("oops");
-    // or others:
+    // или другие:
     //return jsonRpcErrorFactory.ParseError("oops");
     //return jsonRpcErrorFactory.InvalidRequest("oops");
 }
@@ -1471,7 +1471,7 @@ public IError PredefinedError()
 
 <td valign="top">
 
-no difference
+без отличий
 
 </td>
 </tr>
@@ -1508,7 +1508,7 @@ public IActionResult MvcError() =>
 
 <td valign="top">
 
-no difference
+без отличий
 
 </td>
 </tr>
@@ -1667,7 +1667,7 @@ public IError ManuallyCreateError() =>
 
 <td valign="top">
 
-no difference
+без отличий
 
 </td>
 </tr>
@@ -1709,7 +1709,7 @@ public void ThrowErrorAsException()
 
 <td valign="top">
 
-no difference
+без отличий
 
 </td>
 </tr>

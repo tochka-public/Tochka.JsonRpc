@@ -10,16 +10,16 @@ and hides exception details as configured in global options.
 
 Best way to use it is the **same as with REST** controllers: action return type should be `IActionResult`/`IActionResult<T>`/`ObjectResult<T>`.
 
-> `IJsonRpcErrorFactory` checks if data passed to any of its methods is an `Exception` and creates `ExceptionInfo` instead, because exceptions are not always serializable to JSON.
+> `IJsonRpcErrorFactory` checks if data passed to any of its methods is an `Exception` and creates `ExceptionInfo` instead, because exceptions are not always serializable to JSON
 
 ## Return bad HTTP code
 
 In controller class, you can call methods like `NotFound()` which result in `IActionResult` with some HTTP status code.
-If the code is 4xx or 5xx, it will be converted with `IJsonRpcErrorFactory.HttpError`
+If the code is 4xx or 5xx, it will be converted with `IJsonRpcErrorFactory.HttpError`.
 
 ## Exceptions
 
-Exceptions thrown by action or filter are wrapped into JSON-RPC error responses with `IJsonRpcErrorFactory.Exception`
+Exceptions thrown by action or filter are wrapped into JSON-RPC error responses with `IJsonRpcErrorFactory.Exception`.
 
 You can customize wrapping logic by changing `IJsonRpcErrorFactory` implementation in DI or creating custom `IExceptionFilter` which converts exception to error and stores it in `Result`, similar to [`JsonRpcExceptionFilter`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Filters/JsonRpcExceptionFilter.cs).
 
@@ -43,7 +43,7 @@ This approach is not recommended because there is no reason to avoid `IActionRes
 ## Early pipeline exceptions
 
 Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON-RPC error responses, but serialized differently,
-because there it is not known yet which serializer to use. See [Serialization](/docs/en/server/serialization).
+because there it is not known yet which serializer to use. See [Serialization](serialization).
 
 ## Exceptions thrown by middleware before `JsonRpcMiddleware`
 

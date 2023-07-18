@@ -37,4 +37,4 @@ Use this to set response manually. Warning: it may be overwritten later by filte
 
 ## IJsonRpcFeature
 
-You can access all call information manually by reading/changing `IJsonRpcFeature` in `HttpContext.Features`
+You can access all JSON-RPC call information manually by reading/changing `IJsonRpcFeature` in `HttpContext.Features`.

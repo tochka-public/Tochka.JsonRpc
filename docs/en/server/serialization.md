@@ -28,16 +28,16 @@ Use global option `DefaultDataJsonSerializerOptions` for setting default behavio
 
 ## IJsonSerializerOptionsProvider
 
-To make JsonRpc serialization separate from ASP.Net Core, there is an interface `IJsonSerializerOptionsProvider`.
+To make JsonRpc serialization separate from ASP.Net Core, there is an interface `IJsonSerializerOptionsProvider`,
 which is basically a wrapper around `JsonSerializerOptions` to use it by type in attribute.
-We use System.Text.Json under the hood. You should be familiar with its concepts. 
+We use System.Text.Json under the hood, you should be familiar with its concepts. 
 
 There are 2 implementations in package. Use them in you projects or as reference implementation.
 
 * [`SnakeCaseJsonSerializerOptionsProvider`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Serialization/SnakeCaseJsonSerializerOptionsProvider.cs): is default for user data
 * [`CamelCaseJsonSerializerOptionsProvider`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Serialization/CamelCaseJsonSerializerOptionsProvider.cs): only difference is camelCase name handling
 
-> When implementing your own serializer, make `Options` property singleton as in existing providers.
+> When implementing your own provider, make `Options` property singleton as in existing providers
 
 Register your provider as service in DI:
 
@@ -64,7 +64,7 @@ When matching request/notification `method` property,
 library compares `method` value with class name and/or method name, serialized with corresponding serializer or explicitly defined name.
 This way, you can have your `method` in camelCase, or even use completely unrelated name, if desired.
 
-For clarity check [Examples#Serialization](examples?id=serialization) and see code with responses/requests.
+For clarity check [Examples#Serialization](examples?id=serialization) and see code with requests/responses.
 
 Matching process example:
 

@@ -42,7 +42,7 @@ throw new JsonRpcErrorResponseException(new Error<T>{...});
 ## Early pipeline exceptions
 
 Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON Rpc error responses, but serialized differently,
-because there it is not known yet which serializer to use. See [Serialization](/docs/en/server/serialization).
+because there it is not known yet which serializer to use. See [Serialization](serialization).
 
 ## Exceptions thrown by middleware before `JsonRpcMiddleware`
 

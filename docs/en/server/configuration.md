@@ -6,7 +6,7 @@ There are two ways to configure library behavior: `Program.cs` options lambda an
 
 > Check [Examples](examples) page to see how options affect requests/responses
 
-## Startup options
+## Program.cs options
 
 `.AddJsonRpcServer()` supports an overload to set up `JsonRpcServerOptions`.
 
@@ -45,7 +45,7 @@ For all other results:
 * When `false`, server responds with JSON-RPC server error
 * When `true`, let framework interpret it as with normal REST controllers
 
-**Note:** Batches will **break** if this option is enabled and one of requests returns non-json data! See [Batches](batches).
+**Note:** Batches will **break** if this option is enabled and one of requests returns non-JSON data! See [Batches](batches).
 
 ### DetailedResponseExceptions
 
@@ -71,7 +71,7 @@ You may not want this enabled in production environment.
 
 Serialization of names is handled by `DataJsonSerializerOptions`, see below and [Serialization](serialization) for more info.
 
-It can be overridden by `JsonRpcMethodStyleAttribute` or ignored if custom method name is defined with `JsonRpcMethodAttribute`
+It can be overridden by `JsonRpcMethodStyleAttribute` or ignored if custom method name is defined with `JsonRpcMethodAttribute`.
 
 ### DefaultDataJsonSerializerOptions
 
@@ -98,7 +98,7 @@ Changing this not recommended, because request/response "header" object format i
 
 > Default: `JsonRpcConstants.DefaultRoutePrefix` which is `"/api/jsonrpc"`
 
-> This is the default route prefix for all controllers/actions inherited from `JsonRpcControllerBase`.
+> This is the default route prefix for all controllers/actions inherited from `JsonRpcControllerBase`
 
 All JSON-RPC handlers must have same route prefix to distinguish them from REST when you use both APIs in same project. If prefix is not defined explicitly in handler's route, it will be added automatically. For handlers without manually defined route, prefix will be used as full route (without `/controllerName` part).
 

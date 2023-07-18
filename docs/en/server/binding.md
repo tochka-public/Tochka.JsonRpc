@@ -39,7 +39,7 @@ public void Foo(MyData data) {}
 
 But there's a catch:
 
-> JSON-RPC spec allows `params` in two forms: object `{}` or array `[]`.
+> JSON-RPC spec allows `params` in two forms: object `{}` or array `[]`
 
 Binding JSON object to .net object is easy, but it's impossible to bind an array: we don't know property names from request array,
 and CLR has no metadata about property order in type definition.
