@@ -6,6 +6,7 @@ using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 using Tochka.JsonRpc.Swagger;
 using Tochka.JsonRpc.Tests.WebApplication;
+using Tochka.JsonRpc.Tests.WebApplication.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +30,14 @@ builder.Services.AddSwaggerGen(static c => // swagger for REST
 
 builder.Services.AddOpenRpc(Assembly.GetExecutingAssembly()); // OpenRpc
 
+// auth
+builder.Services.AddAuthentication(AuthConstants.SchemeName)
+    .AddScheme<ApiAuthenticationOptions, ApiAuthenticationHandler>(AuthConstants.SchemeName, null);
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
+app.UseAuthentication();
 app.UseSwaggerUI(c =>
 {
     c.JsonRpcSwaggerEndpoints(app.Services); // register json-rpc in swagger UI
@@ -38,6 +45,7 @@ app.UseSwaggerUI(c =>
 });
 app.UseJsonRpc();
 app.UseRouting();
+app.UseAuthorization();
 app.UseEndpoints(c =>
 {
     c.MapControllers();
