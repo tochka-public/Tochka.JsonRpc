@@ -1,6 +1,6 @@
 > # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
-# Server/Examples
+# v1.x/Server/Examples
 
 Here are examples for different scenarios. Common things like default HTTP headers, calls to `AddMvc().SetCompatibilityVersion()` are omitted.
 

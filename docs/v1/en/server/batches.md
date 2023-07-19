@@ -1,6 +1,6 @@
 > # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
-# Server/Batches
+# v1.x/Server/Batches
 
 Batches are handled in `JsonRpcMiddleware` by copying HttpContext, its Headers and Items, and invoking pipeline with it.
 This transparently allows framework to function as intended, with all middlewares and filters working on independent requests.

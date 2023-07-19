@@ -1,6 +1,6 @@
 > # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
-# Server/Quickstart
+# v1.x/Server/Quickstart
 
 ## Installation
 

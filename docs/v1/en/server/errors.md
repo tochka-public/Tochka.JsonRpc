@@ -1,6 +1,6 @@
 > # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
-# Server/Errors
+# v1.x/Server/Errors
 
 Error handling is difficult. Here is what library does and what you can do. Also see [Examples#Errors and Exceptions](examples?id=errors-and-exceptions) in examples.
 

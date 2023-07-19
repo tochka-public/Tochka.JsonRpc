@@ -1,6 +1,6 @@
 > # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
-# Server/Configuration
+# v1.x/Server/Configuration
 
 There are two ways to configure library behavior: `Startup` options lambda and attributes for controllers/actions/parameters.
 *It is also possible to replace or inherit services used to process requests, but this is not described here.*

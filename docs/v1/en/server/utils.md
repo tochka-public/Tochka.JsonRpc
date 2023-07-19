@@ -1,6 +1,6 @@
 > # **THIS IS DOCS FOR OLD VERSIONS (1.x)**
 
-# Server/Utils
+# v1.x/Server/Utils
 
 There are some utilities to work with JSON Rpc request/response objects in pipeline.
 In case you need to obtain request `id` or manipulate data in any way.
