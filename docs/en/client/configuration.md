@@ -12,9 +12,9 @@ You can customize client behavior by `JsonRpcClientOptionsBase`, overriding prop
 
 > Base URL to send HTTP requests to (configures internal HttpClient)
 
-Each client method has overload that accepts `requestUrl` as first argument - it will be concatenated to `JsonRpcClientOptionsBase.Url` for cases when some of API methods are hosted by another route
+Each client method has overload that accepts `requestUrl` as first argument - it will be concatenated to `JsonRpcClientOptionsBase.Url` for cases when some of API methods are hosted by another route.
 
-There are two limitations to prevent unexpected behavior when joining url parts:
+There are two limitations to prevent unexpected behavior when joining URL parts:
  - `JsonRpcClientOptionsBase.Url` must end with `/`
  - `requestUrl` must not start with `/`
 
@@ -62,7 +62,7 @@ See [Serialization](serialization) for more info.
 
 > Internal `HttpClient` used to send HTTP requests
 
-You can configure it to achieve custom logic for sending requests
+You can configure it to achieve custom logic for sending HTTP requests.
 
 ### ParseBody(...)
 
@@ -90,4 +90,4 @@ Changing this not recommended, because JSON-RPC requests must have fixed format.
 
 > Service to generate `id` for requests in overloads that don't accept `id` as argument
 
-Can be replaced in DI to override `id` generation logic
+Can be replaced in DI to override `id` generation logic.

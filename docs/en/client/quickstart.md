@@ -4,7 +4,7 @@
 
 Install nuget package `Tochka.JsonRpc.Client`.
 
-Implement client inherited from `JsonRpcClientBase` and use base class's methods `SendNotification`, `SendRequest` and `SendBatch` for your logic
+Implement client inherited from `JsonRpcClientBase` and use base class's methods `SendNotification`, `SendRequest` and `SendBatch` for your logic.
 
 ```cs
 internal class MyJsonRpcClientOptions : JsonRpcClientOptionsBase
@@ -27,7 +27,7 @@ internal class MyJsonRpcClient : JsonRpcClientBase
 }
 ```
 
-Register options and client implementation in `Program.cs`
+Register options and client implementation in `Program.cs`.
 
 ```cs
 builder.Services.Configure<MyJsonRpcClientOptions>(_ => { });

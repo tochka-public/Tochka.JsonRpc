@@ -32,7 +32,7 @@ If no response with given `id` in batch - throws `JsonRpcException` with `Contex
 
 If response is successful - returns `null`.
 
-If response has error - returns raw `Error<JsonDocument>` without deserializing
+If response has error - returns raw `Error<JsonDocument>` without deserializing `error.data`.
 
 If no response with given `id` in batch - returns `null`.
 
@@ -40,10 +40,10 @@ If no response with given `id` in batch - returns `null`.
 
 If response is successful - returns `null`.
 
-If response has error - returns `Error<TError>` with deserialized `error.data`
+If response has error - returns `Error<TError>` with deserialized `error.data`.
 
 If no response with given `id` in batch - returns `null`.
 
-### AsErrorWithExceptionInfo()
+### `AsErrorWithExceptionInfo()`
 
-Same as `AsTypedError<ExceptionInfo>()`
+Same as `AsTypedError<ExceptionInfo>()`.
