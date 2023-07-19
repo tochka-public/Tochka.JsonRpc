@@ -35,6 +35,9 @@ builder.Services.AddAuthentication(AuthConstants.SchemeName)
     .AddScheme<ApiAuthenticationOptions, ApiAuthenticationHandler>(AuthConstants.SchemeName, null);
 builder.Services.AddAuthorization();
 
+// versioning
+builder.Services.AddApiVersioning(static options => options.AssumeDefaultVersionWhenUnspecified = true);
+
 var app = builder.Build();
 
 app.UseAuthentication();

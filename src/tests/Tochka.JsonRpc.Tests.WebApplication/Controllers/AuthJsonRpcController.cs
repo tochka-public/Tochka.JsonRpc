@@ -4,7 +4,7 @@ using Tochka.JsonRpc.Server;
 namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
 [Authorize]
-public class AuthController : JsonRpcControllerBase
+public class AuthJsonRpcController : JsonRpcControllerBase
 {
     public bool WithAuth() => true;
 
