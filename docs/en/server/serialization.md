@@ -52,7 +52,6 @@ Use it via attribute for controller or action:
 public string ToLower(string value) => value.ToLowerInvariant();
 ```
 
-
 ## Serializing early pipeline errors
 
 If request pipeline fails **before** it can match request to an action, it does not know yet which serializer options is configured for this action.

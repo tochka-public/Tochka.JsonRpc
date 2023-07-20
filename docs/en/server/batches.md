@@ -1,6 +1,6 @@
 # Server/Batches
 
-Batches are handled in `JsonRpcMiddleware` by clearing `HttpContext`'s Endpoint and JSON-RPC data for every element in the batch. `HttpContext` isn't thread safe, so currently only sequential handling is supported. The only other way would be to copy entire `HttpContext` for every batch element, but it leads to data duplication when merging them into batch response, and implementation is complicated, so no concurrent batches for now.
+Batches are handled in `JsonRpcMiddleware` by replacing `HttpContext`'s Endpoint and JSON-RPC data for every element in the batch. `HttpContext` isn't thread safe, so currently only sequential handling is supported. The only other way would be to copy entire `HttpContext` for every batch element, but it leads to data duplication when merging them into batch response, and implementation is complicated, so no concurrent batches for now.
 
 It's possible to find out if current call is part of a Batch by calling `HttpContext`'s extension method `JsonRpcRequestIsBatch()`.
 Can be useful if you want to set some header only once, or create custom logic in middlewares or filters.

@@ -31,7 +31,7 @@ internal class MyJsonRpcClient : JsonRpcClientBase
 
 ```cs
 builder.Services.Configure<MyJsonRpcClientOptions>(_ => { });
-builder.Services.AddJsonRpcClient<MyJsonRpcClient>(); // также доступна перегрузка для регистрации через интерфейс
+builder.Services.AddJsonRpcClient<MyJsonRpcClient>(); // еще есть перегрузка для регистрации через интерфейс
 ```
 Этого достаточно для работы! Теперь можно использовать клиент в своем коде для отправки запросов и обработки ответов.
 Про более продвинутого использование читаем дальше:

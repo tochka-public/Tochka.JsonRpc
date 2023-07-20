@@ -26,7 +26,6 @@ Params are deserialized using `DefaultDataJsonSerializerOptions` from global opt
 You can write regular C# *camelCase* argument names and they will be populated from *snake_case* request `params`.
 If your request params are *camelCase*/*PascalCase* or have objects which require special handling, see [Serialization](serialization).
 
-
 ## Advanced scenarios
 
 You may want to bind whole `params` into one model, if you have a lot of properties or just for clarity:
