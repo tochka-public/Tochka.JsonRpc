@@ -17,7 +17,7 @@ Examples of basic JSON-RPC calls with default configuration
         Client's method
     </td>
     <td>
-        Sended JSON-RPC call 
+        Sent JSON-RPC call 
     </td>
 </tr>
 
@@ -143,8 +143,6 @@ public async Task<byte[]> GetFile(string name, CancellationToken token)
     return await response.Content.ReadAsByteArrayAsync(token);
 }
 ```
-
-</details>
 
 </details>
 

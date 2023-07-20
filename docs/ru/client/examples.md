@@ -1,10 +1,10 @@
 # Клиент/Примеры
 
-Здесь представлены примеры для различных сценариев. Типичные подробности, вроде HTTP заголовков, конструкторов, реализаций настроек, регистрации сервисов в DI опущены для простоты.
+Здесь представлены примеры для различных сценариев. Обычные штуки, вроде HTTP заголовков, конструкторов, реализаций настроек, регистрации сервисов в DI опущены для краткости.
 
-> Для деталей о более продвинутом использовании смотрите страницу [Конфигурация](configuration)
+> Больше деталей и продвинутое использование: [Конфигурация](configuration)
 
-## Запрос, Уведомление, Батч с настройками по умолчанию
+## Request, Notification, Batch с настройками по умолчанию
 
 Примеры базовых JSON-RPC вызовов с настройками по умолчанию
 
@@ -24,7 +24,7 @@
 <tr>
 <td valign="top">
 
-Запрос
+Request
 ```cs
 public async Task<Guid> CreateUser(string login, CancellationToken token)
 {
@@ -55,7 +55,7 @@ var response = await myClient.CreateUser("user_login", token);
 <tr>
 <td valign="top">
 
-Уведомление
+Notification
 ```cs
 public async Task CreateUser(string login, CancellationToken token) =>
     await SendNotification("users.create", new CreateRequest(login), token);
@@ -82,7 +82,7 @@ await myClient.CreateUser("user_login", token);
 <tr>
 <td valign="top">
 
-Батч
+Batch
 ```cs
 public async Task<Dictionary<string, Guid>> CreateUsers(IEnumerable<string> logins, CancellationToken token)
 {
@@ -127,7 +127,7 @@ var response = await myClient.CreateUsers(new[] { "user_login1", "user_login2" }
 
 </details>
 
-## Получение сырых данных в ответе
+## Получение сырых данных ответа
 
 Возврат сырых данных без десериализации и валидации
 
@@ -143,8 +143,6 @@ public async Task<byte[]> GetFile(string name, CancellationToken token)
     return await response.Content.ReadAsByteArrayAsync(token);
 }
 ```
-
-</details>
 
 </details>
 
@@ -174,12 +172,12 @@ public class MyJsonRpcClient
 
 ## Настройка сериализации параметров и десериализации результата
 
-Изменение настроек сериализации JSON для добавления другой политики именования или дополнительных конвертеров
+Изменение настроек сериализации JSON для использования другой политики именования или дополнительных конвертеров
 
 <details>
 <summary>Развернуть</summary>
 
-Вы можете использовать одно из предоставленных в классе `JsonRpcSerializerOptions` значений или создать собственный объект `JsonSerializerOptions`.
+Можно использовать одно из значений в классе `JsonRpcSerializerOptions`, или создать собственный объект `JsonSerializerOptions`.
 
 > Эти настройки не повлияют на "заголовки" JSON-RPC (id, method, jsonrpc) - логика их сериализации настраивается через `HeadersJsonSerializerOptions` и изменять ее не рекомендуется!
 

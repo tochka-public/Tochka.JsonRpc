@@ -2,9 +2,9 @@
 
 ## Установка
 
-Установите nuget пакет `Tochka.JsonRpc.Client`.
+Устанавливаем nuget пакет `Tochka.JsonRpc.Client`.
 
-Реализуйте клиент, унаследованный от `JsonRpcClientBase`, и используйте методы базового класса `SendNotification`, `SendRequest` и `SendBatch` в своей логике.
+Реализуем клиент, унаследованный от `JsonRpcClientBase`, используем методы базового класса `SendNotification`, `SendRequest` и `SendBatch` в своей логике.
 
 ```cs
 internal class MyJsonRpcClientOptions : JsonRpcClientOptionsBase
@@ -27,14 +27,14 @@ internal class MyJsonRpcClient : JsonRpcClientBase
 }
 ```
 
-Зарегистрируйте настройки и реализацию клиента в `Program.cs`.
+Регистрируем настройки и реализацию клиента в `Program.cs`.
 
 ```cs
 builder.Services.Configure<MyJsonRpcClientOptions>(_ => { });
 builder.Services.AddJsonRpcClient<MyJsonRpcClient>(); // также доступна перегрузка для регистрации через интерфейс
 ```
-Этого достаточно для работы! Теперь вы можете использовать клиент в своем коде для отправки запросов и обработки ответов.
-Посмотрите остальные страницы для более продвинутого использования:
+Этого достаточно для работы! Теперь можно использовать клиент в своем коде для отправки запросов и обработки ответов.
+Для более продвинутого использования читаем дальше:
 
 - [Примеры](examples)
 - [Конфигурация](configuration)
