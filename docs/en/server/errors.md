@@ -42,8 +42,7 @@ This approach is not recommended because there is no reason to avoid `IActionRes
 
 ## Early pipeline exceptions
 
-Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON-RPC error responses, but serialized differently,
-because there it is not known yet which serializer to use. See [Serialization](serialization).
+Exceptions thrown before it is known what action is going to be invoked are wrapped into JSON-RPC error responses, but serialized differently, because it is not known yet which serializer to use. See [Serialization](serialization).
 
 ## Exceptions thrown by middleware before `JsonRpcMiddleware`
 

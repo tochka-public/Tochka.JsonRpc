@@ -1,30 +1,30 @@
-# Сервер/Краткое руководство
+# Сервер/Быстрый старт
 
 ## Установка
 
-Установите nuget пакет `Tochka.JsonRpc.Server`. Затем, в `Program.cs`:
+Ставим nuget пакет `Tochka.JsonRpc.Server`. Затем, в `Program.cs`:
 
-* Зарегистрируйте стандартные ASP.NET Core контроллеры: `AddControllers()`
-* Добавьте необходимые сервисы: `AddJsonRpcServer()`
-* Как можно раньше добавьте мидлварь: `UseJsonRpc()`
-* Добавьте Endpoint Routing к контроллерам стандартным способом: `app.UseRouting()` и `app.UseEndpoints(static c => c.MapControllers())`
+* Регистрируем стандартные ASP.NET Core контроллеры: `AddControllers()`
+* Добавляем необходимые сервисы: `AddJsonRpcServer()`
+* Как можно раньше добавляем мидлварь: `UseJsonRpc()`
+* Добавляем Endpoint Routing к контроллерам стандартным способом: `app.UseRouting()` и `app.UseEndpoints(static c => c.MapControllers())`
 
 ```cs
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(); // <-- Зарегистрируйте контроллеры (также как для REST)
-builder.Services.AddJsonRpcServer(); // <-- Зарегистрируйте сервисы библиотеки
+builder.Services.AddControllers(); // <-- Регистрируем контроллеры (также как для REST)
+builder.Services.AddJsonRpcServer(); // <-- Регистрируем сервисы библиотеки
 
 var app = builder.Build();
 
-app.UseJsonRpc(); // <-- Добавьте мидлварь
-app.UseRouting(); // <-- Добавьте роутинг (также как для REST)
-app.UseEndpoints(static c => c.MapControllers()) // <-- Добавьте эндпоинты (также как для REST)
+app.UseJsonRpc(); // <-- Добавляем мидлварь
+app.UseRouting(); // <-- Добавляем роутинг (также как для REST)
+app.UseEndpoints(static c => c.MapControllers()) // <-- Добавляем эндпоинты (также как для REST)
 
 await app.RunAsync();
 ```
 
-Пишите контроллеры для своего API аналогично тому, как это делается для REST, но вместо наследования от `ControllerBase`, наследуйте их от `JsonRpcControllerBase`. Вам не нужно использовать дополнительные атрибуты, специальное именование или конструкторы.
+Пишем контроллеры для своего API аналогично тому, как это делается для REST, но вместо наследования от `ControllerBase`, наследуемся от `JsonRpcControllerBase`. Не нужны никакие дополнительные атрибуты, специальное именование или конструкторы.
 
 ```cs
 public class EchoController : JsonRpcControllerBase
@@ -33,9 +33,9 @@ public class EchoController : JsonRpcControllerBase
 }
 ```
 
-## Отправьте запрос
+## Отправляем запрос
 
-Запустите приложение и отправьте POST запрос (дополнительные заголовки опущены)
+Запускаем приложение и отправляем POST запрос (дополнительные заголовки опущены)
 
 <table>
     <tr>
@@ -83,8 +83,8 @@ Content-Type: application/json; charset=utf-8
 </tr>
 </table>
 
-Этого достаточно для работы! Пишите контроллеры, методы, отправляйте батчи, используйте мидлвари, фильтры и атрибуты аналогично обычным контроллерам.
-Посмотрите остальные страницы для более продвинутого использования:
+Этого достаточно для работы! Можно писать контроллеры, методы, отправлять батчи, использовать мидлвари, фильтры и атрибуты аналогично обычным контроллерам.
+Про более продвинутого использование читаем дальше:
 
 - [Примеры](examples)
 - [Конфигурация](configuration)

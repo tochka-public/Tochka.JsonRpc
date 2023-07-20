@@ -7,6 +7,7 @@ Here are examples for different scenarios. Common things like default HTTP heade
 ## Request, Notification, Batch with default configuration
 
 Examples of basic JSON-RPC calls with default configuration
+
 <details>
 <summary>Expand</summary>
 

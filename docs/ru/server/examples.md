@@ -1,12 +1,13 @@
 # Сервер/Примеры
 
-Здесь представлены примеры для различных сценариев. Типичные подробности, вроде HTTP заголовков, создания/запуска приложения и регистрации контроллеров опущены для простоты.
+Здесь представлены примеры для различных сценариев. Обычные штуки, вроде HTTP заголовков, создания/запуска приложения и регистрации контроллеров опущены для краткости.
 
-> Для деталей о более продвинутом использовании смотрите страницу [Конфигурация](configuration)
+> Больше деталей и продвинутое использование: [Конфигурация](configuration)
 
-##  Запрос, Уведомление, Батч с настройками по умолчанию
+## Request, Notification, Batch с настройками по умолчанию
 
 Примеры базовых JSON-RPC вызовов с настройками по умолчанию
+
 <details>
 <summary>Развернуть</summary>
 
@@ -39,7 +40,7 @@ public class EchoController : JsonRpcControllerBase
 
 <td valign="top">
 
-JSON-RPC Запрос
+JSON-RPC Request
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -58,7 +59,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Стандартный ответ
+Обычный ответ
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -78,7 +79,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-JSON-RPC Уведомление
+JSON-RPC Notification
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -96,7 +97,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Ответ отсутствует согласно спецификации
+Нет ответа, по спецификации
 ```http
 HTTP/1.1 200 OK
 Content-Length: 0
@@ -109,7 +110,7 @@ Content-Length: 0
 
 <td valign="top">
 
-JSON-RPC Батч
+JSON-RPC Batch
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -153,7 +154,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Ответы для всех вызовов кроме уведомлений
+Ответы для всех элементов запроса, кроме notification-ов
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -188,7 +189,7 @@ Content-Type: application/json; charset=utf-8
 
 ## AllowRawResponses
 
-Небольшое нарушение протокола для возврата байтов, HTTP кодов ответа и т.п.
+Нарушаем протокол, чтобы вернуть байты, HTTP код и тп.
 <details>
 <summary>Развернуть</summary>
 
@@ -298,7 +299,7 @@ Location: https://google.com
 
 <td valign="top">
 
-JSON-RPC Батч
+JSON-RPC Batch
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -319,7 +320,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-JSON-RPC Ошибка
+JSON-RPC Error
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -402,7 +403,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-details равно null, если `DetailedResponseExceptions` равен **false**
+Отсутствуют details, если `DetailedResponseExceptions` равен **false**
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -482,7 +483,7 @@ Content-Type: application/json; charset=utf-8
 <details>
 <summary>Развернуть</summary>
 
-Все обработчики JSON-RPC должны иметь одинаковый префикс адреса (по умолчанию `/api/jsonrpc`), чтобы отличать их от REST запросов, если оба API используются в одном проекте. Если префикс не указан явно в адресе обработчика, то он будет добавлен автоматически. Для обработчиков, у которых адрес не указан вручную, префикс будет использоваться как полный адрес (без части `/controllerName`).
+Все методы JSON-RPC должны иметь одинаковый префикс адреса (по умолчанию `/api/jsonrpc`), чтобы их можно было отличить от REST запросов, если оба API используются в одном проекте. Если префикс не указан явно в route метода, то он будет добавлен автоматически. Для методов, у которых адрес не указан вручную, префикс будет использоваться как полный route (без части `/controllerName`).
 
 Изменение адреса по умолчанию и переопределение его для контроллера или метода:
 > `Program.cs`
@@ -494,12 +495,12 @@ app.UseJsonRpc();
 
 > `UsersController.cs`
 ```cs
-/* Переопределение через [Route] также доступно здесь */
+/* Здесь тоже можно переопределить [Route] */
 public class UsersController : JsonRpcControllerBase
 {
     public List<string> GetNames() => new() { "Alice", "Bob" };
 
-    [Route("/admin_api")] // добавить пользователя в БД и вернуть ID
+    [Route("/admin_api")] // добавляем пользователя в БД и возвращаем ID
     public Guid Create(string name) => Guid.NewGuid();
 }
 ```
@@ -558,7 +559,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Запрос Create на переопределенный адрес без установленного префикса
+Запрос Create на переопределенный адрес без префикса
 ```http
 POST /admin_api HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -590,7 +591,7 @@ Content-Length: 0
 
 <td valign="top">
 
-Запрос Create на переопределенный адрес с установленным префиксом
+Запрос Create на переопределенный адрес с префиксом
 ```http
 POST /public_api/admin_api HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -631,7 +632,7 @@ Content-Type: application/json; charset=utf-8
 
 ## Method
 
-Изменение привязки поля `method` к контроллерам и методам. Поле `method` из запроса может быть отправлено в разных форматах в зависимости от глобальной настройки: как `controller.action` или как `action`. Также можно вручную установить значение через `JsonRpcMethodAttribute`.
+Изменение сравнения поля `method` с контроллерами и методами. Поле `method` в запросе можно трактовать по-разному, в зависимости от глобальной настройки: как `controller.action` или как `action`. Также можно вручную установить значение через `JsonRpcMethodAttribute`.
 
 <details>
 <summary>Развернуть</summary>
@@ -646,10 +647,10 @@ app.UseJsonRpc();
 
 > `EchoController.cs`
 ```cs
-/* Переопределение через [JsonRpcMethodStyle] также доступно здесь */
+/* Здесь тоже можно переопределить [JsonRpcMethodStyle] */
 public class EchoController : JsonRpcControllerBase
 {
-    /* Переопределение через [JsonRpcMethodStyle] или [JsonRpcMethod] также доступно здесь */
+    /* Здесь тоже можно переопределить [JsonRpcMethodStyle] или [JsonRpcMethod] */
     public string ToLower(string value) => value.ToLowerInvariant();
 
     [JsonRpcMethod("to upper")]
@@ -749,7 +750,7 @@ Content-Type: application/json; charset=utf-8
 
 <td valign="top">
 
-Запрос с установленным вручную значением method (установлено через `JsonRpcMethodAttribute`)
+Запрос с установленным вручную method (через `JsonRpcMethodAttribute`)
 ```http
 POST /api/jsonrpc HTTP/1.1
 Content-Type: application/json; charset=utf-8
@@ -768,7 +769,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Response from `EchoController.ToUpper`
+Ответ от `EchoController.ToUpper`
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -791,15 +792,15 @@ Content-Type: application/json; charset=utf-8
 
 ## Сериализация
 
-Изменение настроек сериализации JSON по умолчанию или их переопределение для контроллера/метода. Смотрите страницу [Сериализация](serialization) для подробностей.
+Изменение настроек сериализации JSON по умолчанию или их переопределение для контроллера/метода. Подробнее см. в [Сериализация](serialization).
 
 <details>
 <summary>Развернуть</summary>
 
-Обратите внимание как сериализация влияет на поля `params` и `method`.
+Обращаем внимание, как сериализация влияет на поля `params` и `method`.
 > `Program.cs`
 ```cs
-// Вы также можете использовать настройки из класса JsonRpcSerializerOptions
+// Еще можно использовать настройки из класса JsonRpcSerializerOptions
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 builder.Services.AddJsonRpcServer(options => options.DefaultDataJsonSerializerOptions = jsonSerializerOptions);
 
@@ -811,7 +812,7 @@ app.UseJsonRpc();
 
 > `SimpleCalcController.cs`
 ```cs
-/* Переопределение через [JsonRpcSerializerOptions] также доступно здесь */
+/* Здесь тоже можно переопределить [JsonRpcSerializerOptions] */
 public class SimpleCalcController : JsonRpcControllerBase
 {
     public object SubtractIntegers(int firstValue, int secondValue) => new
@@ -821,7 +822,7 @@ public class SimpleCalcController : JsonRpcControllerBase
         firstMinusSecond = firstValue - secondValue
     };
 
-    // ВАЖНО: SnakeCaseJsonSerializerOptionsProvider Должен быть зарегистрирован в DI как IJsonSerializerOptionsProvider
+    // ВАЖНО: SnakeCaseJsonSerializerOptionsProvider должен быть зарегистрирован в DI как IJsonSerializerOptionsProvider
     [JsonRpcSerializerOptions(typeof(SnakeCaseJsonSerializerOptionsProvider))]
     public object AddIntegers(int firstValue, int secondValue) => new
     {
@@ -935,12 +936,12 @@ Content-Type: application/json; charset=utf-8
 </details>
 
 
-## Привязка моделей
+## Binding
 
-Изменение привязки поля `params` к аргументам метода. Смотрите [Привязка моделей](binding) для подробностей.
+Изменение биндинга поля `params` в аргументы метода. Подробности см. в [Binding](binding).
 
 <details>
-<summary>Поведение по умолчанию: params привязывается к аргументам метода. Значение поля params может быть [] или {} согласно спецификации</summary>
+<summary>Поведение по умолчанию: params биндится в аргументы метода. Значение поля params может быть [] или {} согласно спецификации</summary>
 
 <table>
 <tr>
@@ -976,7 +977,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`params` привязывается к аргументам метода по именам
+`params` биндится в аргументы метода по именам
 ```cs
 public void Foo(int bar, string baz)
 {
@@ -1012,7 +1013,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`params` привязывается к аргументам метода по индексам
+`params` биндится в аргументы метода по индексам
 ```cs
 public void Foo(int bar, string baz)
 {
@@ -1030,7 +1031,7 @@ public void Foo(int bar, string baz)
 
 
 <details>
-<summary>Привязка всего объекта params к одной модели, например, когда в модели много полей</summary>
+<summary>Биндинг всего объекта params к одной модели, например, когда в модели много полей</summary>
 
 <table>
 <tr>
@@ -1066,7 +1067,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-`params` привязывается к одному аргументу метода
+`params` биндится в один аргумент метода
 ```cs
 public record Data(int Bar, string Baz);
 
@@ -1104,7 +1105,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Ошибка, потому что элементы массива не могут быть привязаны к полям объекта
+Ошибка, потому что элементы массива не биндятся в поля объекта
 ```cs
 public record Data(int Bar, string Baz);
 
@@ -1139,7 +1140,7 @@ public void Foo([FromParams(BindingStyle.Object)] Data data)
 
 
 <details>
-<summary>Привязка всего массива params к одной коллекции, например, когда в запросе может быть неопределенное количество параметров</summary>
+<summary>Биндинг всего массива params к одной коллекции, например, когда в запросе может быть неопределенное количество параметров</summary>
 
 <table>
 <tr>
@@ -1175,7 +1176,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Ошибка, потому что поля объекта не могут быть привязаны к элементам массива
+Ошибка, потому что поля объекта не биндятся в элементы массива
 ```cs
 public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 {
@@ -1225,7 +1226,7 @@ Content-Type: application/json; charset=utf-8
 </td>
 <td valign="top">
 
-Элементы массива привязываются к коллекции
+Элементы массива биндятся в коллекцию
 ```cs
 public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 {
@@ -1244,20 +1245,20 @@ public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 
 
 <details>
-<summary>Использование сразу нескольких источников</summary>
+<summary>Использование разных бинжеров</summary>
 
-Также попробуйте значения по умолчанию, object, dynamic и собственную сериализацию...
+Также можно попробовать значения по умолчанию, object, dynamic и собственную сериализацию...
 ```cs
 public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices] ICustomService service, CancellationToken token)
 {
-    // bar, baz привязываются по умолчанию
-    // data привязывается согласно указанному поведению
-    // service и token привязываются фреймворком
+    // bar, baz биндятся по умолчанию
+    // data биндится согласно указанному поведению
+    // service и token биндятся фреймворком
 }
 
 public void Foo2(int? bar, string baz = "default_value")
 {
-    // В запросе "params" может содержать nullable "bar" и полностью опустить поле "baz"
+    // В запросе "params" может содержать nullable "bar" и полностью, а поле "baz" может полностью отсутствовать
 }
 ```
 
@@ -1268,7 +1269,7 @@ public void Foo2(int? bar, string baz = "default_value")
 <details>
 <summary>Развернуть</summary>
 
-Для удобства добавлено несколько методов расширения для `HttpContext`. Полезно для использования в мидлварях и фильтрах.
+Для удобства добавлено несколько extension-методов для `HttpContext`. Полезно для использования в мидлварях и фильтрах.
 
 Получение объекта JSON-RPC вызова:
 ```cs
@@ -1294,7 +1295,7 @@ var id = (call as UntypedResponse)?.Id;
 var result = call.Result
 ```
 
-Проверка, является ли текущий вызов частью батч запроса:
+Проверка, является ли текущий вызов частью batch-запроса:
 ```cs
 var isBatch = HttpContext.JsonRpcRequestIsBatch();
 
@@ -1304,7 +1305,7 @@ if (isBatch)
 }
 ```
 
-Ручная установка ответа. Осторожно: он может быть позже перезаписан фильтрами!
+Ручная установка ответа. Осторожно: его могут перезаписать фильтры!
 ```cs
 var response = new UntypedResponse(request.Id, result)
 
@@ -1315,12 +1316,12 @@ HttpContext.SetJsonRpcResponse(response);
 
 ## Ошибки и исключения
 
-Для начала посмотрите [Ошибки](errors).
+Для начала см. [Ошибки](errors).
 
 <details>
 <summary>Разные способы вернуть ошибку из метода</summary>
 
-Рассмотрим методы в данном контроллере. Ниже представлены примеры результатов их работы. HTTP заголовки опущены, код ответа всегда `200 OK`.
+Рассмотрим методы в данном контроллере. Ниже будут примеры того, что они возвращают. HTTP заголовки опущены, код ответа всегда `200 OK`.
 
 ```cs
 public record MyData(int Bar, string Baz);
@@ -1329,7 +1330,7 @@ public class FailController : JsonRpcControllerBase
 {
     private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
     public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
-    // методы представлены в примерах ниже
+    // см. методы в примерах ниже
 }
 ```
 
