@@ -12,7 +12,7 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 public sealed record OpenRpcMethod(string Name)
 {
     /// <summary>
-    /// REQUIRED. The cannonical name for the method. The name MUST be unique within the methods array.
+    /// REQUIRED. The canonical name for the method. The name MUST be unique within the methods array.
     /// </summary>
     public string Name { get; set; } = Name;
 
