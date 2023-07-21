@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
@@ -6,11 +7,12 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// Describes the interface for the given method name.
 /// The method name is used as the method field of the JSON-RPC body. It therefore MUST be unique.
 /// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcMethod(string Name)
 {
     /// <summary>
-    /// REQUIRED. The cannonical name for the method. The name MUST be unique within the methods array.
+    /// REQUIRED. The canonical name for the method. The name MUST be unique within the methods array.
     /// </summary>
     public string Name { get; set; } = Name;
 

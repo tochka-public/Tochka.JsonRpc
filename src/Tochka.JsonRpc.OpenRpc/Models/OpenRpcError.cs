@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// Defines an application level error.
 /// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcError(int Code, string Message)
 {

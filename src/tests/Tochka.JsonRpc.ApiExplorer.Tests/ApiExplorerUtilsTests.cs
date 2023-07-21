@@ -4,12 +4,12 @@ using NUnit.Framework;
 namespace Tochka.JsonRpc.ApiExplorer.Tests;
 
 [TestFixture]
-internal class UtilsTests
+internal class ApiExplorerUtilsTests
 {
     [Test]
     public void GetDocumentName_TypeIsNull_ReturnDefault()
     {
-        var result = Utils.GetDocumentName(null);
+        var result = ApiExplorerUtils.GetDocumentName(null);
 
         result.Should().Be(ApiExplorerConstants.DefaultDocumentName);
     }
@@ -17,7 +17,7 @@ internal class UtilsTests
     [Test]
     public void GetDocumentName_TypeNameEndsWithInterfaceName_AddLowercaseTypeNameStart()
     {
-        var result = Utils.GetDocumentName(typeof(SnakeCaseJsonSerializerOptionsProvider));
+        var result = ApiExplorerUtils.GetDocumentName(typeof(SnakeCaseJsonSerializerOptionsProvider));
 
         result.Should().Be($"{ApiExplorerConstants.DefaultDocumentName}_snakecase");
     }
@@ -25,7 +25,7 @@ internal class UtilsTests
     [Test]
     public void GetDocumentName_TypeNameStartsWithInterfaceName_AddLowercaseTypeNameEnd()
     {
-        var result = Utils.GetDocumentName(typeof(JsonSerializerOptionsProviderCamelCase));
+        var result = ApiExplorerUtils.GetDocumentName(typeof(JsonSerializerOptionsProviderCamelCase));
 
         result.Should().Be($"{ApiExplorerConstants.DefaultDocumentName}_camelcase");
     }
@@ -33,7 +33,7 @@ internal class UtilsTests
     [Test]
     public void GetDocumentName_TypeNameDoesntContainInterfaceName_AddLowercaseTypeName()
     {
-        var result = Utils.GetDocumentName(typeof(PascalCaseProvider));
+        var result = ApiExplorerUtils.GetDocumentName(typeof(PascalCaseProvider));
 
         result.Should().Be($"{ApiExplorerConstants.DefaultDocumentName}_pascalcaseprovider");
     }

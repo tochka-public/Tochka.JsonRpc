@@ -1,9 +1,17 @@
-﻿using Tochka.JsonRpc.Server.Serialization;
+﻿using JetBrains.Annotations;
+using Tochka.JsonRpc.Server.Serialization;
 
 namespace Tochka.JsonRpc.ApiExplorer;
 
-public static class Utils
+/// <summary>
+/// Helpers for ApiExplorer logic
+/// </summary>
+[PublicAPI]
+public static class ApiExplorerUtils
 {
+    /// <summary>
+    /// Generate document name based on Type name of serializer options provider
+    /// </summary>
     public static string GetDocumentName(Type? serializerOptionsProviderType)
     {
         if (serializerOptionsProviderType == null)

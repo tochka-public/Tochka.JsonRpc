@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// The Example object is an object that defines an example that is intended to match the schema of a given <see cref="OpenRpcContentDescriptor" />.
 /// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcExample
 {

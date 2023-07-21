@@ -1,5 +1,8 @@
-﻿namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿using JetBrains.Annotations;
 
+namespace Tochka.JsonRpc.OpenRpc.Models;
+
+[PublicAPI]
 public enum OpenRpcParamStructure
 {
     Either,

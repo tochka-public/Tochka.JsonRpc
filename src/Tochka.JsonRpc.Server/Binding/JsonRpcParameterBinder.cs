@@ -7,6 +7,7 @@ using Tochka.JsonRpc.Server.Metadata;
 
 namespace Tochka.JsonRpc.Server.Binding;
 
+/// <inheritdoc />
 internal class JsonRpcParameterBinder : IJsonRpcParameterBinder
 {
     private readonly ILogger<JsonRpcParameterBinder> log;

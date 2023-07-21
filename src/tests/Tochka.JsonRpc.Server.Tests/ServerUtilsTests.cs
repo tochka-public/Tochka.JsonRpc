@@ -8,7 +8,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests;
 
 [TestFixture]
-internal class UtilsTests
+internal class ServerUtilsTests
 {
     [Test]
     public void GetDataJsonSerializerOptions_NoCustomSerializer_ReturnDefaultDataJsonSerializerOptions()
@@ -17,7 +17,7 @@ internal class UtilsTests
         var options = new JsonRpcServerOptions();
         var serializerOptionsProviders = Array.Empty<IJsonSerializerOptionsProvider>();
 
-        var result = Utils.GetDataJsonSerializerOptions(metadata, options, serializerOptionsProviders);
+        var result = ServerUtils.GetDataJsonSerializerOptions(metadata, options, serializerOptionsProviders);
 
         result.Should().Be(options.DefaultDataJsonSerializerOptions);
     }
@@ -32,7 +32,7 @@ internal class UtilsTests
         var options = new JsonRpcServerOptions();
         var serializerOptionsProviders = Array.Empty<IJsonSerializerOptionsProvider>();
 
-        var action = () => Utils.GetDataJsonSerializerOptions(metadata, options, serializerOptionsProviders);
+        var action = () => ServerUtils.GetDataJsonSerializerOptions(metadata, options, serializerOptionsProviders);
 
         action.Should().Throw<ArgumentException>();
     }
@@ -51,7 +51,7 @@ internal class UtilsTests
             provider
         };
 
-        var result = Utils.GetDataJsonSerializerOptions(metadata, options, serializerOptionsProviders);
+        var result = ServerUtils.GetDataJsonSerializerOptions(metadata, options, serializerOptionsProviders);
 
         result.Should().Be(provider.Options);
     }
@@ -61,7 +61,7 @@ internal class UtilsTests
     {
         var serializerOptionsProviders = Array.Empty<IJsonSerializerOptionsProvider>();
 
-        var action = () => Utils.GetJsonSerializerOptions(serializerOptionsProviders, typeof(SnakeCaseJsonSerializerOptionsProvider));
+        var action = () => ServerUtils.GetJsonSerializerOptions(serializerOptionsProviders, typeof(SnakeCaseJsonSerializerOptionsProvider));
 
         action.Should().Throw<ArgumentException>();
     }
@@ -75,7 +75,7 @@ internal class UtilsTests
             provider
         };
 
-        var result = Utils.GetJsonSerializerOptions(serializerOptionsProviders, typeof(CamelCaseJsonSerializerOptionsProvider));
+        var result = ServerUtils.GetJsonSerializerOptions(serializerOptionsProviders, typeof(CamelCaseJsonSerializerOptionsProvider));
 
         result.Should().Be(provider.Options);
     }

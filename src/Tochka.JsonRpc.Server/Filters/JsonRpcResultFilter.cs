@@ -15,6 +15,10 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Filters;
 
+/// <inheritdoc />
+/// <summary>
+/// Filter for JSON-RPC actions to to convert <see cref="IActionResult" /> to JSON-RPC responses
+/// </summary>
 internal class JsonRpcResultFilter : IAlwaysRunResultFilter
 {
     private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
@@ -43,7 +47,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
             return;
         }
 
-        var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(context.ActionDescriptor.EndpointMetadata, serverOptions, serializerOptionsProviders);
+        var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(context.ActionDescriptor.EndpointMetadata, serverOptions, serializerOptionsProviders);
         var response = GetResult(context.Result);
         if (response is IActionResult)
         {

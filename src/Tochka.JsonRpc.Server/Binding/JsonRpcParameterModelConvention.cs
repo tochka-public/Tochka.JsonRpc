@@ -9,6 +9,10 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Binding;
 
+/// <inheritdoc />
+/// <summary>
+/// <see cref="IParameterModelConvention" /> to add binding info and metadata to parameters of JSON-RPC endpoints
+/// </summary>
 internal class JsonRpcParameterModelConvention : IParameterModelConvention
 {
     private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
@@ -39,7 +43,7 @@ internal class JsonRpcParameterModelConvention : IParameterModelConvention
         var isOptional = parameter.ParameterInfo.IsOptional;
         foreach (var actionSelector in parameter.Action.Selectors)
         {
-            var jsonSerializerOptions = Utils.GetDataJsonSerializerOptions(actionSelector.EndpointMetadata, options, serializerOptionsProviders);
+            var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(actionSelector.EndpointMetadata, options, serializerOptionsProviders);
             var propertyName = jsonSerializerOptions.PropertyNamingPolicy!.ConvertName(parameter.ParameterName);
             var parametersMetadata = actionSelector.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
             if (parametersMetadata == null)

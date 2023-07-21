@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Json.Schema;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
@@ -7,6 +8,7 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// Content Descriptors are objects that do just as they suggest - describe content.
 /// They are reusable ways of describing either parameters or result. They MUST have a schema.
 /// </summary>
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcContentDescriptor(string Name, JsonSchema Schema)
 {

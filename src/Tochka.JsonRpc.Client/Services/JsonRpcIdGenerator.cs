@@ -1,11 +1,15 @@
-﻿using Tochka.JsonRpc.Common.Models.Id;
+﻿using JetBrains.Annotations;
+using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Client.Services;
 
+/// <inheritdoc />
+[PublicAPI]
 public sealed class JsonRpcIdGenerator : IJsonRpcIdGenerator
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Creates string ID from GUID
+    /// Creates string id from Guid
     /// </summary>
     public IRpcId GenerateId()
     {

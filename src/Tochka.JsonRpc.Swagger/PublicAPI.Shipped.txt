@@ -1,0 +1,14 @@
+#nullable enable
+static Tochka.JsonRpc.Swagger.Extensions.AddSwaggerWithJsonRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.Swagger.Extensions.AddSwaggerWithJsonRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly, Microsoft.OpenApi.Models.OpenApiInfo! info) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.Swagger.Extensions.AddSwaggerWithJsonRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly, Microsoft.OpenApi.Models.OpenApiInfo! info, System.Action<Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions!>! setupAction) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.Swagger.Extensions.AddSwaggerWithJsonRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly, System.Action<Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions!>! setupAction) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.Swagger.Extensions.JsonRpcSwaggerEndpoints(this Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptions! options, System.IServiceProvider! services) -> void
+static Tochka.JsonRpc.Swagger.Extensions.JsonRpcSwaggerEndpoints(this Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptions! options, System.IServiceProvider! services, string! name) -> void
+Tochka.JsonRpc.Swagger.Extensions
+Tochka.JsonRpc.Swagger.JsonRpcPropertiesFilter
+Tochka.JsonRpc.Swagger.JsonRpcPropertiesFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema! schema, Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext! context) -> void
+Tochka.JsonRpc.Swagger.JsonRpcPropertiesFilter.JsonRpcPropertiesFilter() -> void
+Tochka.JsonRpc.Swagger.JsonRpcSchemaGenerator
+Tochka.JsonRpc.Swagger.JsonRpcSchemaGenerator.GenerateSchema(System.Type! modelType, Swashbuckle.AspNetCore.SwaggerGen.SchemaRepository! schemaRepository, System.Reflection.MemberInfo? memberInfo = null, System.Reflection.ParameterInfo? parameterInfo = null, Microsoft.AspNetCore.Mvc.ApiExplorer.ApiParameterRouteInfo? routeInfo = null) -> Microsoft.OpenApi.Models.OpenApiSchema!
+Tochka.JsonRpc.Swagger.JsonRpcSchemaGenerator.JsonRpcSchemaGenerator(Swashbuckle.AspNetCore.SwaggerGen.SchemaGeneratorOptions! generatorOptions, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! serializerOptionsProviders, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void

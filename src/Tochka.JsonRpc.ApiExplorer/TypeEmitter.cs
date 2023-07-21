@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
 namespace Tochka.JsonRpc.ApiExplorer;
 
+/// <inheritdoc />
+[PublicAPI]
 public class TypeEmitter : ITypeEmitter
 {
     private readonly ModuleBuilder moduleBuilder;
@@ -15,9 +18,9 @@ public class TypeEmitter : ITypeEmitter
     public TypeEmitter(ILogger<TypeEmitter> log)
     {
         this.log = log;
-        var assemblyName = new AssemblyName(ApiExplorerConstants.GeneratedModelsAssemblyId);
+        var assemblyName = new AssemblyName(ApiExplorerConstants.GeneratedModelsAssemblyName);
         var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
-        moduleBuilder = assemblyBuilder.DefineDynamicModule(ApiExplorerConstants.GeneratedModelsAssemblyId);
+        moduleBuilder = assemblyBuilder.DefineDynamicModule(ApiExplorerConstants.GeneratedModelsAssemblyName);
     }
 
     public Type CreateRequestType(string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType)
@@ -50,7 +53,6 @@ public class TypeEmitter : ITypeEmitter
     /// <summary>
     /// Combine multiple arguments into one type or use type directly if impossible to create descendant
     /// </summary>
-    /// <returns></returns>
     private Type GetParamsType(string name, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams)
     {
         // Can't inherit from non-public or nested or sealed, don't want to deal with valuetypes, default public constructor required
@@ -84,9 +86,8 @@ public class TypeEmitter : ITypeEmitter
     }
 
     /// <summary>
-    /// Create new type with attribute
+    /// Create new type with JsonRpcTypeMetadataAttribute
     /// </summary>
-    /// <returns></returns>
     private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type innerType, Type? serializerOptionsProviderType, string methodName)
     {
         if (!innerType.IsPublic || innerType.IsNested)

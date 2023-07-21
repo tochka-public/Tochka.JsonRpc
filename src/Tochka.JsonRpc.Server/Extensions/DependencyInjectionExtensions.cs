@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -14,8 +15,17 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Extensions;
 
+/// <summary>
+/// Extensions to configure JSON-RPC API
+/// </summary>
+[PublicAPI]
 public static class DependencyInjectionExtensions
 {
+    /// <summary>
+    /// Register services required for JSON-RPC calls processing and configure server options
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
+    /// <param name="configureOptions">Delegate used to configure server options</param>
     public static IServiceCollection AddJsonRpcServer(this IServiceCollection services, Action<JsonRpcServerOptions> configureOptions)
     {
         services.Configure(configureOptions);
@@ -37,14 +47,23 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Register services required for JSON-RPC calls processing
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
     [ExcludeFromCodeCoverage]
     public static IServiceCollection AddJsonRpcServer(this IServiceCollection services) => services.AddJsonRpcServer(static _ => { });
 
+    /// <summary>
+    /// Use middleware to process JSON-RPC calls
+    /// </summary>
+    /// <param name="app">Application to add middleware to</param>
+    /// <exception cref="InvalidOperationException">If AddJsonRpcServer was not called before</exception>
     [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
     public static IApplicationBuilder UseJsonRpc(this IApplicationBuilder app)
     {
         EnsureRequiredServicesRegistered(app.ApplicationServices);
-        // Unfortunately there is no good way to check if UseRouting wasn't called before it
+        // Unfortunately there is no good way to check if UseRouting was called before it
         return app.UseMiddleware<JsonRpcMiddleware>();
     }
 

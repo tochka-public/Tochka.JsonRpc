@@ -1,0 +1,25 @@
+#nullable enable
+const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.DefaultDocumentName = "jsonrpc" -> string!
+const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.DefaultDocumentTitle = "JSON-RPC" -> string!
+const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.DefaultDocumentVersion = "v1" -> string!
+const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.GeneratedModelsAssemblyName = "JsonRpcGeneratedModelTypes" -> string!
+const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.MethodNameProperty = "methodName" -> string!
+static Tochka.JsonRpc.ApiExplorer.ApiExplorerUtils.GetDocumentName(System.Type? serializerOptionsProviderType) -> string!
+Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants
+Tochka.JsonRpc.ApiExplorer.ApiExplorerUtils
+Tochka.JsonRpc.ApiExplorer.ITypeEmitter
+Tochka.JsonRpc.ApiExplorer.ITypeEmitter.CreateRequestType(string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams, System.Type? serializerOptionsProviderType) -> System.Type!
+Tochka.JsonRpc.ApiExplorer.ITypeEmitter.CreateResponseType(string! methodName, System.Type! resultType, System.Type? serializerOptionsProviderType) -> System.Type!
+Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider
+Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider.JsonRpcDescriptionProvider(Tochka.JsonRpc.ApiExplorer.ITypeEmitter! typeEmitter, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider!>! log) -> void
+Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider.OnProvidersExecuted(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionProviderContext! context) -> void
+Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider.OnProvidersExecuting(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionProviderContext! context) -> void
+Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider.Order.get -> int
+Tochka.JsonRpc.ApiExplorer.JsonRpcTypeMetadataAttribute
+Tochka.JsonRpc.ApiExplorer.JsonRpcTypeMetadataAttribute.JsonRpcTypeMetadataAttribute(System.Type? serializerOptionsProviderType, string! methodName) -> void
+Tochka.JsonRpc.ApiExplorer.JsonRpcTypeMetadataAttribute.MethodName.get -> string!
+Tochka.JsonRpc.ApiExplorer.JsonRpcTypeMetadataAttribute.SerializerOptionsProviderType.get -> System.Type?
+Tochka.JsonRpc.ApiExplorer.TypeEmitter
+Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateRequestType(string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams, System.Type? serializerOptionsProviderType) -> System.Type!
+Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateResponseType(string! methodName, System.Type! resultType, System.Type? serializerOptionsProviderType) -> System.Type!
+Tochka.JsonRpc.ApiExplorer.TypeEmitter.TypeEmitter(Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.ApiExplorer.TypeEmitter!>! log) -> void

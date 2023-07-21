@@ -8,10 +8,19 @@ using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.Common;
 
+/// <summary>
+/// Predefined <see cref="JsonSerializerOptions" /> for "headers" and data serialization
+/// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static class JsonRpcSerializerOptions
 {
+    /// <summary>
+    /// Options to serialize JSON-RPC "headers": `id`, `jsonrpc`, etc.
+    /// </summary>
+    /// <remarks>
+    /// Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes.
+    /// </remarks>
     public static JsonSerializerOptions Headers { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
@@ -29,6 +38,9 @@ public static class JsonRpcSerializerOptions
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
+    /// <summary>
+    /// Options for data serialization with snake_case PropertyNamingPolicy and enums conversion
+    /// </summary>
     public static JsonSerializerOptions SnakeCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
@@ -37,6 +49,9 @@ public static class JsonRpcSerializerOptions
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
+    /// <summary>
+    /// Options for data serialization with camelCase PropertyNamingPolicy and enums conversion
+    /// </summary>
     public static JsonSerializerOptions CamelCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

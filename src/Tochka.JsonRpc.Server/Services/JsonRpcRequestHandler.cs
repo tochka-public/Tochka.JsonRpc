@@ -14,6 +14,7 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Services;
 
+/// <inheritdoc />
 internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
 {
     private readonly IJsonRpcExceptionWrapper exceptionWrapper;

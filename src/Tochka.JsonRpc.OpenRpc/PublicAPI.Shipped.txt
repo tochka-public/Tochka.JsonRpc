@@ -1,0 +1,233 @@
+#nullable enable
+const Tochka.JsonRpc.OpenRpc.OpenRpcConstants.DefaultDocumentPath = "openrpc/{documentName}.json" -> string!
+const Tochka.JsonRpc.OpenRpc.OpenRpcConstants.DefaultServerName = "JSON-RPC" -> string!
+const Tochka.JsonRpc.OpenRpc.OpenRpcConstants.DocumentTemplateParameterName = "documentName" -> string!
+const Tochka.JsonRpc.OpenRpc.OpenRpcConstants.SpecVersion = "1.2.6" -> string!
+static readonly Tochka.JsonRpc.OpenRpc.OpenRpcConstants.JsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
+static Tochka.JsonRpc.OpenRpc.Extensions.AddOpenRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.OpenRpc.Extensions.AddOpenRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly, System.Action<Tochka.JsonRpc.OpenRpc.OpenRpcOptions!>! setupAction) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.OpenRpc.Extensions.AddOpenRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly, Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.OpenRpc.Extensions.AddOpenRpc(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Reflection.Assembly! xmlDocAssembly, Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info, System.Action<Tochka.JsonRpc.OpenRpc.OpenRpcOptions!>! setupAction) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.OpenRpc.Extensions.MapOpenRpc(this Microsoft.AspNetCore.Routing.IEndpointRouteBuilder! endpoints) -> Microsoft.AspNetCore.Builder.IEndpointConventionBuilder!
+static Tochka.JsonRpc.OpenRpc.Extensions.OpenRpcDoc(this Tochka.JsonRpc.OpenRpc.OpenRpcOptions! options, string! name, Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info) -> void
+static Tochka.JsonRpc.OpenRpc.Extensions.UseOpenRpc(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
+Tochka.JsonRpc.OpenRpc.Extensions
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Components.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Components.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.ExternalDocs.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.ExternalDocs.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Info.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Info.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Methods.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod!>!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Methods.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.OpenRpc(Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! Info) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Openrpc.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Openrpc.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Servers.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpc.Servers.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.ContentDescriptors.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.ContentDescriptors.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Errors.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcError!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Errors.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.ExamplePairingObjects.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.ExamplePairingObjects.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Examples.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Examples.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Links.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Links.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Schemas.get -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Schemas.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Tags.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcComponents.Tags.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact.Email.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact.Email.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact.Name.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact.Url.get -> System.Uri?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact.Url.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Deprecated.get -> bool?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Deprecated.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Name.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.OpenRpcContentDescriptor(string! Name, Json.Schema.JsonSchema! Schema) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Required.get -> bool?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Required.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Schema.get -> Json.Schema.JsonSchema!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Schema.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.Code.get -> int
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.Code.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.Data.get -> object?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.Data.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.Message.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.Message.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcError.OpenRpcError(int Code, string! Message) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.ExternalValue.get -> System.Uri?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.ExternalValue.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Name.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Value.get -> object?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample.Value.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Name.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Params.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Params.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Result.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcExample?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Result.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation.OpenRpcExternalDocumentation(System.Uri! Url) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation.Url.get -> System.Uri!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation.Url.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Contact.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContact?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Contact.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.License.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.License.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.OpenRpcInfo(string! Title, string! Version) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.TermsOfService.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.TermsOfService.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Title.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Title.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Version.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo.Version.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense.Name.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense.OpenRpcLicense(string! Name) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense.Url.get -> System.Uri?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLicense.Url.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Method.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Method.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Name.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.OpenRpcLink(string! Name) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Params.get -> System.Collections.Generic.Dictionary<string!, object?>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Params.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Server.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Server.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Deprecated.get -> bool?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Deprecated.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Errors.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcError!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Errors.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Examples.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcExamplePairing!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Examples.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.ExternalDocs.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.ExternalDocs.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Links.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcLink!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Links.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Name.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.OpenRpcMethod(string! Name) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Params.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!>!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Params.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.ParamStructure.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.ParamStructure.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Result.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Result.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Servers.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Servers.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Tags.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Tags.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure.ByName = 1 -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure.ByPosition = 2 -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure.Either = 0 -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Name.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.OpenRpcServer(string! Name, System.Uri! Url) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Url.get -> System.Uri!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Url.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Variables.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServer.Variables.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.Default.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.Default.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.Enum.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.Enum.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcServerVariable.OpenRpcServerVariable(string! Default) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.Description.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.Description.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.ExternalDocs.get -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcExternalDocumentation?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.ExternalDocs.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.Name.get -> string!
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.Name.set -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.OpenRpcTag(string! Name) -> void
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.Summary.get -> string?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag.Summary.set -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcConstants
+Tochka.JsonRpc.OpenRpc.OpenRpcMiddleware
+Tochka.JsonRpc.OpenRpc.OpenRpcMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! httpContext, Tochka.JsonRpc.OpenRpc.Services.IOpenRpcDocumentGenerator! documentGenerator) -> System.Threading.Tasks.Task!
+Tochka.JsonRpc.OpenRpc.OpenRpcMiddleware.OpenRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.OpenRpc.OpenRpcOptions!>! options) -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.DefaultServerName.get -> string!
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.DefaultServerName.set -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.DocInclusionPredicate.get -> System.Func<string!, Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription!, bool>!
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.DocInclusionPredicate.set -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.Docs.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo!>!
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.Docs.set -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.DocumentPath.get -> string!
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.DocumentPath.set -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.IgnoreObsoleteActions.get -> bool
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.IgnoreObsoleteActions.set -> void
+Tochka.JsonRpc.OpenRpc.OpenRpcOptions.OpenRpcOptions() -> void
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator.GenerateForParameter(Namotion.Reflection.ContextualPropertyInfo! propertyInfo, string! methodName, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator.GenerateForProperty(Namotion.Reflection.ContextualPropertyInfo! propertyInfo, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator.GenerateForType(Namotion.Reflection.ContextualType! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcDocumentGenerator
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcDocumentGenerator.Generate(Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info, string! documentName, System.Uri! host) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpc!
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator.CreateOrRef(System.Type! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator.GetAllSchemas() -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator.GenerateForParameter(Namotion.Reflection.ContextualPropertyInfo! propertyInfo, string! methodName, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator.GenerateForProperty(Namotion.Reflection.ContextualPropertyInfo! propertyInfo, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator.GenerateForType(Namotion.Reflection.ContextualType! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator.OpenRpcContentDescriptorGenerator(Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator! schemaGenerator) -> void
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator.Generate(Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info, string! documentName, System.Uri! host) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpc!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator.OpenRpcDocumentGenerator(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiDescriptionGroupCollectionProvider! apiDescriptionsProvider, Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator! schemaGenerator, Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator! contentDescriptorGenerator, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! jsonSerializerOptionsProviders, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! serverOptions, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.OpenRpc.OpenRpcOptions!>! openRpcOptions, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator!>! log) -> void
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.CreateOrRef(System.Type! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.GetAllSchemas() -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.OpenRpcSchemaGenerator() -> void

@@ -1,10 +1,16 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Common.Converters;
 
+/// <inheritdoc />
+/// <summary>
+/// Deserialize response that can have Either result or error
+/// </summary>
+[PublicAPI]
 public class ResponseConverter : JsonConverter<IResponse>
 {
     // System.Text.Json can't serialize derived types:

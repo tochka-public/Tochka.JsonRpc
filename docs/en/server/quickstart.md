@@ -2,34 +2,34 @@
 
 ## Installation
 
-Install nuget package `Tochka.JsonRpc.Server`.
+Install nuget package `Tochka.JsonRpc.Server`. Then, in `Program.cs`:
 
-Register it in `Startup.cs` and set compatibility version. Note that `.AddJsonRpcServer()` is an extension of `IMvcBuilder`, not `IServiceCollection`. Add middleware as early as possible.
+* Register default ASP.NET Core Controllers as usual: `AddControllers()`
+* Add required services: `AddJsonRpcServer()`
+* Add middleware as early as possible: `UseJsonRpc()`
+* Add Endpoint Routing to controllers as you do normally: `app.UseRouting()` and `app.UseEndpoints(static c => c.MapControllers())`
 
 ```cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddMvc()
-        .AddJsonRpcServer()  // <-- add this
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  // <-- this is required because 2.1 disables endpoint routing
-}
+var builder = WebApplication.CreateBuilder(args);
 
-public void Configure(IApplicationBuilder app)
-{
-    app.UseMiddleware<JsonRpcMiddleware>();  // <-- add this
-    app.UseMvc();  // <-- this is required obviously because we work on top of MVC
-}
+builder.Services.AddControllers(); // <-- Register controllers (same as for REST)
+builder.Services.AddJsonRpcServer(); // <-- Register this library services
+
+var app = builder.Build();
+
+app.UseJsonRpc(); // <-- Add middleware
+app.UseRouting(); // <-- Add routing (same as for REST)
+app.UseEndpoints(static c => c.MapControllers()) // <-- Add endpoints (same as for REST)
+
+await app.RunAsync();
 ```
 
-Write your API controller as usual, but instead of inheriting from `Controller`, inherit from `JsonRpcController`. To make it work, you don't need any attributes, special naming or constructors.
+Write your API controller as if it was REST, but instead of inheriting from `ControllerBase`, inherit from `JsonRpcControllerBase`. To make it work, you don't need any attributes, special naming or constructors.
 
 ```cs
-public class EchoController : JsonRpcController
+public class EchoController : JsonRpcControllerBase
 {
-    public string ToLower(string value)
-    {
-        return value.ToLower();
-    }
+    public string ToLower(string value) => value.ToLowerInvariant();
 }
 ```
 
@@ -56,11 +56,11 @@ Content-Type: application/json
 ```json
 {
     "id": 1,
-    "jsonrpc": "2.0",
     "method": "echo.to_lower",
     "params": {
         "value": "TEST"
-    }
+    },
+    "jsonrpc": "2.0"
 }
 ```
 
@@ -74,8 +74,8 @@ Content-Type: application/json; charset=utf-8
 ```json
 {
     "id": 1,
-    "jsonrpc": "2.0",
-    "result": "test"
+    "result": "test",
+    "jsonrpc": "2.0"
 }
 ```
 
@@ -83,7 +83,7 @@ Content-Type: application/json; charset=utf-8
 </tr>
 </table>
 
-That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like normal.
+That's it! Write more controllers, methods, send batches, add middlewares, filters and attributes like with regular controllers.
 Check out other pages for more advanced usage:
 
 - [Examples](examples)
