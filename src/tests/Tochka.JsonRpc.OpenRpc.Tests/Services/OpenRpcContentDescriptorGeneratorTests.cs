@@ -7,7 +7,6 @@ using Json.Schema;
 using Moq;
 using Namotion.Reflection;
 using NUnit.Framework;
-using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.OpenRpc.Services;
 using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Settings;

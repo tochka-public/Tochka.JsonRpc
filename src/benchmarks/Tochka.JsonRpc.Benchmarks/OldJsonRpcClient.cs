@@ -2,7 +2,6 @@
 using Moq;
 using Tochka.JsonRpc.V1.Client;
 using Tochka.JsonRpc.V1.Client.Services;
-using Tochka.JsonRpc.V1.Client.Settings;
 using Tochka.JsonRpc.V1.Common.Serializers;
 
 namespace Tochka.JsonRpc.Benchmarks;
