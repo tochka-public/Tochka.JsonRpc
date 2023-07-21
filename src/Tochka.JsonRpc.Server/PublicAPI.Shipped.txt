@@ -1,0 +1,177 @@
+#nullable enable
+static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.AddJsonRpcServer(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.AddJsonRpcServer(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! configureOptions) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.UseJsonRpc(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
+static Tochka.JsonRpc.Server.Extensions.ErrorExtensions.AsUntypedError(this Tochka.JsonRpc.Common.Models.Response.Errors.IError! error, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>!
+static Tochka.JsonRpc.Server.Extensions.ErrorExtensions.ThrowAsException(this Tochka.JsonRpc.Common.Models.Response.Errors.IError! error) -> void
+static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.GetJsonRpcCall(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> Tochka.JsonRpc.Common.Models.Request.ICall?
+static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.GetJsonRpcResponse(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.GetRawJsonRpcCall(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Text.Json.JsonDocument?
+static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.IsJsonRpcRequest(this Microsoft.AspNetCore.Http.HttpContext! httpContext, Microsoft.AspNetCore.Http.PathString jsonRpcPrefix) -> bool
+static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.JsonRpcRequestIsBatch(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> bool
+static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.SetJsonRpcResponse(this Microsoft.AspNetCore.Http.HttpContext! httpContext, Tochka.JsonRpc.Common.Models.Response.IResponse! response) -> void
+static Tochka.JsonRpc.Server.ServerUtils.GetDataJsonSerializerOptions(System.Collections.Generic.IEnumerable<object!>! endpointMetadata, Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions! serverOptions, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! providers) -> System.Text.Json.JsonSerializerOptions!
+static Tochka.JsonRpc.Server.ServerUtils.GetJsonSerializerOptions(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! providers, System.Type! providerType) -> System.Text.Json.JsonSerializerOptions!
+static Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.IsReserved(int code) -> bool
+static Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.IsServer(int code) -> bool
+static Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.IsSpecial(int code) -> bool
+Tochka.JsonRpc.Server.Attributes.FromParamsAttribute
+Tochka.JsonRpc.Server.Attributes.FromParamsAttribute.BinderType.get -> System.Type!
+Tochka.JsonRpc.Server.Attributes.FromParamsAttribute.BindingSource.get -> Microsoft.AspNetCore.Mvc.ModelBinding.BindingSource!
+Tochka.JsonRpc.Server.Attributes.FromParamsAttribute.BindingStyle.get -> Tochka.JsonRpc.Server.Settings.BindingStyle
+Tochka.JsonRpc.Server.Attributes.FromParamsAttribute.FromParamsAttribute(Tochka.JsonRpc.Server.Settings.BindingStyle bindingStyle) -> void
+Tochka.JsonRpc.Server.Attributes.JsonRpcControllerAttribute
+Tochka.JsonRpc.Server.Attributes.JsonRpcControllerAttribute.JsonRpcControllerAttribute() -> void
+Tochka.JsonRpc.Server.Attributes.JsonRpcMethodAttribute
+Tochka.JsonRpc.Server.Attributes.JsonRpcMethodAttribute.JsonRpcMethodAttribute(string! method) -> void
+Tochka.JsonRpc.Server.Attributes.JsonRpcMethodAttribute.Method.get -> string!
+Tochka.JsonRpc.Server.Attributes.JsonRpcMethodStyleAttribute
+Tochka.JsonRpc.Server.Attributes.JsonRpcMethodStyleAttribute.JsonRpcMethodStyleAttribute(Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle methodStyle) -> void
+Tochka.JsonRpc.Server.Attributes.JsonRpcMethodStyleAttribute.MethodStyle.get -> Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle
+Tochka.JsonRpc.Server.Attributes.JsonRpcSerializerOptionsAttribute
+Tochka.JsonRpc.Server.Attributes.JsonRpcSerializerOptionsAttribute.JsonRpcSerializerOptionsAttribute(System.Type! providerType) -> void
+Tochka.JsonRpc.Server.Attributes.JsonRpcSerializerOptionsAttribute.ProviderType.get -> System.Type!
+Tochka.JsonRpc.Server.Binding.IJsonRpcParameterBinder
+Tochka.JsonRpc.Server.Binding.IJsonRpcParameterBinder.SetResult(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext! bindingContext, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata, Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult! parseResult, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> void
+Tochka.JsonRpc.Server.Binding.IJsonRpcParamsParser
+Tochka.JsonRpc.Server.Binding.IJsonRpcParamsParser.Parse(System.Text.Json.JsonDocument! rawCall, System.Text.Json.JsonDocument? parameters, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata) -> Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult!
+Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder
+Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext! bindingContext) -> System.Threading.Tasks.Task!
+Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.JsonRpcModelBinder(Tochka.JsonRpc.Server.Binding.IJsonRpcParamsParser! paramsParser, Tochka.JsonRpc.Server.Binding.IJsonRpcParameterBinder! parameterBinder, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! serializerOptionsProviders, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.ErrorParseResult
+Tochka.JsonRpc.Server.Binding.ParseResults.ErrorParseResult.ErrorParseResult(string! Message, string! JsonKey) -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.ErrorParseResult.JsonKey.get -> string!
+Tochka.JsonRpc.Server.Binding.ParseResults.ErrorParseResult.JsonKey.init -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.ErrorParseResult.Message.get -> string!
+Tochka.JsonRpc.Server.Binding.ParseResults.ErrorParseResult.Message.init -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult
+Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult.JsonKey.get -> string!
+Tochka.JsonRpc.Server.Binding.ParseResults.NoParseResult
+Tochka.JsonRpc.Server.Binding.ParseResults.NoParseResult.JsonKey.get -> string!
+Tochka.JsonRpc.Server.Binding.ParseResults.NoParseResult.JsonKey.init -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.NoParseResult.NoParseResult(string! JsonKey) -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.NullParseResult
+Tochka.JsonRpc.Server.Binding.ParseResults.NullParseResult.JsonKey.get -> string!
+Tochka.JsonRpc.Server.Binding.ParseResults.NullParseResult.JsonKey.init -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.NullParseResult.NullParseResult(string! JsonKey) -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.SuccessParseResult
+Tochka.JsonRpc.Server.Binding.ParseResults.SuccessParseResult.JsonKey.get -> string!
+Tochka.JsonRpc.Server.Binding.ParseResults.SuccessParseResult.JsonKey.init -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.SuccessParseResult.SuccessParseResult(System.Text.Json.JsonElement Value, string! JsonKey) -> void
+Tochka.JsonRpc.Server.Binding.ParseResults.SuccessParseResult.Value.get -> System.Text.Json.JsonElement
+Tochka.JsonRpc.Server.Binding.ParseResults.SuccessParseResult.Value.init -> void
+Tochka.JsonRpc.Server.Exceptions.JsonRpcErrorException
+Tochka.JsonRpc.Server.Exceptions.JsonRpcErrorException.Error.get -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Exceptions.JsonRpcErrorException.JsonRpcErrorException(Tochka.JsonRpc.Common.Models.Response.Errors.IError! error) -> void
+Tochka.JsonRpc.Server.Exceptions.JsonRpcMethodNotFoundException
+Tochka.JsonRpc.Server.Exceptions.JsonRpcMethodNotFoundException.JsonRpcMethodNotFoundException(string! method) -> void
+Tochka.JsonRpc.Server.Exceptions.JsonRpcMethodNotFoundException.Method.get -> string!
+Tochka.JsonRpc.Server.Exceptions.JsonRpcServerException
+Tochka.JsonRpc.Server.Exceptions.JsonRpcServerException.JsonRpcServerException() -> void
+Tochka.JsonRpc.Server.Exceptions.JsonRpcServerException.JsonRpcServerException(string! message) -> void
+Tochka.JsonRpc.Server.Exceptions.JsonRpcServerException.JsonRpcServerException(string! message, System.Exception! innerException) -> void
+Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions
+Tochka.JsonRpc.Server.Extensions.ErrorExtensions
+Tochka.JsonRpc.Server.Extensions.HttpContextExtensions
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Call.set -> void
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.IsBatch.get -> bool
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.IsBatch.set -> void
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.RawCall.set -> void
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Response.set -> void
+Tochka.JsonRpc.Server.Features.JsonRpcFeature
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.Call.set -> void
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.IsBatch.get -> bool
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.IsBatch.set -> void
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.JsonRpcFeature() -> void
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.RawCall.set -> void
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+Tochka.JsonRpc.Server.Features.JsonRpcFeature.Response.set -> void
+Tochka.JsonRpc.Server.JsonRpcControllerBase
+Tochka.JsonRpc.Server.JsonRpcControllerBase.JsonRpcControllerBase() -> void
+Tochka.JsonRpc.Server.JsonRpcMiddleware
+Tochka.JsonRpc.Server.JsonRpcMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Threading.Tasks.Task!
+Tochka.JsonRpc.Server.JsonRpcMiddleware.JsonRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler! requestHandler, Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper! exceptionWrapper, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata
+Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata.JsonRpcActionParametersMetadata() -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata.Parameters.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata!>!
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.BindingStyle.get -> Tochka.JsonRpc.Server.Settings.BindingStyle
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.BindingStyle.init -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.IsOptional.get -> bool
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.IsOptional.init -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.JsonRpcParameterMetadata(string! PropertyName, int Position, Tochka.JsonRpc.Server.Settings.BindingStyle BindingStyle, bool IsOptional, string! OriginalName, System.Type! Type) -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.OriginalName.get -> string!
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.OriginalName.init -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.Position.get -> int
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.Position.init -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.PropertyName.get -> string!
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.PropertyName.init -> void
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.Type.get -> System.Type!
+Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata.Type.init -> void
+Tochka.JsonRpc.Server.Serialization.CamelCaseJsonSerializerOptionsProvider
+Tochka.JsonRpc.Server.Serialization.CamelCaseJsonSerializerOptionsProvider.CamelCaseJsonSerializerOptionsProvider() -> void
+Tochka.JsonRpc.Server.Serialization.CamelCaseJsonSerializerOptionsProvider.Options.get -> System.Text.Json.JsonSerializerOptions!
+Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider
+Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider.Options.get -> System.Text.Json.JsonSerializerOptions!
+Tochka.JsonRpc.Server.Serialization.SnakeCaseJsonSerializerOptionsProvider
+Tochka.JsonRpc.Server.Serialization.SnakeCaseJsonSerializerOptionsProvider.Options.get -> System.Text.Json.JsonSerializerOptions!
+Tochka.JsonRpc.Server.Serialization.SnakeCaseJsonSerializerOptionsProvider.SnakeCaseJsonSerializerOptionsProvider() -> void
+Tochka.JsonRpc.Server.ServerUtils
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.Error(int code, string! message, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.Exception(System.Exception! e) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.HttpError(int httpCode, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.InternalError(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.InvalidParams(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.InvalidRequest(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.MethodNotFound(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.NotFound(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.ParseError(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory.ServerError(int code, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper
+Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper.WrapGeneralException(System.Exception! exception, Tochka.JsonRpc.Common.Models.Id.IRpcId? id = null) -> Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse!
+Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper.WrapParseException(System.Exception! exception) -> Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse!
+Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler
+Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler.ProcessJsonRpcRequest(Tochka.JsonRpc.Common.Models.Request.Wrappers.IRequestWrapper? requestWrapper, Microsoft.AspNetCore.Http.HttpContext! httpContext, Microsoft.AspNetCore.Http.RequestDelegate! next) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper?>!
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.InternalError(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.InvalidParams(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.InvalidRequest(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.JsonRpcErrorFactory(Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory!>! log) -> void
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.MethodNotFound(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.ParseError(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.ServerError(int code, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Server.Settings.BindingStyle
+Tochka.JsonRpc.Server.Settings.BindingStyle.Array = 2 -> Tochka.JsonRpc.Server.Settings.BindingStyle
+Tochka.JsonRpc.Server.Settings.BindingStyle.Default = 0 -> Tochka.JsonRpc.Server.Settings.BindingStyle
+Tochka.JsonRpc.Server.Settings.BindingStyle.Object = 1 -> Tochka.JsonRpc.Server.Settings.BindingStyle
+Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle
+Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle.ActionOnly = 1 -> Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle
+Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle.ControllerAndAction = 0 -> Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.AllowRawResponses.get -> bool
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.AllowRawResponses.set -> void
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DefaultDataJsonSerializerOptions.get -> System.Text.Json.JsonSerializerOptions!
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DefaultDataJsonSerializerOptions.set -> void
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DefaultMethodStyle.get -> Tochka.JsonRpc.Server.Settings.JsonRpcMethodStyle
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DefaultMethodStyle.set -> void
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DetailedResponseExceptions.get -> bool
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DetailedResponseExceptions.set -> void
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.HeadersJsonSerializerOptions.get -> System.Text.Json.JsonSerializerOptions!
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.HeadersJsonSerializerOptions.set -> void
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.JsonRpcServerOptions() -> void
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.RoutePrefix.get -> Microsoft.AspNetCore.Http.PathString
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.RoutePrefix.set -> void
+virtual Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.Parse(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext! bindingContext, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult!>!
+virtual Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.SetResult(Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult! parseResult, Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext! bindingContext, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata) -> System.Threading.Tasks.Task!
+virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.Error(int code, string! message, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.Exception(System.Exception! e) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.HttpError(int httpCode, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.NotFound(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.WrapExceptions(object? errorData) -> object?

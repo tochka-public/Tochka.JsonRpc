@@ -1,107 +1,103 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Text.Json;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Tochka.JsonRpc.Common.Converters;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Request.Wrappers;
+using Tochka.JsonRpc.Common.Models.Response;
+using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
-using Tochka.JsonRpc.Common.Tests.Helpers;
+using Tochka.JsonRpc.TestUtils;
 
-namespace Tochka.JsonRpc.Common.Tests.Converters
+namespace Tochka.JsonRpc.Common.Tests.Converters;
+
+[TestFixture]
+internal class ResponseWrapperConverterTests
 {
-    public class ResponseWrapperConverterTests
+    [Test]
+    public void Serialize_Single()
     {
-        private ResponseWrapperConverter responseWrapperConverter;
+        const string id = "id";
+        IResponseWrapper wrapper = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), null));
 
-        [SetUp]
-        public void Setup()
-        {
-            responseWrapperConverter = new ResponseWrapperConverter();
-        }
+        var serialized = JsonSerializer.Serialize(wrapper, JsonRpcSerializerOptions.Headers);
 
-        [Test]
-        public void Test_WriteJson_Throws()
-        {
-            Action action = () => responseWrapperConverter.WriteJson(Mock.Of<JsonWriter>(), Mock.Of<IResponseWrapper>(), Mock.Of<JsonSerializer>());
-
-            action.Should().Throw<InvalidOperationException>();
-        }
-
-        [Test]
-        public void Test_ReadJson_ReturnsSingleForObject()
-        {
-            var json = new JObject().ToString();
-            var jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings()
+        var expected = $$"""
             {
-                Converters = new List<JsonConverter>()
-                {
-                    new MockResponseConverter()
-                }
-            });
-
-            var result = responseWrapperConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, jsonSerializer);
-
-            result.Should().BeOfType<SingleResponseWrapper>()
-                .Subject.Single.Should().NotBeNull();
-        }
-
-        [Test]
-        public void Test_ReadJson_ReturnsBatchForArray()
-        {
-            var jArray = new JArray
-            {
-                new JObject()
-            };
-            var json = jArray.ToString();
-            var jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings()
-            {
-                Converters = new List<JsonConverter>()
-                {
-                    new MockResponseConverter()
-                }
-            });
-
-            var result = responseWrapperConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, jsonSerializer);
-
-            result.Should().BeOfType<BatchResponseWrapper>();
-            var batch = result as BatchResponseWrapper;
-            batch.Batch.Should().HaveCount(1);
-            batch.Batch[0].Should().Be(Mock.Get(batch.Batch[0]).Object);
-        }
-
-        [TestCaseSource(typeof(ResponseWrapperConverterTests), nameof(BadJsonCases))]
-        public void Test_ReadJson_ThrowsOnBadJson(string json)
-        {
-            var jsonSerializer = JsonSerializer.Create();
-            Action action = () => responseWrapperConverter.ReadJson(CreateJsonReader(json), typeof(IRpcId), null, jsonSerializer);
-
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        private static IEnumerable BadJsonCases => BadJson.Select(data => new TestCaseData(data));
-
-        private static IEnumerable<string> BadJson
-        {
-            get
-            {
-                // Other possible values from ECMA-404, Section 5:
-                yield return "null";
-                yield return @"""""";
-                yield return @"""test""";
-                yield return "0";
-                yield return "0.1";
-                yield return "true";
-                yield return "false";
+                "id": "{{id}}",
+                "result": null,
+                "jsonrpc": "2.0"
             }
-        }
+            """.TrimAllLines();
+        serialized.TrimAllLines().Should().Be(expected);
+    }
 
-        private static JsonTextReader CreateJsonReader(string json) => new JsonTextReader(new StringReader(json));
+    [Test]
+    public void Serialize_Batch()
+    {
+        const string id = "id";
+        IResponseWrapper request = new BatchResponseWrapper(new List<IResponse> { new UntypedResponse(new StringRpcId(id), null) });
+
+        var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
+
+        var expected = $$"""
+            [
+                {
+                    "id": "{{id}}",
+                    "result": null,
+                    "jsonrpc": "2.0"
+                }
+            ]
+            """.TrimAllLines();
+        serialized.TrimAllLines().Should().Be(expected);
+    }
+
+    [Test]
+    public void Serialize_UnknownType_Throw()
+    {
+        var action = static () => JsonSerializer.Serialize(Mock.Of<IResponseWrapper>(), JsonRpcSerializerOptions.Headers);
+
+        action.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public void Deserialize_Single()
+    {
+        var json = """
+            {
+                "id": "id",
+                "result": null,
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, JsonRpcSerializerOptions.Headers);
+
+        deserialized.Should().BeOfType<SingleResponseWrapper>();
+    }
+
+    [Test]
+    public void Deserialize_Batch()
+    {
+        var json = "[]";
+
+        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, JsonRpcSerializerOptions.Headers);
+
+        deserialized.Should().BeOfType<BatchResponseWrapper>();
+    }
+
+    // Other possible values from ECMA-404, Section 5:
+    [TestCase("\"\"")]
+    [TestCase("\"str\"")]
+    [TestCase("0")]
+    [TestCase("0.1")]
+    [TestCase("true")]
+    [TestCase("false")]
+    public void Deserialize_UnknownType_Throw(string json)
+    {
+        var action = () => JsonSerializer.Deserialize<IResponseWrapper>(json, JsonRpcSerializerOptions.Headers);
+
+        action.Should().Throw<JsonRpcFormatException>();
     }
 }

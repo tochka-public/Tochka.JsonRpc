@@ -1,0 +1,90 @@
+name: Release nuget package
+
+on:
+  workflow_dispatch: # for manual running
+  push:
+    branches: # filtering for all branches to not trigger on tags
+      - '**'
+    paths-ignore:
+      - README.md
+      - docs/**
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: dotnet restore src/
+
+      - name: Build
+        run: dotnet build src/ --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test src/ --no-build --configuration Release
+  
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      changelog: ${{ steps.version.outputs.clean_changelog }}
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # required for version
+
+      - name: Get version and changelog
+        id: version
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          git-push: false
+          output-file: false
+          skip-git-pull: true
+          skip-version-file: true
+          skip-commit: true
+          skip-tag: true
+          pre-release: ${{ github.ref_name != 'master' }}
+          pre-release-identifier: ${{ github.ref_name }}.${{ github.sha }}
+          skip-on-empty: false
+
+      - name: Install dependencies
+        run: dotnet restore src/
+
+      - name: Build
+        run: dotnet build src/ --no-restore --configuration Release -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Pack
+        run: dotnet pack src/ --no-build --no-restore --configuration Release -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Push
+        env:
+          NUGET_URL: "https://api.nuget.org/v3/index.json"
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        run: dotnet nuget push "src/**/*.nupkg" --no-symbols --source $NUGET_URL --api-key $NUGET_KEY
+  
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]') && github.ref_name == 'master' && github.event_name != 'workflow_dispatch'"
+    steps:
+      - name: Publish GitHub release # creating tag and release with changelog
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.publish.outputs.tag }}
+          body: ${{ needs.publish.outputs.changelog }}

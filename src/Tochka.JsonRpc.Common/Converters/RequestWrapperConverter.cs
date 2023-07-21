@@ -1,42 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Tochka.JsonRpc.Common.Models.Request;
-using Tochka.JsonRpc.Common.Models.Request.Untyped;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
-namespace Tochka.JsonRpc.Common.Converters
+namespace Tochka.JsonRpc.Common.Converters;
+
+/// <inheritdoc />
+/// <summary>
+/// Deserialize request to single or batch from object/array
+/// </summary>
+[PublicAPI]
+public class RequestWrapperConverter : JsonConverter<IRequestWrapper>
 {
-    /// <summary>
-    /// Handle dumb rule of request being single or batch
-    /// </summary>
-    public class RequestWrapperConverter : JsonConverter<IRequestWrapper>
+    // NOTE: used in server to parse requests, no need for serialization
+    public override void Write(Utf8JsonWriter writer, IRequestWrapper value, JsonSerializerOptions options) =>
+        throw new InvalidOperationException();
+
+    [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for request wrappers")]
+    public override IRequestWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override void WriteJson(JsonWriter writer, IRequestWrapper value, JsonSerializer serializer)
+        var tokenType = reader.TokenType;
+        return tokenType switch
         {
-            // NOTE: used in server to parse requests, no need for serialization
-            throw new InvalidOperationException();
-        }
-
-        public override IRequestWrapper ReadJson(JsonReader reader, Type objectType, IRequestWrapper existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            var token = JToken.Load(reader);
-            var tokenType = token.Type;
-            switch (tokenType)
-            {
-                case JTokenType.Object:
-                    var request = token.ToObject<IUntypedCall>(serializer);
-                    return new SingleRequestWrapper() {Call = request};
-
-                case JTokenType.Array:
-                    var batch = token.ToObject<List<IUntypedCall>>(serializer);
-                    return new BatchRequestWrapper() {Batch = batch};
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, "Expected {} or [] as root element");
-            }
-        }
+            JsonTokenType.StartObject => new SingleRequestWrapper(JsonSerializer.Deserialize<JsonDocument>(ref reader, options)!),
+            JsonTokenType.StartArray => new BatchRequestWrapper(JsonSerializer.Deserialize<List<JsonDocument>>(ref reader, options)!),
+            _ => throw new JsonRpcFormatException($"Expected {{}} or [] as root element. Got {tokenType}")
+        };
     }
 }

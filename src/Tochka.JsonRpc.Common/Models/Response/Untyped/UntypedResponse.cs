@@ -1,22 +1,15 @@
-using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using JetBrains.Annotations;
+using Tochka.JsonRpc.Common.Models.Id;
 
-namespace Tochka.JsonRpc.Common.Models.Response.Untyped
-{
-    [ExcludeFromCodeCoverage]
-    public class UntypedResponse : Response<JToken>
-    {
-        /// <summary>
-        /// Set on deserialization. JSON content corresponding to result property
-        /// </summary>
-        [JsonIgnore]
-        public string RawResult { get; set; }
+namespace Tochka.JsonRpc.Common.Models.Response.Untyped;
 
-        /// <summary>
-        /// Set on deserialization. JSON content corresponding to id property
-        /// </summary>
-        [JsonIgnore]
-        public JValue RawId { get; set; }
-    }
-}
+/// <inheritdoc />
+/// <summary>
+/// Successful response with result as JsonDocument
+/// </summary>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public sealed record UntypedResponse(IRpcId Id, JsonDocument? Result, string Jsonrpc = JsonRpcConstants.Version)
+    : Response<JsonDocument>(Id, Result, Jsonrpc);

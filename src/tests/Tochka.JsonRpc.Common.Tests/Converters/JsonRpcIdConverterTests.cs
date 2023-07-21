@@ -1,137 +1,123 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.Text.Json;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Tochka.JsonRpc.Common.Converters;
 using Tochka.JsonRpc.Common.Models.Id;
 
-namespace Tochka.JsonRpc.Common.Tests.Converters
+namespace Tochka.JsonRpc.Common.Tests.Converters;
+
+[TestFixture]
+internal class JsonRpcIdConverterTests
 {
-    public class JsonRpcIdConverterTests
+    [Test]
+    public void Serialize_Number()
     {
-        private JsonRpcIdConverter jsonRpcIdConverter;
-        private StringBuilder stringBuilder;
-        private JsonTextWriter writer;
+        IRpcId id = new NumberRpcId(42);
 
-        [SetUp]
-        public void Setup()
-        {
-            jsonRpcIdConverter = new JsonRpcIdConverter();
-            stringBuilder = new StringBuilder();
-            writer = new JsonTextWriter(new StringWriter(stringBuilder));
-        }
+        var serialized = JsonSerializer.Serialize(id, JsonRpcSerializerOptions.Headers);
 
-        [Test]
-        public void Test_WriteJson_WorksForNumber()
-        {
-            var id = new NumberRpcId(42);
+        serialized.Should().Be("42");
+    }
 
-            jsonRpcIdConverter.WriteJson(writer, id, Mock.Of<JsonSerializer>());
+    [Test]
+    public void Serialize_String()
+    {
+        IRpcId id = new StringRpcId("test");
 
-            stringBuilder.ToString().Should().Be("42");
-        }
+        var serialized = JsonSerializer.Serialize(id, JsonRpcSerializerOptions.Headers);
 
-        [Test]
-        public void Test_WriteJson_WorksForString()
-        {
-            var id = new StringRpcId("test");
+        serialized.Should().Be("\"test\"");
+    }
 
-            jsonRpcIdConverter.WriteJson(writer, id, Mock.Of<JsonSerializer>());
+    [Test]
+    public void Serialize_StringWithNumber()
+    {
+        IRpcId id = new StringRpcId("123");
 
-            stringBuilder.ToString().Should().Be("\"test\"");
-        }
+        var serialized = JsonSerializer.Serialize(id, JsonRpcSerializerOptions.Headers);
 
-        [Test]
-        public void Test_WriteJson_WorksForNull()
-        {
-            IRpcId id = null;
+        serialized.Should().Be("\"123\"");
+    }
 
-            jsonRpcIdConverter.WriteJson(writer, id, Mock.Of<JsonSerializer>());
+    [Test]
+    public void Serialize_Null()
+    {
+        IRpcId id = new NullRpcId();
 
-            stringBuilder.ToString().Should().Be("null");
-        }
+        var serialized = JsonSerializer.Serialize(id, JsonRpcSerializerOptions.Headers);
 
-        [TestCase("")]
-        [TestCase("test")]
-        public void Test_ReadJson_ReturnsStringIdForString(string value)
-        {
-            var json = $@"""{value}""";
+        serialized.Should().Be("null");
+    }
 
-            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+    [Test]
+    public void Serialize_UnknownType_Throw()
+    {
+        var id = Mock.Of<IRpcId>();
 
-            result.Should().BeOfType<StringRpcId>()
-                .Subject.String.Should().Be(value);
-        }
+        var action = () => JsonSerializer.Serialize(id, JsonRpcSerializerOptions.Headers);
 
-        [TestCase(0)]
-        [TestCase(42)]
-        [TestCase(-1)]
-        [TestCase(int.MaxValue)]
-        public void Test_ReadJson_ReturnsNumberIdForNumber(int value)
-        {
-            var json = new JValue(value).ToString();
+        action.Should().Throw<ArgumentOutOfRangeException>();
+    }
 
-            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+    [TestCase("")]
+    [TestCase("test")]
+    [TestCase("123")]
+    public void Deserialize_String(string value)
+    {
+        var json = $"\"{value}\"";
 
-            result.Should().BeOfType<NumberRpcId>()
-                .Subject.Number.Should().Be(value);
-        }
+        var deserialized = JsonSerializer.Deserialize<IRpcId>(json, JsonRpcSerializerOptions.Headers);
 
-        [TestCase(0L)]
-        [TestCase(42L)]
-        [TestCase(-1L)]
-        [TestCase(long.MaxValue)]
-        public void Test_ReadJson_ReturnsNumberIdForNumber(long value)
-        {
-            var json = new JValue(value).ToString();
+        deserialized.Should().BeOfType<StringRpcId>().Subject.Value.Should().Be(value);
+    }
 
-            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+    [TestCase(0)]
+    [TestCase(42)]
+    [TestCase(-1)]
+    [TestCase(int.MaxValue)]
+    public void Deserialize_IntNumber(int value)
+    {
+        var json = JsonSerializer.Serialize(value);
 
-            result.Should().BeOfType<NumberRpcId>()
-                .Subject.Number.Should().Be(value);
-        }
+        var deserialized = JsonSerializer.Deserialize<IRpcId>(json, JsonRpcSerializerOptions.Headers);
 
-        [Test]
-        public void Test_ReadJson_ReturnsNullForNull()
-        {
-            var json = "null";
+        deserialized.Should().BeOfType<NumberRpcId>().Subject.Value.Should().Be(value);
+    }
 
-            var result = jsonRpcIdConverter.ReadJson(CreateJsonReader(json), Mock.Of<Type>(), null, false, new JsonSerializer());
+    [TestCase(0L)]
+    [TestCase(42L)]
+    [TestCase(-1L)]
+    [TestCase(long.MaxValue)]
+    public void Deserialize_LongNumber(long value)
+    {
+        var json = JsonSerializer.Serialize(value);
 
-            result.Should().BeNull();
-        }
+        var deserialized = JsonSerializer.Deserialize<IRpcId>(json, JsonRpcSerializerOptions.Headers);
 
-        [TestCaseSource(typeof(JsonRpcIdConverterTests), nameof(BadJsonIdCases))]
-        public void Test_ReadJson_ThrowsOnBadIdProperty(string json)
-        {
-            var jsonSerializer = JsonSerializer.Create();
-            Action action = () => jsonRpcIdConverter.ReadJson(CreateJsonReader(json), typeof(IRpcId), null, jsonSerializer);
+        deserialized.Should().BeOfType<NumberRpcId>().Subject.Value.Should().Be(value);
+    }
 
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
-        
-        private static IEnumerable BadJsonIdCases => BadJsonIds.Select(data => new TestCaseData(data));
+    [Test]
+    public void Deserialize_NullForNull()
+    {
+        var json = "null";
 
-        private static IEnumerable<string> BadJsonIds
-        {
-            get
-            {
-                // Other possible values from ECMA-404, Section 5:
-                yield return "{}";
-                yield return "[]";
-                yield return "0.1";
-                yield return "true";
-                yield return "false";
-            }
-        }
+        var deserialized = JsonSerializer.Deserialize<IRpcId>(json, JsonRpcSerializerOptions.Headers);
 
-        private static JsonTextReader CreateJsonReader(string json) => new JsonTextReader(new StringReader(json));
+        deserialized.Should().BeOfType<NullRpcId>();
+    }
+
+    // Other possible values from ECMA-404, Section 5:
+    [TestCase("{}")]
+    [TestCase("[]")]
+    [TestCase("0.1")] // technically floats are supported by spec, but we don't accept it
+    [TestCase("true")]
+    [TestCase("false")]
+    public void Deserialize_BadId_Throws(string json)
+    {
+        var action = () => JsonSerializer.Deserialize<IRpcId>(json, JsonRpcSerializerOptions.Headers);
+
+        action.Should().Throw<JsonRpcFormatException>();
     }
 }

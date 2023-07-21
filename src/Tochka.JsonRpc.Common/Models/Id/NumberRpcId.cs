@@ -1,53 +1,16 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-namespace Tochka.JsonRpc.Common.Models.Id
+namespace Tochka.JsonRpc.Common.Models.Id;
+
+/// <inheritdoc />
+/// <summary>
+/// JSON-RPC id equal to integer number in JSON
+/// </summary>
+/// <param name="Value">Actual id value</param>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public sealed record NumberRpcId(long Value) : IRpcId
 {
-    [ExcludeFromCodeCoverage]
-    public class NumberRpcId : IRpcId, IEquatable<NumberRpcId>
-    {
-        public readonly long Number;
-
-        public NumberRpcId(long value)
-        {
-            Number = value;
-        }
-
-        public override string ToString() => $"{Number}";
-
-        public bool Equals(NumberRpcId other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Number == other.Number;
-        }
-
-        public bool Equals(IRpcId other)
-        {
-            return Equals(other as NumberRpcId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((NumberRpcId) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Number.GetHashCode();
-        }
-
-        public static bool operator ==(NumberRpcId left, NumberRpcId right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(NumberRpcId left, NumberRpcId right)
-        {
-            return !Equals(left, right);
-        }
-    }
+    public override string ToString() => $"{Value}";
 }

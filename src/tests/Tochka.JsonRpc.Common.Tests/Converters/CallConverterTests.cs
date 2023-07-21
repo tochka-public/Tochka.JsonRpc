@@ -1,159 +1,131 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Text.Json;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Tochka.JsonRpc.Common.Converters;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
-using Tochka.JsonRpc.Common.Tests.Helpers;
+using Tochka.JsonRpc.TestUtils;
 
-namespace Tochka.JsonRpc.Common.Tests.Converters
+namespace Tochka.JsonRpc.Common.Tests.Converters;
+
+[TestFixture]
+internal class CallConverterTests
 {
-    public class CallConverterTests
+    [Test]
+    public void Serialize_UntypedRequest()
     {
-        private CallConverter callConverter;
+        const string id = "id";
+        const string method = "method";
+        IUntypedCall request = new UntypedRequest(new StringRpcId(id), method, null);
 
-        [SetUp]
-        public void Setup()
-        {
-            callConverter = new CallConverter();
-        }
+        var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
 
-        [Test]
-        public void Test_WriteJson_Throws()
-        {
-            Action action = () => callConverter.WriteJson(Mock.Of<JsonWriter>(), Mock.Of<object>(), Mock.Of<JsonSerializer>());
-
-            action.Should().Throw<InvalidOperationException>();
-        }
-
-        [TestCase(typeof(ICall<>), true)]
-        [TestCase(typeof(IUntypedCall), true)]
-        [TestCase(typeof(object), false)]
-        public void Test_CanConvert_ChecksType(Type type, bool expected)
-        {
-            var result = callConverter.CanConvert(type);
-
-            result.Should().Be(expected);
-        }
-
-        [TestCase(typeof(ICall<int>))]
-        [TestCase(typeof(ICall<string>))]
-        [TestCase(typeof(IUntypedCall))]
-        public void Test_ReadJson_ReturnsNotificationOnNoProperty(Type targetType)
-        {
-            var json = new JObject().ToString();
-
-            var result = callConverter.ReadJson(CreateJsonReader(json), targetType, null, new JsonSerializer());
-
-            result.Should().BeOfType<UntypedNotification>()
-                .Subject.RawJson.Should().Be(json);
-        }
-
-        [TestCase(typeof(ICall<int>))]
-        [TestCase(typeof(ICall<string>))]
-        [TestCase(typeof(IUntypedCall))]
-        public void Test_ReadJson_ReturnsRequestOnIdProperty(Type targetType)
-        {
-            var json = new JObject
+        var expected = $$"""
             {
-                [JsonRpcConstants.IdProperty] = null
-            }.ToString();
-
-            var result = callConverter.ReadJson(CreateJsonReader(json), targetType, null, JsonSerializer.Create());
-
-            result.Should().BeOfType<UntypedRequest>();
-            var request = result as UntypedRequest;
-            request.RawJson.Should().NotBeNullOrWhiteSpace();
-            Assert.AreEqual(JValue.CreateNull(), request.RawId);
-        }
-
-        [TestCaseSource(typeof(CallConverterTests), nameof(JsonIdCases))]
-        public void Test_ReadJson_ReturnsRequestOnIdProperty(JValue jsonId)
-        {
-            var json = new JObject
-            {
-                [JsonRpcConstants.IdProperty] = jsonId
-            }.ToString();
-            
-            var jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings()
-            {
-                Converters = new List<JsonConverter>()
-                {
-                    new MockJsonRpcIdConverter()
-                }
-            });
-            var result = callConverter.ReadJson(CreateJsonReader(json), typeof(UntypedRequest), null, jsonSerializer);
-
-            result.Should().BeOfType<UntypedRequest>()
-                .Subject.RawJson.Should().NotBeNullOrWhiteSpace();
-            var request = result as UntypedRequest;
-            request.RawId.Type.Should().Be(jsonId.Type);
-            request.RawId.Value.Should().Be(jsonId.Value);
-        }
-
-        [TestCaseSource(typeof(CallConverterTests), nameof(BadJsonIdCases))]
-        public void Test_ReadJson_ThrowsOnBadIdProperty(JToken jsonId)
-        {
-            var json = new JObject
-            {
-                [JsonRpcConstants.IdProperty] = jsonId
-            }.ToString();
-
-            var jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings()
-            {
-                Converters = new List<JsonConverter>()
-                {
-                    new MockJsonRpcIdConverter()
-                }
-            });
-            Action action = () => callConverter.ReadJson(CreateJsonReader(json), typeof(UntypedRequest), null, jsonSerializer);
-
-            action.Should().Throw<ArgumentOutOfRangeException>();
-        }
-
-        private static IEnumerable JsonIdCases => JsonIds.Select(data => new TestCaseData(data));
-
-        private static IEnumerable BadJsonIdCases => BadJsonIds.Select(data => new TestCaseData(data));
-
-        private static IEnumerable<JValue> JsonIds
-        {
-            get
-            {
-                yield return JValue.CreateNull();
-                yield return JValue.CreateString("");
-                yield return JValue.CreateString("test");
-                yield return new JValue(0);
-                yield return new JValue(42);
-                yield return new JValue(-1);
-                yield return new JValue(0L);
-                yield return new JValue(42L);
-                yield return new JValue(-1L);
-                yield return new JValue(int.MaxValue);
-                yield return new JValue(long.MaxValue);
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": null,
+                "jsonrpc": "2.0"
             }
-        }
+            """.TrimAllLines();
+        serialized.TrimAllLines().Should().Be(expected);
+    }
 
-        private static IEnumerable<JToken> BadJsonIds
-        {
-            get
+    [Test]
+    public void Serialize_UntypedNotification()
+    {
+        const string method = "method";
+        IUntypedCall request = new UntypedNotification(method, null);
+
+        var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
+
+        var expected = $$"""
             {
-                // Other possible values from ECMA-404, Section 5:
-                yield return new JObject();
-                yield return new JArray();
-                yield return new JValue(0.1);
-                yield return new JValue(true);
-                yield return new JValue(false);
+                "method": "{{method}}",
+                "params": null,
+                "jsonrpc": "2.0"
             }
-        }
+            """.TrimAllLines();
+        serialized.TrimAllLines().Should().Be(expected);
+    }
 
-        private static JsonTextReader CreateJsonReader(string json) => new JsonTextReader(new StringReader(json));
+    [Test]
+    public void Serialize_UnknownType_Throw()
+    {
+        var action = static () => JsonSerializer.Serialize(Mock.Of<IUntypedCall>(), JsonRpcSerializerOptions.Headers);
+
+        action.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Test]
+    public void Deserialize_Request()
+    {
+        const string id = "id";
+        const string method = "method";
+        var request = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": null,
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
+
+        deserialized.Should().BeOfType<UntypedRequest>().And.BeEquivalentTo(new UntypedRequest(new StringRpcId(id), method, null));
+    }
+
+    [Test]
+    public void Deserialize_Notification()
+    {
+        const string method = "method";
+        var request = $$"""
+            {
+                "method": "{{method}}",
+                "params": null,
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var deserialized = JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
+
+        deserialized.Should().BeOfType<UntypedNotification>().And.BeEquivalentTo(new UntypedNotification(method, null));
+    }
+
+    [Test]
+    public void Deserialize_NoMethod_Throw()
+    {
+        const string id = "id";
+        var request = $$"""
+            {
+                "id": "{{id}}",
+                "params": null,
+                "jsonrpc": "2.0"
+            }
+            """;
+
+        var action = () => JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
+
+        action.Should().Throw<JsonRpcFormatException>();
+    }
+
+    [Test]
+    public void Deserialize_NoVersion_Throw()
+    {
+        const string id = "id";
+        const string method = "method";
+        var request = $$"""
+            {
+                "id": "{{id}}",
+                "method": "{{method}}",
+                "params": null
+            }
+            """;
+
+        var action = () => JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
+
+        action.Should().Throw<JsonRpcFormatException>();
     }
 }

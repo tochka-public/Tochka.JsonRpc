@@ -1,12 +1,28 @@
-namespace Tochka.JsonRpc.Common.Models.Response.Errors
+﻿using JetBrains.Annotations;
+
+namespace Tochka.JsonRpc.Common.Models.Response.Errors;
+
+/// <summary>
+/// Base interface for errors
+/// </summary>
+[PublicAPI]
+public interface IError
 {
-    public interface IError
-    {
-        int Code { get; set; }
+    /// <summary>
+    /// Number that indicates the error type that occurred
+    /// </summary>
+    int Code { get; }
 
-        // SHOULD be limited to a concise single sentence.
-        string Message { get; set; }
+    /// <summary>
+    /// Short description of the error
+    /// </summary>
+    /// <remarks>
+    /// SHOULD be limited to a concise single sentence
+    /// </remarks>
+    string Message { get; }
 
-        object GetData();
-    }
+    /// <summary>
+    /// Additional information about the error
+    /// </summary>
+    object? Data { get; }
 }

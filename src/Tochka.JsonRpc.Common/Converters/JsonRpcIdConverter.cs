@@ -1,53 +1,48 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Request;
 
-namespace Tochka.JsonRpc.Common.Converters
+namespace Tochka.JsonRpc.Common.Converters;
+
+/// <inheritdoc />
+/// <summary>
+/// Convert id to and from string/number/null for requests and responses
+/// </summary>
+[PublicAPI]
+public class JsonRpcIdConverter : JsonConverter<IRpcId>
 {
-    /// <summary>
-    /// Handle dumb rule of Id as string/number/null for requests and responses
-    /// </summary>
-    public class JsonRpcIdConverter : JsonConverter<IRpcId>
+    public override bool HandleNull => true;
+
+    public override void Write(Utf8JsonWriter writer, IRpcId value, JsonSerializerOptions options)
     {
-        public override void WriteJson(JsonWriter writer, IRpcId value, JsonSerializer serializer)
+        switch (value)
         {
-            switch (value)
-            {
-                case NumberRpcId numberRpcId:
-                    writer.WriteValue(numberRpcId.Number);
-                    break;
-                case StringRpcId stringRpcId:
-                    writer.WriteValue(stringRpcId.String);
-                    break;
-                case null:
-                    writer.WriteNull();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
-            }
+            case NumberRpcId numberRpcId:
+                writer.WriteNumberValue(numberRpcId.Value);
+                break;
+            case StringRpcId stringRpcId:
+                writer.WriteStringValue(stringRpcId.Value);
+                break;
+            case NullRpcId:
+                writer.WriteNullValue();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
         }
+    }
 
-        public override IRpcId ReadJson(JsonReader reader, Type objectType, IRpcId existingValue, bool hasExistingValue, JsonSerializer serializer)
+    [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for id property")]
+    public override IRpcId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var idType = reader.TokenType;
+        return idType switch
         {
-            var idProperty = JToken.Load(reader);
-            var idType = idProperty.Type;
-            switch (idType)
-            {
-                case JTokenType.String:
-                    return new StringRpcId(idProperty.Value<string>());
-
-                case JTokenType.Integer:
-                    return new NumberRpcId(idProperty.Value<long>());
-
-                case JTokenType.Null:
-                    return null;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(idType), idType, "Expected string, number or null as Id");
-            }
-        }
+            JsonTokenType.String => new StringRpcId(reader.GetString()!),
+            JsonTokenType.Number when reader.TryGetInt64(out var number) => new NumberRpcId(number),
+            JsonTokenType.Null => new NullRpcId(),
+            _ => throw new JsonRpcFormatException($"Expected string, number or null as Id. Got {idType}")
+        };
     }
 }

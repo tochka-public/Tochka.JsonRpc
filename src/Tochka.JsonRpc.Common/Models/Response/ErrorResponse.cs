@@ -1,20 +1,18 @@
-using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
-namespace Tochka.JsonRpc.Common.Models.Response
-{
-    [ExcludeFromCodeCoverage]
-    public class ErrorResponse<TError> : IErrorResponse
-    {
-        public IRpcId Id { get; set; }
+namespace Tochka.JsonRpc.Common.Models.Response;
 
-        public string Jsonrpc { get; set; } = JsonRpcConstants.Version;
-
-        public Error<TError> Error { get; set; }
-
-        public override string ToString() => $"{nameof(Request<object>)}<{typeof(TError).Name}>: {nameof(Id)} [{Id}], {nameof(Error)} [{Error}]";
-    }
-}
+/// <inheritdoc />
+/// <summary>
+/// Error response with typed error.data
+/// </summary>
+/// <param name="Id">Identifier established by the Client</param>
+/// <param name="Error">Error returned from server</param>
+/// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
+/// <typeparam name="TError">Type of error</typeparam>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public record ErrorResponse<TError>(IRpcId Id, Error<TError> Error, string Jsonrpc = JsonRpcConstants.Version) : IResponse;

@@ -1,54 +1,66 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Tochka.JsonRpc.Common.Models.Request;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
-namespace Tochka.JsonRpc.Common.Converters
+namespace Tochka.JsonRpc.Common.Converters;
+
+/// <inheritdoc />
+/// <summary>
+/// Deserialize calls to request or notification based on existing/missing id property
+/// </summary>
+[PublicAPI]
+public class CallConverter : JsonConverter<IUntypedCall>
 {
-    /// <summary>
-    /// Handle dumb rule of Id present for requests and not present for notifications
-    /// </summary>
-    public class CallConverter : JsonConverter
+    // System.Text.Json can't serialize derived types:
+    // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    public override void Write(Utf8JsonWriter writer, IUntypedCall value, JsonSerializerOptions options)
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        switch (value)
         {
-            // NOTE: used in server to parse requests, no need for serialization
-            throw new InvalidOperationException();
+            case UntypedRequest untypedRequest:
+                JsonSerializer.Serialize(writer, untypedRequest, options);
+                break;
+            case UntypedNotification untypedNotification:
+                JsonSerializer.Serialize(writer, untypedNotification, options);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
         }
+    }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override IUntypedCall? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+        CheckProperties(reader) switch
         {
-            var jObject = JObject.Load(reader);
-            var idProperty = jObject[JsonRpcConstants.IdProperty];
-            var idType = idProperty?.Type;
-            switch (idType)
+            { HasMethod: false } => throw new JsonRpcFormatException($"JSON Rpc call does not have [{JsonRpcConstants.MethodProperty}] property"),
+            { HasVersion: false } => throw new JsonRpcFormatException($"JSON Rpc call does not have [{JsonRpcConstants.JsonrpcVersionProperty}] property"),
+            { HasId: false } => JsonSerializer.Deserialize<UntypedNotification>(ref reader, options),
+            _ => JsonSerializer.Deserialize<UntypedRequest>(ref reader, options)
+        };
+
+    private static PropertiesInfo CheckProperties(Utf8JsonReader propertyReader)
+    {
+        var hasId = false;
+        var hasMethod = false;
+        var hasVersion = false;
+        foreach (var propertyName in Utils.GetPropertyNames(ref propertyReader))
+        {
+            switch (propertyName)
             {
-                case JTokenType.String:
-                case JTokenType.Integer:
-                case JTokenType.Null:
-                    var idValue = idProperty as JValue;
-                    var result1 = jObject.ToObject<UntypedRequest>(serializer);
-                    result1.RawJson = jObject.ToString();
-                    result1.RawId = idValue;
-                    return result1;
-
-                case null:
-                    var result2 = jObject.ToObject<UntypedNotification>(serializer);
-                    result2.RawJson = jObject.ToString();
-                    return result2;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(idType), idType, "Expected string, number, null or nothing as Id");
+                case JsonRpcConstants.IdProperty:
+                    hasId = true;
+                    break;
+                case JsonRpcConstants.MethodProperty:
+                    hasMethod = true;
+                    break;
+                case JsonRpcConstants.JsonrpcVersionProperty:
+                    hasVersion = true;
+                    break;
             }
         }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(ICall<>)
-                   || objectType == typeof(IUntypedCall)
-                ;
-        }
+        return new PropertiesInfo(hasId, hasMethod, hasVersion);
     }
+
+    private record PropertiesInfo(bool HasId, bool HasMethod, bool HasVersion);
 }

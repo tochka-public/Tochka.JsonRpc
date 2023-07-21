@@ -1,21 +1,20 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-namespace Tochka.JsonRpc.Common.Models.Response.Errors
+namespace Tochka.JsonRpc.Common.Models.Response.Errors;
+
+/// <inheritdoc />
+/// <summary>
+/// Error with typed data
+/// </summary>
+/// <param name="Code">Number that indicates the error type that occurred</param>
+/// <param name="Message">Short description of the error</param>
+/// <param name="Data">Additional information about the error</param>
+/// <typeparam name="TData">Type of data</typeparam>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
+public record Error<TData>(int Code, string Message, TData? Data) : IError
 {
-    [ExcludeFromCodeCoverage]
-    public class Error<T> : IError
-    {
-        public int Code { get; set; }
-
-        // SHOULD be limited to a concise single sentence.
-        public string Message { get; set; }
-
-        // This may be omitted
-        public T Data { get; set; }
-
-        public object GetData()
-        {
-            return Data;
-        }
-    }
+    object? IError.Data => Data;
 }

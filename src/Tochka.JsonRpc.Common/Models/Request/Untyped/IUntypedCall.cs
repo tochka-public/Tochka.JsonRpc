@@ -1,14 +1,13 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using JetBrains.Annotations;
 
-namespace Tochka.JsonRpc.Common.Models.Request.Untyped
+namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
+
+/// <inheritdoc />
+/// <summary>
+/// Base interface for calls with params as JsonDocument
+/// </summary>
+[PublicAPI]
+public interface IUntypedCall : ICall<JsonDocument>
 {
-    public interface IUntypedCall : ICall<JContainer>
-    {
-        /// <summary>
-        /// Set on deserialization. JSON content corresponding to this object
-        /// </summary>
-        [JsonIgnore]
-        string RawJson { get; set; }
-    }
 }

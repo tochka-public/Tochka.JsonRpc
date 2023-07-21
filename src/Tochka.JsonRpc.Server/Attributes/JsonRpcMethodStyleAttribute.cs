@@ -1,21 +1,24 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Server.Settings;
 
-namespace Tochka.JsonRpc.Server.Attributes
+namespace Tochka.JsonRpc.Server.Attributes;
+
+/// <inheritdoc />
+/// <summary>
+/// Attribute to override default JSON-RPC method style on controller/action
+/// </summary>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public sealed class JsonRpcMethodStyleAttribute : Attribute
 {
     /// <summary>
-    /// Override matching rule for JSON Rpc "method"
+    /// Method style for controller/action
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class JsonRpcMethodStyleAttribute : Attribute
-    {
-        public MethodStyle MethodStyle { get; }
+    public JsonRpcMethodStyle MethodStyle { get; }
 
-        public JsonRpcMethodStyleAttribute(MethodStyle methodStyle)
-        {
-            MethodStyle = methodStyle;
-        }
-    }
+    /// <inheritdoc />
+    /// <param name="methodStyle">Method style for controller/action</param>
+    public JsonRpcMethodStyleAttribute(JsonRpcMethodStyle methodStyle) => MethodStyle = methodStyle;
 }

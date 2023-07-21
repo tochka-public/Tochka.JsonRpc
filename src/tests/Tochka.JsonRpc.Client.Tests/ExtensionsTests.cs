@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using FluentAssertions;
@@ -9,140 +7,112 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Services;
-using Tochka.JsonRpc.Client.Settings;
-using Tochka.JsonRpc.Common.Serializers;
+using Tochka.JsonRpc.Client.Tests.TestHelpers;
 
-namespace Tochka.JsonRpc.Client.Tests
+namespace Tochka.JsonRpc.Client.Tests;
+
+[TestFixture]
+internal class ExtensionsTests
 {
-    public class ExtensionsTests
+    [Test]
+    public void AddJsonRpcClientWithInterface_RegisterServices()
     {
-        [Test]
-        public void Test_AddJsonRpcClient_RegistersServices()
-        {
-            var services = new ServiceCollection();
+        var services = new ServiceCollection();
 
-            services.AddJsonRpcClient<TestClient>();
+        services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>();
 
-            var result = services.Select(x => (x.ServiceType, x.Lifetime)).ToList();
-            result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(TestClient), ServiceLifetime.Transient)).Should().BeTrue();
-        }
+        var result = services.Select(static x => (x.ServiceType, x.Lifetime)).ToList();
+        result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(ITestJsonRpcClient), ServiceLifetime.Transient)).Should().BeTrue();
+    }
 
-        [Test]
-        public void Test_AddJsonRpcClient_PreservesUserServices()
-        {
-            var services = new ServiceCollection();
+    [Test]
+    public void AddJsonRpcClientWithInterface_PreserveUserServices()
+    {
+        var services = new ServiceCollection();
+        var idGeneratorMock = Mock.Of<IJsonRpcIdGenerator>();
+        services.AddSingleton(idGeneratorMock);
 
-            var mocks = new List<Mock>
-            {
-                RegisterMock<HeaderJsonRpcSerializer>(services),
-                RegisterMock<IJsonRpcIdGenerator>(services),
-            };
+        services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>();
 
-            services.AddJsonRpcClient<TestClient>();
+        var result = services.Select(static x => (x.ImplementationInstance, x.Lifetime)).ToList();
+        result.Should().Contain((idGeneratorMock, ServiceLifetime.Singleton));
+    }
 
-            var result = services.Select(x => (x.ImplementationInstance, x.Lifetime)).ToList();
-            foreach (var mock in mocks)
-            {
-                result.Should().Contain((mock.Object, ServiceLifetime.Singleton));
-            }
-        }
+    [Test]
+    public void AddJsonRpcClientWithInterface_CallConfigure()
+    {
+        var services = new ServiceCollection();
+        var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
+        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
+        services.AddSingleton(Mock.Of<ILogger>());
 
-        [Test]
-        public void Test_AddJsonRpcClient_CallsConfigure()
-        {
-            var services = new ServiceCollection();
-            var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
-            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
-            services.AddSingleton(Mock.Of<ILogger>());
+        services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>(actionMock.Object);
+        services.BuildServiceProvider().GetRequiredService<ITestJsonRpcClient>();
 
-            services.AddJsonRpcClient<TestClient>(actionMock.Object);
-            services.BuildServiceProvider().GetRequiredService<TestClient>();
+        actionMock.Verify(static x => x(It.IsAny<IServiceProvider>(), It.IsAny<HttpClient>()));
+    }
 
-            actionMock.Verify(x => x(It.IsAny<IServiceProvider>(), It.IsAny<HttpClient>()));
-        }
+    [Test]
+    public void AddJsonRpcClientWithInterface_WorkWithoutConfigure()
+    {
+        var services = new ServiceCollection();
+        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
+        services.AddSingleton(Mock.Of<ILogger>());
 
-        [Test]
-        public void Test_AddJsonRpcClient_ConfigureNullWorks()
-        {
-            var services = new ServiceCollection();
-            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
-            services.AddSingleton(Mock.Of<ILogger>());
+        services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>();
+        services.BuildServiceProvider().GetRequiredService<ITestJsonRpcClient>();
+    }
 
-            services.AddJsonRpcClient<TestClient>();
-            services.BuildServiceProvider().GetRequiredService<TestClient>();
-        }
+    [Test]
+    public void AddJsonRpcClient_RegisterServices()
+    {
+        var services = new ServiceCollection();
 
-        [Test]
-        public void Test_AddJsonRpcClientWithInterface_RegistersServices()
-        {
-            var services = new ServiceCollection();
+        services.AddJsonRpcClient<TestJsonRpcClient>();
 
-            services.AddJsonRpcClient<ITestClient, TestClient>();
+        var result = services.Select(static x => (x.ServiceType, x.Lifetime)).ToList();
+        result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(TestJsonRpcClient), ServiceLifetime.Transient)).Should().BeTrue();
+    }
 
-            var result = services.Select(x => (x.ServiceType, x.Lifetime)).ToList();
-            result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(HeaderJsonRpcSerializer), ServiceLifetime.Singleton)).Should().BeTrue();
-            result.Remove((typeof(ITestClient), ServiceLifetime.Transient)).Should().BeTrue();
-        }
+    [Test]
+    public void AddJsonRpcClient_PreserveUserServices()
+    {
+        var services = new ServiceCollection();
+        var idGeneratorMock = Mock.Of<IJsonRpcIdGenerator>();
+        services.AddSingleton(idGeneratorMock);
 
-        [Test]
-        public void Test_AddJsonRpcClientWithInterface_PreservesUserServices()
-        {
-            var services = new ServiceCollection();
+        services.AddJsonRpcClient<TestJsonRpcClient>();
 
-            var mocks = new List<Mock>
-            {
-                RegisterMock<HeaderJsonRpcSerializer>(services),
-                RegisterMock<IJsonRpcIdGenerator>(services),
-            };
+        var result = services.Select(static x => (x.ImplementationInstance, x.Lifetime)).ToList();
+        result.Should().Contain((idGeneratorMock, ServiceLifetime.Singleton));
+    }
 
-            services.AddJsonRpcClient<ITestClient, TestClient>();
+    [Test]
+    public void AddJsonRpcClient_CallConfigure()
+    {
+        var services = new ServiceCollection();
+        var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
+        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
+        services.AddSingleton(Mock.Of<ILogger>());
 
-            var result = services.Select(x => (x.ImplementationInstance, x.Lifetime)).ToList();
-            foreach (var mock in mocks)
-            {
-                result.Should().Contain((mock.Object, ServiceLifetime.Singleton));
-            }
-        }
+        services.AddJsonRpcClient<TestJsonRpcClient>(actionMock.Object);
+        services.BuildServiceProvider().GetRequiredService<TestJsonRpcClient>();
 
-        [Test]
-        public void Test_AddJsonRpcClientWithInterface_CallsConfigure()
-        {
-            var services = new ServiceCollection();
-            var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
-            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
-            services.AddSingleton(Mock.Of<ILogger>());
+        actionMock.Verify(static x => x(It.IsAny<IServiceProvider>(), It.IsAny<HttpClient>()));
+    }
 
-            services.AddJsonRpcClient<ITestClient, TestClient>(actionMock.Object);
-            services.BuildServiceProvider().GetRequiredService<ITestClient>();
+    [Test]
+    public void AddJsonRpcClient_WorkWithoutConfigure()
+    {
+        var services = new ServiceCollection();
+        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
+        services.AddSingleton(Mock.Of<ILogger>());
 
-            actionMock.Verify(x => x(It.IsAny<IServiceProvider>(), It.IsAny<HttpClient>()));
-        }
-
-        [Test]
-        public void Test_AddJsonRpcClientWithInterface_ConfigureNullWorks()
-        {
-            var services = new ServiceCollection();
-            services.AddSingleton(Mock.Of<IJsonRpcSerializer>());
-            services.Configure<TestOptions>(options => { options.Url = "http://foo.bar/"; });
-            services.AddSingleton(Mock.Of<ILogger>());
-
-            services.AddJsonRpcClient<ITestClient, TestClient>();
-            services.BuildServiceProvider().GetRequiredService<ITestClient>();
-        }
-
-        private static Mock<T> RegisterMock<T>(IServiceCollection services, params object[] args) where T : class
-        {
-            var mock = new Mock<T>(args);
-            services.AddSingleton(mock.Object);
-            return mock;
-        }
+        services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>();
+        services.BuildServiceProvider().GetRequiredService<ITestJsonRpcClient>();
     }
 }

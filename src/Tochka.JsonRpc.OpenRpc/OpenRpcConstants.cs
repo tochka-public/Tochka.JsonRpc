@@ -1,25 +1,49 @@
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
+using Yoh.Text.Json.NamingPolicies;
 
-namespace Tochka.JsonRpc.OpenRpc
+namespace Tochka.JsonRpc.OpenRpc;
+
+/// <summary>
+/// All OpenRPC constants
+/// </summary>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public static class OpenRpcConstants
 {
-    public class OpenRpcConstants
-    {
-        public const string SpecVersion = "1.2.6";
-        public const string DocumentTemplateParameterName = "documentName";
-        public static readonly string DefaultDocumentPath = $"openrpc/{{{DocumentTemplateParameterName}}}.json";
+    /// <summary>
+    /// Template parameter name for OpenRPC document name
+    /// </summary>
+    public const string DocumentTemplateParameterName = "documentName";
 
-        public static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
+    /// <summary>
+    /// Default route to OpenRPC document
+    /// </summary>
+    public const string DefaultDocumentPath = $"openrpc/{{{DocumentTemplateParameterName}}}.json";
+
+    /// <summary>
+    /// OpenRPC specification version
+    /// </summary>
+    public const string SpecVersion = "1.2.6";
+
+    /// <summary>
+    /// Default server name for OpenRPC document
+    /// </summary>
+    public const string DefaultServerName = "JSON-RPC";
+
+    /// <summary>
+    /// <see cref="JsonSerializerOptions" /> for OpenRPC document serialization
+    /// </summary>
+    public static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true,
+        Converters =
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            Formatting = Formatting.Indented,
-            Converters = new List<JsonConverter>()
-            {
-                new StringEnumConverter()
-            },
-            NullValueHandling = NullValueHandling.Ignore
-        };
-    }
+            new JsonStringEnumConverter(JsonNamingPolicies.KebabCaseLower)
+        },
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 }

@@ -1,21 +1,23 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Request;
 
-namespace Tochka.JsonRpc.Common.Models.Response
+namespace Tochka.JsonRpc.Common.Models.Response;
+
+/// <inheritdoc />
+/// <summary>
+/// Successful response with typed result
+/// </summary>
+/// <param name="Id">Identifier established by the Client</param>
+/// <param name="Result">Result of the method invoked on the Server</param>
+/// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
+/// <typeparam name="TResult">Type of result</typeparam>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public record Response<TResult>(IRpcId Id, TResult? Result, string Jsonrpc = JsonRpcConstants.Version) : IResponse
 {
-    [ExcludeFromCodeCoverage]
-    public class Response<TResult> : IResponse
+    // required for autodoc metadata generation
+    internal Response() : this(null!)
     {
-        public IRpcId Id { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Jsonrpc { get; set; } = JsonRpcConstants.Version;
-
-        public TResult Result { get; set; }
-
-        public override string ToString() => $"{nameof(Request<object>)}<{typeof(TResult).Name}>: {nameof(Id)} [{Id}], {nameof(Result)} [{Result}]";
     }
 }

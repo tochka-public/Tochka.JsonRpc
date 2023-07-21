@@ -1,5 +1,5 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -7,218 +7,118 @@ using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Settings;
 
-namespace Tochka.JsonRpc.Server.Services
+namespace Tochka.JsonRpc.Server.Services;
+
+/// <inheritdoc />
+[PublicAPI]
+public class JsonRpcErrorFactory : IJsonRpcErrorFactory
 {
-    /// <summary>
-    /// Creates errors by specification rules, wraps exceptions depending on options
-    /// </summary>
-    public class JsonRpcErrorFactory : IJsonRpcErrorFactory
+    private readonly ILogger<JsonRpcErrorFactory> log;
+    private readonly JsonRpcServerOptions options;
+
+    public JsonRpcErrorFactory(IOptions<JsonRpcServerOptions> options, ILogger<JsonRpcErrorFactory> log)
     {
-        private readonly ILogger log;
-        private readonly JsonRpcOptions options;
-
-        public JsonRpcErrorFactory(IOptions<JsonRpcOptions> options, ILogger<JsonRpcErrorFactory> log)
-        {
-            this.log = log;
-            this.options = options.Value;
-        }
-
-        /// <inheritdoc />
-        public virtual IError NotFound(object errorData)
-        {
-            return new Error<object>
-            {
-                Code = -32004,
-                Message = "Not found",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError InvalidRequest(object errorData)
-        {
-            return new Error<object>
-            {
-                Code = -32600,
-                Message = "Invalid Request",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError MethodNotFound(object errorData)
-        {
-            return new Error<object>
-            {
-                Code = -32601,
-                Message = "Method not found",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError InvalidParams(object errorData)
-        {
-            return new Error<object>
-            {
-                Code = -32602,
-                Message = "Invalid params",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError InternalError(object errorData)
-        {
-            return new Error<object>
-            {
-                Code = -32603,
-                Message = "Internal error",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError ParseError(object errorData)
-        {
-            return new Error<object>
-            {
-                Code = -32700,
-                Message = "Parse error",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError Error(int code, string message, object errorData)
-        {
-            if (IsReserved(code))
-            {
-                throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another");
-            }
-
-            return new Error<object>
-            {
-                Code = code,
-                Message = message,
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError Exception(Exception e)
-        {
-            if (e is JsonRpcInternalException x)
-            {
-                return InternalException(x);
-            }
-            return ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e));
-        }
-
-        /// <inheritdoc />
-        public virtual IError ServerError(int code, object errorData)
-        {
-            if (!IsServer(code))
-            {
-                throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]");
-            }
-
-            return new Error<object>
-            {
-                Code = code,
-                Message = "Server error",
-                Data = WrapExceptions(errorData)
-            };
-        }
-
-        /// <inheritdoc />
-        public virtual IError HttpError(int? httpCode, object errorData)
-        {
-            switch (httpCode)
-            {
-                case 400:
-                case 422:
-                    return InvalidParams(errorData);
-                case 401:
-                case 403:  // no known IActionResult returns this?
-                    return MethodNotFound(errorData);
-                case 404:
-                    // TODO distinguish between failed routing and returned NotFoundResult
-                    return NotFound(errorData);
-                case 415:
-                    return ParseError(errorData);
-                case 500:
-                    return InternalError(errorData);
-                default:
-                    return ServerError(JsonRpcConstants.InternalExceptionCode, errorData);
-            }
-        }
-
-        /// <summary>
-        /// -32001 Internal Exception as Server Error
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        internal virtual IError InternalException(JsonRpcInternalException e)
-        {
-            return HttpError(e.HttpCode, WrapExceptions(e, e.HttpCode));
-        }
-
-        /// <summary>
-        /// Hide stack trace if detailed response disabled, avoid serializing exceptions directly
-        /// </summary>
-        /// <param name="errorData"></param>
-        /// <param name="httpCode"></param>
-        /// <returns></returns>
-        protected internal virtual object WrapExceptions(object errorData, int? httpCode=null)
-        {
-            switch (errorData)
-            {
-                case Exception e when options.DetailedResponseExceptions:
-                    log.LogTrace("Wrap detailed exception [{exceptionTypeName}]", e.GetType().Name);
-                    return new ExceptionInfo
-                    {
-                        InternalHttpCode = httpCode,
-                        Message = e.Message,
-                        Type = e.GetType().FullName,
-                        Details = e.ToString()
-                    };
-                case Exception e:
-                    log.LogTrace("Wrap exception without details [{exceptionTypeName}]", e.GetType().Name);
-                    return new ExceptionInfo()
-                    {
-                        InternalHttpCode = httpCode,
-                        Message = e.Message,
-                        Type = e.GetType().FullName,
-                        Details = null
-                    };
-                default:
-                    return errorData;
-            }
-        }
-
-        /// <summary>
-        /// Codes reserved in specification
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [ExcludeFromCodeCoverage]
-        protected internal static bool IsReserved(int code) => -32768 <= code && code <= -32000;
-
-        /// <summary>
-        /// Codes explicitly defined in specification
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [ExcludeFromCodeCoverage]
-        protected internal static bool IsSpecial(int code) => code == -32700 || code == -32600 || code == -32601 || code == -32602 || code == -32603;
-
-        /// <summary>
-        /// Codes reserved for server implementation in specification
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [ExcludeFromCodeCoverage]
-        protected internal static bool IsServer(int code) => -32099 <= code && code <= -32000;
+        this.log = log;
+        this.options = options.Value;
     }
+
+    public IError ParseError(object? errorData) =>
+        new Error<object>(-32700, "Parse error", WrapExceptions(errorData));
+
+    public IError InvalidRequest(object? errorData) =>
+        new Error<object>(-32600, "Invalid Request", WrapExceptions(errorData));
+
+    public IError MethodNotFound(object? errorData) =>
+        new Error<object>(-32601, "Method not found", WrapExceptions(errorData));
+
+    public IError InvalidParams(object? errorData) =>
+        new Error<object>(-32602, "Invalid params", WrapExceptions(errorData));
+
+    public IError InternalError(object? errorData) =>
+        new Error<object>(-32603, "Internal error", WrapExceptions(errorData));
+
+    public IError ServerError(int code, object? errorData) =>
+        !IsServer(code)
+            ? throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]")
+            : new Error<object>(code, "Server error", WrapExceptions(errorData));
+
+    public virtual IError NotFound(object? errorData) =>
+        new Error<object>(-32004, "Not found", WrapExceptions(errorData));
+
+    [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
+    public virtual IError Error(int code, string message, object? errorData) =>
+        IsReserved(code)
+            ? throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another")
+            : new Error<object>(code, message, WrapExceptions(errorData));
+
+    public virtual IError Exception(Exception e) => e switch
+    {
+        JsonRpcServerException => ServerError(JsonRpcConstants.InternalExceptionCode, WrapExceptions(e)),
+        JsonRpcMethodNotFoundException methodException => MethodNotFound(new { methodException.Method }),
+        JsonRpcErrorException errorException => errorException.Error,
+        JsonRpcFormatException => InvalidRequest(WrapExceptions(e)),
+        _ => ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e))
+    };
+
+    public virtual IError HttpError(int httpCode, object? errorData) => httpCode switch
+    {
+        400 or 422 => InvalidParams(errorData),
+        401 or 403 => MethodNotFound(errorData),
+        404 => NotFound(errorData),
+        415 => ParseError(errorData),
+        500 => InternalError(errorData),
+        _ => ServerError(JsonRpcConstants.InternalExceptionCode, errorData)
+    };
+
+    /// <summary>
+    /// Hide stack trace if detailed response disabled, avoid serializing exceptions directly
+    /// </summary>
+    /// <param name="errorData">error.data that could be exception</param>
+    // internal for tests, protected for customization
+    protected internal virtual object? WrapExceptions(object? errorData)
+    {
+        if (errorData is not Exception e)
+        {
+            return errorData;
+        }
+
+        object? details = null;
+        if (options.DetailedResponseExceptions)
+        {
+            log.LogTrace("Wrap detailed exception [{exceptionTypeName}]", e.GetType().Name);
+            details = e.ToString();
+        }
+        else
+        {
+            log.LogTrace("Wrap exception without details [{exceptionTypeName}]", e.GetType().Name);
+        }
+
+        return new ExceptionInfo(GetExceptionTypeName(e), e.Message, details);
+    }
+
+    /// <summary>
+    /// Check if code is reserved in specification
+    /// </summary>
+    /// <param name="code">error.code</param>
+    /// <returns></returns>
+    [ExcludeFromCodeCoverage]
+    protected static bool IsReserved(int code) => code is >= -32768 and <= -32000;
+
+    /// <summary>
+    /// Check if code is explicitly defined in specification
+    /// </summary>
+    /// <param name="code">error.code</param>
+    [ExcludeFromCodeCoverage]
+    protected static bool IsSpecial(int code) => code is -32700 or -32600 or -32601 or -32602 or -32603;
+
+    /// <summary>
+    /// Check if code is reserved for server implementation in specification
+    /// </summary>
+    /// <param name="code"></param>
+    /// <returns></returns>
+    [ExcludeFromCodeCoverage]
+    protected static bool IsServer(int code) => code is >= -32099 and <= -32000;
+
+    [ExcludeFromCodeCoverage(Justification = "FullName == null is probably impossible case, left it for sanity")]
+    private static string GetExceptionTypeName(Exception exception) => exception.GetType().FullName ?? exception.GetType().Name;
 }

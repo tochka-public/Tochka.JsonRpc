@@ -1,26 +1,30 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Settings;
 
-namespace Tochka.JsonRpc.Server.Attributes
+namespace Tochka.JsonRpc.Server.Attributes;
+
+/// <inheritdoc cref="IBinderTypeProviderMetadata" />
+/// <summary>
+/// Attribute to override default parameter binding behavior
+/// </summary>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+[AttributeUsage(AttributeTargets.Parameter)]
+public sealed class FromParamsAttribute : Attribute, IBinderTypeProviderMetadata
 {
     /// <summary>
-    /// Override binding source for JSON Rpc parameters
+    /// Style in which JSON-RPC params will be bound to parameter
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [AttributeUsage(AttributeTargets.Parameter)]
-    public class FromParamsAttribute : Attribute, IBindingSourceMetadata, IBinderTypeProviderMetadata
-    {
-        public FromParamsAttribute(BindingStyle bindingStyle)
-        {
-            BindingStyle = bindingStyle;
-        }
+    public BindingStyle BindingStyle { get; }
 
-        public BindingStyle BindingStyle { get; }
+    public BindingSource BindingSource => BindingSource.Custom;
 
-        public BindingSource BindingSource => BindingSource.Custom;
-        public Type BinderType => typeof(JsonRpcModelBinder);
-    }
+    public Type BinderType => typeof(JsonRpcModelBinder);
+
+    /// <inheritdoc />
+    /// <param name="bindingStyle">Style in which JSON-RPC params will be bound to parameter</param>
+    public FromParamsAttribute(BindingStyle bindingStyle) => BindingStyle = bindingStyle;
 }

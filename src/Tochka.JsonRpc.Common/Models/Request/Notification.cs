@@ -1,28 +1,25 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
-using Tochka.JsonRpc.Common.Serializers;
 
-namespace Tochka.JsonRpc.Common.Models.Request
+namespace Tochka.JsonRpc.Common.Models.Request;
+
+/// <inheritdoc />
+/// <summary>
+/// Notification with typed params
+/// </summary>
+/// <param name="Method">Name of the method to be invoked</param>
+/// <param name="Params">Parameter values to be used during the invocation of the method</param>
+/// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public record Notification<TParams>(string Method, TParams? Params, string Jsonrpc = JsonRpcConstants.Version) : ICall<TParams>
+    where TParams : class
 {
-    [ExcludeFromCodeCoverage]
-    public class Notification<TParams> : ICall<TParams>
+    public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions)
     {
-        public string Jsonrpc { get; set; } = JsonRpcConstants.Version;
-
-        public string Method { get; set; }
-
-        public TParams Params { get; set; }
-
-        public IUntypedCall WithSerializedParams(IJsonRpcSerializer serializer)
-        {
-            var serializedParams = serializer.SerializeParams(Params);
-            return new UntypedNotification()
-            {
-                Method = Method,
-                Params = serializedParams
-            };
-        }
-
-        public override string ToString() => $"{nameof(Request<object>)}<{typeof(TParams).Name}>: {nameof(Method)} [{Method}], {nameof(Params)} [{Params}]";
+        var serializedParams = Utils.SerializeParams(Params, serializerOptions);
+        return new UntypedNotification(Method, serializedParams);
     }
 }

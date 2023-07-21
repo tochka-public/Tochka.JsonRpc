@@ -1,23 +1,23 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-namespace Tochka.JsonRpc.Client.Models
+namespace Tochka.JsonRpc.Client.Models;
+
+/// <inheritdoc />
+/// <summary>
+/// Exception with IJsonRpcCallContext
+/// </summary>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+[SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Context is required")]
+public class JsonRpcException : Exception
 {
-    [ExcludeFromCodeCoverage]
-    public class JsonRpcException : Exception
-    {
-        public IJsonRpcCallContext Context { get; }
+    public IJsonRpcCallContext Context { get; }
 
-        // for easy mocking
-        public JsonRpcException()
-        {
-        }
+    public override string Message => $"{base.Message}{Environment.NewLine}{Context}";
 
-        public JsonRpcException(string message, IJsonRpcCallContext context) : base(message)
-        {
-            Context = context;
-        }
+    public JsonRpcException(string message, IJsonRpcCallContext context) : base(message) => Context = context;
 
-        public override string Message => $"{base.Message}{Environment.NewLine}{Context}";
-    }
+    // for easy mocking
+    internal JsonRpcException() => Context = new JsonRpcCallContext();
 }

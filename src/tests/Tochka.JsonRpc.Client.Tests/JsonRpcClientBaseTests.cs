@@ -1,542 +1,566 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Client.Settings;
-using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Response;
-using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
-using Tochka.JsonRpc.Common.Serializers;
 
-namespace Tochka.JsonRpc.Client.Tests
+namespace Tochka.JsonRpc.Client.Tests;
+
+[TestFixture]
+internal class JsonRpcClientBaseTests
 {
-    public class JsonRpcClientBaseTests
+    private Mock<JsonRpcClientBase> clientMock;
+    private MockHttpMessageHandler handlerMock;
+    private Mock<JsonRpcClientOptionsBase> optionsMock;
+    private Mock<IJsonRpcIdGenerator> generatorMock;
+
+    [SetUp]
+    public void Setup()
     {
-        private Mock<JsonRpcClientBase> clientMock;
-        private TestEnvironment testEnvironment;
-        private Mock<IJsonRpcSerializer> serializerMock;
-        private Mock<IJsonRpcIdGenerator> generatorMock;
-        private Mock<JsonRpcClientOptionsBase> optionsMock;
-        private MockHttpMessageHandler handlerMock;
-
-        [SetUp]
-        public void Setup()
+        handlerMock = new MockHttpMessageHandler();
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        optionsMock = new Mock<JsonRpcClientOptionsBase>
         {
-            handlerMock = new MockHttpMessageHandler();
-            serializerMock = new Mock<IJsonRpcSerializer>();
-            optionsMock = new Mock<JsonRpcClientOptionsBase>()
-            {
-                CallBase = true
-            };
-            optionsMock.Object.Url = "http://foo.bar/";
-            generatorMock = new Mock<IJsonRpcIdGenerator>();
-            testEnvironment = new TestEnvironment();
-            clientMock = new Mock<JsonRpcClientBase>(handlerMock.ToHttpClient(), serializerMock.Object, new HeaderJsonRpcSerializer(), optionsMock.Object, generatorMock.Object, testEnvironment.ServiceProvider.GetRequiredService<ILogger<JsonRpcClientBase>>())
-            {
-                CallBase = true
-            };
-            //clientMock.Setup(x => x.InitializeClient(It.IsAny<HttpClient>(), It.IsAny<JsonRpcClientOptionsBase>()));
-        }
-
-        [Test]
-        public void Test_UserAgent_DefaultValue()
+            CallBase = true
+        };
+        optionsMock.Object.Url = BaseUrl;
+        generatorMock = new Mock<IJsonRpcIdGenerator>();
+        clientMock = new Mock<JsonRpcClientBase>(handlerMock.ToHttpClient(), optionsMock.Object, generatorMock.Object, Mock.Of<ILogger>())
         {
-            clientMock.Object.UserAgent.Should().Be("Tochka.JsonRpc.Client");
-        }
-
-        [Test]
-        public void Test_Encoding_DefaultValue()
-        {
-            clientMock.Object.Encoding.Should().Be(Encoding.UTF8);
-        }
-
-        [Test]
-        public void Test_Constructor_CallsInitializeClient()
-        {
-            var client = clientMock.Object;
-
-            clientMock.Verify(x => x.InitializeClient(It.IsAny<HttpClient>(), It.IsAny<JsonRpcClientOptionsBase>()));
-        }
-
-        [Test]
-        public async Task Test_SendNotification1_ChainsToActualMehtod()
-        {
-            var notification = new Notification<object>();
-            clientMock.Setup(x => x.SendNotification(null, notification, It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
-
-            await clientMock.Object.SendNotification(notification, new CancellationToken());
-
-            clientMock.Verify(x => x.SendNotification(null, notification, It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendNotification2_ChainsToActualMehtod()
-        {
-            var url = "test";
-            var method = "method";
-            var parameters = new object();
-
-            clientMock.Setup(x => x.SendNotification(url, It.Is<Notification<object>>(y => y.Method == method && y.Params == parameters), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
-
-            await clientMock.Object.SendNotification(url, method, parameters, new CancellationToken());
-
-            clientMock.Verify(x => x.SendNotification(url, It.Is<Notification<object>>(y => y.Method == method && y.Params == parameters), It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendNotification3_ChainsToActualMehtod()
-        {
-            var method = "method";
-            var parameters = new object();
-
-            clientMock.Setup(x => x.SendNotification(null, It.Is<Notification<object>>(y => y.Method == method && y.Params == parameters), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
-
-            await clientMock.Object.SendNotification(method, parameters, new CancellationToken());
-
-            clientMock.Verify(x => x.SendNotification(null, It.Is<Notification<object>>(y => y.Method == method && y.Params == parameters), It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendRequest1_ChainsToActualMehtod()
-        {
-            var request = new Request<object>();
-            clientMock.Setup(x => x.SendRequest(null, request, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>());
-
-            await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            clientMock.Verify(x => x.SendRequest(null, request, It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendRequest2_ChainsToActualMehtod()
-        {
-            var url = "test";
-            var method = "method";
-            var parameters = new object();
-            var id = Mock.Of<IRpcId>();
-            clientMock.Setup(x => x.SendRequest(url, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>());
-
-            await clientMock.Object.SendRequest(url, id, method, parameters, new CancellationToken());
-
-            clientMock.Verify(x => x.SendRequest(url, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendRequest3_ChainsToActualMehtod()
-        {
-            var method = "method";
-            var parameters = new object();
-            var id = Mock.Of<IRpcId>();
-            clientMock.Setup(x => x.SendRequest(null, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>());
-
-            await clientMock.Object.SendRequest(id, method, parameters, new CancellationToken());
-
-            clientMock.Verify(x => x.SendRequest(null, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendRequest4_ChainsToActualMehtod()
-        {
-            var url = "test";
-            var method = "method";
-            var parameters = new object();
-            var id = Mock.Of<IRpcId>();
-            clientMock.Setup(x => x.SendRequest(url, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>());
-            generatorMock.Setup(x => x.GenerateId())
-                .Returns(id);
-
-            await clientMock.Object.SendRequest(url, method, parameters, new CancellationToken());
-
-            clientMock.Verify(x => x.SendRequest(url, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendRequest5_ChainsToActualMehtod()
-        {
-            var method = "method";
-            var parameters = new object();
-            var id = Mock.Of<IRpcId>();
-            clientMock.Setup(x => x.SendRequest(null, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>());
-            generatorMock.Setup(x => x.GenerateId())
-                .Returns(id);
-
-            await clientMock.Object.SendRequest(method, parameters, new CancellationToken());
-
-            clientMock.Verify(x => x.SendRequest(null, It.Is<Request<object>>(y => y.Method == method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendBatch_ChainsToActualMehtod()
-        {
-            var batch = new List<ICall>();
-            clientMock.Setup(x => x.SendBatch(null, batch, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<IBatchJsonRpcResult>());
-
-            await clientMock.Object.SendBatch(batch, new CancellationToken());
-
-            clientMock.Verify(x => x.SendBatch(null, batch, It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_Send_ChainsToActualMehtod()
-        {
-            var request = new Request<object>();
-            clientMock.Setup(x => x.Send(null, request, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Mock.Of<HttpResponseMessage>());
-
-            await clientMock.Object.Send(request, new CancellationToken());
-
-            clientMock.Verify(x => x.Send(null, request, It.IsAny<CancellationToken>()));
-        }
-
-        [Test]
-        public async Task Test_SendNotification_SerializesContentAndHeadersAndChecksResponse()
-        {
-            var notification = new Notification<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK);
-
-            await clientMock.Object.SendNotification(notification, new CancellationToken());
-
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<UntypedNotification>()));
-        }
-
-        [TestCase(HttpStatusCode.NoContent)]
-        [TestCase(HttpStatusCode.InternalServerError)]
-        [TestCase(HttpStatusCode.BadRequest)]
-        public async Task Test_SendNotification_ThrowsOnBadResponse(HttpStatusCode httpStatusCode)
-        {
-            var notification = new Notification<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(httpStatusCode);
-
-            Func<Task> action = async () => await clientMock.Object.SendNotification(notification, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-        }
-
-        [Test]
-        public async Task Test_SendRequest_SerializesContentAndHeadersAndReadsResponse()
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns(new SingleResponseWrapper() {Single = new UntypedResponse()});
-
-            var result = await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            result.Should().NotBeNull();
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<UntypedRequest>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
-        }
-
-        [TestCase(HttpStatusCode.NoContent)]
-        [TestCase(HttpStatusCode.InternalServerError)]
-        [TestCase(HttpStatusCode.BadRequest)]
-        public async Task Test_SendRequest_ThrowsOnBadResponse(HttpStatusCode httpStatusCode)
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(httpStatusCode);
-
-            Func<Task> action = async () => await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-        }
-
-        [Test]
-        public async Task Test_SendRequest_ThrowsOnNullBody()
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(x => new HttpResponseMessage(HttpStatusCode.OK));
-
-            Func<Task> action = async () => await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-        }
-
-        [Test]
-        public async Task Test_SendRequest_ThrowsOnNullContentLength()
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(x => new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(string.Empty)
-                {
-                    Headers =
-                    {
-                        ContentLength = null
-                    }
-                }
-            });
-
-            Func<Task> action = async () => await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-        }
-
-        [Test]
-        public async Task Test_SendRequest_ThrowsOnEmptyBody()
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, string.Empty);
-
-            Func<Task> action = async () => await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-        }
-
-        [Test]
-        public async Task Test_SendRequest_ThrowsOnBadResponse()
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns(Mock.Of<IResponseWrapper>());
-
-            Func<Task> action = async () => await clientMock.Object.SendRequest(request, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-        }
-
-        [Test]
-        public async Task Test_SendBatch_SerializesContentAndHeadersAndReadsResponse()
-        {
-            var batch = new List<ICall>
-            {
-                new Request<object>()
-                {
-                    Params = new object()
-                },
-                new Notification<object>()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns(new BatchResponseWrapper()
-                {
-                    Batch = new List<IResponse>()
-                    {
-                        new Response<object>()
-                    }
-                });
-
-            var result = await clientMock.Object.SendBatch(batch, new CancellationToken());
-
-            result.Should().NotBeNull();
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
-        }
-
-        [Test]
-        public async Task Test_SendBatch_ThrowsOnSingleResponse()
-        {
-            var batch = new List<ICall>
-            {
-                new Request<object>()
-                {
-                    Params = new object()
-                },
-                new Notification<object>()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns(new SingleResponseWrapper()
-                {
-                    Single = new Response<object>()
-                });
-            Func<Task> action = async () => await clientMock.Object.SendBatch(batch, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
-        }
-
-        [Test]
-        public async Task Test_SendBatch_ThrowsOnBadResponse()
-        {
-            var batch = new List<ICall>
-            {
-                new Request<object>()
-                {
-                    Params = new object()
-                },
-                new Notification<object>()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns(Mock.Of<IResponseWrapper>());
-            Func<Task> action = async () => await clientMock.Object.SendBatch(batch, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
-        }
-
-        [Test]
-        public async Task Test_SendBatch_ThrowsOnNullResponse()
-        {
-            var batch = new List<ICall>
-            {
-                new Request<object>()
-                {
-                    Params = new object()
-                },
-                new Notification<object>()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns((IResponseWrapper) null);
-            Func<Task> action = async () => await clientMock.Object.SendBatch(batch, new CancellationToken());
-
-            await action.Should().ThrowAsync<JsonRpcException>();
-
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-            clientMock.Verify(x => x.ParseBody(It.IsAny<string>()));
-        }
-
-        [Test]
-        public async Task Test_SendBatch_ReturnsNullWhenNotificationsBatch()
-        {
-            var batch = new List<ICall>
-            {
-                new Notification<object>()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(HttpStatusCode.OK, JsonRpcConstants.ContentType, "{}");
-            clientMock.Setup(x => x.ParseBody(It.IsAny<string>()))
-                .Returns(new BatchResponseWrapper()
-                {
-                    Batch = new List<IResponse>()
-                });
-            var result = await clientMock.Object.SendBatch(batch, new CancellationToken());
-
-            result.Should().BeNull();
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<List<IUntypedCall>>()));
-        }
-
-        [TestCase(HttpStatusCode.OK)]
-        [TestCase(HttpStatusCode.NoContent)]
-        [TestCase(HttpStatusCode.InternalServerError)]
-        [TestCase(HttpStatusCode.BadRequest)]
-        public async Task Test_Send_SerializesContentAndReturnsResponse(HttpStatusCode httpStatusCode)
-        {
-            var request = new Request<object>
-            {
-                Params = new object()
-            };
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            handlerMock.When("*").Respond(httpStatusCode);
-
-            var result = await clientMock.Object.Send(request, new CancellationToken());
-
-            result.Should().NotBeNull();
-            result.StatusCode.Should().Be(httpStatusCode);
-            serializerMock.Verify(x => x.Serializer);
-            clientMock.Verify(x => x.CreateHttpContent(It.IsAny<UntypedRequest>()));
-        }
-
-        [Test]
-        public void Test_ParseBody_DeserializesJson()
-        {
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            var stringContent = @"{""id"": null, ""result"": null}";
-
-            var result = clientMock.Object.ParseBody(stringContent);
-
-            result.Should().BeOfType<SingleResponseWrapper>();
-        }
-
-        [Test]
-        public void Test_ParseBody_ThrowsOnBadJson()
-        {
-            serializerMock.Setup(x => x.Serializer)
-                .Returns(new JsonSerializer());
-            var stringContent = @"{""id"": null, ""result"": null";
-
-            Action action = () => clientMock.Object.ParseBody(stringContent);
-
-            action.Should().Throw<JsonException>();
-        }
+            CallBase = true
+        };
     }
+
+    [Test]
+    public void Ctor_BaseUrlDoesntEndWithSlash_Throw()
+    {
+        optionsMock.Object.Url = BaseUrl[..^1];
+
+        // Needed to call constructor
+        var action = () => clientMock.Object;
+
+        action.Should().Throw<TargetInvocationException>().WithInnerException<ArgumentException>();
+    }
+
+    [Test]
+    public void Ctor_ValidBaseUrl_InitializeHttpClient()
+    {
+        var options = optionsMock.Object;
+
+        // Needed to call constructor
+        var client = clientMock.Object;
+
+        var httpClient = client.Client;
+        httpClient.BaseAddress.Should().BeEquivalentTo(new Uri(options.Url, UriKind.Absolute));
+        httpClient.DefaultRequestHeaders.Should().ContainKey("User-Agent");
+        httpClient.DefaultRequestHeaders.UserAgent.ToString().Should().Be(client.UserAgent);
+        httpClient.Timeout.Should().Be(options.Timeout);
+    }
+
+    [Test]
+    public async Task SendNotification1_ChainsToInternalMethod()
+    {
+        var notification = new Notification<object>(Method, null);
+        clientMock.Setup(x => x.SendNotificationInternal(RequestUrl, notification, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+
+        await clientMock.Object.SendNotification(RequestUrl, notification, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendNotification2_ChainsToInternalMethod()
+    {
+        var notification = new Notification<object>(Method, null);
+        clientMock.Setup(x => x.SendNotificationInternal(null, notification, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+
+        await clientMock.Object.SendNotification(notification, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendNotification3_ChainsToInternalMethod()
+    {
+        var parameters = new object();
+        clientMock.Setup(x => x.SendNotificationInternal(RequestUrl, It.Is<Notification<object>>(y => y.Method == Method && y.Params == parameters), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+
+        await clientMock.Object.SendNotification(RequestUrl, Method, parameters, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendNotification4_ChainsToInternalMethod()
+    {
+        var parameters = new object();
+        clientMock.Setup(x => x.SendNotificationInternal(null, It.Is<Notification<object>>(y => y.Method == Method && y.Params == parameters), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+
+        await clientMock.Object.SendNotification(Method, parameters, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequest1_ChainsToInternalMethod()
+    {
+        var request = new Request<object>(new NullRpcId(), Method, null);
+        clientMock.Setup(x => x.SendRequestInternal(RequestUrl, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(RequestUrl, request, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequest2_ChainsToInternalMethod()
+    {
+        var request = new Request<object>(new NullRpcId(), Method, null);
+        clientMock.Setup(x => x.SendRequestInternal(null, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(request, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequest3_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        generatorMock.Setup(static g => g.GenerateId())
+            .Returns(id)
+            .Verifiable();
+        var parameters = new object();
+        clientMock.Setup(x => x.SendRequestInternal(RequestUrl, It.Is<Request<object>>(y => y.Method == Method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(RequestUrl, Method, parameters, new CancellationToken());
+
+        generatorMock.Verify();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequest4_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        generatorMock.Setup(static g => g.GenerateId())
+            .Returns(id)
+            .Verifiable();
+        var parameters = new object();
+        clientMock.Setup(x => x.SendRequestInternal(null, It.Is<Request<object>>(y => y.Method == Method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(Method, parameters, new CancellationToken());
+
+        generatorMock.Verify();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequest5_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        var parameters = new object();
+        clientMock.Setup(x => x.SendRequestInternal(RequestUrl, It.Is<Request<object>>(y => y.Method == Method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(RequestUrl, id, Method, parameters, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequest6_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        var parameters = new object();
+        clientMock.Setup(x => x.SendRequestInternal(null, It.Is<Request<object>>(y => y.Method == Method && y.Params == parameters && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(id, Method, parameters, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendBatch1_ChainsToInternalMethod()
+    {
+        var batch = Array.Empty<ICall>();
+        clientMock.Setup(x => x.SendBatchInternal(RequestUrl, batch, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<IBatchJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendBatch(RequestUrl, batch, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendBatch2_ChainsToInternalMethod()
+    {
+        var batch = Array.Empty<ICall>();
+        clientMock.Setup(x => x.SendBatchInternal(null, batch, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<IBatchJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendBatch(batch, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task Send1_ChainsToInternalMethod()
+    {
+        var call = new Notification<object>(Method, null);
+        clientMock.Setup(x => x.SendInternal(RequestUrl, call, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<HttpResponseMessage>())
+            .Verifiable();
+
+        await clientMock.Object.Send(RequestUrl, call, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task Send2_ChainsToInternalMethod()
+    {
+        var call = new Notification<object>(Method, null);
+        clientMock.Setup(x => x.SendInternal(null, call, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<HttpResponseMessage>())
+            .Verifiable();
+
+        await clientMock.Object.Send(call, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task Send3_ChainsToInternalMethod()
+    {
+        var calls = Array.Empty<ICall>();
+        clientMock.Setup(x => x.SendInternal(RequestUrl, calls, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<HttpResponseMessage>())
+            .Verifiable();
+
+        await clientMock.Object.Send(RequestUrl, calls, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task Send4_ChainsToInternalMethod()
+    {
+        var calls = Array.Empty<ICall>();
+        clientMock.Setup(x => x.SendInternal(null, calls, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<HttpResponseMessage>())
+            .Verifiable();
+
+        await clientMock.Object.Send(calls, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendNotificationInternal_PostContentToRequestUrl()
+    {
+        var notification = new Notification<object>(Method, new object());
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+
+        await clientMock.Object.SendNotificationInternal(RequestUrl, notification, CancellationToken.None);
+
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+    }
+
+    [Test]
+    public async Task SendNotificationInternal_FillContext()
+    {
+        var notification = new Notification<object>(Method, new object());
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var response = new HttpResponseMessage();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.When(PostUrl)
+            .Respond(() => Task.FromResult(response));
+
+        await clientMock.Object.SendNotificationInternal(RequestUrl, notification, CancellationToken.None);
+
+        contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
+        contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
+        contextMock.Verify(c => c.WithHttpResponse(response));
+    }
+
+    [Test]
+    public async Task SendRequestInternal_PostContentToRequestUrlAndParseResponse()
+    {
+        var request = new Request<object>(new NullRpcId(), Method, new object());
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(Mock.Of<IJsonRpcCallContext>());
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(Mock.Of<IResponse>()))
+            .Verifiable();
+
+        await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestInternal_FillContext()
+    {
+        var request = new Request<object>(new NullRpcId(), Method, new object());
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var response = new HttpResponseMessage();
+        var singleResponse = Mock.Of<IResponse>();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.When(PostUrl)
+            .Respond(() => Task.FromResult(response));
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(singleResponse))
+            .Verifiable();
+
+        await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
+        contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
+        contextMock.Verify(c => c.WithHttpResponse(response));
+        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
+        contextMock.Verify(c => c.WithSingleResponse(singleResponse));
+    }
+
+    [Test]
+    public async Task SendRequestInternal_ThrowOnBatchResponse()
+    {
+        var request = new Request<object>(new NullRpcId(), Method, new object());
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new BatchResponseWrapper(new List<IResponse>()))
+            .Verifiable();
+
+        var act = async () => await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        await act.Should().ThrowAsync<JsonRpcException>();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendBatchInternal_BatchWithoutRequests_PostContentToRequestUrl()
+    {
+        var batch = new List<ICall> { new Notification<object>(Method, null) };
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+
+        var response = await clientMock.Object.SendBatchInternal(RequestUrl, batch, CancellationToken.None);
+
+        response.Should().BeNull();
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+    }
+
+    [Test]
+    public async Task SendBatchInternal_BatchWithoutRequests_FillContext()
+    {
+        var batch = new List<ICall> { new Notification<object>(Method, null) };
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var response = new HttpResponseMessage();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.When(PostUrl)
+            .Respond(() => Task.FromResult(response));
+
+        await clientMock.Object.SendBatchInternal(RequestUrl, batch, CancellationToken.None);
+
+        contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
+        contextMock.Verify(static c => c.WithBatch(It.IsAny<ICollection<IUntypedCall>>()));
+        contextMock.Verify(c => c.WithHttpResponse(response));
+    }
+
+    [Test]
+    public async Task SendBatchInternal_BatchWithRequests_PostContentToRequestUrlAndParseResponse()
+    {
+        var batch = new List<ICall> { new Request<object>(new NullRpcId(), Method, null) };
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var batchResponse = new List<IResponse> { Mock.Of<IResponse>() };
+        contextMock.Setup(static c => c.ExpectedBatchResponseCount)
+            .Returns(batch.Count);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new BatchResponseWrapper(batchResponse))
+            .Verifiable();
+
+        var response = await clientMock.Object.SendBatchInternal(RequestUrl, batch, CancellationToken.None);
+
+        response.Should().NotBeNull();
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendBatchInternal_BatchWithRequests_FillContext()
+    {
+        var batch = new List<ICall> { new Request<object>(new NullRpcId(), Method, null) };
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var response = new HttpResponseMessage();
+        var batchResponse = new List<IResponse> { Mock.Of<IResponse>() };
+        contextMock.Setup(static c => c.ExpectedBatchResponseCount)
+            .Returns(batch.Count);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.When(PostUrl)
+            .Respond(() => Task.FromResult(response));
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new BatchResponseWrapper(batchResponse))
+            .Verifiable();
+
+        await clientMock.Object.SendBatchInternal(RequestUrl, batch, CancellationToken.None);
+
+        contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
+        contextMock.Verify(static c => c.WithBatch(It.IsAny<ICollection<IUntypedCall>>()));
+        contextMock.Verify(c => c.WithHttpResponse(response));
+        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
+        contextMock.Verify(c => c.WithBatchResponse(batchResponse));
+    }
+
+    [Test]
+    public async Task SendBatchInternal_BatchWithRequestsAndSingleResponse_ThrowAndFillContext()
+    {
+        var batch = new List<ICall> { new Request<object>(new NullRpcId(), Method, null) };
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var singleResponse = Mock.Of<IResponse>();
+        contextMock.Setup(static c => c.ExpectedBatchResponseCount)
+            .Returns(batch.Count);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(singleResponse))
+            .Verifiable();
+
+        var act = async () => await clientMock.Object.SendBatchInternal(RequestUrl, batch, CancellationToken.None);
+
+        await act.Should().ThrowAsync<JsonRpcException>();
+        clientMock.Verify();
+        contextMock.Verify(c => c.WithSingleResponse(singleResponse));
+    }
+
+    [Test]
+    public async Task SendBatchInternal_BatchWithRequestsAndUnknownResponse_Throw()
+    {
+        var batch = new List<ICall> { new Request<object>(new NullRpcId(), Method, null) };
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        contextMock.Setup(static c => c.ExpectedBatchResponseCount)
+            .Returns(1);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(Mock.Of<IResponseWrapper>())
+            .Verifiable();
+
+        var act = async () => await clientMock.Object.SendBatchInternal(RequestUrl, batch, CancellationToken.None);
+
+        await act.Should().ThrowAsync<JsonRpcException>();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendInternal_SingleCall_PostContentToRequestUrl()
+    {
+        var call = Mock.Of<ICall>();
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+
+        await clientMock.Object.SendInternal(RequestUrl, call, CancellationToken.None);
+
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+    }
+
+    [Test]
+    public async Task SendInternal_BatchCall_PostContentToRequestUrl()
+    {
+        var calls = Array.Empty<ICall>();
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+
+        await clientMock.Object.SendInternal(RequestUrl, calls, CancellationToken.None);
+
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+    }
+
+    private const string BaseUrl = "https://localhost/";
+    private const string Method = "method";
+    private const string RequestUrl = "request-url";
+    private const string PostUrl = $"{BaseUrl}{RequestUrl}";
+    private const string ResponseContent = "response-content";
 }

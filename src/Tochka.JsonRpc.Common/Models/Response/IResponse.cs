@@ -1,12 +1,21 @@
+﻿using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Request;
 
-namespace Tochka.JsonRpc.Common.Models.Response
+namespace Tochka.JsonRpc.Common.Models.Response;
+
+/// <summary>
+/// Base interface for responses
+/// </summary>
+[PublicAPI]
+public interface IResponse
 {
-    public interface IResponse
-    {
-        IRpcId Id { get; set; }
+    /// <summary>
+    /// Identifier established by the Client
+    /// </summary>
+    IRpcId Id { get; }
 
-        string Jsonrpc { get; set; }
-    }
+    /// <summary>
+    /// Version of the JSON-RPC protocol
+    /// </summary>
+    string Jsonrpc { get; }
 }

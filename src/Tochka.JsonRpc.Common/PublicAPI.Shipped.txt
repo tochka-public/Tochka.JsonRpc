@@ -1,0 +1,154 @@
+#nullable enable
+const Tochka.JsonRpc.Common.JsonRpcConstants.ContentType = "application/json" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.ControllerMethodSeparator = "." -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.DefaultRoutePrefix = "/api/jsonrpc" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.ErrorProperty = "error" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.ExceptionCode = -32000 -> int
+const Tochka.JsonRpc.Common.JsonRpcConstants.IdProperty = "id" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.InternalExceptionCode = -32001 -> int
+const Tochka.JsonRpc.Common.JsonRpcConstants.JsonrpcVersionProperty = "jsonrpc" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.LogStringLimit = 5000 -> int
+const Tochka.JsonRpc.Common.JsonRpcConstants.MethodProperty = "method" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.ParamsProperty = "params" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.ResultProperty = "result" -> string!
+const Tochka.JsonRpc.Common.JsonRpcConstants.Version = "2.0" -> string!
+override Tochka.JsonRpc.Common.Converters.CallConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall?
+override Tochka.JsonRpc.Common.Converters.CallConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Tochka.JsonRpc.Common.Converters.JsonRpcIdConverter.HandleNull.get -> bool
+override Tochka.JsonRpc.Common.Converters.JsonRpcIdConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
+override Tochka.JsonRpc.Common.Converters.JsonRpcIdConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Id.IRpcId! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Tochka.JsonRpc.Common.Converters.RequestWrapperConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Tochka.JsonRpc.Common.Models.Request.Wrappers.IRequestWrapper!
+override Tochka.JsonRpc.Common.Converters.RequestWrapperConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Request.Wrappers.IRequestWrapper! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Tochka.JsonRpc.Common.Converters.ResponseConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+override Tochka.JsonRpc.Common.Converters.ResponseConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Response.IResponse! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Tochka.JsonRpc.Common.Converters.ResponseWrapperConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper!
+override Tochka.JsonRpc.Common.Converters.ResponseWrapperConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Tochka.JsonRpc.Common.Models.Id.NullRpcId.ToString() -> string!
+override Tochka.JsonRpc.Common.Models.Id.NumberRpcId.ToString() -> string!
+override Tochka.JsonRpc.Common.Models.Id.StringRpcId.ToString() -> string!
+static Tochka.JsonRpc.Common.Extensions.ConvertName(this System.Text.Json.JsonSerializerOptions! jsonSerializerOptions, string! name) -> string!
+static Tochka.JsonRpc.Common.Extensions.Get<T>(this System.Collections.Generic.IEnumerable<object!>! collection) -> T?
+static Tochka.JsonRpc.Common.JsonRpcSerializerOptions.CamelCase.get -> System.Text.Json.JsonSerializerOptions!
+static Tochka.JsonRpc.Common.JsonRpcSerializerOptions.Headers.get -> System.Text.Json.JsonSerializerOptions!
+static Tochka.JsonRpc.Common.JsonRpcSerializerOptions.SnakeCase.get -> System.Text.Json.JsonSerializerOptions!
+static Tochka.JsonRpc.Common.Utils.DeserializeErrorData<T>(System.Text.Json.JsonDocument? data, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> T?
+Tochka.JsonRpc.Common.Converters.CallConverter
+Tochka.JsonRpc.Common.Converters.CallConverter.CallConverter() -> void
+Tochka.JsonRpc.Common.Converters.JsonRpcIdConverter
+Tochka.JsonRpc.Common.Converters.JsonRpcIdConverter.JsonRpcIdConverter() -> void
+Tochka.JsonRpc.Common.Converters.RequestWrapperConverter
+Tochka.JsonRpc.Common.Converters.RequestWrapperConverter.RequestWrapperConverter() -> void
+Tochka.JsonRpc.Common.Converters.ResponseConverter
+Tochka.JsonRpc.Common.Converters.ResponseConverter.ResponseConverter() -> void
+Tochka.JsonRpc.Common.Converters.ResponseWrapperConverter
+Tochka.JsonRpc.Common.Converters.ResponseWrapperConverter.ResponseWrapperConverter() -> void
+Tochka.JsonRpc.Common.Extensions
+Tochka.JsonRpc.Common.JsonRpcConstants
+Tochka.JsonRpc.Common.JsonRpcFormatException
+Tochka.JsonRpc.Common.JsonRpcFormatException.JsonRpcFormatException() -> void
+Tochka.JsonRpc.Common.JsonRpcFormatException.JsonRpcFormatException(string! message) -> void
+Tochka.JsonRpc.Common.JsonRpcFormatException.JsonRpcFormatException(string! message, System.Exception! innerException) -> void
+Tochka.JsonRpc.Common.JsonRpcSerializerOptions
+Tochka.JsonRpc.Common.Models.Id.IRpcId
+Tochka.JsonRpc.Common.Models.Id.NullRpcId
+Tochka.JsonRpc.Common.Models.Id.NumberRpcId
+Tochka.JsonRpc.Common.Models.Id.NumberRpcId.NumberRpcId(long Value) -> void
+Tochka.JsonRpc.Common.Models.Id.NumberRpcId.Value.get -> long
+Tochka.JsonRpc.Common.Models.Id.NumberRpcId.Value.init -> void
+Tochka.JsonRpc.Common.Models.Id.StringRpcId
+Tochka.JsonRpc.Common.Models.Id.StringRpcId.StringRpcId(string! Value) -> void
+Tochka.JsonRpc.Common.Models.Id.StringRpcId.Value.get -> string!
+Tochka.JsonRpc.Common.Models.Id.StringRpcId.Value.init -> void
+Tochka.JsonRpc.Common.Models.Request.ICall
+Tochka.JsonRpc.Common.Models.Request.ICall.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Request.ICall.Method.get -> string!
+Tochka.JsonRpc.Common.Models.Request.ICall.WithSerializedParams(System.Text.Json.JsonSerializerOptions! serializerOptions) -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!
+Tochka.JsonRpc.Common.Models.Request.ICall<TParams>
+Tochka.JsonRpc.Common.Models.Request.ICall<TParams>.Params.get -> TParams?
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Jsonrpc.init -> void
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Method.get -> string!
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Method.init -> void
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Notification(string! Method, TParams? Params, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Params.get -> TParams?
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.Params.init -> void
+Tochka.JsonRpc.Common.Models.Request.Notification<TParams>.WithSerializedParams(System.Text.Json.JsonSerializerOptions! serializerOptions) -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Id.get -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Id.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Jsonrpc.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Method.get -> string!
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Method.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Params.get -> TParams?
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Params.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Request(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, string! Method, TParams? Params, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Request.Request<TParams>.WithSerializedParams(System.Text.Json.JsonSerializerOptions! serializerOptions) -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!
+Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall
+Tochka.JsonRpc.Common.Models.Request.Untyped.UntypedNotification
+Tochka.JsonRpc.Common.Models.Request.Untyped.UntypedNotification.UntypedNotification(string! Method, System.Text.Json.JsonDocument? Params, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Request.Untyped.UntypedRequest
+Tochka.JsonRpc.Common.Models.Request.Untyped.UntypedRequest.UntypedRequest(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, string! Method, System.Text.Json.JsonDocument? Params, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Request.Wrappers.BatchRequestWrapper
+Tochka.JsonRpc.Common.Models.Request.Wrappers.BatchRequestWrapper.BatchRequestWrapper(System.Collections.Generic.List<System.Text.Json.JsonDocument!>! Calls) -> void
+Tochka.JsonRpc.Common.Models.Request.Wrappers.BatchRequestWrapper.Calls.get -> System.Collections.Generic.List<System.Text.Json.JsonDocument!>!
+Tochka.JsonRpc.Common.Models.Request.Wrappers.BatchRequestWrapper.Calls.init -> void
+Tochka.JsonRpc.Common.Models.Request.Wrappers.IRequestWrapper
+Tochka.JsonRpc.Common.Models.Request.Wrappers.SingleRequestWrapper
+Tochka.JsonRpc.Common.Models.Request.Wrappers.SingleRequestWrapper.Call.get -> System.Text.Json.JsonDocument!
+Tochka.JsonRpc.Common.Models.Request.Wrappers.SingleRequestWrapper.Call.init -> void
+Tochka.JsonRpc.Common.Models.Request.Wrappers.SingleRequestWrapper.SingleRequestWrapper(System.Text.Json.JsonDocument! Call) -> void
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.Error.get -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>!
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.Error.init -> void
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.ErrorResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>! Error, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.Id.get -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.Id.init -> void
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.Jsonrpc.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Code.get -> int
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Code.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Data.get -> TData?
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Data.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Error(int Code, string! Message, TData? Data) -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Message.get -> string!
+Tochka.JsonRpc.Common.Models.Response.Errors.Error<TData>.Message.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.Details.get -> object?
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.Details.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.ExceptionInfo(string! Type, string! Message, object? Details) -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.Message.get -> string!
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.Message.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.Type.get -> string!
+Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo.Type.init -> void
+Tochka.JsonRpc.Common.Models.Response.Errors.IError
+Tochka.JsonRpc.Common.Models.Response.Errors.IError.Code.get -> int
+Tochka.JsonRpc.Common.Models.Response.Errors.IError.Data.get -> object?
+Tochka.JsonRpc.Common.Models.Response.Errors.IError.Message.get -> string!
+Tochka.JsonRpc.Common.Models.Response.IResponse
+Tochka.JsonRpc.Common.Models.Response.IResponse.Id.get -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
+Tochka.JsonRpc.Common.Models.Response.IResponse.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Id.get -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Id.init -> void
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Jsonrpc.init -> void
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Response(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, TResult? Result, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Result.get -> TResult?
+Tochka.JsonRpc.Common.Models.Response.Response<TResult>.Result.init -> void
+Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse
+Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse.UntypedErrorResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>! Error, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedResponse
+Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedResponse.UntypedResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, System.Text.Json.JsonDocument? Result, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Response.Wrappers.BatchResponseWrapper
+Tochka.JsonRpc.Common.Models.Response.Wrappers.BatchResponseWrapper.BatchResponseWrapper(System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>! Responses) -> void
+Tochka.JsonRpc.Common.Models.Response.Wrappers.BatchResponseWrapper.Responses.get -> System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>!
+Tochka.JsonRpc.Common.Models.Response.Wrappers.BatchResponseWrapper.Responses.init -> void
+Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper
+Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper
+Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse!
+Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper.Response.init -> void
+Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper.SingleResponseWrapper(Tochka.JsonRpc.Common.Models.Response.IResponse! Response) -> void
+Tochka.JsonRpc.Common.Utils

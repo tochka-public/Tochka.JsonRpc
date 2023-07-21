@@ -1,40 +1,45 @@
-using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
-namespace Tochka.JsonRpc.Common.Converters
+namespace Tochka.JsonRpc.Common.Converters;
+
+/// <inheritdoc />
+/// <summary>
+/// Deserialize response to single or batch from object/array
+/// </summary>
+[PublicAPI]
+public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
 {
-    /// <summary>
-    /// Handle dumb rule of response being single on some batch errors
-    /// </summary>
-    public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
+    // System.Text.Json can't serialize derived types:
+    // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    public override void Write(Utf8JsonWriter writer, IResponseWrapper value, JsonSerializerOptions options)
     {
-        public override void WriteJson(JsonWriter writer, IResponseWrapper value, JsonSerializer serializer)
+        switch (value)
         {
-            // NOTE: used in client to parse responses, no need for serialization
-            throw new InvalidOperationException();
+            case SingleResponseWrapper singleResponseWrapper:
+                JsonSerializer.Serialize(writer, singleResponseWrapper.Response, options);
+                break;
+            case BatchResponseWrapper batchResponseWrapper:
+                JsonSerializer.Serialize(writer, batchResponseWrapper.Responses, options);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
         }
+    }
 
-        public override IResponseWrapper ReadJson(JsonReader reader, Type objectType, IResponseWrapper existingValue, bool hasExistingValue, JsonSerializer serializer)
+    [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for response wrappers")]
+    public override IResponseWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var tokenType = reader.TokenType;
+        return tokenType switch
         {
-            var token = JToken.Load(reader);
-            var tokenType = token.Type;
-            switch (tokenType)
-            {
-                case JTokenType.Object:
-                    var request = token.ToObject<IResponse>(serializer);
-                    return new SingleResponseWrapper() {Single = request};
-
-                case JTokenType.Array:
-                    var batch = token.ToObject<List<IResponse>>(serializer);
-                    return new BatchResponseWrapper() {Batch = batch};
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, "Expected {} or [] as root element");
-            }
-        }
+            JsonTokenType.StartObject => new SingleResponseWrapper(JsonSerializer.Deserialize<IResponse>(ref reader, options)!),
+            JsonTokenType.StartArray => new BatchResponseWrapper(JsonSerializer.Deserialize<List<IResponse>>(ref reader, options)!),
+            _ => throw new JsonRpcFormatException($"Expected {{}} or [] as root element. Got {tokenType}")
+        };
     }
 }

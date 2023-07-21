@@ -1,19 +1,42 @@
+﻿using System.Text.Json;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
-using Tochka.JsonRpc.Common.Serializers;
 
-namespace Tochka.JsonRpc.Common.Models.Request
+namespace Tochka.JsonRpc.Common.Models.Request;
+
+/// <summary>
+/// Base interface for all calls
+/// </summary>
+[PublicAPI]
+public interface ICall
 {
-    public interface ICall
-    {
-        string Jsonrpc { get; set; }
+    /// <summary>
+    /// Version of the JSON-RPC protocol
+    /// </summary>
+    string Jsonrpc { get; }
 
-        string Method { get; set; }
+    /// <summary>
+    /// Name of the method to be invoked
+    /// </summary>
+    string Method { get; }
 
-        IUntypedCall WithSerializedParams(IJsonRpcSerializer serializer);
-    }
+    /// <summary>
+    /// Serialize params to JsonDocument
+    /// </summary>
+    IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions);
+}
 
-    public interface ICall<TParams> : ICall
-    {
-        TParams Params { get; set; }
-    }
+/// <inheritdoc />
+/// <summary>
+/// Base interface for calls to access typed params
+/// </summary>
+/// <typeparam name="TParams">Type of params</typeparam>
+[PublicAPI]
+public interface ICall<out TParams> : ICall
+    where TParams : class?
+{
+    /// <summary>
+    /// Parameter values to be used during the invocation of the method
+    /// </summary>
+    TParams? Params { get; }
 }

@@ -1,1 +1,16 @@
-root=true
+[*.{cs,csx,cake,razor}]
+resharper_keep_existing_linebreaks = true
+
+##########################################
+##########################################
+# If you need more freedom in new line formatting, you can uncomment this lines:
+
+resharper_keep_existing_property_patterns_arrangement = true
+resharper_keep_existing_initializer_arrangement = true
+#resharper_keep_existing_declaration_block_arrangement = true
+#resharper_keep_existing_invocation_parens_arrangement = true
+#resharper_keep_existing_property_patterns_arrangement = true
+
+##########################################
+##########################################
+# ... Add your custom settings here ...

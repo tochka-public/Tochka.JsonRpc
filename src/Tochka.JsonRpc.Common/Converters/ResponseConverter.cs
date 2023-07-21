@@ -1,59 +1,74 @@
-using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
-namespace Tochka.JsonRpc.Common.Converters
+namespace Tochka.JsonRpc.Common.Converters;
+
+/// <inheritdoc />
+/// <summary>
+/// Deserialize response that can have Either result or error
+/// </summary>
+[PublicAPI]
+public class ResponseConverter : JsonConverter<IResponse>
 {
-    public class ResponseConverter : JsonConverter
+    // System.Text.Json can't serialize derived types:
+    // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    public override void Write(Utf8JsonWriter writer, IResponse value, JsonSerializerOptions options)
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        switch (value)
         {
-            // NOTE: used in client to parse responses, no need for serialization
-            throw new InvalidOperationException();
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var jObject = JObject.Load(reader);
-            var idProperty = jObject[JsonRpcConstants.IdProperty];
-            var resultProperty = jObject[JsonRpcConstants.ResultProperty];
-            var errorProperty = jObject[JsonRpcConstants.ErrorProperty];
-            var hasResult = resultProperty != null;
-            var hasError = errorProperty != null;
-            if (idProperty == null)
-            {
-                // "This member is REQUIRED. If there was an error in detecting the id in the Request object (e.g. Parse error/Invalid Request), it MUST be Null."
-                // (JToken.Null, not actual null)
-                throw new ArgumentException($"JSON Rpc response does not have [{JsonRpcConstants.IdProperty}] property");
-            }
-
-            if (hasResult && !hasError)
-            {
-                // result: This member is REQUIRED on success. This member MUST NOT exist if there was an error invoking the method.
-                var result = jObject.ToObject<UntypedResponse>(serializer);
-                result.RawResult = resultProperty.ToString();
-                result.RawId = idProperty as JValue;
-                return result;
-            }
-
-
-            if (!hasResult && hasError)
-            {
-                // error: This member is REQUIRED on error. This member MUST NOT exist if there was no error triggered during invocation.
-                var result = jObject.ToObject<UntypedErrorResponse>(serializer);
-                result.RawError = errorProperty.ToString();
-                result.RawId = idProperty as JValue;
-                return result;
-            }
-
-            throw new ArgumentException($"JSON Rpc response is invalid, expected one of properties. Has [{JsonRpcConstants.ResultProperty}]: {hasResult}. Has [{JsonRpcConstants.ErrorProperty}]: {hasError}");
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(IResponse);
+            case UntypedResponse untypedResponse:
+                JsonSerializer.Serialize(writer, untypedResponse, options);
+                break;
+            case UntypedErrorResponse untypedErrorResponse:
+                JsonSerializer.Serialize(writer, untypedErrorResponse, options);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(value), value.GetType().Name);
         }
     }
+
+    public override IResponse? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+        CheckProperties(reader) switch
+        {
+            // "Id is REQUIRED. If there was an error in detecting the id in the Request object (e.g. Parse error/Invalid Request), it MUST be Null."
+            // (JsonTokenType.Null, not actual null)
+            { HasId: false } => throw new JsonRpcFormatException($"JSON Rpc response does not have [{JsonRpcConstants.IdProperty}] property"),
+            { HasVersion: false } => throw new JsonRpcFormatException($"JSON Rpc response does not have [{JsonRpcConstants.JsonrpcVersionProperty}] property"),
+            { HasResult: true, HasError: false } => JsonSerializer.Deserialize<UntypedResponse>(ref reader, options),
+            { HasResult: false, HasError: true } => JsonSerializer.Deserialize<UntypedErrorResponse>(ref reader, options),
+            var properties => throw new JsonRpcFormatException($"JSON Rpc response is invalid, expected one of properties. Has [{JsonRpcConstants.ResultProperty}]: {properties.HasResult}. Has [{JsonRpcConstants.ErrorProperty}]: {properties.HasError}")
+        };
+
+    private static PropertiesInfo CheckProperties(Utf8JsonReader propertyReader)
+    {
+        var hasId = false;
+        var hasError = false;
+        var hasResult = false;
+        var hasVersion = false;
+        foreach (var propertyName in Utils.GetPropertyNames(ref propertyReader))
+        {
+            switch (propertyName)
+            {
+                case JsonRpcConstants.IdProperty:
+                    hasId = true;
+                    break;
+                case JsonRpcConstants.ResultProperty:
+                    hasResult = true;
+                    break;
+                case JsonRpcConstants.ErrorProperty:
+                    hasError = true;
+                    break;
+                case JsonRpcConstants.JsonrpcVersionProperty:
+                    hasVersion = true;
+                    break;
+            }
+        }
+
+        return new PropertiesInfo(hasId, hasResult, hasError, hasVersion);
+    }
+
+    private record PropertiesInfo(bool HasId, bool HasResult, bool HasError, bool HasVersion);
 }

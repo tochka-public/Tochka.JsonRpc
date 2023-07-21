@@ -10,11 +10,32 @@
     - [Errors](/en/server/errors)
     - [Utils](/en/server/utils)
     - [Autodocs](/en/server/autodocs)
-  - Client (writing in progress)
-    - ...
-- Russian (в процессе написания)
-  - ...
+  - Client
+    - [Quickstart](/en/client/quickstart)
+    - [Examples](/en/client/examples)
+    - [Configuration](/en/client/configuration)
+    - [Serialization](/en/client/serialization)
+    - [Responses](/en/client/responses)
+- Русский
+  - [Обзор](/ru/overview)
+  - Сервер
+    - [Быстрый старт](/ru/server/quickstart)
+    - [Примеры](/ru/server/examples)
+    - [Конфигурация](/ru/server/configuration)
+    - [Binding](/ru/server/binding)
+    - [Сериализация](/ru/server/serialization)
+    - [Batches](/ru/server/batches)
+    - [Ошибки](/ru/server/errors)
+    - [Utils](/ru/server/utils)
+    - [Автодокументация](/ru/server/autodocs)
+  - Клиент
+    - [Быстрый старт](/ru/client/quickstart)
+    - [Примеры](/ru/client/examples)
+    - [Конфигурация](/ru/client/configuration)
+    - [Сериализация](/ru/client/serialization)
+    - [Ответы](/ru/client/responses)
 - **Links**
+  - [Legacy docs (1.x)](https://github.com/tochka-public/Tochka.JsonRpc/tree/master/docs/v1)
   - [Readme ➪](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
   - [Nuget ➪](https://www.nuget.org/profiles/tochka-public)
   - [JSON-RPC 2.0 Specification ➪](https://www.jsonrpc.org/specification)
