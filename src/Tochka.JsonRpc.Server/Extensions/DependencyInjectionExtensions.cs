@@ -36,6 +36,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
         services.AddSingleton<IJsonRpcRequestHandler, JsonRpcRequestHandler>();
         services.AddSingleton<IJsonRpcExceptionWrapper, JsonRpcExceptionWrapper>();
+        services.AddSingleton<IJsonRpcRequestValidator, JsonRpcRequestValidator>();
         services.Configure<MvcOptions>(static options =>
         {
             options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);

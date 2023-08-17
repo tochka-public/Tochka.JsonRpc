@@ -39,6 +39,7 @@ internal class DependencyInjectionExtensionsTests
         result.Remove((typeof(IJsonRpcParameterBinder), typeof(JsonRpcParameterBinder), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcRequestHandler), typeof(JsonRpcRequestHandler), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcExceptionWrapper), typeof(JsonRpcExceptionWrapper), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IJsonRpcRequestValidator), typeof(JsonRpcRequestValidator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcErrorFactory), typeof(JsonRpcErrorFactory), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
     }
@@ -54,6 +55,7 @@ internal class DependencyInjectionExtensionsTests
         var parameterBinderMock = Mock.Of<IJsonRpcParameterBinder>();
         var requestHandlerMock = Mock.Of<IJsonRpcRequestHandler>();
         var exceptionWrapperMock = Mock.Of<IJsonRpcExceptionWrapper>();
+        var requestValidatorMock = Mock.Of<IJsonRpcRequestValidator>();
         var errorFactoryMock = Mock.Of<IJsonRpcErrorFactory>();
         services.AddSingleton(mvcOptionsConfiguratorMock);
         services.AddSingleton(matcherPolicyMock);
@@ -62,6 +64,7 @@ internal class DependencyInjectionExtensionsTests
         services.AddSingleton(requestHandlerMock);
         services.AddSingleton(exceptionWrapperMock);
         services.AddSingleton(errorFactoryMock);
+        services.AddSingleton(requestValidatorMock);
 
         services.AddJsonRpcServer(configureOptions);
 
@@ -72,6 +75,7 @@ internal class DependencyInjectionExtensionsTests
         result.Should().Contain((parameterBinderMock, ServiceLifetime.Singleton));
         result.Should().Contain((requestHandlerMock, ServiceLifetime.Singleton));
         result.Should().Contain((exceptionWrapperMock, ServiceLifetime.Singleton));
+        result.Should().Contain((requestValidatorMock, ServiceLifetime.Singleton));
         result.Should().Contain((errorFactoryMock, ServiceLifetime.Singleton));
     }
 

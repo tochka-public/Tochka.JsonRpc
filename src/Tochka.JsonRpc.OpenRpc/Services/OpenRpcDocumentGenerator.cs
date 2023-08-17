@@ -45,7 +45,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     public Models.OpenRpc Generate(OpenRpcInfo info, string documentName, Uri host) =>
         new(info)
         {
-            Servers = GetServers(host, serverOptions.RoutePrefix),
+            Servers = GetServers(host, serverOptions.RoutePrefix.Value),
             Methods = GetMethods(documentName, host),
             Components = new()
             {
@@ -54,7 +54,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         };
 
     // internal virtual for mocking in tests
-    internal virtual List<OpenRpcServer> GetServers(Uri host, string route)
+    internal virtual List<OpenRpcServer> GetServers(Uri host, string? route)
     {
         var uriBuilder = new UriBuilder(host) { Path = route };
         var server = new OpenRpcServer(openRpcOptions.DefaultServerName, uriBuilder.Uri);

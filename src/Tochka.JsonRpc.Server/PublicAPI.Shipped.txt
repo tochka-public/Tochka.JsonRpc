@@ -175,3 +175,6 @@ virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.Exception(System.Exce
 virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.HttpError(int httpCode, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
 virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.NotFound(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
 virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.WrapExceptions(object? errorData) -> object?
+Tochka.JsonRpc.Server.JsonRpcMiddleware.JsonRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler! requestHandler, Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper! exceptionWrapper, Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator! requestValidator, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void
+Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator
+Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator.IsJsonRpcRequest(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> bool
