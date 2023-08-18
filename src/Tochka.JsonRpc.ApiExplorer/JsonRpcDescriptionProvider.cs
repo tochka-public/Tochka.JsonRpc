@@ -60,7 +60,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             var serializerMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
             var serializerOptionsProviderType = serializerMetadata?.ProviderType;
 
-            description.GroupName = ApiExplorerUtils.GetDocumentName(serializerOptionsProviderType);
+            description.GroupName = ApiExplorerUtils.GetDocumentName(ApiExplorerConstants.DefaultDocumentName, serializerOptionsProviderType);
 
             description.HttpMethod = HttpMethods.Post;
             description.RelativePath += $"#{methodMetadata.Method}";

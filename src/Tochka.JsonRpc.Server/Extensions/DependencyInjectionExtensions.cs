@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Asp.Versioning;
+using Asp.Versioning.ApplicationModels;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +47,19 @@ public static class DependencyInjectionExtensions
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
         services.AddSingleton<JsonRpcMarkerService>();
+        services.AddApiVersioning(static options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            })
+            .AddMvc()
+            .AddApiExplorer(static options =>
+            {
+                options.SubstituteApiVersionInUrl = true;
+                options.GroupNameFormat = "'v'VVV";
+                options.FormatGroupName = static (name, version) => $"{name}_{version}";
+            });
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiControllerSpecification, JsonRpcControllerSpecification>());
         return services;
     }
 

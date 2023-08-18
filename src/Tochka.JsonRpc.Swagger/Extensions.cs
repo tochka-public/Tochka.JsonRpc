@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Asp.Versioning.ApiExplorer;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -25,10 +27,13 @@ public static class Extensions
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
     /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <param name="info">Metadata about API</param>
     /// <param name="setupAction">Delegate used to additionally configure Swagger options</param>
     /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenApiInfo info, Action<SwaggerGenOptions> setupAction)
+    /// <remarks>
+    /// This method doesn't register SwaggerDocs - You need to add it manually in <paramref name="setupAction" />.<br />
+    /// You can use overload without <paramref name="setupAction" /> - it will register docs for all versions and serializers
+    /// </remarks>
+    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, Action<SwaggerGenOptions> setupAction)
     {
         services.TryAddTransient<ISchemaGenerator, JsonRpcSchemaGenerator>();
         services.TryAddSingleton<ITypeEmitter, TypeEmitter>();
@@ -41,29 +46,6 @@ public static class Extensions
         services.AddSwaggerGen(c =>
         {
             setupAction(c);
-
-            // it's impossible to add same model with different serializers, so we have to create separate documents for each serializer
-            c.SwaggerDoc(ApiExplorerConstants.DefaultDocumentName, info);
-            var jsonSerializerOptionsProviders = services
-                .Where(static x => typeof(IJsonSerializerOptionsProvider).IsAssignableFrom(x.ServiceType))
-                .Select(static x => x.ImplementationType)
-                .Where(static x => x != null)
-                .Distinct();
-            foreach (var providerType in jsonSerializerOptionsProviders)
-            {
-                var documentName = ApiExplorerUtils.GetDocumentName(providerType);
-                var documentInfo = new OpenApiInfo
-                {
-                    Title = info.Title,
-                    Version = info.Version,
-                    Description = $"Serializer: {providerType!.Name}\n{info.Description}",
-                    Contact = info.Contact,
-                    License = info.License,
-                    TermsOfService = info.TermsOfService,
-                    Extensions = info.Extensions
-                };
-                c.SwaggerDoc(documentName, documentInfo);
-            }
 
             c.DocInclusionPredicate(DocumentSelector);
             c.SchemaFilter<JsonRpcPropertiesFilter>();
@@ -87,54 +69,56 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Register services required for JSON-RPC Swagger document generation with metadata from Assembly and configure Swagger options
+    /// Register services required for JSON-RPC Swagger document generation and SwaggerDocs for all versions and serializers with metadata from Assembly
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
     /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <param name="setupAction">Delegate used to additionally configure Swagger options</param>
     /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, Action<SwaggerGenOptions> setupAction)
+    /// <remarks>
+    /// This method registers SwaggerDocs for all versions and serializers with title and description from Assembly.<br />
+    /// If you want to add docs and <see cref="OpenApiInfo" /> for them manually - use overload with setup action
+    /// </remarks>
+    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly)
     {
-        // returns assembly name, not what Rider shows in Csproj>Properties>Nuget>Title
-        var assemblyName = xmlDocAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
-        var title = $"{assemblyName} {ApiExplorerConstants.DefaultDocumentTitle}".TrimStart();
-        var description = xmlDocAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
-        var info = new OpenApiInfo
-        {
-            Title = title,
-            Version = ApiExplorerConstants.DefaultDocumentVersion,
-            Description = description
-        };
+        // we need to get IApiVersionDescriptionProvider and IJsonSerializerOptionsProviders from DI so can't use Configure<>() here
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>(x =>
+            new ConfigureSwaggerOptions(xmlDocAssembly, x.GetRequiredService<IApiVersionDescriptionProvider>(), x.GetServices<IJsonSerializerOptionsProvider>()));
 
-        return services.AddSwaggerWithJsonRpc(xmlDocAssembly, info, setupAction);
+        return services.AddSwaggerWithJsonRpc(xmlDocAssembly, static _ => { });
     }
 
     /// <summary>
-    /// Register services required for JSON-RPC Swagger document generation
+    /// Register SwaggerDocs for default serializer and all custom serializers
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
-    /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
+    /// <param name="options">SwaggerGenOptions options to add docs to</param>
+    /// <param name="namePrefix">Prefix of document name. Custom serializers' names will be added after this prefix with '_' delimiter</param>
+    /// <param name="nameSuffix">Suffix of document name. Will be added to documents' names without delimiter</param>
     /// <param name="info">Metadata about API</param>
-    /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    [ExcludeFromCodeCoverage]
-    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenApiInfo info) =>
-        services.AddSwaggerWithJsonRpc(xmlDocAssembly,
-            info,
-            static _ => { });
+    /// <param name="jsonSerializerOptionsProviderTypes">Custom serializer options providers to register docs for</param>
+    public static void JsonRpcSwaggerDocs(this SwaggerGenOptions options, string namePrefix, string nameSuffix, OpenApiInfo info, IEnumerable<Type> jsonSerializerOptionsProviderTypes)
+    {
+        // it's impossible to add same model with different serializers, so we have to create separate documents for each serializer
+        options.SwaggerDoc($"{namePrefix}{nameSuffix}", info);
+
+        foreach (var providerType in jsonSerializerOptionsProviderTypes)
+        {
+            var documentName = ApiExplorerUtils.GetDocumentName(namePrefix, providerType);
+            var documentInfo = new OpenApiInfo
+            {
+                Title = info.Title,
+                Version = info.Version,
+                Description = $"Serializer: {providerType.Name}\n{info.Description}",
+                Contact = info.Contact,
+                License = info.License,
+                TermsOfService = info.TermsOfService,
+                Extensions = info.Extensions
+            };
+            options.SwaggerDoc($"{documentName}{nameSuffix}", documentInfo);
+        }
+    }
 
     /// <summary>
-    /// Register services required for JSON-RPC Swagger document generation with metadata from Assembly
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
-    /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    [ExcludeFromCodeCoverage]
-    public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
-        services.AddSwaggerWithJsonRpc(xmlDocAssembly,
-            static _ => { });
-
-    /// <summary>
-    /// Add Swagger JSON endpoints for JSON-RPC
+    /// Add Swagger JSON endpoints for all versions and serializers of JSON-RPC API
     /// </summary>
     /// <param name="options">SwaggerUI options to add endpoints to</param>
     /// <param name="services">The <see cref="IServiceProvider" /> to retrieve serializer options providers</param>
@@ -144,17 +128,21 @@ public static class Extensions
     /// </remarks>
     public static void JsonRpcSwaggerEndpoints(this SwaggerUIOptions options, IServiceProvider services, string name)
     {
-        options.SwaggerEndpoint(GetSwaggerDocumentUrl(ApiExplorerConstants.DefaultDocumentName), name);
-        var jsonSerializerOptionsProviders = services.GetRequiredService<IEnumerable<IJsonSerializerOptionsProvider>>();
-        foreach (var provider in jsonSerializerOptionsProviders)
+        var versionDescriptionProvider = services.GetRequiredService<IApiVersionDescriptionProvider>();
+        foreach (var versionDescription in versionDescriptionProvider.ApiVersionDescriptions)
         {
-            var documentName = ApiExplorerUtils.GetDocumentName(provider.GetType());
-            options.SwaggerEndpoint(GetSwaggerDocumentUrl(documentName), $"{name} {GetSwaggerEndpointSuffix(provider)}");
+            options.SwaggerEndpoint(GetSwaggerDocumentUrl($"{ApiExplorerConstants.DefaultDocumentName}_{versionDescription.GroupName}"), $"{name} {versionDescription.ApiVersion}");
+            var jsonSerializerOptionsProviders = services.GetRequiredService<IEnumerable<IJsonSerializerOptionsProvider>>();
+            foreach (var provider in jsonSerializerOptionsProviders)
+            {
+                var documentName = ApiExplorerUtils.GetDocumentName(ApiExplorerConstants.DefaultDocumentName, provider.GetType());
+                options.SwaggerEndpoint(GetSwaggerDocumentUrl($"{documentName}_{versionDescription.GroupName}"), $"{name} {GetSwaggerEndpointSuffix(provider)} {versionDescription.ApiVersion}");
+            }
         }
     }
 
     /// <summary>
-    /// Add Swagger JSON endpoints for JSON-RPC with default name (<see cref="ApiExplorerConstants.DefaultDocumentTitle" />)
+    /// Add Swagger JSON endpoints for all versions and serializers of JSON-RPC API with default name (<see cref="ApiExplorerConstants.DefaultDocumentTitle" />)
     /// </summary>
     /// <param name="options">SwaggerUI options to add endpoints to</param>
     /// <param name="services">The <see cref="IServiceProvider" /> to retrieve serializer options providers</param>

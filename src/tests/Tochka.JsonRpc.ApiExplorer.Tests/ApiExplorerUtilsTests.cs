@@ -9,33 +9,41 @@ internal class ApiExplorerUtilsTests
     [Test]
     public void GetDocumentName_TypeIsNull_ReturnDefault()
     {
-        var result = ApiExplorerUtils.GetDocumentName(null);
+        var defaultName = "default";
 
-        result.Should().Be(ApiExplorerConstants.DefaultDocumentName);
+        var result = ApiExplorerUtils.GetDocumentName(defaultName, null);
+
+        result.Should().Be(defaultName);
     }
 
     [Test]
     public void GetDocumentName_TypeNameEndsWithInterfaceName_AddLowercaseTypeNameStart()
     {
-        var result = ApiExplorerUtils.GetDocumentName(typeof(SnakeCaseJsonSerializerOptionsProvider));
+        var defaultName = "default";
 
-        result.Should().Be($"{ApiExplorerConstants.DefaultDocumentName}_snakecase");
+        var result = ApiExplorerUtils.GetDocumentName(defaultName, typeof(SnakeCaseJsonSerializerOptionsProvider));
+
+        result.Should().Be($"{defaultName}_snakecase");
     }
 
     [Test]
     public void GetDocumentName_TypeNameStartsWithInterfaceName_AddLowercaseTypeNameEnd()
     {
-        var result = ApiExplorerUtils.GetDocumentName(typeof(JsonSerializerOptionsProviderCamelCase));
+        var defaultName = "default";
 
-        result.Should().Be($"{ApiExplorerConstants.DefaultDocumentName}_camelcase");
+        var result = ApiExplorerUtils.GetDocumentName(defaultName, typeof(JsonSerializerOptionsProviderCamelCase));
+
+        result.Should().Be($"{defaultName}_camelcase");
     }
 
     [Test]
     public void GetDocumentName_TypeNameDoesntContainInterfaceName_AddLowercaseTypeName()
     {
-        var result = ApiExplorerUtils.GetDocumentName(typeof(PascalCaseProvider));
+        var defaultName = "default";
 
-        result.Should().Be($"{ApiExplorerConstants.DefaultDocumentName}_pascalcaseprovider");
+        var result = ApiExplorerUtils.GetDocumentName(defaultName, typeof(PascalCaseProvider));
+
+        result.Should().Be($"{defaultName}_pascalcaseprovider");
     }
 
     private record SnakeCaseJsonSerializerOptionsProvider;
