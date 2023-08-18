@@ -49,6 +49,9 @@ jobs:
         with:
           fetch-depth: 0 # required for version
 
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4
+
       - name: Get version and changelog
         id: version
         uses: TriPSs/conventional-changelog-action@v3
@@ -60,7 +63,7 @@ jobs:
           skip-commit: true
           skip-tag: true
           pre-release: ${{ github.ref_name != 'master' }}
-          pre-release-identifier: ${{ github.ref_name }}.${{ github.sha }}
+          pre-release-identifier: ${{ env.GITHUB_REF_SLUG }}.${{ github.sha }}
           skip-on-empty: false
 
       - name: Install dependencies
