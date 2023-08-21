@@ -36,7 +36,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [TestCase("error_throw_as_response_exception")]
     public async Task GetDocument_ReturnsAllMethods(string method)
     {
-        var response = await ApiClient.GetAsync("/openrpc/jsonrpc.json");
+        var response = await ApiClient.GetAsync("/openrpc/jsonrpc_v1.json");
 
         var responseContent = await response.Content.ReadAsStringAsync();
         var responseJson = JsonDocument.Parse(responseContent);

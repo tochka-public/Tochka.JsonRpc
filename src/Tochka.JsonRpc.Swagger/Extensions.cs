@@ -30,7 +30,8 @@ public static class Extensions
     /// <param name="setupAction">Delegate used to additionally configure Swagger options</param>
     /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
     /// <remarks>
-    /// This method doesn't register SwaggerDocs - You need to add it manually in <paramref name="setupAction" />.<br />
+    /// This method doesn't register SwaggerDocs - You need to add it manually in <paramref name="setupAction" />
+    /// using <see cref="JsonRpcSwaggerDocs" /> or <see cref="SwaggerGenOptionsExtensions.SwaggerDoc" />.<br />
     /// You can use overload without <paramref name="setupAction" /> - it will register docs for all versions and serializers
     /// </remarks>
     public static IServiceCollection AddSwaggerWithJsonRpc(this IServiceCollection services, Assembly xmlDocAssembly, Action<SwaggerGenOptions> setupAction)

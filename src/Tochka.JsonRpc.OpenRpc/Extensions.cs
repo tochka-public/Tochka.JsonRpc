@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Asp.Versioning.ApiExplorer;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -24,10 +25,14 @@ public static class Extensions
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
     /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <param name="info">Metadata about API</param>
     /// <param name="setupAction">Delegate used to configure OpenRPC options</param>
     /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info, Action<OpenRpcOptions> setupAction)
+    /// <remarks>
+    /// This method doesn't register OpenRpcDocs - You need to add it manually in <paramref name="setupAction" />
+    /// using <see cref="OpenRpcDoc" />.<br />
+    /// You can use overload without <paramref name="setupAction" /> - it will register docs for all versions
+    /// </remarks>
+    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, Action<OpenRpcOptions> setupAction)
     {
         services.TryAddScoped<IOpenRpcDocumentGenerator, OpenRpcDocumentGenerator>();
         services.TryAddScoped<IOpenRpcSchemaGenerator, OpenRpcSchemaGenerator>();
@@ -39,11 +44,7 @@ public static class Extensions
             services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
         }
 
-        services.Configure<OpenRpcOptions>(c =>
-        {
-            setupAction(c);
-            c.OpenRpcDoc(ApiExplorerConstants.DefaultDocumentName, info);
-        });
+        services.Configure(setupAction);
 
         var xmlFile = $"{xmlDocAssembly.GetName().Name}.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -59,47 +60,24 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Register services required for OpenRPC document generation with metadata from Assembly and configure OpenRPC options
+    /// Register services required for OpenRPC document generation and OpenRpcDocs for all versions with metadata from Assembly
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
     /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <param name="setupAction">Delegate used to configure OpenRPC options</param>
     /// <returns></returns>
     /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, Action<OpenRpcOptions> setupAction)
+    /// <remarks>
+    /// This method registers OpenRpcDocs for all versions with title and description from Assembly.<br />
+    /// If you want to add docs and <see cref="OpenRpcInfo" /> for them manually - use overload with setup action
+    /// </remarks>
+    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly)
     {
-        // returns assembly name, not what Rider shows in Csproj>Properties>Nuget>Title
-        var assemblyName = xmlDocAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
-        var title = $"{assemblyName} {ApiExplorerConstants.DefaultDocumentTitle}".TrimStart();
-        var description = xmlDocAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
-        var info = new OpenRpcInfo(title, ApiExplorerConstants.DefaultDocumentVersion)
-        {
-            Description = description
-        };
+        // we need to get IApiVersionDescriptionProvider from DI so can't use Configure<>() here
+        services.AddTransient<IConfigureOptions<OpenRpcOptions>, ConfigureOpenRpcOptions>(x =>
+            new ConfigureOpenRpcOptions(xmlDocAssembly, x.GetRequiredService<IApiVersionDescriptionProvider>()));
 
-        return services.AddOpenRpc(xmlDocAssembly, info, setupAction);
+        return services.AddOpenRpc(xmlDocAssembly, static _ => { });
     }
-
-    /// <summary>
-    /// Register services required for OpenRPC document generation
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
-    /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <param name="info">Metadata about API</param>
-    /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    [ExcludeFromCodeCoverage]
-    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly, OpenRpcInfo info) =>
-        services.AddOpenRpc(xmlDocAssembly, info, static _ => { });
-
-    /// <summary>
-    /// Register services required for OpenRPC document generation with metadata from Assembly
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
-    /// <param name="xmlDocAssembly">Assembly with xml documentation for API methods and model types</param>
-    /// <exception cref="FileNotFoundException">If xml documentation disabled</exception>
-    [ExcludeFromCodeCoverage]
-    public static IServiceCollection AddOpenRpc(this IServiceCollection services, Assembly xmlDocAssembly) =>
-        services.AddOpenRpc(xmlDocAssembly, static _ => { });
 
     /// <summary>
     /// Define document to be created by OpenRPC generator
