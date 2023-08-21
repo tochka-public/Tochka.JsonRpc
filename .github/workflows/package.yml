@@ -49,8 +49,11 @@ jobs:
         with:
           fetch-depth: 0 # required for version
 
-      - name: Inject slug/short variables
+      - name: Inject slug/short variables # Nuget can't handle versions longer then 64 chars
         uses: rlespinasse/github-slug-action@v4
+        with: # 55 (branch) + 1 (dot) + 8 (sha) = 64
+          slug-maxlength: 55 # shortening branch name
+          short-length: 8 # shortening sha
 
       - name: Get version and changelog
         id: version
@@ -63,7 +66,7 @@ jobs:
           skip-commit: true
           skip-tag: true
           pre-release: ${{ github.ref_name != 'master' }}
-          pre-release-identifier: ${{ env.GITHUB_REF_SLUG }}.${{ github.sha }}
+          pre-release-identifier: ${{ env.GITHUB_REF_SLUG }}.${{ env.GITHUB_SHA_SHORT }}
           skip-on-empty: false
 
       - name: Install dependencies
