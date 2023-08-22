@@ -23,6 +23,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         this.jsonRpcErrorFactory = jsonRpcErrorFactory;
     }
 
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
     /// <summary>
     /// some description
     /// </summary>
@@ -33,6 +34,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         await Task.Delay(1, token);
         return rp.GetJsonRpcResponse();
     }
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 
     public TestData ProcessAnything([FromParams(BindingStyle.Object)] TestData data) =>
         Process(data);

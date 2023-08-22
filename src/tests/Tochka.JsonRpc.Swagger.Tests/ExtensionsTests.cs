@@ -136,7 +136,9 @@ internal class ExtensionsTests
         services.AddSwaggerWithJsonRpc(xmlDocAssembly, setup.Object);
         var swaggerOptions = services.BuildServiceProvider().GetRequiredService<IOptions<SwaggerGenOptions>>().Value;
 
+#pragma warning disable CS8974 // Converting method group to non-delegate type
         swaggerOptions.SchemaGeneratorOptions.SchemaIdSelector.Should().Be(Extensions.SchemaIdSelector);
+#pragma warning restore CS8974 // Converting method group to non-delegate type
     }
 
     [Test]

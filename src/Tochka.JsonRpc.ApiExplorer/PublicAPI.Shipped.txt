@@ -4,7 +4,6 @@ const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.DefaultDocumentTitle = "JS
 const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.DefaultDocumentVersion = "v1" -> string!
 const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.GeneratedModelsAssemblyName = "JsonRpcGeneratedModelTypes" -> string!
 const Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants.MethodNameProperty = "methodName" -> string!
-static Tochka.JsonRpc.ApiExplorer.ApiExplorerUtils.GetDocumentName(System.Type? serializerOptionsProviderType) -> string!
 Tochka.JsonRpc.ApiExplorer.ApiExplorerConstants
 Tochka.JsonRpc.ApiExplorer.ApiExplorerUtils
 Tochka.JsonRpc.ApiExplorer.ITypeEmitter
@@ -22,6 +21,5 @@ Tochka.JsonRpc.ApiExplorer.TypeEmitter.TypeEmitter(Microsoft.Extensions.Logging.
 static Tochka.JsonRpc.ApiExplorer.ApiExplorerUtils.GetDocumentName(string! defaultName, System.Type? serializerOptionsProviderType) -> string!
 Tochka.JsonRpc.ApiExplorer.ITypeEmitter.CreateRequestType(string! actionFullName, string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams, System.Type? serializerOptionsProviderType) -> System.Type!
 Tochka.JsonRpc.ApiExplorer.ITypeEmitter.CreateResponseType(string! actionFullName, string! methodName, System.Type! resultType, System.Type? serializerOptionsProviderType) -> System.Type!
-Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider.JsonRpcDescriptionProvider(Tochka.JsonRpc.ApiExplorer.ITypeEmitter! typeEmitter, Microsoft.Extensions.Options.IOptions<Asp.Versioning.ApiExplorer.ApiExplorerOptions!>! apiExplorerOptions, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider!>! log) -> void
 Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateRequestType(string! actionFullName, string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams, System.Type? serializerOptionsProviderType) -> System.Type!
 Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateResponseType(string! actionFullName, string! methodName, System.Type! resultType, System.Type? serializerOptionsProviderType) -> System.Type!

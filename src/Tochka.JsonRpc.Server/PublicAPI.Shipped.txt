@@ -7,7 +7,6 @@ static Tochka.JsonRpc.Server.Extensions.ErrorExtensions.ThrowAsException(this To
 static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.GetJsonRpcCall(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> Tochka.JsonRpc.Common.Models.Request.ICall?
 static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.GetJsonRpcResponse(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> Tochka.JsonRpc.Common.Models.Response.IResponse?
 static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.GetRawJsonRpcCall(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Text.Json.JsonDocument?
-static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.IsJsonRpcRequest(this Microsoft.AspNetCore.Http.HttpContext! httpContext, Microsoft.AspNetCore.Http.PathString jsonRpcPrefix) -> bool
 static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.JsonRpcRequestIsBatch(this Microsoft.AspNetCore.Http.HttpContext! httpContext) -> bool
 static Tochka.JsonRpc.Server.Extensions.HttpContextExtensions.SetJsonRpcResponse(this Microsoft.AspNetCore.Http.HttpContext! httpContext, Tochka.JsonRpc.Common.Models.Response.IResponse! response) -> void
 static Tochka.JsonRpc.Server.ServerUtils.GetDataJsonSerializerOptions(System.Collections.Generic.IEnumerable<object!>! endpointMetadata, Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions! serverOptions, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! providers) -> System.Text.Json.JsonSerializerOptions!
@@ -96,7 +95,6 @@ Tochka.JsonRpc.Server.JsonRpcControllerBase
 Tochka.JsonRpc.Server.JsonRpcControllerBase.JsonRpcControllerBase() -> void
 Tochka.JsonRpc.Server.JsonRpcMiddleware
 Tochka.JsonRpc.Server.JsonRpcMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Threading.Tasks.Task!
-Tochka.JsonRpc.Server.JsonRpcMiddleware.JsonRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler! requestHandler, Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper! exceptionWrapper, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void
 Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata
 Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata.JsonRpcActionParametersMetadata() -> void
 Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata.Parameters.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata!>!
