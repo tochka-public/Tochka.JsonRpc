@@ -46,7 +46,6 @@ public static class DependencyInjectionExtensions
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
-        services.AddSingleton<JsonRpcMarkerService>();
         services.AddApiVersioning(static options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -60,6 +59,7 @@ public static class DependencyInjectionExtensions
                 options.FormatGroupName = static (name, version) => $"{name}_{version}";
             });
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiControllerSpecification, JsonRpcControllerSpecification>());
+        services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }
 

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -67,7 +66,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             description.Properties[ApiExplorerConstants.MethodNameProperty] = methodMetadata.Method;
 
             WrapRequest(description, actionDescriptor, methodMetadata.Method, serializerOptionsProviderType);
-            WrapResponse(description, methodMetadata.Method, serializerOptionsProviderType);
+            WrapResponse(description, actionDescriptor, methodMetadata.Method, serializerOptionsProviderType);
         }
     }
 
@@ -76,7 +75,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     {
     }
 
-    private void WrapRequest(ApiDescription description, ActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
+    private void WrapRequest(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
     {
         description.SupportedRequestFormats.Clear();
         description.SupportedRequestFormats.Add(new ApiRequestFormat { MediaType = JsonRpcConstants.ContentType });
@@ -90,7 +89,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             description.ParameterDescriptions.Remove(parameterDescription);
         }
 
-        var requestType = GetRequestType(parametersMetadata, methodName, serializerOptionsProviderType);
+        var requestType = GetRequestType(actionDescriptor, parametersMetadata, methodName, serializerOptionsProviderType);
         description.ParameterDescriptions.Add(new ApiParameterDescription
         {
             Name = JsonRpcConstants.ParamsProperty,
@@ -101,7 +100,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         });
     }
 
-    private Type GetRequestType(JsonRpcActionParametersMetadata parametersMetadata, string methodName, Type? serializerOptionsProviderType)
+    private Type GetRequestType(ControllerActionDescriptor actionDescriptor, JsonRpcActionParametersMetadata parametersMetadata, string methodName, Type? serializerOptionsProviderType)
     {
         var parameters = parametersMetadata.Parameters.Values;
         var parameterBoundAsObject = parameters.FirstOrDefault(static x => x.BindingStyle == BindingStyle.Object);
@@ -126,13 +125,13 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             baseParamsType = parameterBoundAsObject.Type;
         }
 
-        return typeEmitter.CreateRequestType(methodName, baseParamsType, parametersBoundByDefault, serializerOptionsProviderType);
+        return typeEmitter.CreateRequestType(GetActionFullName(actionDescriptor), methodName, baseParamsType, parametersBoundByDefault, serializerOptionsProviderType);
     }
 
-    private void WrapResponse(ApiDescription description, string methodName, Type? serializerOptionsProviderType)
+    private void WrapResponse(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
     {
         var resultType = description.SupportedResponseTypes.FirstOrDefault()?.Type ?? typeof(object);
-        var responseType = typeEmitter.CreateResponseType(methodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(GetActionFullName(actionDescriptor), methodName, resultType, serializerOptionsProviderType);
 
         description.SupportedResponseTypes.Clear();
         description.SupportedResponseTypes.Add(new ApiResponseType
@@ -144,4 +143,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             Type = responseType
         });
     }
+
+    private static string GetActionFullName(ControllerActionDescriptor actionDescriptor) =>
+        $"{actionDescriptor.ControllerTypeInfo.FullName}.{actionDescriptor.ActionName}";
 }
