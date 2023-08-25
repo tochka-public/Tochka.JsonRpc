@@ -17,6 +17,7 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
     private readonly JsonSerializerOptions dataJsonSerializerOptions;
     private readonly IResponse? response;
 
+    /// <summary></summary>
     public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
     {
         this.context = context;
@@ -30,6 +31,7 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
         this.dataJsonSerializerOptions = dataJsonSerializerOptions;
     }
 
+    /// <inheritdoc />
     public TResponse? GetResponseOrThrow<TResponse>() => response switch
     {
         null => throw new JsonRpcException($"Expected successful response with [{typeof(TResponse).Name}] params, got nothing", context),
@@ -39,20 +41,24 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
         _ => throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name)
     };
 
+    /// <inheritdoc />
     public TResponse? AsResponse<TResponse>() => response switch
     {
         UntypedResponse { Result: not null } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
         _ => default
     };
 
+    /// <inheritdoc />
     public bool HasError() => response is UntypedErrorResponse;
 
+    /// <inheritdoc />
     public Error<JsonDocument>? AsAnyError() => response switch
     {
         UntypedErrorResponse untypedErrorResponse => untypedErrorResponse.Error,
         _ => null
     };
 
+    /// <inheritdoc />
     public Error<TError>? AsTypedError<TError>() => response switch
     {
         UntypedErrorResponse untypedErrorResponse => new Error<TError>(untypedErrorResponse.Error.Code,
@@ -61,6 +67,7 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
         _ => null
     };
 
+    /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public Error<ExceptionInfo>? AsErrorWithExceptionInfo() => AsTypedError<ExceptionInfo>();
 }

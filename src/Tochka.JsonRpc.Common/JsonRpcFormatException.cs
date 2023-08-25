@@ -11,14 +11,17 @@ namespace Tochka.JsonRpc.Common;
 [ExcludeFromCodeCoverage]
 public class JsonRpcFormatException : Exception
 {
+    /// <inheritdoc />
     public JsonRpcFormatException()
     {
     }
 
+    /// <inheritdoc />
     public JsonRpcFormatException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public JsonRpcFormatException(string message, Exception innerException) : base(message, innerException)
     {
     }

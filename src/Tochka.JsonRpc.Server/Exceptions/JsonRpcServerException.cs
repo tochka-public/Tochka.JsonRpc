@@ -11,14 +11,17 @@ namespace Tochka.JsonRpc.Server.Exceptions;
 [ExcludeFromCodeCoverage]
 public class JsonRpcServerException : Exception
 {
+    /// <inheritdoc />
     public JsonRpcServerException()
     {
     }
 
+    /// <inheritdoc />
     public JsonRpcServerException(string message) : base(message)
     {
     }
 
+    /// <inheritdoc />
     public JsonRpcServerException(string message, Exception innerException) : base(message, innerException)
     {
     }

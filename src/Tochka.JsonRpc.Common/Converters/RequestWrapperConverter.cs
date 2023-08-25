@@ -14,9 +14,11 @@ namespace Tochka.JsonRpc.Common.Converters;
 public class RequestWrapperConverter : JsonConverter<IRequestWrapper>
 {
     // NOTE: used in server to parse requests, no need for serialization
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, IRequestWrapper value, JsonSerializerOptions options) =>
         throw new InvalidOperationException();
 
+    /// <inheritdoc />
     [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for request wrappers")]
     public override IRequestWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
