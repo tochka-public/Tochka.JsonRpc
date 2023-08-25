@@ -16,16 +16,34 @@ namespace Tochka.JsonRpc.Client.Models;
 [PublicAPI]
 public sealed class JsonRpcCallContext : IJsonRpcCallContext
 {
+    /// <inheritdoc />
     public string? RequestUrl { get; private set; }
+
+    /// <inheritdoc />
     public IUntypedCall? SingleCall { get; private set; }
+
+    /// <inheritdoc />
     public ICollection<IUntypedCall>? BatchCall { get; private set; }
+
+    /// <inheritdoc />
     public int ExpectedBatchResponseCount { get; private set; }
+
+    /// <inheritdoc />
     public string? HttpResponseInfo { get; private set; }
+
+    /// <inheritdoc />
     public string? HttpContentInfo { get; private set; }
+
+    /// <inheritdoc />
     public IResponse? SingleResponse { get; private set; }
+
+    /// <inheritdoc />
     public List<IResponse>? BatchResponse { get; private set; }
+
+    /// <inheritdoc />
     public IError? Error { get; private set; }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithRequestUrl(string? requestUrl)
     {
         if (requestUrl == null)
@@ -42,6 +60,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithSingle(IUntypedCall singleCall)
     {
         if (BatchCall != null)
@@ -53,6 +72,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithBatch(ICollection<IUntypedCall> batchCall)
     {
         if (SingleCall != null)
@@ -65,6 +85,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithHttpResponse(HttpResponseMessage httpResponseMessage)
     {
         HttpResponseInfo = $"{httpResponseMessage}";
@@ -76,6 +97,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithHttpContent(HttpContent httpContent, string httpContentString)
     {
         HttpContentInfo = GetStringWithLimit(httpContentString);
@@ -93,6 +115,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithSingleResponse(IResponse singleResponse)
     {
         SingleResponse = singleResponse;
@@ -136,6 +159,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithBatchResponse(List<IResponse> batchResponse)
     {
         BatchResponse = batchResponse;
@@ -172,6 +196,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc />
     public IJsonRpcCallContext WithError(UntypedErrorResponse untypedErrorResponse)
     {
         Error = untypedErrorResponse.Error;
@@ -179,6 +204,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
+    /// <inheritdoc cref="object.ToString" />
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {

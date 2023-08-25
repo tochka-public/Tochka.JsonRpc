@@ -11,8 +11,15 @@ namespace Tochka.JsonRpc.Server.Features;
 [ExcludeFromCodeCoverage]
 public class JsonRpcFeature : IJsonRpcFeature
 {
+    /// <inheritdoc />
     public JsonDocument? RawCall { get; set; }
+
+    /// <inheritdoc />
     public ICall? Call { get; set; }
+
+    /// <inheritdoc />
     public IResponse? Response { get; set; }
+
+    /// <inheritdoc />
     public bool IsBatch { get; set; }
 }

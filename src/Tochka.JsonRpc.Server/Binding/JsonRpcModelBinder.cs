@@ -25,6 +25,7 @@ public class JsonRpcModelBinder : IModelBinder
     private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private readonly JsonRpcServerOptions options;
 
+    /// <summary></summary>
     public JsonRpcModelBinder(IJsonRpcParamsParser paramsParser, IJsonRpcParameterBinder parameterBinder, IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options)
     {
         this.paramsParser = paramsParser;
@@ -33,6 +34,7 @@ public class JsonRpcModelBinder : IModelBinder
         this.options = options.Value;
     }
 
+    /// <inheritdoc />
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         var actionParametersMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();

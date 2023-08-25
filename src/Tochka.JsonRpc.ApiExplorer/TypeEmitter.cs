@@ -15,6 +15,7 @@ public class TypeEmitter : ITypeEmitter
     private readonly ILogger<TypeEmitter> log;
     private readonly object lockObject = new();
 
+    /// <summary></summary>
     public TypeEmitter(ILogger<TypeEmitter> log)
     {
         this.log = log;
@@ -23,6 +24,7 @@ public class TypeEmitter : ITypeEmitter
         moduleBuilder = assemblyBuilder.DefineDynamicModule(ApiExplorerConstants.GeneratedModelsAssemblyName);
     }
 
+    /// <inheritdoc />
     public Type CreateRequestType(string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType)
     {
         lock (lockObject)
@@ -40,6 +42,7 @@ public class TypeEmitter : ITypeEmitter
         }
     }
 
+    /// <inheritdoc />
     public Type CreateResponseType(string methodName, Type resultType, Type? serializerOptionsProviderType)
     {
         lock (lockObject)

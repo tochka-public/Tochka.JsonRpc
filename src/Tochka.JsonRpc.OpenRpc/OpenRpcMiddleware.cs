@@ -19,6 +19,7 @@ public class OpenRpcMiddleware
     private readonly TemplateMatcher requestMatcher;
     private readonly OpenRpcOptions options;
 
+    /// <summary></summary>
     public OpenRpcMiddleware(RequestDelegate next, IOptions<OpenRpcOptions> options)
     {
         this.next = next;
@@ -26,6 +27,7 @@ public class OpenRpcMiddleware
         requestMatcher = new TemplateMatcher(TemplateParser.Parse(options.Value.DocumentPath), new RouteValueDictionary());
     }
 
+    /// <summary></summary>
     public async Task InvokeAsync(HttpContext httpContext, IOpenRpcDocumentGenerator documentGenerator)
     {
         var documentName = GetDocumentName(httpContext.Request);

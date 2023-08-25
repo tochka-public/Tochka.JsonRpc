@@ -23,6 +23,7 @@ public class JsonRpcMiddleware
     private readonly IJsonRpcExceptionWrapper exceptionWrapper;
     private readonly JsonRpcServerOptions options;
 
+    /// <summary></summary>
     public JsonRpcMiddleware(RequestDelegate next, IJsonRpcRequestHandler requestHandler, IJsonRpcExceptionWrapper exceptionWrapper, IOptions<JsonRpcServerOptions> options)
     {
         this.next = next;
@@ -31,6 +32,7 @@ public class JsonRpcMiddleware
         this.options = options.Value;
     }
 
+    /// <summary></summary>
     public async Task InvokeAsync(HttpContext httpContext)
     {
         if (!httpContext.IsJsonRpcRequest(options.RoutePrefix))

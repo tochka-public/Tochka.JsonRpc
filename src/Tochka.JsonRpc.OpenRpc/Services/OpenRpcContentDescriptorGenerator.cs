@@ -14,8 +14,10 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
 {
     private readonly IOpenRpcSchemaGenerator schemaGenerator;
 
+    /// <summary></summary>
     public OpenRpcContentDescriptorGenerator(IOpenRpcSchemaGenerator schemaGenerator) => this.schemaGenerator = schemaGenerator;
 
+    /// <inheritdoc />
     public OpenRpcContentDescriptor GenerateForType(ContextualType type, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         var name = jsonSerializerOptions.ConvertName(type.TypeName);
@@ -27,6 +29,7 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
         return Generate(type, methodName, jsonSerializerOptions, name, summary, description, required, deprecated);
     }
 
+    /// <inheritdoc />
     public OpenRpcContentDescriptor GenerateForParameter(ContextualPropertyInfo propertyInfo, string methodName, JsonRpcParameterMetadata parameterMetadata, JsonSerializerOptions jsonSerializerOptions)
     {
         var type = propertyInfo.PropertyType;
@@ -39,6 +42,7 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
         return Generate(type, methodName, jsonSerializerOptions, name, summary, description, required, deprecated);
     }
 
+    /// <inheritdoc />
     public OpenRpcContentDescriptor GenerateForProperty(ContextualPropertyInfo propertyInfo, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         var type = propertyInfo.PropertyType;

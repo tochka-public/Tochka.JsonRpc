@@ -16,41 +16,51 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     private readonly ILogger<JsonRpcErrorFactory> log;
     private readonly JsonRpcServerOptions options;
 
+    /// <summary></summary>
     public JsonRpcErrorFactory(IOptions<JsonRpcServerOptions> options, ILogger<JsonRpcErrorFactory> log)
     {
         this.log = log;
         this.options = options.Value;
     }
 
+    /// <inheritdoc />
     public IError ParseError(object? errorData) =>
         new Error<object>(-32700, "Parse error", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public IError InvalidRequest(object? errorData) =>
         new Error<object>(-32600, "Invalid Request", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public IError MethodNotFound(object? errorData) =>
         new Error<object>(-32601, "Method not found", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public IError InvalidParams(object? errorData) =>
         new Error<object>(-32602, "Invalid params", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public IError InternalError(object? errorData) =>
         new Error<object>(-32603, "Internal error", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public IError ServerError(int code, object? errorData) =>
         !IsServer(code)
             ? throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]")
             : new Error<object>(code, "Server error", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public virtual IError NotFound(object? errorData) =>
         new Error<object>(-32004, "Not found", WrapExceptions(errorData));
 
+    /// <inheritdoc />
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
     public virtual IError Error(int code, string message, object? errorData) =>
         IsReserved(code)
             ? throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another")
             : new Error<object>(code, message, WrapExceptions(errorData));
 
+    /// <inheritdoc />
     public virtual IError Exception(Exception e) => e switch
     {
         JsonRpcServerException => ServerError(JsonRpcConstants.InternalExceptionCode, WrapExceptions(e)),
@@ -60,6 +70,7 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
         _ => ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e))
     };
 
+    /// <inheritdoc />
     public virtual IError HttpError(int httpCode, object? errorData) => httpCode switch
     {
         400 or 422 => InvalidParams(errorData),

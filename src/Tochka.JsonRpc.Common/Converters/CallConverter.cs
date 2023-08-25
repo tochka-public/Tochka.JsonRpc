@@ -14,6 +14,7 @@ public class CallConverter : JsonConverter<IUntypedCall>
 {
     // System.Text.Json can't serialize derived types:
     // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, IUntypedCall value, JsonSerializerOptions options)
     {
         switch (value)
@@ -29,6 +30,7 @@ public class CallConverter : JsonConverter<IUntypedCall>
         }
     }
 
+    /// <inheritdoc />
     public override IUntypedCall? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
         CheckProperties(reader) switch
         {

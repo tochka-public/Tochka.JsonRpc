@@ -16,6 +16,7 @@
     <PackageProjectUrl>https://tochka-public.github.io/Tochka.JsonRpc</PackageProjectUrl>
     <Authors>Tochka</Authors>
     <Product>Tochka.JsonRpc</Product>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
