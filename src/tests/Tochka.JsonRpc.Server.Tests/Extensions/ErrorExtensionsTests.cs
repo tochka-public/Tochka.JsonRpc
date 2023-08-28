@@ -24,6 +24,16 @@ internal class ErrorExtensionsTests
     }
 
     [Test]
+    public void AsException_ReturnJsonRpcErrorExceptionWithError()
+    {
+        var error = Mock.Of<IError>();
+
+        var result = error.AsException();
+
+        result.Error.Should().Be(error);
+    }
+
+    [Test]
     public void AsUntypedError_DataIsNull_ReturnUntypedErrorWithNullData()
     {
         var code = 123;
