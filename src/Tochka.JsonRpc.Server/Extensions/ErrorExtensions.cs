@@ -21,6 +21,12 @@ public static class ErrorExtensions
     public static void ThrowAsException(this IError error) => throw new JsonRpcErrorException(error);
 
     /// <summary>
+    /// Returns special <see cref="JsonRpcErrorException" /> which is converted into JSON-RPC error response with given code, message and data when thrown
+    /// </summary>
+    /// <param name="error">Error to return in response</param>
+    public static JsonRpcErrorException AsException(this IError error) => new(error);
+
+    /// <summary>
     /// Serialize error.data
     /// </summary>
     /// <param name="error">Error with data to serialize</param>
