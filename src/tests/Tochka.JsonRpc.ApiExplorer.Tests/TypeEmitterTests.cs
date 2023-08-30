@@ -20,15 +20,28 @@ internal class TypeEmitterTests
     public void Setup() => typeEmitter = new TypeEmitter(Mock.Of<ILogger<TypeEmitter>>());
 
     [Test]
-    public void CreateRequestType_TypeNameHasMethodName()
+    public void CreateRequestType_TypeFullNameHasMethodNameAndActionFullName()
     {
         var baseParamsType = typeof(object);
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
-        requestType.Name.Should().Be($"{MethodName} request");
+        requestType.FullName.Should().Be($"{MethodName} request ({ActionFullName})");
+    }
+
+    [Test]
+    public void CreateRequestType_SameActionSecondTime_ReturnTypeAndDontThrow()
+    {
+        var baseParamsType = typeof(object);
+        var defaultBoundParams = new Dictionary<string, Type>();
+        var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
+
+        var requestType1 = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType2 = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+
+        requestType1.Should().Be(requestType2);
     }
 
     [Test]
@@ -38,7 +51,7 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         requestType.Should().BeAssignableTo<Request<object>>();
     }
@@ -54,7 +67,7 @@ internal class TypeEmitterTests
         };
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var paramsType = requestType.GetProperty(nameof(Request<object>.Params)).PropertyType;
         var properties = paramsType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -76,7 +89,7 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var attributes = requestType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -93,7 +106,7 @@ internal class TypeEmitterTests
         };
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var paramsType = requestType.GetProperty(nameof(Request<ClassWithoutEmptyConstructor>.Params)).PropertyType;
         paramsType.Should().Be(baseParamsType);
@@ -106,7 +119,7 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var attributes = requestType.GetCustomAttributes();
         attributes.Should().NotContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -123,7 +136,7 @@ internal class TypeEmitterTests
         };
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var paramsType = requestType.GetProperty(nameof(Request<ClassWithoutEmptyConstructor>.Params)).PropertyType;
         paramsType.Should().Be(baseParamsType);
@@ -136,7 +149,7 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var attributes = requestType.GetCustomAttributes();
         attributes.Should().NotContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -153,7 +166,7 @@ internal class TypeEmitterTests
         };
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var paramsType = requestType.GetProperty(nameof(Request<ClassWithoutEmptyConstructor>.Params)).PropertyType;
         paramsType.Should().Be(baseParamsType);
@@ -166,7 +179,7 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var attributes = requestType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -183,7 +196,7 @@ internal class TypeEmitterTests
         };
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var paramsType = requestType.GetProperty(nameof(Request<ClassWithoutEmptyConstructor>.Params)).PropertyType;
         paramsType.Should().Be<object>();
@@ -196,7 +209,7 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var attributes = requestType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -213,7 +226,7 @@ internal class TypeEmitterTests
         };
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var paramsType = requestType.GetProperty(nameof(Request<ClassWithoutEmptyConstructor>.Params)).PropertyType;
         paramsType.Should().Be(baseParamsType);
@@ -226,21 +239,33 @@ internal class TypeEmitterTests
         var defaultBoundParams = new Dictionary<string, Type>();
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var requestType = typeEmitter.CreateRequestType(MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
+        var requestType = typeEmitter.CreateRequestType(ActionFullName, MethodName, baseParamsType, defaultBoundParams, serializerOptionsProviderType);
 
         var attributes = requestType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
     }
 
     [Test]
-    public void CreateResponseType_TypeNameHasMethodName()
+    public void CreateResponseType_TypeFullNameHasMethodNameAndActionFullName()
     {
         var resultType = typeof(object);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
-        responseType.Name.Should().Be($"{MethodName} response");
+        responseType.FullName.Should().Be($"{MethodName} response ({ActionFullName})");
+    }
+
+    [Test]
+    public void CreateResponseType_SameActionSecondTime_ReturnTypeAndDontThrow()
+    {
+        var resultType = typeof(object);
+        var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
+
+        var responseType1 = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
+        var responseType2 = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
+
+        responseType1.Should().Be(responseType2);
     }
 
     [Test]
@@ -249,7 +274,7 @@ internal class TypeEmitterTests
         var resultType = typeof(object);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<object>>();
     }
@@ -260,7 +285,7 @@ internal class TypeEmitterTests
         var resultType = typeof(ClassWithEmptyConstructor);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<ClassWithEmptyConstructor>>();
     }
@@ -271,7 +296,7 @@ internal class TypeEmitterTests
         var resultType = typeof(ClassWithEmptyConstructor);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         var attributes = responseType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -283,7 +308,7 @@ internal class TypeEmitterTests
         var resultType = typeof(NonPublicClass);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<NonPublicClass>>();
     }
@@ -294,7 +319,7 @@ internal class TypeEmitterTests
         var resultType = typeof(NonPublicClass);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         var attributes = responseType.GetCustomAttributes();
         attributes.Should().NotContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -306,7 +331,7 @@ internal class TypeEmitterTests
         var resultType = typeof(NestedClass);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<NestedClass>>();
     }
@@ -317,7 +342,7 @@ internal class TypeEmitterTests
         var resultType = typeof(NestedClass);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         var attributes = responseType.GetCustomAttributes();
         attributes.Should().NotContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -329,7 +354,7 @@ internal class TypeEmitterTests
         var resultType = typeof(SealedClass);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<SealedClass>>();
     }
@@ -340,7 +365,7 @@ internal class TypeEmitterTests
         var resultType = typeof(SealedClass);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         var attributes = responseType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -352,7 +377,7 @@ internal class TypeEmitterTests
         var resultType = typeof(int);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<int>>();
     }
@@ -363,7 +388,7 @@ internal class TypeEmitterTests
         var resultType = typeof(int);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         var attributes = responseType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
@@ -375,7 +400,7 @@ internal class TypeEmitterTests
         var resultType = typeof(ClassWithoutEmptyConstructor);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         responseType.Should().BeAssignableTo<Response<ClassWithoutEmptyConstructor>>();
     }
@@ -386,12 +411,13 @@ internal class TypeEmitterTests
         var resultType = typeof(ClassWithoutEmptyConstructor);
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
 
-        var responseType = typeEmitter.CreateResponseType(MethodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
 
         var attributes = responseType.GetCustomAttributes();
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
     }
 
+    private const string ActionFullName = "namespace.controller.action";
     private const string MethodName = "method";
 
     // ReSharper disable once MemberCanBePrivate.Global

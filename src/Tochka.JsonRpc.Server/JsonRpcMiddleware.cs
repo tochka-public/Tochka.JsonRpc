@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
-using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -16,26 +16,29 @@ namespace Tochka.JsonRpc.Server;
 /// <summary>
 /// Middleware to process JSON-RPC calls
 /// </summary>
+[PublicAPI]
 public class JsonRpcMiddleware
 {
     private readonly RequestDelegate next;
     private readonly IJsonRpcRequestHandler requestHandler;
     private readonly IJsonRpcExceptionWrapper exceptionWrapper;
+    private readonly IJsonRpcRequestValidator requestValidator;
     private readonly JsonRpcServerOptions options;
 
     /// <summary></summary>
-    public JsonRpcMiddleware(RequestDelegate next, IJsonRpcRequestHandler requestHandler, IJsonRpcExceptionWrapper exceptionWrapper, IOptions<JsonRpcServerOptions> options)
+    public JsonRpcMiddleware(RequestDelegate next, IJsonRpcRequestHandler requestHandler, IJsonRpcExceptionWrapper exceptionWrapper, IJsonRpcRequestValidator requestValidator, IOptions<JsonRpcServerOptions> options)
     {
         this.next = next;
         this.requestHandler = requestHandler;
         this.exceptionWrapper = exceptionWrapper;
+        this.requestValidator = requestValidator;
         this.options = options.Value;
     }
 
     /// <summary></summary>
     public async Task InvokeAsync(HttpContext httpContext)
     {
-        if (!httpContext.IsJsonRpcRequest(options.RoutePrefix))
+        if (!requestValidator.IsJsonRpcRequest(httpContext))
         {
             await next(httpContext);
             return;

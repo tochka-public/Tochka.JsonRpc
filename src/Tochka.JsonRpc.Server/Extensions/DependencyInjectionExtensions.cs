@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Asp.Versioning;
+using Asp.Versioning.ApplicationModels;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +38,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
         services.AddSingleton<IJsonRpcRequestHandler, JsonRpcRequestHandler>();
         services.AddSingleton<IJsonRpcExceptionWrapper, JsonRpcExceptionWrapper>();
+        services.AddSingleton<IJsonRpcRequestValidator, JsonRpcRequestValidator>();
         services.Configure<MvcOptions>(static options =>
         {
             options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
@@ -43,6 +46,19 @@ public static class DependencyInjectionExtensions
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
+        services.AddApiVersioning(static options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            })
+            .AddMvc()
+            .AddApiExplorer(static options =>
+            {
+                options.SubstituteApiVersionInUrl = true;
+                options.GroupNameFormat = "'v'VVV";
+                options.FormatGroupName = static (name, version) => $"{name}_{version}";
+            });
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiControllerSpecification, JsonRpcControllerSpecification>());
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }

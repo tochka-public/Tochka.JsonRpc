@@ -123,6 +123,7 @@ internal class OpenRpcDocumentGeneratorTests
         documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
             .Returns(method)
             .Verifiable();
+        openRpcOptions.DocInclusionPredicate = static (_, _) => true;
         openRpcOptions.IgnoreObsoleteActions = true;
 
         var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
@@ -166,6 +167,7 @@ internal class OpenRpcDocumentGeneratorTests
         documentGeneratorMock.Setup(g => g.GetMethod(apiDescription3, host))
             .Returns(method3)
             .Verifiable();
+        openRpcOptions.DocInclusionPredicate = static (_, _) => true;
         openRpcOptions.IgnoreObsoleteActions = false;
 
         var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
@@ -200,6 +202,7 @@ internal class OpenRpcDocumentGeneratorTests
         documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
             .Returns(method)
             .Verifiable();
+        openRpcOptions.DocInclusionPredicate = static (_, _) => true;
 
         var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
 
@@ -265,6 +268,7 @@ internal class OpenRpcDocumentGeneratorTests
         documentGeneratorMock.Setup(g => g.GetMethod(apiDescription2, host))
             .Returns(method2)
             .Verifiable();
+        openRpcOptions.DocInclusionPredicate = static (_, _) => true;
 
         var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
 

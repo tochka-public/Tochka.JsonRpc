@@ -2,7 +2,6 @@
 using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
-using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Server.Features;
@@ -62,36 +61,5 @@ public static class HttpContextExtensions
         }
 
         feature.Response = response;
-    }
-
-    /// <summary>
-    /// Check if HttpRequest should be processed by JSON-RPC pipeline
-    /// </summary>
-    /// <param name="httpContext">Request <see cref="HttpContext" /></param>
-    /// <param name="jsonRpcPrefix">Prefix configured for JSON-RPC server</param>
-    public static bool IsJsonRpcRequest(this HttpContext httpContext, PathString jsonRpcPrefix)
-    {
-        if (!httpContext.Request.Path.StartsWithSegments(jsonRpcPrefix))
-        {
-            return false;
-        }
-
-        if (httpContext.Request.Method != HttpMethods.Post)
-        {
-            return false;
-        }
-
-        var contentType = httpContext.Request.GetTypedHeaders().ContentType;
-        if (contentType == null)
-        {
-            return false;
-        }
-
-        if (!contentType.MediaType.Equals(JsonRpcConstants.ContentType, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        return true;
     }
 }

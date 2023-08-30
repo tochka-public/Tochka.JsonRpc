@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using Asp.Versioning.ApplicationModels;
+using Asp.Versioning.Builder;
+using Asp.Versioning.Conventions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +35,7 @@ internal class DependencyInjectionExtensionsTests
         services.AddJsonRpcServer(configureOptions);
 
         var result = services.Select(static x => (x.ServiceType, x.ImplementationType, x.Lifetime)).ToList();
+        // services defined in library
         result.Remove((typeof(JsonRpcActionModelConvention), typeof(JsonRpcActionModelConvention), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IConfigureOptions<MvcOptions>), typeof(ModelConventionConfigurator<JsonRpcActionModelConvention>), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcParameterModelConvention), typeof(JsonRpcParameterModelConvention), ServiceLifetime.Singleton)).Should().BeTrue();
@@ -39,8 +45,16 @@ internal class DependencyInjectionExtensionsTests
         result.Remove((typeof(IJsonRpcParameterBinder), typeof(JsonRpcParameterBinder), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcRequestHandler), typeof(JsonRpcRequestHandler), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcExceptionWrapper), typeof(JsonRpcExceptionWrapper), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IJsonRpcRequestValidator), typeof(JsonRpcRequestValidator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcErrorFactory), typeof(JsonRpcErrorFactory), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IApiControllerSpecification), typeof(JsonRpcControllerSpecification), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
+        // one of services registered by calling AddApiVersioning
+        result.Remove((typeof(IApiVersionSetBuilderFactory), typeof(DefaultApiVersionSetBuilderFactory), ServiceLifetime.Singleton)).Should().BeTrue();
+        // one of services registered by calling AddApiVersioning.AddMvc
+        result.Remove((typeof(IControllerNameConvention), typeof(DefaultControllerNameConvention), ServiceLifetime.Singleton)).Should().BeTrue();
+        // one of services registered by calling AddApiVersioning.AddApiExplorer
+        result.Remove((typeof(IApiVersionDescriptionProvider), null, ServiceLifetime.Singleton)).Should().BeTrue();
     }
 
     [Test]
@@ -54,6 +68,7 @@ internal class DependencyInjectionExtensionsTests
         var parameterBinderMock = Mock.Of<IJsonRpcParameterBinder>();
         var requestHandlerMock = Mock.Of<IJsonRpcRequestHandler>();
         var exceptionWrapperMock = Mock.Of<IJsonRpcExceptionWrapper>();
+        var requestValidatorMock = Mock.Of<IJsonRpcRequestValidator>();
         var errorFactoryMock = Mock.Of<IJsonRpcErrorFactory>();
         services.AddSingleton(mvcOptionsConfiguratorMock);
         services.AddSingleton(matcherPolicyMock);
@@ -62,6 +77,7 @@ internal class DependencyInjectionExtensionsTests
         services.AddSingleton(requestHandlerMock);
         services.AddSingleton(exceptionWrapperMock);
         services.AddSingleton(errorFactoryMock);
+        services.AddSingleton(requestValidatorMock);
 
         services.AddJsonRpcServer(configureOptions);
 
@@ -72,6 +88,7 @@ internal class DependencyInjectionExtensionsTests
         result.Should().Contain((parameterBinderMock, ServiceLifetime.Singleton));
         result.Should().Contain((requestHandlerMock, ServiceLifetime.Singleton));
         result.Should().Contain((exceptionWrapperMock, ServiceLifetime.Singleton));
+        result.Should().Contain((requestValidatorMock, ServiceLifetime.Singleton));
         result.Should().Contain((errorFactoryMock, ServiceLifetime.Singleton));
     }
 
@@ -100,9 +117,38 @@ internal class DependencyInjectionExtensionsTests
         var configureOptionsMock = new Mock<Action<JsonRpcServerOptions>>();
 
         services.AddJsonRpcServer(configureOptionsMock.Object);
-        var _ = services.BuildServiceProvider().GetRequiredService<IOptions<JsonRpcServerOptions>>().Value;
+        _ = services.BuildServiceProvider().GetRequiredService<IOptions<JsonRpcServerOptions>>().Value;
 
         configureOptionsMock.Verify(static x => x(It.IsAny<JsonRpcServerOptions>()));
+    }
+
+    [Test]
+    public void AddJsonRpcServer_ConfigureApiVersioning()
+    {
+        var services = new ServiceCollection();
+        var configureOptions = Mock.Of<Action<JsonRpcServerOptions>>();
+
+        services.AddJsonRpcServer(configureOptions);
+        var apiVersioningOptions = services.BuildServiceProvider().GetRequiredService<IOptions<ApiVersioningOptions>>().Value;
+
+        apiVersioningOptions.DefaultApiVersion.Should().BeEquivalentTo(new ApiVersion(1, 0));
+        apiVersioningOptions.AssumeDefaultVersionWhenUnspecified.Should().BeTrue();
+    }
+
+    [Test]
+    public void AddJsonRpcServer_ConfigureApiVersioningExplorer()
+    {
+        var services = new ServiceCollection();
+        var configureOptions = Mock.Of<Action<JsonRpcServerOptions>>();
+
+        services.AddJsonRpcServer(configureOptions);
+        var apiExplorerOptions = services.BuildServiceProvider().GetRequiredService<IOptions<ApiExplorerOptions>>().Value;
+
+        apiExplorerOptions.SubstituteApiVersionInUrl.Should().BeTrue();
+        apiExplorerOptions.GroupNameFormat.Should().Be("'v'VVV");
+        var name = "name";
+        var version = "version";
+        apiExplorerOptions.FormatGroupName(name, version).Should().Be($"{name}_{version}");
     }
 
     [Test]

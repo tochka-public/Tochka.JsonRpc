@@ -31,6 +31,7 @@ You only need couple of lines in `Program.cs`, and a different base class for yo
 * Raw and typed JSON-RPC request/response data is accessible to middlewares and controllers
 * Lightweight extensibility: common models and utils are not tied to client or server packages
 * Autodocumentation support: [Swagger/OpenAPI](https://swagger.io/) and [OpenRPC](https://open-rpc.org/)
+* Versioning support: [API Versioning](https://github.com/dotnet/aspnet-api-versioning)
 
 
 ## Limitations and things to improve

@@ -41,5 +41,26 @@ public sealed class OpenRpcOptions
     /// <summary>
     /// Strategy for selecting actions to describe
     /// </summary>
-    public Func<string, ApiDescription, bool> DocInclusionPredicate { get; set; } = static (_, _) => true;
+    public Func<string, ApiDescription, bool> DocInclusionPredicate { get; set; } = DocumentSelector;
+
+    // internal for tests
+    internal static bool DocumentSelector(string docName, ApiDescription description)
+    {
+        if (docName == description.GroupName)
+        {
+            return true;
+        }
+
+        if (string.IsNullOrEmpty(description.GroupName))
+        {
+            return false;
+        }
+
+        // for custom serializers groupName will be something like "jsonrpc_serializerCase_version"
+        // (serializer in groupName required for Swagger documents separation)
+        // for OpenRPC we don't need to separate docs by serializer, so we are taking only first and last part
+        var groupParts = description.GroupName.Split("_");
+        return docName.StartsWith($"{groupParts.First()}_", StringComparison.Ordinal)
+            && docName.EndsWith($"_{groupParts.Last()}", StringComparison.Ordinal);
+    }
 }

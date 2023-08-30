@@ -52,7 +52,7 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
         var routeModels = controller.Selectors
             .Select(controllerSelector =>
                 AttributeRouteModel.CombineAttributeRouteModel(controllerSelector.AttributeRouteModel, actionSelector.AttributeRouteModel)
-                ?? new AttributeRouteModel { Template = options.RoutePrefix })
+                ?? new AttributeRouteModel { Template = options.RoutePrefix.Value })
             .Select(static m => m.Template!.StartsWith('/')
                 ? m
                 : new AttributeRouteModel(m) { Template = $"/{m.Template}" });

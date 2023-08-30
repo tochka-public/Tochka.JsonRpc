@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -101,9 +102,9 @@ internal class JsonRpcDescriptionProviderTests
     {
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
-        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -124,12 +125,14 @@ internal class JsonRpcDescriptionProviderTests
         var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcSerializerOptionsAttribute(serializerOptionsProviderType));
         typeEmitterMock.Setup(e => e.CreateRequestType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 It.IsAny<Type>(),
                 It.IsAny<IReadOnlyDictionary<string, Type>>(),
                 serializerOptionsProviderType))
             .Returns(Mock.Of<Type>)
             .Verifiable();
         typeEmitterMock.Setup(e => e.CreateResponseType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 It.IsAny<Type>(),
                 serializerOptionsProviderType))
             .Returns(Mock.Of<Type>)
@@ -149,9 +152,9 @@ internal class JsonRpcDescriptionProviderTests
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         var requestType = Mock.Of<Type>();
-        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(requestType);
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -178,9 +181,9 @@ internal class JsonRpcDescriptionProviderTests
         context.Results.First().ParameterDescriptions.Add(parameter1);
         context.Results.First().ParameterDescriptions.Add(parameter2);
         context.Results.First().ParameterDescriptions.Add(parameter3);
-        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>());
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -209,9 +212,9 @@ internal class JsonRpcDescriptionProviderTests
         context.Results.First().ParameterDescriptions.Add(parameter4);
         context.Results.First().ParameterDescriptions.Add(parameter5);
         context.Results.First().ParameterDescriptions.Add(parameter6);
-        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>());
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -248,12 +251,13 @@ internal class JsonRpcDescriptionProviderTests
         context.Results.First().ParameterDescriptions.Add(defaultParameter);
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         typeEmitterMock.Setup(e => e.CreateRequestType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 arrayParameterType,
                 It.Is<IReadOnlyDictionary<string, Type>>(static d => d.Count == 0),
                 It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>)
             .Verifiable();
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -287,6 +291,7 @@ internal class JsonRpcDescriptionProviderTests
         context.Results.First().ParameterDescriptions.Add(defaultParameter);
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         typeEmitterMock.Setup(e => e.CreateRequestType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 objectParameterType,
                 It.Is<IReadOnlyDictionary<string, Type>>(d =>
                     d.ContainsKey(defaultParameterOriginalName)
@@ -294,7 +299,7 @@ internal class JsonRpcDescriptionProviderTests
                 It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>)
             .Verifiable();
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -323,6 +328,7 @@ internal class JsonRpcDescriptionProviderTests
         };
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         typeEmitterMock.Setup(e => e.CreateRequestType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 typeof(object),
                 It.Is<IReadOnlyDictionary<string, Type>>(d =>
                     d.ContainsKey(defaultParameterOriginalName)
@@ -330,7 +336,7 @@ internal class JsonRpcDescriptionProviderTests
                 It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>)
             .Verifiable();
-        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -349,9 +355,10 @@ internal class JsonRpcDescriptionProviderTests
         var initialResponseType = new ApiResponseType { Type = Mock.Of<Type>() };
         context.Results.First().SupportedResponseTypes.Add(initialResponseType);
         var responseType = Mock.Of<Type>();
-        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
         typeEmitterMock.Setup(e => e.CreateResponseType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 initialResponseType.Type,
                 It.IsAny<Type?>()))
             .Returns(responseType)
@@ -376,9 +383,10 @@ internal class JsonRpcDescriptionProviderTests
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         var responseType = Mock.Of<Type>();
-        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(Mock.Of<Type>);
         typeEmitterMock.Setup(e => e.CreateResponseType(It.IsAny<string>(),
+                It.IsAny<string>(),
                 typeof(object),
                 It.IsAny<Type?>()))
             .Returns(responseType)
@@ -404,7 +412,8 @@ internal class JsonRpcDescriptionProviderTests
                     EndpointMetadata = new List<object>
                     {
                         new JsonRpcControllerAttribute()
-                    }
+                    },
+                    ControllerTypeInfo = Mock.Of<TypeInfo>()
                 }
             }
         }

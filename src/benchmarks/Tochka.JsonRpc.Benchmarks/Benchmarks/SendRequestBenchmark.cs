@@ -92,7 +92,7 @@ public class SendRequestBenchmark
     [Benchmark]
     public async Task<TestData?> EdjCase()
     {
-        var request = RpcRequest.WithParameterMap(Method, edjCaseData, edjCaseId);
+        var request = RpcRequest.WithParameterMap(Method, edjCaseData!, edjCaseId);
         var response = await edjCaseClient.SendAsync<TestData>(request, Response);
         return response.Result;
     }

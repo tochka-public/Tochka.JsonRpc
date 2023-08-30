@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -25,10 +28,9 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = Mock.Of<Action<OpenRpcOptions>>();
 
-        services.AddOpenRpc(xmlDocAssembly, info, setup);
+        services.AddOpenRpc(xmlDocAssembly, setup);
 
         var result = services.Select(static x => (x.ServiceType, x.ImplementationType, x.Lifetime)).ToList();
         result.Remove((typeof(IOpenRpcDocumentGenerator), typeof(OpenRpcDocumentGenerator), ServiceLifetime.Scoped)).Should().BeTrue();
@@ -44,7 +46,6 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = Mock.Of<Action<OpenRpcOptions>>();
         var documentGeneratorMock = Mock.Of<IOpenRpcDocumentGenerator>();
         var schemaGeneratorMock = Mock.Of<IOpenRpcSchemaGenerator>();
@@ -55,7 +56,7 @@ internal class ExtensionsTests
         services.AddSingleton(contentDescriptorGeneratorMock);
         services.AddSingleton(typeEmitterMock);
 
-        services.AddOpenRpc(xmlDocAssembly, info, setup);
+        services.AddOpenRpc(xmlDocAssembly, setup);
 
         var result = services.Select(static x => (x.ImplementationInstance, x.Lifetime)).ToList();
         result.Should().Contain((documentGeneratorMock, ServiceLifetime.Singleton));
@@ -69,11 +70,10 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = Mock.Of<Action<OpenRpcOptions>>();
         services.AddTransient<IApiDescriptionProvider, DefaultApiDescriptionProvider>();
 
-        services.AddOpenRpc(xmlDocAssembly, info, setup);
+        services.AddOpenRpc(xmlDocAssembly, setup);
 
         services.Should().Contain(static s => s.ImplementationType == typeof(DefaultApiDescriptionProvider));
         services.Should().Contain(static s => s.ImplementationType == typeof(JsonRpcDescriptionProvider));
@@ -84,11 +84,10 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = Mock.Of<Action<OpenRpcOptions>>();
         services.AddTransient<IApiDescriptionProvider, JsonRpcDescriptionProvider>();
 
-        services.AddOpenRpc(xmlDocAssembly, info, setup);
+        services.AddOpenRpc(xmlDocAssembly, setup);
 
         services.Where(static s => s.ImplementationType == typeof(JsonRpcDescriptionProvider)).Should().HaveCount(1);
     }
@@ -98,27 +97,12 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = new Mock<Action<OpenRpcOptions>>();
 
-        services.AddOpenRpc(xmlDocAssembly, info, setup.Object);
+        services.AddOpenRpc(xmlDocAssembly, setup.Object);
         var _ = services.BuildServiceProvider().GetRequiredService<IOptions<OpenRpcOptions>>().Value;
 
         setup.Verify(static x => x(It.IsAny<OpenRpcOptions>()));
-    }
-
-    [Test]
-    public void AddOpenRpc_AddOpenRpcDoc()
-    {
-        var services = new ServiceCollection();
-        var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
-        var setup = Mock.Of<Action<OpenRpcOptions>>();
-
-        services.AddOpenRpc(xmlDocAssembly, info, setup);
-        var options = services.BuildServiceProvider().GetRequiredService<IOptions<OpenRpcOptions>>().Value;
-
-        options.Docs.Should().Contain(ApiExplorerConstants.DefaultDocumentName, info);
     }
 
     [Test]
@@ -126,30 +110,46 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(TestUtilsMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = Mock.Of<Action<OpenRpcOptions>>();
 
-        var action = () => services.AddOpenRpc(xmlDocAssembly, info, setup);
+        var action = () => services.AddOpenRpc(xmlDocAssembly, setup);
 
         action.Should().Throw<FileNotFoundException>();
     }
 
     [Test]
-    public void AddOpenRpc_UseDefaultInfo_GetInfoFromAssembly()
+    public void AddOpenRpc_OverloadWithoutSetup_AddOpenRpcDocForAllVersionsWithInfoFromAssembly()
     {
         var services = new ServiceCollection();
-        var setup = Mock.Of<Action<OpenRpcOptions>>();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
+        var versionDescriptions = new List<ApiVersionDescription>
+        {
+            new(new ApiVersion(1, 0), "v1"),
+            new(new ApiVersion(2, 0), "v2")
+        };
+        var apiVersionDescriptionProviderMock = new Mock<IApiVersionDescriptionProvider>();
+        apiVersionDescriptionProviderMock.Setup(static p => p.ApiVersionDescriptions)
+            .Returns(versionDescriptions)
+            .Verifiable();
+        services.AddSingleton(apiVersionDescriptionProviderMock.Object);
 
-        services.AddOpenRpc(xmlDocAssembly, setup);
-        var options = services.BuildServiceProvider().GetRequiredService<IOptions<OpenRpcOptions>>().Value;
+        services.AddOpenRpc(xmlDocAssembly);
+        var openRpcOptions = services.BuildServiceProvider().GetRequiredService<IOptions<OpenRpcOptions>>().Value;
 
         var expectedTitle = $"Tochka.JsonRpc.Tests.WebApplication {ApiExplorerConstants.DefaultDocumentTitle}";
-        var expected = new OpenRpcInfo(expectedTitle, ApiExplorerConstants.DefaultDocumentVersion)
+        var expectedDescription = "description for tests";
+        var expected = new Dictionary<string, OpenRpcInfo>
         {
-            Description = "description for tests"
+            [$"{ApiExplorerConstants.DefaultDocumentName}_{versionDescriptions[0].GroupName}"] = new(expectedTitle, versionDescriptions[0].ApiVersion.ToString())
+            {
+                Description = expectedDescription
+            },
+            [$"{ApiExplorerConstants.DefaultDocumentName}_{versionDescriptions[1].GroupName}"] = new(expectedTitle, versionDescriptions[1].ApiVersion.ToString())
+            {
+                Description = expectedDescription
+            }
         };
-        options.Docs.Should().Contain(ApiExplorerConstants.DefaultDocumentName, expected);
+        openRpcOptions.Docs.Should().BeEquivalentTo(expected);
     }
 
     [Test]
@@ -184,9 +184,8 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var xmlDocAssembly = Assembly.GetAssembly(typeof(WebApplicationMarker));
-        var info = new OpenRpcInfo("title", "version");
         var setup = Mock.Of<Action<OpenRpcOptions>>();
-        services.AddOpenRpc(xmlDocAssembly, info, setup);
+        services.AddOpenRpc(xmlDocAssembly, setup);
         var app = new Mock<IApplicationBuilder>();
         app.Setup(static a => a.ApplicationServices)
             .Returns(services.BuildServiceProvider)
