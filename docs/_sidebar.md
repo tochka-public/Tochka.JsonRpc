@@ -10,6 +10,8 @@
     - [Errors](/en/server/errors)
     - [Utils](/en/server/utils)
     - [Autodocs](/en/server/autodocs)
+    - [Routing](/en/server/routing.md)
+    - [Versioning](/en/server/versioning.md)
   - Client
     - [Quickstart](/en/client/quickstart)
     - [Examples](/en/client/examples)
@@ -28,6 +30,8 @@
     - [Ошибки](/ru/server/errors)
     - [Utils](/ru/server/utils)
     - [Автодокументация](/ru/server/autodocs)
+    - [Маршрутизация](/ru/server/routing.md)
+    - [Версионирование](/ru/server/versioning.md)
   - Клиент
     - [Быстрый старт](/ru/client/quickstart)
     - [Примеры](/ru/client/examples)

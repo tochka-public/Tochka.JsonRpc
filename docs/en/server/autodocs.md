@@ -55,8 +55,9 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/rest/swagger.json", "RESTful"); // REST
 });
 ```
-* Document for JSON-RPC methods is at `/swagger/jsonrpc/swagger.json`
-* If you have multiple `IJsonSerializerOptionsProvider` implementations registered in DI, there will be more documents, eg. `/swagger/jsonrpc_camelcase/swagger.json` (naming based on provider's class name, see [`GetDocumentName`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.ApiExplorer/Utils.cs) for info)
+* Document for JSON-RPC methods is at `/swagger/jsonrpc_v1/swagger.json`
+* If you have multiple `IJsonSerializerOptionsProvider` implementations registered in DI, there will be more documents, eg. `/swagger/jsonrpc_camelcase_v1/swagger.json` (naming based on provider's class name, see [`GetDocumentName`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.ApiExplorer/Utils.cs) for info)
+* If you use multiple API versions in project (see [Versioning](versioning)), there will be more documents, eg. `/swagger/jsonrpc_v2/swagger.json` and `/swagger/jsonrpc_camelcase_v2/swagger.json`
 
 ### Details
 
@@ -145,17 +146,18 @@ You will also need to [enable XMLdoc generation](https://docs.microsoft.com/en-u
 
 What you will get in your app:
 
-* OpenRPC document at `/openrpc/jsonrpc.json` (you can use it to build UI on [OpenRPC Playground](https://playground.open-rpc.org/))
+* OpenRPC document at `/openrpc/jsonrpc_v1.json` (you can use it to build UI on [OpenRPC Playground](https://playground.open-rpc.org/))
+* If you use multiple API versions in project (see [Versioning](versioning)), there will be more documents according to versions, eg. `/openrpc/jsonrpc_v2.json`
 
 ### Details
 
 #### Where are multiple documents?
 
-Compared to Swagger, here we have better control of JSON schema generation, so there is no need to generate different documents for different serializers.
+Documents are divided only by API versions. Compared to Swagger, here we have better control of JSON schema generation, so there is no need to generate different documents for different serializers.
 
 #### Dealing with URLs
 
-If some of your methods are routed to a URL other than default, eg. with `RouteAttribute`, their description will have a `servers` property with this URL, which by specification overrides top-level `servers`.
+If some of your methods are routed to a URL other than default, eg. with `RouteAttribute` or because of using templates, their description will have a `servers` property with this URL, which by specification overrides top-level `servers`.
 
 #### Missing features
 

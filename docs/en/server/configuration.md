@@ -106,6 +106,7 @@ Route can be overridden with framework's `RouteAttribute` like usual, and global
 
 * Should start with `/`
 * Prefix can be set to `"/"` to get rid of it
+* Templates are supported (see [Routing#Route templates](routing#Route-templates))
 
 ## Attributes
 
