@@ -18,6 +18,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
     private readonly JsonSerializerOptions dataJsonSerializerOptions;
     private readonly Dictionary<IRpcId, IResponse> responses;
 
+    /// <summary></summary>
     public BatchJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
     {
         this.context = context;
@@ -31,6 +32,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         this.dataJsonSerializerOptions = dataJsonSerializerOptions;
     }
 
+    /// <inheritdoc />
     public TResponse? GetResponseOrThrow<TResponse>(IRpcId id)
     {
         if (!TryGetValue(id, out var response))
@@ -47,6 +49,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
+    /// <inheritdoc />
     public TResponse? AsResponse<TResponse>(IRpcId id)
     {
         TryGetValue(id, out var response);
@@ -57,6 +60,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
+    /// <inheritdoc />
     public bool HasError(IRpcId id)
     {
         if (!TryGetValue(id, out var response))
@@ -67,6 +71,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         return response is UntypedErrorResponse;
     }
 
+    /// <inheritdoc />
     public Error<JsonDocument>? AsAnyError(IRpcId id)
     {
         TryGetValue(id, out var response);
@@ -77,6 +82,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
+    /// <inheritdoc />
     public Error<TError>? AsTypedError<TError>(IRpcId id)
     {
         TryGetValue(id, out var response);
@@ -89,6 +95,7 @@ public sealed class BatchJsonRpcResult : IBatchJsonRpcResult
         };
     }
 
+    /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public Error<ExceptionInfo>? AsErrorWithExceptionInfo(IRpcId id) => AsTypedError<ExceptionInfo>(id);
 

@@ -24,6 +24,7 @@ public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string
     {
     }
 
+    /// <inheritdoc />
     public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions)
     {
         var serializedParams = Utils.SerializeParams(Params, serializerOptions);

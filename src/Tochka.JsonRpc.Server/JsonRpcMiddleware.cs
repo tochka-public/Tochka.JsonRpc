@@ -25,6 +25,7 @@ public class JsonRpcMiddleware
     private readonly IJsonRpcRequestValidator requestValidator;
     private readonly JsonRpcServerOptions options;
 
+    /// <summary></summary>
     public JsonRpcMiddleware(RequestDelegate next, IJsonRpcRequestHandler requestHandler, IJsonRpcExceptionWrapper exceptionWrapper, IJsonRpcRequestValidator requestValidator, IOptions<JsonRpcServerOptions> options)
     {
         this.next = next;
@@ -34,6 +35,7 @@ public class JsonRpcMiddleware
         this.options = options.Value;
     }
 
+    /// <summary></summary>
     public async Task InvokeAsync(HttpContext httpContext)
     {
         if (!requestValidator.IsJsonRpcRequest(httpContext))

@@ -16,6 +16,7 @@ public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
 {
     // System.Text.Json can't serialize derived types:
     // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-6-0#serialize-properties-of-derived-classes
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, IResponseWrapper value, JsonSerializerOptions options)
     {
         switch (value)
@@ -31,6 +32,7 @@ public class ResponseWrapperConverter : JsonConverter<IResponseWrapper>
         }
     }
 
+    /// <inheritdoc />
     [SuppressMessage("ReSharper", "SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault", Justification = "Other cases not allowed for response wrappers")]
     public override IResponseWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

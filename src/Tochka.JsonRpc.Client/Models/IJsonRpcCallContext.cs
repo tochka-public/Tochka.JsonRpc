@@ -101,6 +101,7 @@ public interface IJsonRpcCallContext
     /// <returns></returns>
     IJsonRpcCallContext WithError(UntypedErrorResponse untypedErrorResponse);
 
+    /// <summary></summary>
     [UsedImplicitly]
     string ToString();
 }

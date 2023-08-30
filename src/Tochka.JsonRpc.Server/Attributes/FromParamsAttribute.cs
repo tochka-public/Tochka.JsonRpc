@@ -20,8 +20,10 @@ public sealed class FromParamsAttribute : Attribute, IBinderTypeProviderMetadata
     /// </summary>
     public BindingStyle BindingStyle { get; }
 
+    /// <inheritdoc />
     public BindingSource BindingSource => BindingSource.Custom;
 
+    /// <inheritdoc />
     public Type BinderType => typeof(JsonRpcModelBinder);
 
     /// <inheritdoc />

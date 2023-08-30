@@ -13,7 +13,7 @@ namespace Tochka.JsonRpc.Client;
 public static class Extensions
 {
     /// <summary>
-    /// Register JSON-RPC client as <see cref="TClient" />
+    /// Register JSON-RPC client as <typeparamref name="TClient"/>
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add the service to</param>
     /// <typeparam name="TClient">Type of JSON-RPC client</typeparam>
@@ -25,7 +25,7 @@ public static class Extensions
         AddJsonRpcClient<TClient, TImplementation>(services, static (_, _) => { });
 
     /// <summary>
-    /// Register JSON-RPC client as <see cref="TClient" /> and configure internal <see cref="HttpClient" />
+    /// Register JSON-RPC client as <typeparamref name="TClient"/> and configure internal <see cref="HttpClient" />
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add the service to</param>
     /// <param name="configureClient">Delegate used to configure internal <see cref="HttpClient" /></param>

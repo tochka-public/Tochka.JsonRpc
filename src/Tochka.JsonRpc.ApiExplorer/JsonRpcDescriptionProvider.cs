@@ -20,17 +20,20 @@ namespace Tochka.JsonRpc.ApiExplorer;
 public class JsonRpcDescriptionProvider : IApiDescriptionProvider
 {
     // need to run after DefaultApiDescriptionProvider to override it's result
+    /// <inheritdoc />
     public int Order => int.MaxValue;
 
     private readonly ITypeEmitter typeEmitter;
     private readonly ILogger<JsonRpcDescriptionProvider> log;
 
+    /// <summary></summary>
     public JsonRpcDescriptionProvider(ITypeEmitter typeEmitter, ILogger<JsonRpcDescriptionProvider> log)
     {
         this.typeEmitter = typeEmitter;
         this.log = log;
     }
 
+    /// <inheritdoc />
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
         var existingDescriptions = context.Results
@@ -70,6 +73,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         }
     }
 
+    /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public void OnProvidersExecuted(ApiDescriptionProviderContext context)
     {

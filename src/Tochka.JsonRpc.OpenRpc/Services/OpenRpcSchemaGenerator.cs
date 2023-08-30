@@ -15,8 +15,10 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     private readonly Dictionary<string, JsonSchema> registeredSchemas = new();
     private readonly HashSet<string> registeredSchemaKeys = new();
 
+    /// <inheritdoc />
     public Dictionary<string, JsonSchema> GetAllSchemas() => new(registeredSchemas);
 
+    /// <inheritdoc />
     public JsonSchema CreateOrRef(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         var itemType = type.GetEnumerableItemType();

@@ -23,6 +23,7 @@ public class JsonRpcSchemaGenerator : ISchemaGenerator
     private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private readonly JsonRpcServerOptions options;
 
+    /// <summary></summary>
     public JsonRpcSchemaGenerator(SchemaGeneratorOptions generatorOptions, IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options)
     {
         this.generatorOptions = generatorOptions;
@@ -30,6 +31,7 @@ public class JsonRpcSchemaGenerator : ISchemaGenerator
         this.options = options.Value;
     }
 
+    /// <inheritdoc />
     public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null, ApiParameterRouteInfo? routeInfo = null)
     {
         var typeMetadata = modelType.GetCustomAttribute<JsonRpcTypeMetadataAttribute>();

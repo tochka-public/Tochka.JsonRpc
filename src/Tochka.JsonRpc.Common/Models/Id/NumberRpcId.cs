@@ -12,5 +12,6 @@ namespace Tochka.JsonRpc.Common.Models.Id;
 [ExcludeFromCodeCoverage]
 public sealed record NumberRpcId(long Value) : IRpcId
 {
+    /// <inheritdoc />
     public override string ToString() => $"{Value}";
 }

@@ -31,6 +31,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     private readonly OpenRpcOptions openRpcOptions;
     private readonly ILogger<OpenRpcDocumentGenerator> log;
 
+    /// <summary></summary>
     public OpenRpcDocumentGenerator(IApiDescriptionGroupCollectionProvider apiDescriptionsProvider, IOpenRpcSchemaGenerator schemaGenerator, IOpenRpcContentDescriptorGenerator contentDescriptorGenerator, IEnumerable<IJsonSerializerOptionsProvider> jsonSerializerOptionsProviders, IOptions<JsonRpcServerOptions> serverOptions, IOptions<OpenRpcOptions> openRpcOptions, ILogger<OpenRpcDocumentGenerator> log)
     {
         this.apiDescriptionsProvider = apiDescriptionsProvider;
@@ -42,6 +43,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         this.openRpcOptions = openRpcOptions.Value;
     }
 
+    /// <inheritdoc />
     public Models.OpenRpc Generate(OpenRpcInfo info, string documentName, Uri host) =>
         new(info)
         {
