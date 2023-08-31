@@ -13,16 +13,26 @@
 ```cs
 builder.Services.AddJsonRpcServer(static options =>
 {
-    options.AllowRawResponses = true;
-    options.RoutePrefix = "/api/test";
+    options.AllowRawResponses = false;
+    options.DetailedResponseExceptions = false;
+    options.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
+    options.DefaultDataJsonSerializerOptions = JsonRpcSerializerOptions.SnakeCase;
+    options.HeadersJsonSerializerOptions = JsonRpcSerializerOptions.Headers;
+    options.RoutePrefix = "/api/jsonrpc";
 });
 ```
 
 ### AllowRawResponses
 
+```cs
+builder.Services.AddJsonRpcServer(static options => options.AllowRawResponses = /* true или false */);
+```
+
 > Значение по умолчанию: `false`
 
 > Если `true`, то сервер может возвращать ответы, нарушающие протокол JSON-RPC. Например, HTTP-редиректы, бинарные данные и тп.
+
+[Примеры использования](examples#AllowRawResponses).
 
 Методы/фильтры ASP.Net Core возвращают `IActionResult` с HTTP кодом, контентом и тд.
 Библиотека пытается конвертировать их в ответ `200 OK` и сериализовать контент в формат JSON-RPC.
@@ -47,9 +57,15 @@ builder.Services.AddJsonRpcServer(static options =>
 
 ### DetailedResponseExceptions
 
+```cs
+builder.Services.AddJsonRpcServer(static options => options.DetailedResponseExceptions = /* true или false */);
+```
+
 > Значение по умолчанию: `false`
 
 > Если `true`, исключения сериализуются вместе с их `.ToString()`, который включает стек трейс
+
+[Примеры использования](examples#DetailedResponseExceptions).
 
 Исключения, вызванные этой библиотекой, мидлварями или пользовательским кодом, перехватываются и сериализуются как JSON-RPC response с полем error и объектом `ExceptionInfo`.
 
@@ -60,9 +76,15 @@ builder.Services.AddJsonRpcServer(static options =>
 
 ### DefaultMethodStyle
 
+```cs
+builder.Services.AddJsonRpcServer(static options => options.DetailedResponseExceptions = /* JsonRpcMethodStyle.ControllerAndAction или JsonRpcMethodStyle.ActionOnly */);
+```
+
 > Значение по умолчанию: `JsonRpcMethodStyle.ControllerAndAction`
 
 > Управление тем, как JSON-RPC поле `method` сравнивается с контроллерами/методами
+
+[Примеры использования](examples#Method) и [подробности](serialization#Сравнение-метода-из-запроса-и-имени-контроллераметода).
 
 * `ControllerAndAction`: `method` интерпретируется как `controller.action`. Значение `foo.bar` будет соответсововать `FooController.Bar`
 * `ActionOnly`: `method` интерпретируется как `action`. Значение `bar` будет соответствовать методу `Bar` в любом контроллере
@@ -73,30 +95,50 @@ builder.Services.AddJsonRpcServer(static options =>
 
 ### DefaultDataJsonSerializerOptions
 
+```cs
+// Еще можно использовать настройки из класса JsonRpcSerializerOptions
+var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+builder.Services.AddJsonRpcServer(options => options.DefaultDataJsonSerializerOptions = jsonSerializerOptions);
+```
+
 > Значение по умолчанию: `JsonRpcSerializerOptions.SnakeCase`
 
 > `JsonSerializerOptions` для сериализации полей `params` и `method`, а также десериализации полей `result` и `error.data`
 
+[Примеры использования](examples#Сериализация) и [подробности](serialization).
+
 **Пользовательские данные** сериализуется отдельно от "заголовков" JSON-RPC объекта.
 Для типовых сценариев в пакете `Tochka.JsonRpc.Common` есть `JsonRpcSerializerOptions.SnakeCase` и `JsonRpcSerializerOptions.CamelCase`.
-
-Примеры использования: [Сериализация](serialization).
 
 Можно переопределить с помощью `JsonRpcSerializerOptionsAttribute`, если использовать реализацию интерфейса `IJsonSerializerOptionsProvider`, зарегистрированную в DI.
 
 ### HeadersJsonSerializerOptions
 
+```cs
+// Еще можно использовать настройки из класса JsonRpcSerializerOptions
+var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+builder.Services.AddJsonRpcServer(options => options.HeadersJsonSerializerOptions = jsonSerializerOptions);
+```
+
 > Значение по умолчанию: `JsonRpcSerializerOptions.Headers`
 
 > `JsonSerializerOptions` для сериализации/десериализации JSON-RPC "заголовков": `id`, `jsonrpc`, и тд.
+
+[Подробности](serialization).
 
 Не рекомендуется менять, так как объект "заголовков" запроса/ответа имеет фиксированный формат и не подразумевает каких-либо изменений.
 
 ### RoutePrefix
 
+```cs
+builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/public_api");
+```
+
 > Значение по умолчанию: `JsonRpcConstants.DefaultRoutePrefix` равное `"/api/jsonrpc"`
 
 > Общий префикс route для всех контроллеров/методов, унаследованных от `JsonRpcControllerBase`
+
+[Примеры использования](examples#Маршрутизация) и [подробности](routing).
 
 Когда в одном проекте используются и JSON-RPC, и REST, нужен какой-то общий префикс для адреса, чтобы отличать JSON-RPC методы. Если префикс не указан явно в адресе метода, то он будет добавлен автоматически. Для методов, у которых адрес не указан вручную, префикс будет использоваться как полный адрес (без части `/controllerName`).
 
@@ -110,18 +152,40 @@ Route может быть переопределен с помощью стан�
 
 ### JsonRpcSerializerOptionsAttribute
 
-> Переопределение `DefaultDataJsonSerializerOptions` для контроллера/метода. Детали про `IJsonSerializerOptionsProvider` описаны выше и в [Сериализация](serialization).
+Вешается на:
+ - контроллеры
+ - методы
+
+> Переопределение [`DefaultDataJsonSerializerOptions`](#DefaultDataJsonSerializerOptions) для контроллера/метода.
+
+[Примеры использования](examples#Сериализация) и [подробности](serialization#IJsonSerializerOptionsProvider).
 
 ### JsonRpcMethodStyleAttribute
 
-> Переопределение `DefaultMethodStyle` для контроллера/метода. Детали про `DefaultMethodStyle` описаны выше.
+Вешается на:
+ - контроллеры
+ - методы
+
+> Переопределение [`DefaultMethodStyle`](#DefaultMethodStyle) для контроллера/метода.
+
+[Примеры использования](examples#Method) и [подробности](serialization#Сравнение-метода-из-запроса-и-имени-контроллераметода).
 
 ### JsonRpcMethodAttribute
 
-> Определение значения поля `method` вручную для любого метода, игнорирует `DefaultMethodStyle` и `JsonRpcMethodStyleAttribute`. Детали про `DefaultMethodStyle` описаны выше.
+Вешается на:
+ - методы
+
+> Определение значения поля `method` вручную для любого метода, игнорирует [`DefaultMethodStyle`](#DefaultMethodStyle) и [`JsonRpcMethodStyleAttribute`](#JsonRpcMethodStyleAttribute).
+
+[Примеры использования](examples#Method) и [подробности](serialization#Сравнение-метода-из-запроса-и-имени-контроллераметода).
 
 ### FromParamsAttribute
 
-> Переопределение поведения биндинга моделей в параметры по умолчанию (`BindingStyle.Default`)
+Вешается на:
+ - аргументы метода
 
-Изменение того, как JSON-RPC поле `params` биндится в аргументы метода, см. [Binding](binding).
+> Переопределение дефолтного биндинга моделей в параметры (`BindingStyle.Default`)
+
+Изменение того, как JSON-RPC поле `params` биндится в аргументы метода.
+
+[Примеры использования](examples#Binding) и [подробности](binding).

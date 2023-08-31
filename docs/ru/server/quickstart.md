@@ -29,7 +29,12 @@ await app.RunAsync();
 ```cs
 public class EchoController : JsonRpcControllerBase
 {
-    public string ToLower(string value) => value.ToLowerInvariant();
+    public async Task<ActionResult<string>> ToLower(string value)
+    {
+        // ...
+        var result = value.ToLowerInvariant();
+        return this.Ok(result);
+    }
 }
 ```
 
@@ -39,12 +44,12 @@ public class EchoController : JsonRpcControllerBase
 
 <table>
     <tr>
-        <td>
+        <th>
             Запрос
-        </td>
-        <td>
+        </th>
+        <th>
             Ответ
-        </td>
+        </th>
     </tr>
 <tr>
 <td valign="top">

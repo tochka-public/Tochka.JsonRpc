@@ -29,7 +29,12 @@ Write your API controller as if it was REST, but instead of inheriting from `Con
 ```cs
 public class EchoController : JsonRpcControllerBase
 {
-    public string ToLower(string value) => value.ToLowerInvariant();
+    public async Task<ActionResult<string>> ToLower(string value)
+    {
+        // ...
+        var result = value.ToLowerInvariant();
+        return this.Ok(result);
+    }
 }
 ```
 
@@ -39,12 +44,12 @@ Start your app and send POST (extra headers omitted)
 
 <table>
     <tr>
-        <td>
+        <th>
             Request
-        </td>
-        <td>
+        </th>
+        <th>
             Response
-        </td>
+        </th>
     </tr>
 <tr>
 <td valign="top">

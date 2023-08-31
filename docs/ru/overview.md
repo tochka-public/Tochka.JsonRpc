@@ -46,7 +46,7 @@
 
 ## Nuget пакеты
 
-| ссылка| описание |
+| Ссылка| Описание |
 | - | - |
 | [Tochka.JsonRpc.Server](https://www.nuget.org/packages/Tochka.JsonRpc.Server/) | Мидлварь и сервисы для ASP.Net Core |
 | [Tochka.JsonRpc.Swagger](https://www.nuget.org/packages/Tochka.JsonRpc.Swagger/) | Генератор документации Swagger |

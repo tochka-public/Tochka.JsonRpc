@@ -6,34 +6,41 @@ Here are examples for different scenarios. Common things like default HTTP heade
 
 ## Request, Notification, Batch with default configuration
 
-Examples of basic JSON-RPC calls with default configuration
+Examples of basic JSON-RPC calls with default configuration.
 
 <details>
 <summary>Expand</summary>
 
 > `Program.cs`
 ```cs
+// ...
 builder.Services.AddJsonRpcServer();
-
+// ...
 app.UseJsonRpc();
+// ...
 ```
 
 > `EchoController.cs`
 ```cs
 public class EchoController : JsonRpcControllerBase
 {
-    public string ToLower(string value) => value.ToLowerInvariant();
+    public async Task<ActionResult<string>> ToLower(string value)
+    {
+        // ...
+        var result = value.ToLowerInvariant();
+        return this.Ok(result);
+    }
 }
 ```
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Response
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -189,39 +196,46 @@ Content-Type: application/json; charset=utf-8
 
 ## AllowRawResponses
 
-Break protocol a bit and return bytes, HTTP codes, etc.
+Break protocol a bit and return bytes, HTTP codes, etc. See [Configuration#AllowRawResponses](configuration#AllowRawResponses) for details.
 <details>
 <summary>Expand</summary>
 
 > `Program.cs`
 ```cs
+// ...
 builder.Services.AddJsonRpcServer(static options => options.AllowRawResponses = true);
-
+// ...
 app.UseJsonRpc();
+// ...
 ```
 
 > `DataController.cs`
 ```cs
 public class DataController : JsonRpcControllerBase
 {
-    public IActionResult GetBytes(int count)
+    public async Task<IActionResult> GetBytes(int count)
     {
+        // ...
         var bytes = Enumerable.Range(0, count).Select(static x => (byte) x).ToArray();
         return new FileContentResult(bytes, "application/octet-stream");
     }
 
-    public IActionResult RedirectTo(string url) => RedirectPermanent(url);
+    public async Task<IActionResult> RedirectTo(string url)
+    {
+        // ...
+        return this.RedirectPermanent(url);
+    }
 }
 ```
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Response
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -353,33 +367,40 @@ Content-Type: application/json; charset=utf-8
 
 ## DetailedResponseExceptions
 
-Hide or reveal exception information
+Hide or reveal exception information. See [Configuration#DetailedResponseExceptions](configuration#DetailedResponseExceptions) for details.
+
 <details>
 <summary>Expand</summary>
 
 > `Program.cs`
 ```cs
+// ...
 builder.Services.AddJsonRpcServer(static options => options.DetailedResponseExceptions = /* true or false */);
-
+// ...
 app.UseJsonRpc();
+// ...
 ```
 
 > `ErrorController.cs`
 ```cs
 public class ErrorController : JsonRpcControllerBase
 {
-    public string Fail() => throw new NotImplementedException("exception message");
+    public async Task<IActionResult> Fail()
+    {
+        // ...
+        throw new NotImplementedException("exception message");
+    }
 }
 ```
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Response
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -479,7 +500,8 @@ Content-Type: application/json; charset=utf-8
 
 ## Routes
 
-Override routing with global setting or attribute
+Override routing with global setting or attribute. See [Routing](routing) for details.
+
 <details>
 <summary>Expand</summary>
 
@@ -488,9 +510,11 @@ All JSON-RPC handlers must have same route prefix (`/api/jsonrpc` by default) to
 How to change default route and override it with custom route in controller or action:
 > `Program.cs`
 ```cs
+// ...
 builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/public_api");
-
+// ...
 app.UseJsonRpc();
+// ...
 ```
 
 > `UsersController.cs`
@@ -498,21 +522,30 @@ app.UseJsonRpc();
 /* [Route] override is also possible here */
 public class UsersController : JsonRpcControllerBase
 {
-    public List<string> GetNames() => new() { "Alice", "Bob" };
+    public async Task<ActionResult<List<string>>> GetNames()
+    {
+        // ...
+        return this.Ok(new List<string>() { "Alice", "Bob" });
+    }
 
-    [Route("/admin_api")] // add user to DB and return ID
-    public Guid Create(string name) => Guid.NewGuid();
+    [Route("/admin_api")]
+    public async Task<ActionResult<Guid>> Create(string name)
+    {
+        // add user to DB and return ID
+        // ...
+        return this.Ok(Guid.NewGuid());
+    }
 }
 ```
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Response
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -632,7 +665,7 @@ Content-Type: application/json; charset=utf-8
 
 ## Method
 
-Change how `method` property is matched to controllers and actions. Request's `method` property can be sent in different formats depending on global setting: as `controller.action` or as `action`. It's also can be set manually with `JsonRpcMethodAttribute`.
+Change how `method` property is matched to controllers and actions. Request's `method` property can be sent in different formats depending on global setting: as `controller.action` or as `action`. It's also can be set manually with `JsonRpcMethodAttribute`. See [Serialization#Matching method name to controller/action names](serialization#Matching-method-name-to-controlleraction-names) for details.
 
 <details>
 <summary>Expand</summary>
@@ -640,9 +673,11 @@ Change how `method` property is matched to controllers and actions. Request's `m
 
 > `Program.cs`
 ```cs
+// ...
 builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = /* JsonRpcMethodStyle.ControllerAndAction or JsonRpcMethodStyle.ActionOnly */);
-
+// ...
 app.UseJsonRpc();
+// ...
 ```
 
 > `EchoController.cs`
@@ -651,21 +686,31 @@ app.UseJsonRpc();
 public class EchoController : JsonRpcControllerBase
 {
     /* [JsonRpcMethodStyle] or [JsonRpcMethod] override is also possible here */
-    public string ToLower(string value) => value.ToLowerInvariant();
+    public async Task<ActionResult<string>> ToLower(string value)
+    {
+        // ...
+        var result = value.ToLowerInvariant();
+        return this.Ok(result);
+    }
 
     [JsonRpcMethod("to upper")]
-    public string ToUpper(string value) => value.ToUpperInvariant();
+    public async Task<ActionResult<string>> ToUpper(string value)
+    {
+        // ...
+        var result = value.ToUpperInvariant();
+        return this.Ok(result);
+    }
 }
 ```
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Response
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -793,20 +838,24 @@ Content-Type: application/json; charset=utf-8
 ## Serialization
 
 Change default JSON serialization options or override it for controller/action. See [Serialization](serialization) for details.
+
 <details>
 <summary>Expand</summary>
 
 Note how changing serialization affects `params` and `method`.
 > `Program.cs`
 ```cs
+// ...
+
 // you can also use predefined options from JsonRpcSerializerOptions class
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 builder.Services.AddJsonRpcServer(options => options.DefaultDataJsonSerializerOptions = jsonSerializerOptions);
 
 // options provider to use in JsonRpcSerializerOptionsAttribute
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
-
+// ...
 app.UseJsonRpc();
+// ...
 ```
 
 > `SimpleCalcController.cs`
@@ -814,32 +863,40 @@ app.UseJsonRpc();
 /* [JsonRpcSerializerOptions] override is also possible here */
 public class SimpleCalcController : JsonRpcControllerBase
 {
-    public object SubtractIntegers(int firstValue, int secondValue) => new
+    public async Task<ActionResult<object>> SubtractIntegers(int firstValue, int secondValue)
     {
-        firstValue,
-        secondValue,
-        firstMinusSecond = firstValue - secondValue
-    };
+        // ...
+        return this.Ok(new
+        {
+            firstValue,
+            secondValue,
+            firstMinusSecond = firstValue - secondValue
+        });
+    }
 
     // IMPORTANT: SnakeCaseJsonSerializerOptionsProvider must be registered in DI as IJsonSerializerOptionsProvider
     [JsonRpcSerializerOptions(typeof(SnakeCaseJsonSerializerOptionsProvider))]
-    public object AddIntegers(int firstValue, int secondValue) => new
+    public async Task<ActionResult<object>> AddIntegers(int firstValue, int secondValue)
     {
-        firstValue,
-        secondValue,
-        firstPlusSecond = firstValue + secondValue
-    };
+        // ...
+        return this.Ok(new
+        {
+            firstValue,
+            secondValue,
+            firstPlusSecond = firstValue + secondValue
+        });
+    }
 }
 ```
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Response
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -939,18 +996,17 @@ Content-Type: application/json; charset=utf-8
 
 Change how `params` are bound to method arguments. See [Binding](binding) for details.
 
-
 <details>
 <summary>Default behavior: params are bound to method arguments. Params can be [] or {} by specification</summary>
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Action method
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -979,10 +1035,12 @@ Content-Type: application/json; charset=utf-8
 
 `params` are bound to method arguments by names
 ```cs
-public void Foo(int bar, string baz)
+public async Task<IActionResult> Foo(int bar, string baz)
 {
     // bar == 1
     // baz == "test"
+
+    // ...
 }
 ```
 
@@ -1015,10 +1073,12 @@ Content-Type: application/json; charset=utf-8
 
 `params` are bound to method arguments by indices
 ```cs
-public void Foo(int bar, string baz)
+public async Task<IActionResult> Foo(int bar, string baz)
 {
     // bar == 1
     // baz == "test"
+
+    // ...
 }
 ```
 
@@ -1035,12 +1095,12 @@ public void Foo(int bar, string baz)
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Action method
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -1071,10 +1131,12 @@ Content-Type: application/json; charset=utf-8
 ```cs
 public record Data(int Bar, string Baz);
 
-public void Foo([FromParams(BindingStyle.Object)] Data data)
+public async Task<IActionResult> Foo([FromParams(BindingStyle.Object)] Data data)
 {
     // data.Bar == 1
     // data.Baz == "test"
+
+    // ...
 }
 ```
 
@@ -1109,7 +1171,7 @@ Error because array items can not be bound to object properties
 ```cs
 public record Data(int Bar, string Baz);
 
-public void Foo([FromParams(BindingStyle.Object)] Data data)
+public async Task<IActionResult> Foo([FromParams(BindingStyle.Object)] Data data)
 {
     // does not work for `params` array
 }
@@ -1144,12 +1206,12 @@ public void Foo([FromParams(BindingStyle.Object)] Data data)
 
 <table>
 <tr>
-    <td>
+    <th>
         Request
-    </td>
-    <td>
+    </th>
+    <th>
         Action method
-    </td>
+    </th>
 </tr>
 
 <tr>
@@ -1178,7 +1240,7 @@ Content-Type: application/json; charset=utf-8
 
 Error because object properties can not be bound to array items
 ```cs
-public void Foo([FromParams(BindingStyle.Array)] List<int> data)
+public async Task<IActionResult> Foo([FromParams(BindingStyle.Array)] List<int> data)
 {
     // does not work for `params` object
 }
@@ -1228,10 +1290,12 @@ Content-Type: application/json; charset=utf-8
 
 Array items are bound to collection
 ```cs
-public void Foo([FromParams(BindingStyle.Array)] List<int> data)
+public async Task<IActionResult> Foo([FromParams(BindingStyle.Array)] List<int> data)
 {
     // data[0] == 1
     // data[1] == 2
+
+    // ...
 }
 ```
 
@@ -1249,22 +1313,28 @@ public void Foo([FromParams(BindingStyle.Array)] List<int> data)
 
 Also try default params, object, dynamic and custom serialization...
 ```cs
-public void Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices] ICustomService service, CancellationToken token)
+public async Task<IActionResult> Foo1(object bar, dynamic baz, [FromParams(BindingStyle.Object)] Data data, [FromServices] ICustomService service, CancellationToken token)
 {
     // bar, baz are bound by default
     // data is bound with specified behavior
     // service and token are bound by framework as usual
+
+    // ...
 }
 
-public void Foo2(int? bar, string baz = "default_value")
+public async Task<IActionResult> Foo2(int? bar, string baz = "default_value")
 {
     // Request "params" can have nullable "bar" and omit "baz" property entirely
+
+    // ...
 }
 ```
 
 </details>
 
 ## Access extra information
+
+Utility methods to work with JSON-RPC request/response objects. See [Utils](utils) for details.
 
 <details>
 <summary>Expand</summary>
@@ -1316,48 +1386,69 @@ HttpContext.SetJsonRpcResponse(response);
 
 ## Errors and exceptions
 
-See [Errors](errors) first.
+Different ways to return error from method. See [Errors](errors) for details.
 
 <details>
-<summary>Different ways to return an error from Action</summary>
-
-Consider actions in this controller. Below are examples of their output. HTTP headers are omitted, response is always `200 OK`.
+<summary>IJsonRpcErrorFactory methods</summary>
 
 ```cs
-public record MyData(int Bar, string Baz);
-
 public class FailController : JsonRpcControllerBase
 {
     private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
     public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
-    // see methods in examples below
+
+    public async Task<ActionResult<IError>> PredefinedError()
+    {
+        // ...
+        return this.Ok(jsonRpcErrorFactory.InvalidParams("oops"));
+        // or others:
+        //return this.Ok(jsonRpcErrorFactory.ParseError("oops"));
+        //return this.Ok(jsonRpcErrorFactory.InvalidRequest("oops"));
+    }
 }
 ```
 
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+```json
+{
+    "id": 1,
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": "oops"
+    },
+    "jsonrpc": "2.0"
+}
+```
+
+</details>
+
+<details>
+<summary>Any exception</summary>
+
+```cs
+public class FailController : JsonRpcControllerBase
+{
+    public async Task<IActionResult> ThrowException()
+    {
+        // ...
+        throw new DivideByZeroException("test");
+    }
+}
+```
+
+Response (depends on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
 <table>
 <tr>
-    <td>
-        Action
-    </td>
-    <td>
-        Response without DetailedResponseExceptions
-    </td>
-    <td>
-        Response with DetailedResponseExceptions
-    </td>
+    <th>
+        DetailedResponseExceptions = false
+    </th>
+    <th>
+        DetailedResponseExceptions = true
+    </th>
 </tr>
 
 <tr>
-
-<td valign="top">
-
-```cs
-public void ThrowException() =>
-    throw new DivideByZeroException("test");
-```
-
-</td>
-
 <td valign="top">
 
 ```json
@@ -1377,7 +1468,6 @@ public void ThrowException() =>
 ```
 
 </td>
-
 <td valign="top">
 
 ```json
@@ -1398,22 +1488,30 @@ public void ThrowException() =>
 
 </td>
 </tr>
+</table>
 
-<tr>
+</details>
 
-<td valign="top">
+<details>
+<summary>Creating error using factory IJsonRpcErrorFactory.Error</summary>
 
 ```cs
-public IError Error() =>
-    jsonRpcErrorFactory.Error(123,
-        "error with custom data",
-        new MyData(456, "baz"));
+public record MyData(int Bar, string Baz);
+
+public class FailController : JsonRpcControllerBase
+{
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+
+    public async Task<ActionResult<IError>> Error()
+    {
+        // ...
+        return this.Ok(jsonRpcErrorFactory.Error(123, "error with custom data", new MyData(456, "baz"));
+    }
+}
 ```
 
-</td>
-
-<td valign="top">
-
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
 ```json
 {
     "id": 1,
@@ -1429,67 +1527,25 @@ public IError Error() =>
 }
 ```
 
-</td>
+</details>
 
-<td valign="top">
-
-no difference
-
-</td>
-</tr>
-
-<tr>
-
-<td valign="top">
+<details>
+<summary>ActionResult with HTTP error codes</summary>
 
 ```cs
-public IError PredefinedError()
+public record MyData(int Bar, string Baz);
+
+public class FailController : JsonRpcControllerBase
 {
-    return jsonRpcErrorFactory.InvalidParams("oops");
-    // or others:
-    //return jsonRpcErrorFactory.ParseError("oops");
-    //return jsonRpcErrorFactory.InvalidRequest("oops");
+    public async Task<IActionResult> MvcError()
+    {
+        // ...
+        return this.BadRequest(new MyData(123, "baz"));
+    }
 }
 ```
 
-</td>
-
-<td valign="top">
-
-```json
-{
-    "id": 1,
-    "error": {
-        "code": -32602,
-        "message": "Invalid params",
-        "data": "oops"
-    },
-    "jsonrpc": "2.0"
-}
-```
-
-</td>
-
-<td valign="top">
-
-no difference
-
-</td>
-</tr>
-
-<tr>
-
-<td valign="top">
-
-```cs
-public IActionResult MvcError() =>
-    this.BadRequest(new MyData(123, "baz"));
-```
-
-</td>
-
-<td valign="top">
-
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
 ```json
 {
     "id": 1,
@@ -1505,38 +1561,47 @@ public IActionResult MvcError() =>
 }
 ```
 
-</td>
+</details>
 
-<td valign="top">
-
-no difference
-
-</td>
-</tr>
-
-<tr>
-
-<td valign="top">
+<details>
+<summary>Wrapping exception manually IJsonRpcErrorFactory.Exception</summary>
 
 ```cs
-public IActionResult WrapExceptionManually()
+public class FailController : JsonRpcControllerBase
 {
-    try
-    {
-        throw new DivideByZeroException("oops");
-    }
-    catch (Exception e)
-    {
-        var error = jsonRpcErrorFactory.Exception(e);
-        return new ObjectResult(error);
-    }
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
 
-    return Ok();
+    public async Task<IActionResult> WrapExceptionManually()
+    {
+        // ...
+        try
+        {
+            throw new DivideByZeroException("oops");
+        }
+        catch (Exception e)
+        {
+            var error = jsonRpcErrorFactory.Exception(e);
+            return new ObjectResult(error);
+        }
+
+        return this.Ok();
+    }
 }
 ```
 
-</td>
+Response (depends on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+<table>
+<tr>
+    <th>
+        DetailedResponseExceptions = false
+    </th>
+    <th>
+        DetailedResponseExceptions = true
+    </th>
+</tr>
 
+<tr>
 <td valign="top">
 
 ```json
@@ -1556,7 +1621,6 @@ public IActionResult WrapExceptionManually()
 ```
 
 </td>
-
 <td valign="top">
 
 ```json
@@ -1577,22 +1641,41 @@ public IActionResult WrapExceptionManually()
 
 </td>
 </tr>
+</table>
 
-<tr>
+</details>
 
-<td valign="top">
+<details>
+<summary>Wrapping HTTP status code manually IJsonRpcErrorFactory.HttpError</summary>
 
 ```cs
-public IError WrapHttpErrorManually()
+public class FailController : JsonRpcControllerBase
 {
-    var innerException = new DivideByZeroException("inner!");
-    var e = new ArgumentException("message!", innerException);
-    return jsonRpcErrorFactory.HttpError(500, e);
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+
+    public async Task<ActionResult<IError>> WrapHttpErrorManually()
+    {
+        // ...
+        var innerException = new DivideByZeroException("inner!");
+        var e = new ArgumentException("message!", innerException);
+        return this.Ok(jsonRpcErrorFactory.HttpError(500, e));
+    }
 }
 ```
 
-</td>
+Response (depends on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+<table>
+<tr>
+    <th>
+        DetailedResponseExceptions = false
+    </th>
+    <th>
+        DetailedResponseExceptions = true
+    </th>
+</tr>
 
+<tr>
 <td valign="top">
 
 ```json
@@ -1612,7 +1695,6 @@ public IError WrapHttpErrorManually()
 ```
 
 </td>
-
 <td valign="top">
 
 ```json
@@ -1633,89 +1715,158 @@ public IError WrapHttpErrorManually()
 
 </td>
 </tr>
-
-<tr>
-
-<td valign="top">
-
-```cs
-public IError ManuallyCreateError() =>
-    new Error<MyData>(123,
-        "error with custom data",
-        new MyData(456, "baz"));
-```
-
-</td>
-
-<td valign="top">
-
-```json
-{
-    "id": 1,
-    "error": {
-        "code": 123,
-        "message": "error with custom data",
-        "data": {
-            "bar": 456,
-            "baz": "baz"
-        }
-    },
-    "jsonrpc": "2.0"
-}
-```
-
-</td>
-
-<td valign="top">
-
-no difference
-
-</td>
-</tr>
-
-<tr>
-
-<td valign="top">
-
-```cs
-public void ThrowErrorAsException()
-{
-    var error = jsonRpcErrorFactory.Error(123,
-        "error with custom data",
-        new MyData(456, "baz"));
-    error.ThrowAsException();
-}
-```
-
-</td>
-
-<td valign="top">
-
-```json
-{
-    "id": 1,
-    "error": {
-        "code": 123,
-        "message": "error with custom data",
-        "data": {
-            "bar": 456,
-            "baz": "baz"
-        }
-    },
-    "jsonrpc": "2.0"
-}
-```
-
-</td>
-
-<td valign="top">
-
-no difference
-
-</td>
-</tr>
-
-
 </table>
+
+</details>
+
+<details>
+<summary>Creating error manually</summary>
+
+```cs
+public record MyData(int Bar, string Baz);
+
+public class FailController : JsonRpcControllerBase
+{
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+
+    public async Task<ActionResult<IError>> ManuallyCreateError()
+    {
+        // ...
+        var error = new Error<MyData>(123, "error with custom data", new MyData(456, "baz"));
+        return this.Ok(error);
+    }
+}
+```
+
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+```json
+{
+    "id": 1,
+    "error": {
+        "code": 123,
+        "message": "error with custom data",
+        "data": {
+            "bar": 456,
+            "baz": "baz"
+        }
+    },
+    "jsonrpc": "2.0"
+}
+```
+
+</details>
+
+<details>
+<summary>Throwing exception with error using throw and method IError.AsException</summary>
+
+```cs
+public record MyData(int Bar, string Baz);
+
+public class FailController : JsonRpcControllerBase
+{
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+
+    public async Task<IActionResult> ThrowErrorAsException()
+    {
+        // ...
+        var error = jsonRpcErrorFactory.Error(123, "error with custom data", new MyData(456, "baz"));
+        throw error.AsException();
+    }
+}
+```
+
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+```json
+{
+    "id": 1,
+    "error": {
+        "code": 123,
+        "message": "error with custom data",
+        "data": {
+            "bar": 456,
+            "baz": "baz"
+        }
+    },
+    "jsonrpc": "2.0"
+}
+```
+
+</details>
+
+<details>
+<summary>Throwing exception with error from method IError.ThrowAsException</summary>
+
+```cs
+public record MyData(int Bar, string Baz);
+
+public class FailController : JsonRpcControllerBase
+{
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+
+    public async Task<IActionResult> ThrowErrorAsException()
+    {
+        // ...
+        var error = jsonRpcErrorFactory.Error(123, "error with custom data", new MyData(456, "baz"));
+        error.ThrowAsException();
+    }
+}
+```
+
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+```json
+{
+    "id": 1,
+    "error": {
+        "code": 123,
+        "message": "error with custom data",
+        "data": {
+            "bar": 456,
+            "baz": "baz"
+        }
+    },
+    "jsonrpc": "2.0"
+}
+```
+
+</details>
+
+<details>
+<summary>Throwing exception with error manually</summary>
+
+```cs
+public record MyData(int Bar, string Baz);
+
+public class FailController : JsonRpcControllerBase
+{
+    private readonly IJsonRpcErrorFactory jsonRpcErrorFactory;
+    public FailController(IJsonRpcErrorFactory jsonRpcErrorFactory) => this.jsonRpcErrorFactory = jsonRpcErrorFactory;
+
+    public async Task<IActionResult> ThrowExceptionWithError()
+    {
+        // ...
+        var error = jsonRpcErrorFactory.Error(123, "error with custom data", new MyData(456, "baz"));
+        throw new JsonRpcErrorException(error);
+    }
+}
+```
+
+Response (does not depend on [`DetailedResponseExceptions`](configuration#DetailedResponseExceptions)):
+```json
+{
+    "id": 1,
+    "error": {
+        "code": 123,
+        "message": "error with custom data",
+        "data": {
+            "bar": 456,
+            "baz": "baz"
+        }
+    },
+    "jsonrpc": "2.0"
+}
+```
 
 </details>

@@ -1,6 +1,6 @@
 # Сервер/Ошибки
 
-Обрабатывать ошибки - сложно. Здесь описано, что для этого делает библиотека, и чем можно воспользоваться вручную. Также см. [Примеры#Ошибки и исключения](examples?id=Ошибки-и-исключения).
+Обрабатывать ошибки - сложно. Здесь описано, что для этого делает библиотека, и чем можно воспользоваться вручную. Также см. [Примеры#Ошибки и исключения](examples#Ошибки-и-исключения).
 
 ## Возврат ошибок вручную
 
@@ -10,6 +10,11 @@
 
 Лучше всего делать **аналогично REST**: метод должен возвращать `IActionResult`/`IActionResult<T>`/`ObjectResult<T>`.
 
+[Примеры](examples#Ошибки-и-исключения):
+ - Методы IJsonRpcErrorFactory
+ - Создание ошибки с помощью фабрики IJsonRpcErrorFactory.Error
+ - Создание ошибки вручную
+
 > `IJsonRpcErrorFactory` проверяет, не передали ли в его методы объект-наследник `Exception`, и подменяет исключения на `ExceptionInfo`. Потому что исключения не всегда сериализуются в JSON
 
 ## Возврат "плохого" HTTP статус-кода
@@ -17,28 +22,41 @@
 В классах контроллера есть стандартные методы типа `NotFound()`, которые возвращают `IActionResult` с определенным HTTP статус-кодом.
 Если код 4xx или 5xx, то он будет обернут в response с полем error с помощью `IJsonRpcErrorFactory.HttpError`.
 
+[Примеры](examples#Ошибки-и-исключения):
+ - ActionResult с кодами ошибок
+ - Оборачивание HTTP кода ответа вручную IJsonRpcErrorFactory.HttpError
+
 ## Исключения
 
 Исключения, выброшенные из метода или фильтров, оборачиваются в JSON-RPC response с полем error с помощью `IJsonRpcErrorFactory.Exception`.
 
 Можно переопределить логику создания ошибок, если подменить реализацию `IJsonRpcErrorFactory` в DI. Другой вариант - создать свой `IExceptionFilter`, который будет конвертировать исключение в ошибку и складывать в `Result`, аналогично [`JsonRpcExceptionFilter`](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/src/Tochka.JsonRpc.Server/Filters/JsonRpcExceptionFilter.cs).
 
+[Примеры](examples#Ошибки-и-исключения):
+ - Любое исключение
+ - Оборачивание исключения вручную IJsonRpcErrorFactory.Exception
+
 ## Возврат ошибки при сохранении возвращаемого значения
 
 Бывает, нужно сохранить чистую сигнатуру метода, например, `public User GetUser(int id) {}`.
 При этом может потребоваться вернуть JSON-RPC ошибку с заданным кодом, сообщением и данными, например, `-10, "user not found", {id: 1}`. Выкидывание обычных исключений не поможет, так как они будут обернуты в `ServerError` (как необработанное исключение).
 
-Для этого есть `IError.ThrowAsException`. Еще можно выбросить исключение `JsonRpcErrorException` напрямую:
+Для этого есть `IError.ThrowAsException` и `IError.AsException`. Еще можно выбросить исключение `JsonRpcErrorException` напрямую:
 
 ```cs
 errorFactory.MethodNotFound("oops!").ThrowAsException();
-errorFactory.Exception(e).ThrowAsException();
+errorFactory.Exception(e).AsException();
 errorFactory.Error(-10, "user not found", new { id = 1 }).ThrowAsException();
-errorFactory.Error(-10, "users not found", new List<string> { "user1", "user2" }).ThrowAsException();
+errorFactory.Error(-10, "users not found", new List<string> { "user1", "user2" }).AsException();
 throw new JsonRpcErrorException(new Error<T>(...));
 ```
 
-Такой подход не рекомендуется, потому что нет причин отказываться от `IActionResult`/`IActionResult<T>`/`ObjectResult<T>` в сигнатурах методов.
+Такой подход не рекомендуется, потому что нет причин отказываться от `IActionResult`/`ActionResult<T>`/`ObjectResult<T>` в сигнатурах методов.
+
+[Примеры](examples#Ошибки-и-исключения):
+ - Выбрасывание исключения с ошибкой с помощью throw и метода IError.AsException
+ - Выбрасывание исключения с ошибкой из метода IError.ThrowAsException
+ - Выбрасывание исключения с ошибкой вручную
 
 ## Ранние исключения в пайплайне
 
