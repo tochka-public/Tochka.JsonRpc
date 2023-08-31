@@ -70,24 +70,9 @@ We patch internal metadata about actions, so they appear as different methods in
 This way Swagger treats them as different urls, but sending request via Swagger UI still works. Combination of url + method must be unique.
 See the example:
 
-<table>
-<tr>
-    <td>
-        JSON-RPC method
-    </td>
-    <td>
-        Swagger representation
-    </td>
-</tr>
-<tr>
-    <td>
-        echo.to_lower
-    </td>
-    <td>
-        POST /api/jsonrpc#echo.to_lower
-    </td>
-</tr>
-</table>
+| JSON-RPC method | Swagger representation |
+| - | - |
+| echo.to_lower | POST /api/jsonrpc#echo.to_lower |
 
 #### Fixing requests and responses
 

@@ -12,44 +12,11 @@ builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/api"
 
 Префикс `/api` будет добавлен ко всем эндпоинтам приложения, если он уже явно не указан в атрибуте `RouteAttribute`.
 
-<table>
-<tr>
-    <th>
-        RouteAttribute
-    </th>
-    <th>
-        Итоговый route для маршрутизации 
-    </th>
-</tr>
-
-<tr>
-    <td>
-        Отсутствует
-    </td>
-    <td>
-        `/api`
-    </td>
-</tr>
-
-<tr>
-    <td>
-        `[Route("action")]` или `[Route("/action")]`
-    </td>
-    <td>
-        `/api/action`
-    </td>
-</tr>
-
-<tr>
-    <td>
-        `[Route("api/action")]` или `[Route("/api/action")]`
-    </td>
-    <td>
-        `/api/action`
-    </td>
-</tr>
-</table>
-
+| RouteAttribute | Итоговый route для маршрутизации |
+| - | - |
+| Отсутствует | `/api` |
+| `[Route("action")]` или `[Route("/action")]` | `/api/action` |
+| `[Route("api/action")]` или `[Route("/api/action")]` | `/api/action` |
 
 ## Переопределение route для метода/контроллера
 
@@ -63,7 +30,11 @@ builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/api"
 public class UsersController : JsonRpcControllerBase
 {
     [Route("names")]
-    public List<string> GetNames() => new() { "Alice", "Bob" };
+    public async Task<ActionResult<List<string>>> GetNames()
+    {
+        // ...
+        return this.Ok(new List<string>() { "Alice", "Bob" });
+    }
 }
 ```
 То в результате маршрутизация к методу `GetNames` будет осуществляться по route = `/api/jsonrpc/users/names`

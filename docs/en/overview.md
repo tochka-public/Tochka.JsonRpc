@@ -46,7 +46,7 @@ and fine-tune experience after release when we have some real-world usage feedba
 
 ## Nuget Packages
 
-| link| description |
+| Link| Description |
 | - | - |
 | [Tochka.JsonRpc.Server](https://www.nuget.org/packages/Tochka.JsonRpc.Server/) | ASP.Net Core middleware and services |
 | [Tochka.JsonRpc.Swagger](https://www.nuget.org/packages/Tochka.JsonRpc.Swagger/) | Swagger document generator |

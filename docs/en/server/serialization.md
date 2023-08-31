@@ -49,7 +49,12 @@ Use it via attribute for controller or action:
 
 ```cs
 [JsonRpcSerializerOptions(typeof(YourProvider))]
-public string ToLower(string value) => value.ToLowerInvariant();
+public async Task<ActionResult<string>> ToLower(string value)
+{
+    // ...
+    var result = value.ToLowerInvariant();
+    return this.Ok(result);
+}
 ```
 
 ## Serializing early pipeline errors

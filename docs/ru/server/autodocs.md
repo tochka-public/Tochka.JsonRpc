@@ -70,24 +70,9 @@ app.UseSwaggerUI(c =>
 Поэтому Swagger считает их за разные url-ы, и отправка запроса через Swagger UI не ломается. Комбинация url + метод должна быть уникальной.
 Пример:
 
-<table>
-<tr>
-    <td>
-        JSON-RPC метод
-    </td>
-    <td>
-        Отображение в Swagger
-    </td>
-</tr>
-<tr>
-    <td>
-        echo.to_lower
-    </td>
-    <td>
-        POST /api/jsonrpc#echo.to_lower
-    </td>
-</tr>
-</table>
+| JSON-RPC метод | Отображение в Swagger |
+| - | - |
+| echo.to_lower | POST /api/jsonrpc#echo.to_lower |
 
 #### Исправление запросов и ответов
 

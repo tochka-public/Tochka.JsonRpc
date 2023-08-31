@@ -48,7 +48,12 @@ services.AddSingleton<IJsonSerializerOptionsProvider, YourProvider>();
 
 ```cs
 [JsonRpcSerializerOptions(typeof(YourProvider))]
-public string ToLower(string value) => value.ToLowerInvariant();
+public async Task<ActionResult<string>> ToLower(string value)
+{
+    // ...
+    var result = value.ToLowerInvariant();
+    return this.Ok(result);
+}
 ```
 
 ## Сериализация ранних ошибок в пайплайне

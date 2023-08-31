@@ -15,12 +15,18 @@ builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/api/
 [ApiVersion(2)]
 public class VersionedController : JsonRpcControllerBase
 {
-    public void Do1() { };
+    public async Task<IActionResult> Do1()
+    {
+        // ...
+    };
 }
 
 public class UnversionedController : JsonRpcControllerBase
 {
-    public void Do2() { };
+    public async Task<IActionResult> Do2()
+    {
+        // ...
+    };
 }
 ```
 Method `VersionedController.Do1` will be available by routes:

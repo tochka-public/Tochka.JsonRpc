@@ -12,44 +12,11 @@ builder.Services.AddJsonRpcServer(static options => options.RoutePrefix = "/api"
 
 Prefix `/api` will be added to all project endpoints if it wasn't explicitly defined in attribute `RouteAttribute`.
 
-<table>
-<tr>
-    <th>
-        RouteAttribute
-    </th>
-    <th>
-        Final route for requests
-    </th>
-</tr>
-
-<tr>
-    <td>
-        Not used
-    </td>
-    <td>
-        `/api`
-    </td>
-</tr>
-
-<tr>
-    <td>
-        `[Route("action")]` or `[Route("/action")]`
-    </td>
-    <td>
-        `/api/action`
-    </td>
-</tr>
-
-<tr>
-    <td>
-        `[Route("api/action")]` or `[Route("/api/action")]`
-    </td>
-    <td>
-        `/api/action`
-    </td>
-</tr>
-</table>
-
+| RouteAttribute | Final route for requests |
+| - | - |
+| Not used | `/api` |
+| `[Route("action")]` or `[Route("/action")]` | `/api/action` |
+| `[Route("api/action")]` or `[Route("/api/action")]` | `/api/action` |
 
 ## Overriding route for method/controller
 
@@ -60,10 +27,13 @@ You can explicitly define route for controller or method by using `RouteAttribut
 If `RoutePrefix` from global settings has default value = `/api/jsonrpc/` (see [Overriding global prefix](#Overriding-global-prefix)) and defined controller with such code:
 ```cs
 [Route("users")]
-public class UsersController : JsonRpcControllerBase
 {
     [Route("names")]
-    public List<string> GetNames() => new() { "Alice", "Bob" };
+    public async Task<ActionResult<List<string>>> GetNames()
+    {
+        // ...
+        return this.Ok(new List<string>() { "Alice", "Bob" });
+    }
 }
 ```
 Then method `GetNames` will be available by route = `/api/jsonrpc/users/names`
