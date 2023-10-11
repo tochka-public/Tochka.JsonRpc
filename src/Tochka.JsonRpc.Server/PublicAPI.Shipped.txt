@@ -177,3 +177,7 @@ static Tochka.JsonRpc.Server.Extensions.ErrorExtensions.AsException(this Tochka.
 Tochka.JsonRpc.Server.JsonRpcMiddleware.JsonRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler! requestHandler, Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper! exceptionWrapper, Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator! requestValidator, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void
 Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator
 Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator.IsJsonRpcRequest(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> bool
+Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware
+Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext! context) -> System.Threading.Tasks.Task!
+Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware.JsonRpcRequestLoggingMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware!>! log) -> void
+static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.WithJsonRpcRequestLogging(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
