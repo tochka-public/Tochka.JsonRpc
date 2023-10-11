@@ -1874,10 +1874,11 @@ Response (does not depend on [`DetailedResponseExceptions`](configuration#Detail
 ## Requests logging
 
 <details>
-<summary>Log request</summary>
+<summary>Expand</summary>
 
 ```cs
-app.UseJsonRpc().WithJsonRpcRequestLogging()
+app.UseJsonRpc()
+    .WithJsonRpcRequestLogging()
 ```
 
 </details>

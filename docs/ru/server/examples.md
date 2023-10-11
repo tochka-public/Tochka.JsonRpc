@@ -1875,10 +1875,11 @@ public class FailController : JsonRpcControllerBase
 ## Логирование запросов
 
 <details>
-<summary>Логируем запрос</summary>
+<summary>Развернуть</summary>
 
 ```cs
-app.UseJsonRpc().WithJsonRpcRequestLogging()
+app.UseJsonRpc()
+    .WithJsonRpcRequestLogging()
 ```
 
 </details>
