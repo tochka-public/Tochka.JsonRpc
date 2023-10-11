@@ -19,7 +19,7 @@ public class JsonRpcRequestLoggingHandler : DelegatingHandler
         if (request.Content is not null)
         {
             var body = await request.Content.ReadAsStringAsync(cancellationToken);
-            logger.LogInformation("Request is going to send [{jsonRpcRequest}]", body);
+            logger.LogInformation("{jsonRpcRequest}", body);
         }
 
         return await base.SendAsync(request, cancellationToken);
