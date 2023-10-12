@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Tochka.JsonRpc.Client.HttpMessageHandlers;
 using Tochka.JsonRpc.Client.Services;
 
 namespace Tochka.JsonRpc.Client;
@@ -36,6 +37,7 @@ public static class Extensions
         where TClient : class, IJsonRpcClient
         where TImplementation : JsonRpcClientBase, TClient
     {
+        services.TryAddTransient<JsonRpcRequestLoggingHandler>();
         services.TryAddSingleton<IJsonRpcIdGenerator, JsonRpcIdGenerator>();
         var builder = services.AddHttpClient<TClient, TImplementation>(configureClient);
         return builder;
@@ -60,8 +62,14 @@ public static class Extensions
     public static IHttpClientBuilder AddJsonRpcClient<TClient>(this IServiceCollection services, Action<IServiceProvider, HttpClient> configureClient)
         where TClient : JsonRpcClientBase
     {
+        services.TryAddTransient<JsonRpcRequestLoggingHandler>();
         services.TryAddSingleton<IJsonRpcIdGenerator, JsonRpcIdGenerator>();
         var builder = services.AddHttpClient<TClient>(configureClient);
         return builder;
     }
+
+    /// <summary>
+    /// Register handler to log outgoing requests
+    /// </summary>
+    public static IHttpClientBuilder WithJsonRpcRequestLogging(this IHttpClientBuilder httpClientBuilder) => httpClientBuilder.AddHttpMessageHandler<JsonRpcRequestLoggingHandler>();
 }

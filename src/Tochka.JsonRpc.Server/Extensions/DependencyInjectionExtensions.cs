@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
+using Tochka.JsonRpc.Server.Middlewares;
 using Tochka.JsonRpc.Server.Routing;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
@@ -82,6 +83,14 @@ public static class DependencyInjectionExtensions
         // Unfortunately there is no good way to check if UseRouting was called before it
         return app.UseMiddleware<JsonRpcMiddleware>();
     }
+
+    /// <summary>
+    /// Log requests. Call it after UseJsonRpc()
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
+    public static IApplicationBuilder WithJsonRpcRequestLogging(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcRequestLoggingMiddleware>();
 
     private static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
         where T : class

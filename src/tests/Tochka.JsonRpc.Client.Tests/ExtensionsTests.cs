@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Tochka.JsonRpc.Client.HttpMessageHandlers;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Client.Tests.TestHelpers;
 
@@ -25,6 +26,7 @@ internal class ExtensionsTests
         result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(ITestJsonRpcClient), ServiceLifetime.Transient)).Should().BeTrue();
+        result.Remove((typeof(JsonRpcRequestLoggingHandler), ServiceLifetime.Transient)).Should().BeTrue();
     }
 
     [Test]
@@ -76,6 +78,7 @@ internal class ExtensionsTests
         result.Remove((typeof(IHttpClientFactory), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcIdGenerator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(TestJsonRpcClient), ServiceLifetime.Transient)).Should().BeTrue();
+        result.Remove((typeof(JsonRpcRequestLoggingHandler), ServiceLifetime.Transient)).Should().BeTrue();
     }
 
     [Test]

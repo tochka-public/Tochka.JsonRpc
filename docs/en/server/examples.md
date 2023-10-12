@@ -1870,3 +1870,15 @@ Response (does not depend on [`DetailedResponseExceptions`](configuration#Detail
 ```
 
 </details>
+
+## Requests logging
+
+<details>
+<summary>Expand</summary>
+
+```cs
+app.UseJsonRpc()
+    .WithJsonRpcRequestLogging()
+```
+
+</details>

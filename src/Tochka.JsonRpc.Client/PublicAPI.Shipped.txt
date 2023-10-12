@@ -135,3 +135,8 @@ virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Timeout.get -> S
 virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Timeout.set -> void
 virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Url.get -> string!
 virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Url.set -> void
+override Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler.SendAsync(System.Net.Http.HttpRequestMessage! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage!>!
+static Tochka.JsonRpc.Client.Extensions.WithRequestLogging(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder! httpClientBuilder) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
+Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler
+Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler.JsonRpcRequestLoggingHandler(Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler!>! logger) -> void
+static Tochka.JsonRpc.Client.Extensions.WithJsonRpcRequestLogging(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder! httpClientBuilder) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!

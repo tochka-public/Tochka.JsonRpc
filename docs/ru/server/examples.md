@@ -1871,3 +1871,15 @@ public class FailController : JsonRpcControllerBase
 ```
 
 </details>
+
+## Логирование запросов
+
+<details>
+<summary>Развернуть</summary>
+
+```cs
+app.UseJsonRpc()
+    .WithJsonRpcRequestLogging()
+```
+
+</details>

@@ -222,3 +222,15 @@ public async Task<BusinessError?> GetError(CancellationToken token)
 ```
 
 </details>
+
+## Requests logging
+
+<details>
+<summary>Expand</summary>
+
+```cs
+builder.Services.AddJsonRpcClient<IFooClient, FooClient>()
+    .WithJsonRpcRequestLogging();
+```
+
+</details>
