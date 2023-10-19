@@ -1993,6 +1993,34 @@ internal class DeserializationTests
 
     #endregion
 
+    #region Common
+
+    [Test]
+    public void JsonRpcSnakeCaseSerializerOptions_DeserializedWithHonorToSpecifiedPolicy()
+    {
+        var expectedEnum = TestEnum.ThreeFour;
+
+        var data = TestData.Plain with { EnumField = expectedEnum };
+        var json = JsonSerializer.Serialize(data, snakeCaseSerializerOptions);
+
+        var deserialized = JsonSerializer.Deserialize<TestData>(json, snakeCaseSerializerOptions);
+        deserialized.EnumField.Should().Be(expectedEnum);
+    }
+
+    [Test]
+    public void JsonRpcCamelCaseSerializerOptions_DeserializedWithHonorToSpecifiedPolicy()
+    {
+        var expectedEnum = TestEnum.ThreeFour;
+
+        var data = TestData.Plain with { EnumField = expectedEnum };
+        var json = JsonSerializer.Serialize(data, camelCaseSerializerOptions);
+
+        var deserialized = JsonSerializer.Deserialize<TestData>(json, camelCaseSerializerOptions);
+        deserialized.EnumField.Should().Be(expectedEnum);
+    }
+
+    #endregion
+
     private static EquivalencyAssertionOptions<T> AssertionOptions<T>(EquivalencyAssertionOptions<T> options) => options
         .RespectingRuntimeTypes()
         .Excluding(static info => info.Type == typeof(JsonDocument));

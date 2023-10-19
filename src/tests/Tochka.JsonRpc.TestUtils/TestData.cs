@@ -310,5 +310,6 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
 public enum TestEnum
 {
     One,
-    Two
+    Two,
+    ThreeFour
 }
