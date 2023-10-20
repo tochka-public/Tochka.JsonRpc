@@ -44,7 +44,11 @@ public static class JsonRpcSerializerOptions
     public static JsonSerializerOptions SnakeCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicies.SnakeCaseLower) },
+        /*
+         * Bug: dotnet6 JsonStringEnumConverter ignores policy on deserialization.
+         * Fixed in dotnet7 so use JsonStringEnumConverter after upgrading and remove `Macross.Json.Extensions` dependency
+         */
+        Converters = { new JsonStringEnumMemberConverter(JsonNamingPolicies.SnakeCaseLower) },
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
@@ -55,7 +59,11 @@ public static class JsonRpcSerializerOptions
     public static JsonSerializerOptions CamelCase { get; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        /*
+         * Bug: dotnet6 JsonStringEnumConverter ignores policy on deserialization.
+         * Fixed in dotnet7 so use JsonStringEnumConverter after upgrading and remove `Macross.Json.Extensions` dependency
+         */
+        Converters = { new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase) },
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
