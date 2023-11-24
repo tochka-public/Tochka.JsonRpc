@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.ApplicationModels;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
@@ -60,6 +61,10 @@ public static class DependencyInjectionExtensions
                 options.FormatGroupName = static (name, version) => $"{name}_{version}";
             });
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiControllerSpecification, JsonRpcControllerSpecification>());
+
+        // required for correct autodocs document names if ApiExplorerSettingsAttribute with custom GroupName is used
+        services.Replace(ServiceDescriptor.Singleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>());
+
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }

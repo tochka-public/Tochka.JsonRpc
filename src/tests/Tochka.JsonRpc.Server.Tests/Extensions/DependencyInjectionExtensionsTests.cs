@@ -48,13 +48,14 @@ internal class DependencyInjectionExtensionsTests
         result.Remove((typeof(IJsonRpcRequestValidator), typeof(JsonRpcRequestValidator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcErrorFactory), typeof(JsonRpcErrorFactory), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IApiControllerSpecification), typeof(JsonRpcControllerSpecification), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IApiVersionDescriptionProvider), typeof(DefaultApiVersionDescriptionProvider), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
         // one of services registered by calling AddApiVersioning
         result.Remove((typeof(IApiVersionSetBuilderFactory), typeof(DefaultApiVersionSetBuilderFactory), ServiceLifetime.Singleton)).Should().BeTrue();
         // one of services registered by calling AddApiVersioning.AddMvc
         result.Remove((typeof(IControllerNameConvention), typeof(DefaultControllerNameConvention), ServiceLifetime.Singleton)).Should().BeTrue();
         // one of services registered by calling AddApiVersioning.AddApiExplorer
-        result.Remove((typeof(IApiVersionDescriptionProvider), null, ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IApiVersionDescriptionProviderFactory), null, ServiceLifetime.Transient)).Should().BeTrue();
     }
 
     [Test]

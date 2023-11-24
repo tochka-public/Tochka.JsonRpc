@@ -118,6 +118,25 @@ internal class JsonRpcDescriptionProviderTests
     }
 
     [Test]
+    public void OnProvidersExecuting_GroupNameAlreadySpecified_DontOverrideGroupName()
+    {
+        var groupName = "group-name";
+        var context = GetContext();
+        context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
+        context.Results.First().GroupName = groupName;
+        typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
+            .Returns(Mock.Of<Type>);
+        typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
+            .Returns(Mock.Of<Type>);
+
+        descriptionProvider.OnProvidersExecuting(context);
+
+        context.Results.Should().HaveCount(1);
+        var description = context.Results.Single();
+        description.GroupName.Should().Be(groupName);
+    }
+
+    [Test]
     public void OnProvidersExecuting_HasCustomSerializer_UseSerializer()
     {
         var context = GetContext();
