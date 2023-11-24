@@ -14,7 +14,7 @@ namespace Tochka.JsonRpc.Client;
 public static class Extensions
 {
     /// <summary>
-    /// Register JSON-RPC client as <typeparamref name="TClient"/>
+    /// Register JSON-RPC client as <typeparamref name="TClient" />
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add the service to</param>
     /// <typeparam name="TClient">Type of JSON-RPC client</typeparam>
@@ -26,7 +26,7 @@ public static class Extensions
         AddJsonRpcClient<TClient, TImplementation>(services, static (_, _) => { });
 
     /// <summary>
-    /// Register JSON-RPC client as <typeparamref name="TClient"/> and configure internal <see cref="HttpClient" />
+    /// Register JSON-RPC client as <typeparamref name="TClient" /> and configure internal <see cref="HttpClient" />
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" /> to add the service to</param>
     /// <param name="configureClient">Delegate used to configure internal <see cref="HttpClient" /></param>
@@ -71,5 +71,7 @@ public static class Extensions
     /// <summary>
     /// Register handler to log outgoing requests
     /// </summary>
-    public static IHttpClientBuilder WithJsonRpcRequestLogging(this IHttpClientBuilder httpClientBuilder) => httpClientBuilder.AddHttpMessageHandler<JsonRpcRequestLoggingHandler>();
+    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test AddHttpMessageHandler")]
+    public static IHttpClientBuilder WithJsonRpcRequestLogging(this IHttpClientBuilder httpClientBuilder) =>
+        httpClientBuilder.AddHttpMessageHandler<JsonRpcRequestLoggingHandler>();
 }

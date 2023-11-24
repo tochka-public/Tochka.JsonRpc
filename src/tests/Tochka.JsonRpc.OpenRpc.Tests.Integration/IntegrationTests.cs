@@ -44,4 +44,16 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToArray();
         methods.Should().Contain(m => m.GetProperty("name").GetString() == method);
     }
+
+    [Test]
+    public async Task GetDocument_AttributeWithCustomGroup_ReturnAllCustomGroupMethods()
+    {
+        var response = await ApiClient.GetAsync("/openrpc/custom_v1.json");
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var responseJson = JsonDocument.Parse(responseContent);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToArray();
+        methods.Should().OnlyContain(static m => m.GetProperty("name").GetString() == "custom_group");
+    }
 }
