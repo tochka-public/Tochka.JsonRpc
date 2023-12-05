@@ -1,6 +1,6 @@
 # Client/Examples
 
-Here are examples for different scenarios. Common things like default HTTP headers, constructors, options implementations, registering services in DI are omitted.
+Here are examples for different scenarios. Common things like default HTTP headers, constructors, registering services in DI are omitted.
 
 > For details beyond basic usage check [Configuration](configuration) page
 
@@ -146,12 +146,12 @@ public async Task<byte[]> GetFile(string name, CancellationToken token)
 
 </details>
 
-## Configure HttpClient (eg. Authorization headers)
+## Configure HttpClient (eg. BaseAddress, Timeout, Authorization headers, etc.)
 
 Configure internal `HttpClient` used to send requests
 
 <details>
-<summary>Expand</summary>
+<summary>In client implementation's constructor</summary>
 
 ```cs
 public class MyJsonRpcClient
@@ -160,12 +160,31 @@ public class MyJsonRpcClient
     protected override Encoding Encoding => Encoding.UTF32;
 
     public MyJsonRpcClient(HttpClient client, IOptions<MyJsonRpcClientOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
-        : base(client, options.Value, jsonRpcIdGenerator, logger)
+        : base(client, jsonRpcIdGenerator, logger)
     {
-        var basicAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes("login:password"));
+        client.BaseAddress = new Uri(options.Value.BaseAddress);
+        client.Timeout = TimeSpan.FromSeconds(options.Value.Timeout);
+        var basicAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{options.Value.Login}:{options.Value.Password}"));
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuth);
     }
 }
+```
+
+</details>
+
+<details>
+<summary>Using ConfigureHttpClient()</summary>
+
+> `Program.cs`
+```cs
+builder.Services.AddJsonRpcClient<MyJsonRpcClient>();
+    .ConfigureHttpClient(static client =>
+    {
+        client.BaseAddress = new Uri("https://another.api/jsonrpc/");
+        client.Timeout = TimeSpan.FromSeconds(10);
+        var basicAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes("login:password"));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuth);
+    });
 ```
 
 </details>
@@ -186,8 +205,8 @@ public class MyJsonRpcClient
 {
     public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.CamelCase;
 
-    public MyJsonRpcClient(HttpClient client, IOptions<MyJsonRpcClientOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
-        : base(client, options.Value, jsonRpcIdGenerator, logger)
+    public MyJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
+        : base(client, jsonRpcIdGenerator, logger)
     {
     }
 }
@@ -224,6 +243,8 @@ public async Task<BusinessError?> GetError(CancellationToken token)
 </details>
 
 ## Requests logging
+
+Add logging of outgoing requests
 
 <details>
 <summary>Expand</summary>

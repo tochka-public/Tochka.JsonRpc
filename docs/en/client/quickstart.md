@@ -7,15 +7,10 @@ Install nuget package `Tochka.JsonRpc.Client`.
 Implement client inherited from `JsonRpcClientBase` and use base class's methods `SendNotification`, `SendRequest` and `SendBatch` for your logic.
 
 ```cs
-internal class MyJsonRpcClientOptions : JsonRpcClientOptionsBase
-{
-    public override string Url { get; set; } = "https://another.api/jsonrpc/";
-}
-
 internal class MyJsonRpcClient : JsonRpcClientBase
 {
-    public MyJsonRpcClient(HttpClient client, IOptions<MyJsonRpcClientOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
-        : base(client, options.Value, jsonRpcIdGenerator, logger)
+    public MyJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
+        : base(client, jsonRpcIdGenerator, logger)
     {
     }
 
@@ -27,11 +22,11 @@ internal class MyJsonRpcClient : JsonRpcClientBase
 }
 ```
 
-Register options and client implementation in `Program.cs`.
+Register client implementation in `Program.cs` and configure `BaseAddress`.
 
 ```cs
-builder.Services.Configure<MyJsonRpcClientOptions>(_ => { });
 builder.Services.AddJsonRpcClient<MyJsonRpcClient>(); // there is also overload to register as interface
+    .ConfigureHttpClient(static c => c.BaseAddress = new Uri("https://another.api/jsonrpc/")); // HttpClient can be configured here or in constructor
 ```
 
 That's it! Now you can use it in your logic to send requests and process responses.

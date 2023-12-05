@@ -1,28 +1,8 @@
 # Client/Configuration
 
-You can customize client behavior by `JsonRpcClientOptionsBase`, overriding properties or methods and by replacing internal services.
+You can customize client behavior by overriding properties or methods and by replacing internal services.
 
 > Check [Examples](examples) page to see how it works
-
-## JsonRpcClientOptionsBase
-
-### Url
-
-> Default: `null`
-
-> Base URL to send HTTP requests to (configures internal HttpClient)
-
-Each client method has overload that accepts `requestUrl` as first argument - it will be concatenated to `JsonRpcClientOptionsBase.Url` for cases when some of API methods are hosted by another route.
-
-There are two limitations to prevent unexpected behavior when joining URL parts:
- - `JsonRpcClientOptionsBase.Url` must end with `/`
- - `requestUrl` must not start with `/`
-
-### Timeout
-
-> Default: `TimeSpan.FromSeconds(10)`
-
-> HTTP requests timeout (configures internal HttpClient)
 
 ## Properties and methods
 
