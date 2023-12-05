@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
-using Tochka.JsonRpc.Client.Settings;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
@@ -68,12 +67,12 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     protected IJsonRpcIdGenerator RpcIdGenerator { get; }
 
     /// <summary></summary>
-    protected internal JsonRpcClientBase(HttpClient client, JsonRpcClientOptionsBase options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
+    protected internal JsonRpcClientBase(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger log)
     {
         Client = client;
         RpcIdGenerator = jsonRpcIdGenerator;
         Log = log;
-        InitializeClient(client, options);
+        InitializeClient(client);
     }
 
     /// <inheritdoc />
@@ -299,20 +298,13 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         await content.ReadAsStringAsync(cancellationToken);
 
     /// <summary>
-    /// Set HttpClient properties from base options
+    /// Set User-Agent header
     /// </summary>
     [ExcludeFromCodeCoverage]
-    private void InitializeClient(HttpClient client, JsonRpcClientOptionsBase options)
+    private void InitializeClient(HttpClient client)
     {
-        if (!options.Url.EndsWith('/'))
-        {
-            throw new ArgumentException("Base url should end with '/' to prevent unexpected behavior when joining url parts", nameof(options.Url));
-        }
-
-        client.BaseAddress = new Uri(options.Url, UriKind.Absolute);
         client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
-        client.Timeout = options.Timeout;
-        Log.LogTrace("Client initialized: url {baseUrl}, user-agent {userAgent}, timeout {timeout}s", client.BaseAddress, client.DefaultRequestHeaders.UserAgent, client.Timeout.TotalSeconds);
+        Log.LogTrace("Client initialized: user-agent {userAgent}", client.DefaultRequestHeaders.UserAgent);
     }
 
     private static readonly string DefaultUserAgent = typeof(JsonRpcClientBase).Namespace!;

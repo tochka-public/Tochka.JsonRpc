@@ -30,25 +30,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     private IJsonRpcClient snakeCaseJsonRpcClient;
     private IJsonRpcClient camelCaseJsonRpcClient;
 
-    public override async Task OneTimeSetup()
-    {
-        await base.OneTimeSetup();
-        responseProviderMock = new Mock<IResponseProvider>();
-        requestValidatorMock = new Mock<IRequestValidator>();
-        scope = ApplicationFactory.Services.CreateAsyncScope();
-        var idGenerator = scope.ServiceProvider.GetRequiredService<IJsonRpcIdGenerator>();
-
-        snakeCaseJsonRpcClient = new SnakeCaseJsonRpcClient(ApiClient, idGenerator);
-        camelCaseJsonRpcClient = new CamelCaseJsonRpcClient(ApiClient, idGenerator);
-    }
-
     protected override void SetupServices(IServiceCollection services)
     {
         base.SetupServices(services);
         services.AddTransient(_ => responseProviderMock.Object);
         services.AddTransient(_ => requestValidatorMock.Object);
-        services.AddJsonRpcClient<SnakeCaseJsonRpcClient>();
-        services.AddJsonRpcClient<CamelCaseJsonRpcClient>();
+        services.AddJsonRpcClient<SnakeCaseJsonRpcClient>(); // <- client configured in ctor
+        services.AddJsonRpcClient<CamelCaseJsonRpcClient>() // <- client configured using ConfigureHttpClient
+            .ConfigureHttpClient(static c => c.BaseAddress = new Uri("https://localhost/"));
     }
 
     [OneTimeTearDown]
@@ -58,12 +47,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendNotification_SendRequestWithNullData_SerializeSuccessfully()
     {
         var expectedRequestJson = $$"""
-            {
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "method": "{{Method}}",
+                                        "params": null,
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -86,12 +75,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.PlainFullCamelCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -114,12 +103,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.PlainFullSnakeCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -142,12 +131,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Nested;
         var expectedRequestJson = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.NestedFullCamelCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -170,12 +159,12 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Nested;
         var expectedRequestJson = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.NestedFullSnakeCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -198,20 +187,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -237,20 +226,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = 123;
         var expectedRequestJson = $$"""
-            {
-                "id": {{id}},
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": {{id}},
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": {{id}},
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": {{id}},
+                                                    "result": {},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -275,20 +264,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendRequest_SendRequestWithNullId_SerializeSuccessfully()
     {
         var expectedRequestJson = $$"""
-            {
-                "id": null,
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": null,
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse("""
-            {
-                "id": null,
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                              {
+                                                  "id": null,
+                                                  "result": {},
+                                                  "jsonrpc": "2.0"
+                                              }
+                                              """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -314,20 +303,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": null,
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": null,
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -355,20 +344,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.PlainFullCamelCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.PlainRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -397,20 +386,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.PlainFullSnakeCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.PlainRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {{TestData.PlainRequiredSnakeCaseJson}},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -439,20 +428,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Nested;
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.NestedFullCamelCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.NestedRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {{TestData.NestedRequiredCamelCaseJson}},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedResponseData = TestData.Nested;
 
         string actualContentType = null;
@@ -481,20 +470,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Nested;
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {{TestData.NestedFullSnakeCaseJson}},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.NestedRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {{TestData.NestedRequiredSnakeCaseJson}},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedResponseData = TestData.Nested;
 
         string actualContentType = null;
@@ -522,26 +511,26 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainRequiredCamelCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}",
+                                                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, TestData.Plain);
 
         string actualContentType = null;
@@ -569,26 +558,26 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainRequiredSnakeCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}",
+                                                        "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, TestData.Plain);
 
         string actualContentType = null;
@@ -616,25 +605,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}"
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, null);
 
         string actualContentType = null;
@@ -662,23 +651,23 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var error = "errorValue";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {
-                    "error": "{{error}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {
+                                                        "error": "{{error}}"
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedResponseData = new ResultWithError(error);
 
         string actualContentType = null;
@@ -706,29 +695,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var result = "resultValue";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {
-                        "result": "{{result}}"
-                    }
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}",
+                                                        "data": {
+                                                            "result": "{{result}}"
+                                                        }
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedError = new Error<ErrorWithResult>(errorCode, errorMessage, new ErrorWithResult(result));
 
         string actualContentType = null;
@@ -756,25 +745,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": null,
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": null,
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}"
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, null);
 
         string actualContentType = null;
@@ -802,19 +791,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse("""
-            {
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                              {
+                                                  "result": {},
+                                                  "jsonrpc": "2.0"
+                                              }
+                                              """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -840,19 +829,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -878,26 +867,26 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "result": {},
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {},
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}"
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -923,13 +912,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -955,20 +944,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{Guid.NewGuid().ToString()}}",
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{Guid.NewGuid().ToString()}}",
+                                                    "result": {},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -994,20 +983,20 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                                    {
+                                        "id": "{{id}}",
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse("""
-            {
-                "id": null,
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                              {
+                                                  "id": null,
+                                                  "result": {},
+                                                  "jsonrpc": "2.0"
+                                              }
+                                              """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1033,24 +1022,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id}}",
+                                            "method": "{{Method}}",
+                                            "params": {},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id}}",
+                                                        "result": {},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1080,24 +1069,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var id = 123;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": {{id}},
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": {{id}},
+                                            "method": "{{Method}}",
+                                            "params": {},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": {{id}},
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": {{id}},
+                                                        "result": {},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1126,24 +1115,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     public async Task SendBatch_BatchWithRequestWithNullId_LinkResponseSuccessfully()
     {
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": null,
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": null,
+                                            "method": "{{Method}}",
+                                            "params": {},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse("""
-            [
-                {
-                    "id": null,
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                              [
+                                                  {
+                                                      "id": null,
+                                                      "result": {},
+                                                      "jsonrpc": "2.0"
+                                                  }
+                                              ]
+                                              """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1174,24 +1163,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id}}",
+                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -1225,35 +1214,35 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id2 = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id1}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        },
+                                        {
+                                            "id": "{{id2}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id1}}",
+                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "jsonrpc": "2.0"
+                                                    },
+                                                    {
+                                                        "id": "{{id2}}",
+                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -1288,14 +1277,14 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1325,19 +1314,19 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     {
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        },
+                                        {
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1367,29 +1356,29 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        },
+                                        {
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id}}",
+                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
         var expectedResponseData = TestData.Plain;
 
         string actualContentType = null;
@@ -1423,30 +1412,30 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {{TestData.PlainRequiredCamelCaseJson}}
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id}}",
+                                                        "error": {
+                                                            "code": {{errorCode}},
+                                                            "message": "{{errorMessage}}",
+                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                        },
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, TestData.Plain);
 
         string actualContentType = null;
@@ -1480,45 +1469,45 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id2 = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id1}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        },
+                                        {
+                                            "id": "{{id2}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {{TestData.PlainRequiredCamelCaseJson}}
-                    },
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {{TestData.PlainRequiredCamelCaseJson}}
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id1}}",
+                                                        "error": {
+                                                            "code": {{errorCode}},
+                                                            "message": "{{errorMessage}}",
+                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                        },
+                                                        "jsonrpc": "2.0"
+                                                    },
+                                                    {
+                                                        "id": "{{id2}}",
+                                                        "error": {
+                                                            "code": {{errorCode}},
+                                                            "message": "{{errorMessage}}",
+                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                        },
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, TestData.Plain);
 
         string actualContentType = null;
@@ -1555,41 +1544,41 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id2 = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id1}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        },
+                                        {
+                                            "id": "{{id2}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {{TestData.PlainRequiredCamelCaseJson}}
-                    },
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{id1}}",
+                                                        "error": {
+                                                            "code": {{errorCode}},
+                                                            "message": "{{errorMessage}}",
+                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                        },
+                                                        "jsonrpc": "2.0"
+                                                    },
+                                                    {
+                                                        "id": "{{id2}}",
+                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
         var expectedError = new Error<TestData>(errorCode, errorMessage, TestData.Plain);
         var expectedResponseData = TestData.Plain;
 
@@ -1626,28 +1615,28 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var responseBody = JsonDocument.Parse($$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainRequiredCamelCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """);
+                                                {
+                                                    "id": "{{id}}",
+                                                    "error": {
+                                                        "code": {{errorCode}},
+                                                        "message": "{{errorMessage}}",
+                                                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                    },
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1678,24 +1667,24 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var id = Guid.NewGuid().ToString();
         var requestData = TestData.Plain;
         var expectedRequestJson = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {{TestData.PlainFullCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+                                    [
+                                        {
+                                            "id": "{{id}}",
+                                            "method": "{{Method}}",
+                                            "params": {{TestData.PlainFullCamelCaseJson}},
+                                            "jsonrpc": "2.0"
+                                        }
+                                    ]
+                                    """.TrimAllLines();
         var responseBody = JsonDocument.Parse($$"""
-            [
-                {
-                    "id": "{{Guid.NewGuid().ToString()}}",
-                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """);
+                                                [
+                                                    {
+                                                        "id": "{{Guid.NewGuid().ToString()}}",
+                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "jsonrpc": "2.0"
+                                                    }
+                                                ]
+                                                """);
 
         string actualContentType = null;
         string actualRequestJson = null;
@@ -1719,6 +1708,18 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualRequestJson.Should().Be(expectedRequestJson);
         var act = () => response.GetResponseOrThrow<TestData>(new StringRpcId(id));
         act.Should().Throw<JsonRpcException>();
+    }
+
+    public override async Task OneTimeSetup()
+    {
+        await base.OneTimeSetup();
+        responseProviderMock = new Mock<IResponseProvider>();
+        requestValidatorMock = new Mock<IRequestValidator>();
+        scope = ApplicationFactory.Services.CreateAsyncScope();
+        var idGenerator = scope.ServiceProvider.GetRequiredService<IJsonRpcIdGenerator>();
+
+        snakeCaseJsonRpcClient = new SnakeCaseJsonRpcClient(ApiClient, idGenerator);
+        camelCaseJsonRpcClient = new CamelCaseJsonRpcClient(ApiClient, idGenerator);
     }
 
     private const string Method = "some-method";

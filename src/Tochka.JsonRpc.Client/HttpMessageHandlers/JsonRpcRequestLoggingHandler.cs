@@ -12,8 +12,10 @@ public class JsonRpcRequestLoggingHandler : DelegatingHandler
 {
     private readonly ILogger<JsonRpcRequestLoggingHandler> logger;
 
+    /// <inheritdoc />
     public JsonRpcRequestLoggingHandler(ILogger<JsonRpcRequestLoggingHandler> logger) => this.logger = logger;
 
+    /// <inheritdoc />
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (request.Content is not null)

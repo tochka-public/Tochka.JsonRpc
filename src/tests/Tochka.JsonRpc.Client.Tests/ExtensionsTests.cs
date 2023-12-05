@@ -47,7 +47,6 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
-        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
         services.AddSingleton(Mock.Of<ILogger>());
 
         services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>(actionMock.Object);
@@ -60,7 +59,6 @@ internal class ExtensionsTests
     public void AddJsonRpcClientWithInterface_WorkWithoutConfigure()
     {
         var services = new ServiceCollection();
-        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
         services.AddSingleton(Mock.Of<ILogger>());
 
         services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>();
@@ -99,7 +97,6 @@ internal class ExtensionsTests
     {
         var services = new ServiceCollection();
         var actionMock = new Mock<Action<IServiceProvider, HttpClient>>();
-        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
         services.AddSingleton(Mock.Of<ILogger>());
 
         services.AddJsonRpcClient<TestJsonRpcClient>(actionMock.Object);
@@ -112,7 +109,6 @@ internal class ExtensionsTests
     public void AddJsonRpcClient_WorkWithoutConfigure()
     {
         var services = new ServiceCollection();
-        services.Configure<TestJsonRpcClientOptions>(static options => { options.Url = "https://localhost/"; });
         services.AddSingleton(Mock.Of<ILogger>());
 
         services.AddJsonRpcClient<ITestJsonRpcClient, TestJsonRpcClient>();
