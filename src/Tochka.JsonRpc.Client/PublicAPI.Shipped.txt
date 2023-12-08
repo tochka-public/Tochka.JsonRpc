@@ -27,7 +27,6 @@ Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(Tochka.JsonRpc.Common.
 Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.ISingleJsonRpcResult!>!
 Tochka.JsonRpc.Client.JsonRpcClientBase
 Tochka.JsonRpc.Client.JsonRpcClientBase.Client.get -> System.Net.Http.HttpClient!
-Tochka.JsonRpc.Client.JsonRpcClientBase.JsonRpcClientBase(System.Net.Http.HttpClient! client, Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase! options, Tochka.JsonRpc.Client.Services.IJsonRpcIdGenerator! jsonRpcIdGenerator, Microsoft.Extensions.Logging.ILogger! log) -> void
 Tochka.JsonRpc.Client.JsonRpcClientBase.Log.get -> Microsoft.Extensions.Logging.ILogger!
 Tochka.JsonRpc.Client.JsonRpcClientBase.RpcIdGenerator.get -> Tochka.JsonRpc.Client.Services.IJsonRpcIdGenerator!
 Tochka.JsonRpc.Client.JsonRpcClientBase.Send(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage!>!
@@ -121,8 +120,6 @@ Tochka.JsonRpc.Client.Services.IJsonRpcIdGenerator.GenerateId() -> Tochka.JsonRp
 Tochka.JsonRpc.Client.Services.JsonRpcIdGenerator
 Tochka.JsonRpc.Client.Services.JsonRpcIdGenerator.GenerateId() -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
 Tochka.JsonRpc.Client.Services.JsonRpcIdGenerator.JsonRpcIdGenerator() -> void
-Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase
-Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.JsonRpcClientOptionsBase() -> void
 virtual Tochka.JsonRpc.Client.JsonRpcClientBase.CreateHttpContent(object! data) -> System.Net.Http.HttpContent!
 virtual Tochka.JsonRpc.Client.JsonRpcClientBase.DataJsonSerializerOptions.get -> System.Text.Json.JsonSerializerOptions!
 virtual Tochka.JsonRpc.Client.JsonRpcClientBase.Encoding.get -> System.Text.Encoding!
@@ -131,12 +128,8 @@ virtual Tochka.JsonRpc.Client.JsonRpcClientBase.HeadersJsonSerializerOptions.get
 virtual Tochka.JsonRpc.Client.JsonRpcClientBase.ParseBody(string! contentString) -> Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper?
 virtual Tochka.JsonRpc.Client.JsonRpcClientBase.SendNotification<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Notification<TParams!>! notification, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
 virtual Tochka.JsonRpc.Client.JsonRpcClientBase.UserAgent.get -> string!
-virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Timeout.get -> System.TimeSpan
-virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Timeout.set -> void
-virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Url.get -> string!
-virtual Tochka.JsonRpc.Client.Settings.JsonRpcClientOptionsBase.Url.set -> void
 override Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler.SendAsync(System.Net.Http.HttpRequestMessage! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage!>!
-static Tochka.JsonRpc.Client.Extensions.WithRequestLogging(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder! httpClientBuilder) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
 Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler
 Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler.JsonRpcRequestLoggingHandler(Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler!>! logger) -> void
 static Tochka.JsonRpc.Client.Extensions.WithJsonRpcRequestLogging(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder! httpClientBuilder) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
+Tochka.JsonRpc.Client.JsonRpcClientBase.JsonRpcClientBase(System.Net.Http.HttpClient! client, Tochka.JsonRpc.Client.Services.IJsonRpcIdGenerator! jsonRpcIdGenerator, Microsoft.Extensions.Logging.ILogger! log) -> void

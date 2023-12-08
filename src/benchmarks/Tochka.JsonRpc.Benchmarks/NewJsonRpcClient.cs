@@ -7,7 +7,6 @@ namespace Tochka.JsonRpc.Benchmarks;
 
 public class NewJsonRpcClient : JsonRpcClientBase
 {
-    public NewJsonRpcClient(HttpClient client) : base(client, new NewJsonRpcClientOptions(), new JsonRpcIdGenerator(), Mock.Of<ILogger<NewJsonRpcClient>>())
-    {
-    }
+    public NewJsonRpcClient(HttpClient client) : base(client, new JsonRpcIdGenerator(), Mock.Of<ILogger<NewJsonRpcClient>>()) =>
+        client.BaseAddress = new Uri(Constants.BaseUrl);
 }

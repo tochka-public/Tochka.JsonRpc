@@ -11,7 +11,7 @@ internal class CamelCaseJsonRpcClient : JsonRpcClientBase
 {
     public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.CamelCase;
 
-    public CamelCaseJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator) : base(client, new SimpleJsonRpcClientOptions(), jsonRpcIdGenerator, Mock.Of<ILogger>())
+    public CamelCaseJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator) : base(client, jsonRpcIdGenerator, Mock.Of<ILogger>())
     {
     }
 }

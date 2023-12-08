@@ -1,6 +1,6 @@
 # Клиент/Примеры
 
-Здесь представлены примеры для различных сценариев. Обычные штуки, вроде HTTP заголовков, конструкторов, настроек, регистрации сервисов в DI опущены для краткости.
+Здесь представлены примеры для различных сценариев. Обычные штуки, вроде HTTP заголовков, конструкторов, регистрации сервисов в DI опущены для краткости.
 
 > Больше деталей и продвинутое использование: [Конфигурация](configuration)
 
@@ -146,12 +146,12 @@ public async Task<byte[]> GetFile(string name, CancellationToken token)
 
 </details>
 
-## Настройка HttpClient (например, заголовки авторизации)
+## Настройка HttpClient (например, BaseAddress, Timeout, заголовки авторизации)
 
 Настройка внутреннего `HttpClient`, который используется для отправки запросов
 
 <details>
-<summary>Развернуть</summary>
+<summary>В конструкторе реализованного клиента</summary>
 
 ```cs
 public class MyJsonRpcClient
@@ -160,12 +160,31 @@ public class MyJsonRpcClient
     protected override Encoding Encoding => Encoding.UTF32;
 
     public MyJsonRpcClient(HttpClient client, IOptions<MyJsonRpcClientOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
-        : base(client, options.Value, jsonRpcIdGenerator, logger)
+        : base(client, jsonRpcIdGenerator, logger)
     {
-        var basicAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes("login:password"));
+        client.BaseAddress = new Uri(options.Value.BaseAddress);
+        client.Timeout = TimeSpan.FromSeconds(options.Value.Timeout);
+        var basicAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{options.Value.Login}:{options.Value.Password}"));
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuth);
     }
 }
+```
+
+</details>
+
+<details>
+<summary>Через ConfigureHttpClient()</summary>
+
+> `Program.cs`
+```cs
+builder.Services.AddJsonRpcClient<MyJsonRpcClient>();
+    .ConfigureHttpClient(static client =>
+    {
+        client.BaseAddress = new Uri("https://another.api/jsonrpc/");
+        client.Timeout = TimeSpan.FromSeconds(10);
+        var basicAuth = Convert.ToBase64String(Encoding.UTF8.GetBytes("login:password"));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuth);
+    });
 ```
 
 </details>
@@ -186,8 +205,8 @@ public class MyJsonRpcClient
 {
     public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.CamelCase;
 
-    public MyJsonRpcClient(HttpClient client, IOptions<MyJsonRpcClientOptions> options, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
-        : base(client, options.Value, jsonRpcIdGenerator, logger)
+    public MyJsonRpcClient(HttpClient client, IJsonRpcIdGenerator jsonRpcIdGenerator, ILogger<MyJsonRpcClient> logger)
+        : base(client, jsonRpcIdGenerator, logger)
     {
     }
 }
@@ -224,6 +243,8 @@ public async Task<BusinessError?> GetError(CancellationToken token)
 </details>
 
 ## Логирование запросов
+
+Логирование исходящих запросов
 
 <details>
 <summary>Развернуть</summary>

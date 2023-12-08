@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -12,7 +11,6 @@ using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
-using Tochka.JsonRpc.Client.Settings;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -26,50 +24,30 @@ internal class JsonRpcClientBaseTests
 {
     private Mock<JsonRpcClientBase> clientMock;
     private MockHttpMessageHandler handlerMock;
-    private Mock<JsonRpcClientOptionsBase> optionsMock;
     private Mock<IJsonRpcIdGenerator> generatorMock;
 
     [SetUp]
     public void Setup()
     {
         handlerMock = new MockHttpMessageHandler();
-        // ReSharper disable once UseObjectOrCollectionInitializer
-        optionsMock = new Mock<JsonRpcClientOptionsBase>
-        {
-            CallBase = true
-        };
-        optionsMock.Object.Url = BaseUrl;
         generatorMock = new Mock<IJsonRpcIdGenerator>();
-        clientMock = new Mock<JsonRpcClientBase>(handlerMock.ToHttpClient(), optionsMock.Object, generatorMock.Object, Mock.Of<ILogger>())
+        var httpClient = handlerMock.ToHttpClient();
+        httpClient.BaseAddress = new Uri(BaseUrl);
+        clientMock = new Mock<JsonRpcClientBase>(httpClient, generatorMock.Object, Mock.Of<ILogger>())
         {
             CallBase = true
         };
     }
 
     [Test]
-    public void Ctor_BaseUrlDoesntEndWithSlash_Throw()
+    public void Ctor_InitializeHttpClient()
     {
-        optionsMock.Object.Url = BaseUrl[..^1];
-
-        // Needed to call constructor
-        var action = () => clientMock.Object;
-
-        action.Should().Throw<TargetInvocationException>().WithInnerException<ArgumentException>();
-    }
-
-    [Test]
-    public void Ctor_ValidBaseUrl_InitializeHttpClient()
-    {
-        var options = optionsMock.Object;
-
         // Needed to call constructor
         var client = clientMock.Object;
 
         var httpClient = client.Client;
-        httpClient.BaseAddress.Should().BeEquivalentTo(new Uri(options.Url, UriKind.Absolute));
         httpClient.DefaultRequestHeaders.Should().ContainKey("User-Agent");
         httpClient.DefaultRequestHeaders.UserAgent.ToString().Should().Be(client.UserAgent);
-        httpClient.Timeout.Should().Be(options.Timeout);
     }
 
     [Test]
