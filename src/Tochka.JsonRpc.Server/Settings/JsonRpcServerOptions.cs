@@ -63,4 +63,12 @@ public sealed class JsonRpcServerOptions
     /// Batches will break if this option is enabled and one of requests returns non-json data!
     /// </remarks>
     public bool AllowRawResponses { get; set; }
+
+    /// <summary>
+    /// If `true`, all exceptions during JSON-RPC call processing will be logged with Error log level
+    /// </summary>
+    /// <remarks>
+    /// true by default
+    /// </remarks>
+    public bool LogExceptions { get; set; } = true;
 }

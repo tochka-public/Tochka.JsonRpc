@@ -19,6 +19,7 @@ builder.Services.AddJsonRpcServer(static options =>
     options.DefaultDataJsonSerializerOptions = JsonRpcSerializerOptions.SnakeCase;
     options.HeadersJsonSerializerOptions = JsonRpcSerializerOptions.Headers;
     options.RoutePrefix = "/api/jsonrpc";
+    options.LogExceptions = true;
 });
 ```
 
@@ -149,6 +150,22 @@ Route can be overridden with framework's `RouteAttribute` like usual, and global
 * Should start with `/`
 * Prefix can be set to `"/"` to get rid of it
 * Templates are supported (see [Routing#Route templates](routing#Route-templates))
+
+### LogExceptions
+
+```cs
+builder.Services.AddJsonRpcServer(static options => options.LogExceptions = /* true or false */);
+```
+
+> Default: `true`
+
+> If `true`, all exceptions during JSON-RPC call processing will be logged with Error log level
+
+[Usage examples](examples#Logging).
+
+Exceptions thrown by this library, middleware, or user code, are intercepted and serialized as JSON-RPC error response in `IExceptionFilter`. Because of that, filter is the last place, where you can access exception object.
+
+If you want to log only certain type of exceptions, you can set this option to `false` and add your own `IExceptionFilter` with logging logic (see [Examples#Logging > Certain exceptions](examples#Logging)).
 
 ## Attributes
 

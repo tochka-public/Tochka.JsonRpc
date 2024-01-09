@@ -1,5 +1,6 @@
 using System.Reflection;
-using Asp.Versioning.ApiExplorer;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Tochka.JsonRpc.OpenRpc;
 using Tochka.JsonRpc.OpenRpc.Models;
@@ -12,12 +13,17 @@ using Tochka.JsonRpc.Tests.WebApplication.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(static options =>
+{
+    options.Filters.Add<BusinessLogicExceptionWrappingFilter>();
+    options.Filters.Add<BusinessLogicExceptionHandlingFilter>();
+});
 builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = JsonRpcMethodStyle.ActionOnly);
 
 // "business logic"
 builder.Services.AddScoped<IResponseProvider, SimpleResponseProvider>();
 builder.Services.AddScoped<IRequestValidator, SimpleRequestValidator>();
+builder.Services.AddScoped<IBusinessLogicExceptionHandler, BusinessLogicExceptionHandler>();
 
 // custom serializers for requests
 builder.Services.AddSingleton<IJsonSerializerOptionsProvider, SnakeCaseJsonSerializerOptionsProvider>();
@@ -39,7 +45,9 @@ builder.Services.AddAuthentication(AuthConstants.SchemeName)
     .AddScheme<ApiAuthenticationOptions, ApiAuthenticationHandler>(AuthConstants.SchemeName, null);
 builder.Services.AddAuthorization();
 
-builder.Services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 

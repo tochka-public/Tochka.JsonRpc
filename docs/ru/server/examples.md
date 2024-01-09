@@ -1390,7 +1390,7 @@ HttpContext.SetJsonRpcResponse(response);
 Разные способы вернуть ошибку из метода. Подробности см. в [Ошибки](errors).
 
 <details>
-<summary>Методы IJsonRpcErrorFactory</summary>
+<summary>Методы IJsonRpcErrorFactory (рекомендуется)</summary>
 
 ```cs
 public class FailController : JsonRpcControllerBase
@@ -1872,14 +1872,92 @@ public class FailController : JsonRpcControllerBase
 
 </details>
 
-## Логирование запросов
+## Кастомная обработка исключений
+
+Если нужно реализовать особую логику заворачивания исключений в JSON-RPC response, можно зарегистрировать свой `IExceptionFilter` и просаживать в нем `context.Result`.
 
 <details>
 <summary>Развернуть</summary>
 
+> `Program.cs`
+```cs
+builder.Services.AddControllers(static options => options.Filters.Add<CustomExceptionWrappingFilter>());
+builder.Services.AddJsonRpcServer();
+```
+
+> `CustomExceptionWrappingFilter.cs`
+```cs
+public class CustomExceptionWrappingFilter : IExceptionFilter
+{
+    private readonly IJsonRpcErrorFactory errorFactory;
+
+    public CustomExceptionWrappingFilter(IJsonRpcErrorFactory errorFactory) => this.errorFactory = errorFactory;
+
+    public void OnException(ExceptionContext context)
+    {
+        if (context.Exception is not BusinessLogicException exception)
+        {
+            return;
+        }
+
+        var error = errorFactory.InternalError(exception);
+        context.Result = new ObjectResult(error);
+    }
+}
+```
+
+</details>
+
+## Логирование
+
+<details>
+<summary>Входящие запросы</summary>
+
 ```cs
 app.UseJsonRpc()
     .WithJsonRpcRequestLogging()
+```
+
+</details>
+
+<details>
+<summary>Все исключения</summary>
+
+Логирование исключений включено по умолчанию, но его можно конфигурировать через настройки.
+
+```cs
+builder.Services.AddJsonRpcServer(static options => options.LogExceptions = true); // <-- по умолчанию
+```
+
+</details>
+
+<details>
+<summary>Определенные исключения</summary>
+
+Можно выключить логирование исключений и добавить собственный фильтр.
+
+> `Program.cs`
+```cs
+builder.Services.AddControllers(static options => options.Filters.Add<CustomExceptionsLoggingFilter>());
+builder.Services.AddJsonRpcServer(static options => options.LogExceptions = false);
+```
+
+> `CustomExceptionsLoggingFilter.cs`
+```cs
+public class CustomExceptionsLoggingFilter : IExceptionFilter
+{
+    private readonly ILogger<CustomExceptionsLoggingFilter> log;
+
+    public CustomExceptionsLoggingFilter(ILogger<CustomExceptionsLoggingFilter> log) => this.log = log;
+
+    public void OnException(ExceptionContext context)
+    {
+        if (context.Exception is not BusinessLogicException)
+        {
+            log.LogError(context.Exception, "Unexpected exception");
+        }
+    }
+}
 ```
 
 </details>
