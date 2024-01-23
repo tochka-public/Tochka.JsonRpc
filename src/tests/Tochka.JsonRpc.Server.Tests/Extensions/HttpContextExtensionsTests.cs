@@ -3,10 +3,10 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
+using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Server.Extensions;
-using Tochka.JsonRpc.Server.Features;
 
 namespace Tochka.JsonRpc.Server.Tests.Extensions;
 

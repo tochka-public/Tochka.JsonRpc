@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Moq;
 using NUnit.Framework;
+using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Request;
-using Tochka.JsonRpc.Server.Features;
 using Tochka.JsonRpc.Server.Filters;
 
 namespace Tochka.JsonRpc.Server.Tests.Filters;

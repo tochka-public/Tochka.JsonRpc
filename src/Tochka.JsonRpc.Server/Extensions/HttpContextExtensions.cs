@@ -2,9 +2,9 @@
 using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
+using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
-using Tochka.JsonRpc.Server.Features;
 
 namespace Tochka.JsonRpc.Server.Extensions;
 
