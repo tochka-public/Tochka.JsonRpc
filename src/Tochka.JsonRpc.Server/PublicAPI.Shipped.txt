@@ -72,25 +72,6 @@ Tochka.JsonRpc.Server.Exceptions.JsonRpcServerException.JsonRpcServerException(s
 Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions
 Tochka.JsonRpc.Server.Extensions.ErrorExtensions
 Tochka.JsonRpc.Server.Extensions.HttpContextExtensions
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Call.set -> void
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.IsBatch.get -> bool
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.IsBatch.set -> void
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.RawCall.set -> void
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
-Tochka.JsonRpc.Server.Features.IJsonRpcFeature.Response.set -> void
-Tochka.JsonRpc.Server.Features.JsonRpcFeature
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.Call.set -> void
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.IsBatch.get -> bool
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.IsBatch.set -> void
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.JsonRpcFeature() -> void
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.RawCall.set -> void
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
-Tochka.JsonRpc.Server.Features.JsonRpcFeature.Response.set -> void
 Tochka.JsonRpc.Server.JsonRpcControllerBase
 Tochka.JsonRpc.Server.JsonRpcControllerBase.JsonRpcControllerBase() -> void
 Tochka.JsonRpc.Server.JsonRpcMiddleware

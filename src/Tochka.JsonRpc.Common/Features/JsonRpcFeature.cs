@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
-namespace Tochka.JsonRpc.Server.Features;
+namespace Tochka.JsonRpc.Common.Features;
 
 /// <inheritdoc />
 [PublicAPI]

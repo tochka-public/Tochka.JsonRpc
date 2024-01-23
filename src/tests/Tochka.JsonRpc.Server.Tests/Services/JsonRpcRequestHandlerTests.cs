@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
@@ -17,7 +18,6 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
-using Tochka.JsonRpc.Server.Features;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 

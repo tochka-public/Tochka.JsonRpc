@@ -152,3 +152,22 @@ Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper.Response.ge
 Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper.Response.init -> void
 Tochka.JsonRpc.Common.Models.Response.Wrappers.SingleResponseWrapper.SingleResponseWrapper(Tochka.JsonRpc.Common.Models.Response.IResponse! Response) -> void
 Tochka.JsonRpc.Common.Utils
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Call.set -> void
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.IsBatch.get -> bool
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.IsBatch.set -> void
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.RawCall.set -> void
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Response.set -> void
+Tochka.JsonRpc.Common.Features.JsonRpcFeature
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.Call.set -> void
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.IsBatch.get -> bool
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.IsBatch.set -> void
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.JsonRpcFeature() -> void
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.set -> void
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.Response.set -> void
