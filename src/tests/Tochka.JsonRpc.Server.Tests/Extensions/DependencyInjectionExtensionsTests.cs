@@ -162,7 +162,8 @@ internal class DependencyInjectionExtensionsTests
         var options = services.BuildServiceProvider().GetRequiredService<IOptions<MvcOptions>>().Value;
 
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcActionFilter)) { Order = int.MaxValue });
-        options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcExceptionFilter)) { Order = int.MaxValue });
+        options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcExceptionLoggingFilter)) { Order = int.MinValue });
+        options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcExceptionWrappingFilter)) { Order = int.MaxValue });
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcResultFilter)) { Order = int.MaxValue });
     }
 
