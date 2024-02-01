@@ -45,7 +45,7 @@ public static class DependencyInjectionExtensions
         {
             options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
             options.Filters.Add<JsonRpcExceptionLoggingFilter>(int.MinValue); // should fire first to log exceptions even if they are handled with custom filter
-            options.Filters.Add<JsonRpcExceptionWrappingFilter>(int.MaxValue); // should fire last do users can handle specific exceptions with custom filters
+            options.Filters.Add<JsonRpcExceptionWrappingFilter>(int.MaxValue); // should fire last so users can handle specific exceptions with custom filters
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
