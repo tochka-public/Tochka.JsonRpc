@@ -117,6 +117,14 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         return responseProvider.GetJsonRpcResponse();
     }
 
+    public void VoidMethod()
+    {
+    }
+
+    public Task TaskMethod() => Task.CompletedTask;
+
+    public IActionResult EmptyOk() => Ok();
+
     private TestData Process(TestData data)
     {
         requestValidator.Validate(data);

@@ -36,6 +36,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [TestCase("jsonrpc_v1", "/api/jsonrpc#return_error_from_factory")]
     [TestCase("jsonrpc_v1", "/api/jsonrpc#return_mvc_error")]
     [TestCase("jsonrpc_v1", "/api/jsonrpc#error_throw_as_response_exception")]
+    [TestCase("jsonrpc_v1", "/api/jsonrpc#void_method")]
+    [TestCase("jsonrpc_v1", "/api/jsonrpc#task_method")]
+    [TestCase("jsonrpc_v1", "/api/jsonrpc#empty_ok")]
     [TestCase("custom_v1", "/api/jsonrpc#custom_group")]
     public async Task GetDocument_ReturnsAllMethods(string document, string path)
     {

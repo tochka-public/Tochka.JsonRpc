@@ -417,6 +417,17 @@ internal class TypeEmitterTests
         attributes.Should().ContainEquivalentOf(new JsonRpcTypeMetadataAttribute(serializerOptionsProviderType, MethodName));
     }
 
+    [Test]
+    public void CreateResponseType_ResultTypeIsVoid_GenericArgumentIsObject()
+    {
+        var resultType = typeof(void);
+        var serializerOptionsProviderType = typeof(SnakeCaseJsonSerializerOptionsProvider);
+
+        var responseType = typeEmitter.CreateResponseType(ActionFullName, MethodName, resultType, serializerOptionsProviderType);
+
+        responseType.Should().BeAssignableTo<Response<object>>();
+    }
+
     private const string ActionFullName = "namespace.controller.action";
     private const string MethodName = "method";
 
