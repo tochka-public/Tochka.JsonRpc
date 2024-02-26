@@ -240,6 +240,44 @@ internal class JsonRpcResultFilterTests
         errorFactoryMock.Verify();
     }
 
+    [TestCase(StatusCodes.Status200OK)]
+    [TestCase(StatusCodes.Status201Created)]
+    [TestCase(StatusCodes.Status204NoContent)]
+    public void OnResultExecuting_SuccessStatusResult_SetNullResponseAndStatusResult200(int statusCode)
+    {
+        var httpContext = new DefaultHttpContext();
+        var id = new NumberRpcId(123);
+        var jsonRpcFeature = new JsonRpcFeature { Call = new UntypedRequest(id, "method", null) };
+        httpContext.Features.Set<IJsonRpcFeature>(jsonRpcFeature);
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
+        var result = new StatusCodeResult(statusCode);
+        var context = new ResultExecutingContext(actionContext, new List<IFilterMetadata>(), result, new object());
+
+        resultFilter.OnResultExecuting(context);
+
+        var expectedResult = new StatusCodeResult(StatusCodes.Status200OK);
+        var expectedResponse = new UntypedResponse(id, null);
+        context.Result.Should().BeEquivalentTo(expectedResult);
+        jsonRpcFeature.Response.Should().BeEquivalentTo(expectedResponse);
+    }
+
+    [TestCase(StatusCodes.Status100Continue)]
+    [TestCase(StatusCodes.Status300MultipleChoices)]
+    public void OnResultExecuting_UnknownStatusResponseAndRawResponsesForbiddenByOptions_Throw(int statusCode)
+    {
+        var httpContext = new DefaultHttpContext();
+        var jsonRpcFeature = new JsonRpcFeature { Call = new UntypedRequest(new NullRpcId(), "method", null) };
+        httpContext.Features.Set<IJsonRpcFeature>(jsonRpcFeature);
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
+        var result = new StatusCodeResult(statusCode);
+        var context = new ResultExecutingContext(actionContext, new List<IFilterMetadata>(), result, new object());
+        options.AllowRawResponses = false;
+
+        var action = () => resultFilter.OnResultExecuting(context);
+
+        action.Should().Throw<JsonRpcServerException>();
+    }
+
     [Test]
     public void OnResultExecuting_EmptyResult_SetResponseAndStatusResult200()
     {
