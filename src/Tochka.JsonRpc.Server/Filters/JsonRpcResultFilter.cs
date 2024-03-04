@@ -83,6 +83,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
         ObjectResult { StatusCode: >= 400 } result => errorFactory.HttpError(result.StatusCode.Value, result.Value),
         ObjectResult result => result.Value,
         StatusCodeResult { StatusCode: >= 400 } result => errorFactory.HttpError(result.StatusCode, null),
+        StatusCodeResult { StatusCode: >= 200 and < 300 } => null,
         EmptyResult => null,
         _ => actionResult
     };

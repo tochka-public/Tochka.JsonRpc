@@ -34,6 +34,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     [TestCase("return_error_from_factory")]
     [TestCase("return_mvc_error")]
     [TestCase("error_throw_as_response_exception")]
+    [TestCase("void_method")]
+    [TestCase("task_method")]
+    [TestCase("empty_ok")]
     public async Task GetDocument_ReturnsAllMethods(string method)
     {
         var response = await ApiClient.GetAsync("/openrpc/jsonrpc_v1.json");

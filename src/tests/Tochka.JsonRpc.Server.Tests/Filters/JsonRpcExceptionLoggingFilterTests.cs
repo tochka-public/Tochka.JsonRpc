@@ -34,6 +34,41 @@ public class JsonRpcExceptionLoggingFilterTests
     }
 
     [Test]
+    public void OnException_NoJsonRpcFeature_DontLogAnything()
+    {
+        var exception = new ArgumentException();
+        var httpContext = new DefaultHttpContext();
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
+        var context = new ExceptionContext(actionContext, new List<IFilterMetadata>())
+        {
+            Exception = exception
+        };
+        options.LogExceptions = true;
+
+        exceptionLoggingFilter.OnException(context);
+
+        logMock.VerifyNoOtherCalls();
+    }
+
+    [Test]
+    public void OnException_NoJsonRpcCall_DontLogAnything()
+    {
+        var exception = new ArgumentException();
+        var httpContext = new DefaultHttpContext();
+        httpContext.Features.Set<IJsonRpcFeature>(new JsonRpcFeature { Call = null });
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
+        var context = new ExceptionContext(actionContext, new List<IFilterMetadata>())
+        {
+            Exception = exception
+        };
+        options.LogExceptions = true;
+
+        exceptionLoggingFilter.OnException(context);
+
+        logMock.VerifyNoOtherCalls();
+    }
+
+    [Test]
     public void OnException_LogExceptionsTrue_LogError()
     {
         var exception = new ArgumentException();

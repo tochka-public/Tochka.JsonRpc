@@ -60,6 +60,11 @@ public class TypeEmitter : ITypeEmitter
                 return definedType;
             }
 
+            if (resultType == typeof(void))
+            {
+                resultType = typeof(object);
+            }
+
             var responseType = typeof(Response<>).MakeGenericType(resultType);
             return GenerateTypeWithInfoAttribute(responseTypeName, responseType, resultType, serializerOptionsProviderType, methodName);
         }
