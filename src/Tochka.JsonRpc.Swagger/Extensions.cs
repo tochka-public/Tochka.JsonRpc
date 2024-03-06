@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -64,6 +65,13 @@ public static class Extensions
 
             c.IncludeXmlComments(xmlPath);
             c.SupportNonNullableReferenceTypes();
+            
+            // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2505
+            c.MapType<TimeSpan>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Example = new OpenApiString("00:00:00")
+            });
         });
 
         return services;
