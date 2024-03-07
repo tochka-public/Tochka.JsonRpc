@@ -62,7 +62,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
     
     
     [Test]
-    public async Task ObectTypes_Parsing()
+    public async Task TimeSpan_ParsingAsString()
     {
         var response = await ApiClient.GetAsync("/swagger/custom_v1/swagger.json");
 
@@ -70,19 +70,13 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var responseContent = await response.Content.ReadAsStringAsync();
         var responseJson = JsonDocument.Parse(responseContent);
 
-        var propertiesJson = responseJson.RootElement.GetProperty("components")
-                                         .GetProperty("schemas")
-                                         .GetProperty(nameof(TestObject))
-                                         .GetProperty("properties");
-
-        EnsureObjectType(nameof(TestObject.Ts), "string");
-        return;
-
-        void EnsureObjectType(string field, string swaggerType)
-        {
-            propertiesJson.GetProperty(field.ToLower())
-                          .TryGetProperty("type", out var typePropertyJson).Should().BeTrue();
-            typePropertyJson.GetString().Should().Be(swaggerType);
-        }
+        responseJson.RootElement.GetProperty("components")
+                    .GetProperty("schemas")
+                    .GetProperty(nameof(TestObject))
+                    .GetProperty("properties")
+                    .GetProperty(nameof(TestObject.Ts).ToLower())
+                    .TryGetProperty("type", out var typePropertyJson).Should().BeTrue();
+        
+        typePropertyJson.GetString().Should().Be("string");
     }
 }
