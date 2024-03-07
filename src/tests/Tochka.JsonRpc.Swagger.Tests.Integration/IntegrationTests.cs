@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using Tochka.JsonRpc.Tests.WebApplication.Controllers;
 using Tochka.JsonRpc.TestUtils.Integration;
 
 namespace Tochka.JsonRpc.Swagger.Tests.Integration;
@@ -57,5 +58,25 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var response = await ApiClient.GetAsync("/swagger");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+    
+    
+    [Test]
+    public async Task TimeSpan_ParsingAsString()
+    {
+        var response = await ApiClient.GetAsync("/swagger/custom_v1/swagger.json");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var responseJson = JsonDocument.Parse(responseContent);
+
+        responseJson.RootElement.GetProperty("components")
+                    .GetProperty("schemas")
+                    .GetProperty(nameof(TestObject))
+                    .GetProperty("properties")
+                    .GetProperty(nameof(TestObject.Ts).ToLower())
+                    .TryGetProperty("type", out var typePropertyJson).Should().BeTrue();
+        
+        typePropertyJson.GetString().Should().Be("string");
     }
 }
