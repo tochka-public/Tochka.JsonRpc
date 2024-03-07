@@ -57,6 +57,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         var responseJson = JsonDocument.Parse(responseContent);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToArray();
-        methods.Should().OnlyContain(static m => m.GetProperty("name").GetString() == "custom_group");
+        methods.Length.Should().Be(2);
+        methods.Should().Contain(static m => m.GetProperty("name").GetString() == "custom_group");
+        methods.Should().Contain(static m => m.GetProperty("name").GetString() == "test_object_types");
     }
 }
