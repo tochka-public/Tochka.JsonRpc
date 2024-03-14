@@ -463,6 +463,29 @@ internal class DeserializationTests
     }
 
     [Test]
+    public void Request_FloatId()
+    {
+        var method = "method";
+        var id = 123.565;
+        var json = $$"""
+                     {
+                         "id": {{id}},
+                         "method": "{{method}}",
+                         "jsonrpc": "2.0"
+                     }
+                     """;
+
+        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
+
+        deserialized.Should().BeOfType<SingleRequestWrapper>();
+        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
+        var expected = new UntypedRequest(new FloatNumberRpcId(id), method, null);
+
+
+        request.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
     public void Request_StringId()
     {
         var method = "method";
@@ -850,6 +873,24 @@ internal class DeserializationTests
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
         var expected = new SingleResponseWrapper(new UntypedResponse(new NumberRpcId(id), AnyJsonDocument));
+        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
+    }
+
+    [Test]
+    public void RequestResponse_FloatId()
+    {
+        var id = 123.565;
+        var json = $$"""
+                     {
+                         "id": {{id}},
+                         "result": {},
+                         "jsonrpc": "2.0"
+                     }
+                     """;
+
+        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
+
+        var expected = new SingleResponseWrapper(new UntypedResponse(new FloatNumberRpcId(id), AnyJsonDocument));
         deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
     }
 

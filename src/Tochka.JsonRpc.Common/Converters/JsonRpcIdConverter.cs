@@ -24,6 +24,9 @@ public class JsonRpcIdConverter : JsonConverter<IRpcId>
             case NumberRpcId numberRpcId:
                 writer.WriteNumberValue(numberRpcId.Value);
                 break;
+            case FloatNumberRpcId floatNumberRpcId:
+                writer.WriteNumberValue(floatNumberRpcId.Value);
+                break;
             case StringRpcId stringRpcId:
                 writer.WriteStringValue(stringRpcId.Value);
                 break;
@@ -44,8 +47,9 @@ public class JsonRpcIdConverter : JsonConverter<IRpcId>
         {
             JsonTokenType.String => new StringRpcId(reader.GetString()!),
             JsonTokenType.Number when reader.TryGetInt64(out var number) => new NumberRpcId(number),
+            JsonTokenType.Number when reader.TryGetDouble(out var number) => new FloatNumberRpcId(number),
             JsonTokenType.Null => new NullRpcId(),
-            _ => throw new JsonRpcFormatException($"Expected string, number or null as Id. Got {idType}")
+            _ => throw new JsonRpcFormatException($"Expected string, number, float number or null as Id. Got {idType}")
         };
     }
 }
