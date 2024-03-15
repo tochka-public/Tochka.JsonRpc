@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Id;
@@ -13,5 +14,5 @@ namespace Tochka.JsonRpc.Common.Models.Id;
 public sealed record FloatNumberRpcId(double Value) : IRpcId
 {
     /// <inheritdoc />
-    public override string ToString() => $"{Value}";
+    public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);
 }

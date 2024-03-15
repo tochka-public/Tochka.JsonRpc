@@ -128,11 +128,13 @@ internal class BatchJsonRpcResultTests
     {
         var stringIdResult = 1;
         var intIdResult = 2;
+        var floatIdResult = 2.5;
         var nullIdResult = 3;
         var responses = new List<IResponse>
         {
             new UntypedResponse(new StringRpcId(StringId), JsonDocument.Parse($"{stringIdResult}")),
             new UntypedResponse(new NumberRpcId(IntId), JsonDocument.Parse($"{intIdResult}")),
+            new UntypedResponse(new FloatNumberRpcId(FloatId), JsonDocument.Parse($"{floatIdResult}")),
             new UntypedResponse(new NullRpcId(), JsonDocument.Parse($"{nullIdResult}"))
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -141,6 +143,7 @@ internal class BatchJsonRpcResultTests
 
         batchJsonRpcResult.GetResponseOrThrow<int>(new StringRpcId(StringId)).Should().Be(stringIdResult);
         batchJsonRpcResult.GetResponseOrThrow<int>(new NumberRpcId(IntId)).Should().Be(intIdResult);
+        batchJsonRpcResult.GetResponseOrThrow<double>(new FloatNumberRpcId(FloatId)).Should().Be(floatIdResult);
         batchJsonRpcResult.GetResponseOrThrow<int>(new NullRpcId()).Should().Be(nullIdResult);
     }
 
@@ -210,11 +213,13 @@ internal class BatchJsonRpcResultTests
     {
         var stringIdResult = 1;
         var intIdResult = 2;
+        var floatIdResult = 2.5;
         var nullIdResult = 3;
         var responses = new List<IResponse>
         {
             new UntypedResponse(new StringRpcId(StringId), JsonDocument.Parse($"{stringIdResult}")),
             new UntypedResponse(new NumberRpcId(IntId), JsonDocument.Parse($"{intIdResult}")),
+            new UntypedResponse(new FloatNumberRpcId(FloatId), JsonDocument.Parse($"{floatIdResult}")),
             new UntypedResponse(new NullRpcId(), JsonDocument.Parse($"{nullIdResult}"))
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -223,6 +228,7 @@ internal class BatchJsonRpcResultTests
 
         batchJsonRpcResult.AsResponse<int>(new StringRpcId(StringId)).Should().Be(stringIdResult);
         batchJsonRpcResult.AsResponse<int>(new NumberRpcId(IntId)).Should().Be(intIdResult);
+        batchJsonRpcResult.AsResponse<double>(new FloatNumberRpcId(FloatId)).Should().Be(floatIdResult);
         batchJsonRpcResult.AsResponse<int>(new NullRpcId()).Should().Be(nullIdResult);
     }
 
@@ -279,6 +285,7 @@ internal class BatchJsonRpcResultTests
         {
             new UntypedErrorResponse(new StringRpcId(StringId), error),
             new UntypedErrorResponse(new NumberRpcId(IntId), error),
+            new UntypedErrorResponse(new FloatNumberRpcId(FloatId), error),
             new UntypedErrorResponse(new NullRpcId(), error)
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -287,6 +294,7 @@ internal class BatchJsonRpcResultTests
 
         batchJsonRpcResult.HasError(new StringRpcId(StringId)).Should().BeTrue();
         batchJsonRpcResult.HasError(new NumberRpcId(IntId)).Should().BeTrue();
+        batchJsonRpcResult.HasError(new FloatNumberRpcId(FloatId)).Should().BeTrue();
         batchJsonRpcResult.HasError(new NullRpcId()).Should().BeTrue();
     }
 
@@ -341,11 +349,13 @@ internal class BatchJsonRpcResultTests
     {
         var stringIdError = new Error<JsonDocument>(1, "message", null);
         var intIdError = new Error<JsonDocument>(2, "message", null);
+        var floatIdError = new Error<JsonDocument>(2, "message", null);
         var nullIdError = new Error<JsonDocument>(3, "message", null);
         var responses = new List<IResponse>
         {
             new UntypedErrorResponse(new StringRpcId(StringId), stringIdError),
             new UntypedErrorResponse(new NumberRpcId(IntId), intIdError),
+            new UntypedErrorResponse(new FloatNumberRpcId(FloatId), floatIdError),
             new UntypedErrorResponse(new NullRpcId(), nullIdError)
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -354,6 +364,7 @@ internal class BatchJsonRpcResultTests
 
         batchJsonRpcResult.AsAnyError(new StringRpcId(StringId)).Should().BeEquivalentTo(stringIdError);
         batchJsonRpcResult.AsAnyError(new NumberRpcId(IntId)).Should().BeEquivalentTo(intIdError);
+        batchJsonRpcResult.AsAnyError(new FloatNumberRpcId(FloatId)).Should().BeEquivalentTo(floatIdError);
         batchJsonRpcResult.AsAnyError(new NullRpcId()).Should().BeEquivalentTo(nullIdError);
     }
 
@@ -410,11 +421,13 @@ internal class BatchJsonRpcResultTests
     {
         var stringIdErrorData = 1;
         var intIdErrorData = 2;
+        var floatIdErrorData = 2.5;
         var nullIdErrorData = 3;
         var responses = new List<IResponse>
         {
             new UntypedErrorResponse(new StringRpcId(StringId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{stringIdErrorData}"))),
             new UntypedErrorResponse(new NumberRpcId(IntId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{intIdErrorData}"))),
+            new UntypedErrorResponse(new FloatNumberRpcId(FloatId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{floatIdErrorData}"))),
             new UntypedErrorResponse(new NullRpcId(), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{nullIdErrorData}")))
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -423,6 +436,7 @@ internal class BatchJsonRpcResultTests
 
         batchJsonRpcResult.AsTypedError<int>(new StringRpcId(StringId)).Data.Should().Be(stringIdErrorData);
         batchJsonRpcResult.AsTypedError<int>(new NumberRpcId(IntId)).Data.Should().Be(intIdErrorData);
+        batchJsonRpcResult.AsTypedError<double>(new FloatNumberRpcId(FloatId)).Data.Should().Be(floatIdErrorData);
         batchJsonRpcResult.AsTypedError<int>(new NullRpcId()).Data.Should().Be(nullIdErrorData);
     }
 
@@ -432,4 +446,5 @@ internal class BatchJsonRpcResultTests
 
     private const string StringId = "123";
     private const int IntId = 123;
+    private const double FloatId = 123.5;
 }

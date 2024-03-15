@@ -135,6 +135,57 @@ internal class BatchTests : IntegrationTestsBase<Program>
     }
 
     [Test]
+    public async Task FloatId_DeserializeSuccessfully()
+    {
+        const string requestJson = $$"""
+                                     [
+                                         {
+                                             "method": "process_anything",
+                                             "id": 123.23,
+                                             "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                                             "jsonrpc": "2.0"
+                                         },
+                                         {
+                                             "method": "process_anything",
+                                             "id": 456.23,
+                                             "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                                             "jsonrpc": "2.0"
+                                         }
+                                     ]
+                                     """;
+        var expectedRequestData = TestData.Plain;
+        var responseData = TestData.Plain;
+        var expectedResponseJson = $$"""
+                                     [
+                                         {
+                                             "id": 123.23,
+                                             "result": {{TestData.PlainFullSnakeCaseJson}},
+                                             "jsonrpc": "2.0"
+                                         },
+                                         {
+                                             "id": 456.23,
+                                             "result": {{TestData.PlainFullSnakeCaseJson}},
+                                             "jsonrpc": "2.0"
+                                         }
+                                     ]
+                                     """.TrimAllLines();
+
+        var actualRequestData = new List<TestData>();
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
+            .Callback<TestData>(requestData => actualRequestData.Add(requestData));
+        responseProviderMock.Setup(static p => p.GetJsonRpcResponse())
+            .Returns(responseData);
+
+        using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        var response = await ApiClient.PostAsync(JsonRpcUrl, request);
+        var actualResponseJson = (await response.Content.ReadAsStringAsync()).TrimAllLines();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        actualRequestData.Should().AllBeEquivalentTo(expectedRequestData);
+        actualResponseJson.Should().Be(expectedResponseJson);
+    }
+
+    [Test]
     public async Task NullId_DeserializeSuccessfully()
     {
         const string requestJson = $$"""
