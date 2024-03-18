@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -254,6 +255,45 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
             .Returns(responseBody);
 
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new NumberRpcId(id), Method, new { }, CancellationToken.None);
+
+        actualContentType.Should().Contain("application/json");
+        actualRequestJson.Should().Be(expectedRequestJson);
+        response.HasError().Should().BeFalse();
+    }
+
+    [Test]
+    public async Task SendRequest_SendRequestWithFloatId_SerializeSuccessfully()
+    {
+        var id = 123.5;
+        var expectedRequestJson = $$"""
+                                    {
+                                        "id": {{id.ToString(CultureInfo.InvariantCulture)}},
+                                        "method": "{{Method}}",
+                                        "params": {},
+                                        "jsonrpc": "2.0"
+                                    }
+                                    """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+                                                {
+                                                    "id": {{id.ToString(CultureInfo.InvariantCulture)}},
+                                                    "result": {},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
+
+        string actualContentType = null;
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
+        responseProviderMock.Setup(static p => p.GetResponse())
+            .Returns(responseBody);
+
+        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new FloatNumberRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
