@@ -276,6 +276,34 @@ internal class JsonRpcRequestHandlerTests
     }
 
     [Test]
+    public async Task ProcessJsonRpcRequestWithFloatId_SingleRequestNextSetsResponseInFeature_ReturnResponse()
+    {
+        var floatId = 123.454;
+        var id = new FloatNumberRpcId(floatId);
+        var rawCall = JsonDocument.Parse($$"""
+                                           {
+                                               "id": {{floatId}},
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
+        var requestWrapper = new SingleRequestWrapper(rawCall);
+        var httpContext = new DefaultHttpContext();
+        var nextMock = new Mock<RequestDelegate>();
+        var response = new UntypedResponse(id, null);
+        nextMock.Setup(n => n(httpContext))
+            .Callback<HttpContext>(context => context.SetJsonRpcResponse(response))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
+        var result = await requestHandler.ProcessJsonRpcRequest(requestWrapper, httpContext, nextMock.Object);
+
+        var expectedResponseWrapper = new SingleResponseWrapper(response);
+        result.Should().BeEquivalentTo(expectedResponseWrapper);
+        nextMock.Verify();
+        exceptionWrapperMock.Verify();
+    }
+
+    [Test]
     public async Task ProcessJsonRpcRequest_BatchRequestWithZeroCalls_WrapJsonRpcFormatException()
     {
         var requestWrapper = new BatchRequestWrapper(new List<JsonDocument>());

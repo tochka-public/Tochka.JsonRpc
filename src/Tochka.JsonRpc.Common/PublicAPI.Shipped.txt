@@ -23,6 +23,7 @@ override Tochka.JsonRpc.Common.Converters.ResponseConverter.Read(ref System.Text
 override Tochka.JsonRpc.Common.Converters.ResponseConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Response.IResponse! value, System.Text.Json.JsonSerializerOptions! options) -> void
 override Tochka.JsonRpc.Common.Converters.ResponseWrapperConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper!
 override Tochka.JsonRpc.Common.Converters.ResponseWrapperConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Tochka.JsonRpc.Common.Models.Id.FloatNumberRpcId.ToString() -> string!
 override Tochka.JsonRpc.Common.Models.Id.NullRpcId.ToString() -> string!
 override Tochka.JsonRpc.Common.Models.Id.NumberRpcId.ToString() -> string!
 override Tochka.JsonRpc.Common.Models.Id.StringRpcId.ToString() -> string!
@@ -49,6 +50,10 @@ Tochka.JsonRpc.Common.JsonRpcFormatException.JsonRpcFormatException() -> void
 Tochka.JsonRpc.Common.JsonRpcFormatException.JsonRpcFormatException(string! message) -> void
 Tochka.JsonRpc.Common.JsonRpcFormatException.JsonRpcFormatException(string! message, System.Exception! innerException) -> void
 Tochka.JsonRpc.Common.JsonRpcSerializerOptions
+Tochka.JsonRpc.Common.Models.Id.FloatNumberRpcId
+Tochka.JsonRpc.Common.Models.Id.FloatNumberRpcId.FloatNumberRpcId(double Value) -> void
+Tochka.JsonRpc.Common.Models.Id.FloatNumberRpcId.Value.get -> double
+Tochka.JsonRpc.Common.Models.Id.FloatNumberRpcId.Value.init -> void
 Tochka.JsonRpc.Common.Models.Id.IRpcId
 Tochka.JsonRpc.Common.Models.Id.NullRpcId
 Tochka.JsonRpc.Common.Models.Id.NumberRpcId
