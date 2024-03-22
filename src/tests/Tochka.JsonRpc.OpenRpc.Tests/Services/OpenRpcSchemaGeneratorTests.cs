@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using FluentAssertions;
@@ -334,6 +335,37 @@ internal class OpenRpcSchemaGeneratorTests
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
+    
+    [Test]
+    public void CreateOrRef_DefaultSimpleTypesFormattedAsString()
+    {
+        var type = typeof(TypeWithSimpleProperties);
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        
+        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+
+        var expectedTypeName = $"{MethodName} {nameof(TypeWithSimpleProperties)}";
+        var expectedSchema = new JsonSchemaBuilder()
+                             .Ref($"#/components/schemas/{expectedTypeName}")
+                             .Build();
+        actualSchema.Should().BeEquivalentTo(expectedSchema);
+        var expectedRegistrations = new Dictionary<string, JsonSchema>
+        {
+            [expectedTypeName] = new JsonSchemaBuilder()
+                                 .Type(SchemaValueType.Object)
+                                 .Properties(new Dictionary<string, JsonSchema>
+                                 {
+                                     ["date_time"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).Build(),
+                                     ["date_time_offset"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).Build(),
+                                     ["date_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Date).Build(),
+                                     ["time_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Time).Build(),
+                                     ["time_span"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Duration).Build(),
+                                     ["guid"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Uuid).Build()
+                                 })
+                                 .Build()
+        };
+        schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
+    }
 
     [Test]
     public void GetAllSchemas_ChangingCollection_DontAffectInnerCollection()
@@ -368,6 +400,8 @@ internal class OpenRpcSchemaGeneratorTests
     private record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
 
     private record AnotherTypeWithProperties(bool BoolProperty);
+    
+    private record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
 
     private record CustomSimpleType;
 }

@@ -15,6 +15,16 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     private readonly Dictionary<string, JsonSchema> registeredSchemas = new();
     private readonly HashSet<string> registeredSchemaKeys = new();
 
+    private readonly Dictionary<Type, Format> defaultStringConvertedSimpleTypes = new()
+    {
+        { typeof(DateTime), Formats.DateTime },
+        { typeof(DateTimeOffset), Formats.DateTime },
+        { typeof(DateOnly), Formats.Date },
+        { typeof(TimeOnly), Formats.Time },
+        { typeof(TimeSpan), Formats.Duration },
+        { typeof(Guid), Formats.Uuid }
+    };
+
     /// <inheritdoc />
     public Dictionary<string, JsonSchema> GetAllSchemas() => new(registeredSchemas);
 
@@ -74,6 +84,14 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         {
             // string, int, bool, etc...
             return schema;
+        }
+        
+        if (defaultStringConvertedSimpleTypes.TryGetValue(type, out var format))
+        {
+            return new JsonSchemaBuilder()
+                   .Type(SchemaValueType.String)
+                   .Format(format)
+                   .Build();
         }
 
         // required to break infinite recursion
