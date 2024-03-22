@@ -29,18 +29,11 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     public Dictionary<string, JsonSchema> GetAllSchemas() => new(registeredSchemas);
 
     /// <inheritdoc />
-    public JsonSchema CreateOrRef(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions)
+    public JsonSchema CreateOrRef(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions) =>
+        CreateOrRefInternal(type, methodName, null, jsonSerializerOptions);
+    
+    private JsonSchema CreateOrRefInternal(Type type, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
-        var itemType = type.GetEnumerableItemType();
-        if (typeof(IEnumerable).IsAssignableFrom(type) && itemType != null)
-        {
-            // returning schema itself if it's collection
-            return new JsonSchemaBuilder()
-                .Type(SchemaValueType.Array)
-                .Items(CreateOrRef(itemType, methodName, jsonSerializerOptions))
-                .Build();
-        }
-
         var typeName = type.Name;
         if (!typeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
         {
@@ -48,64 +41,101 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             typeName = $"{methodName} {typeName}";
         }
 
-        if (!registeredSchemas.ContainsKey(typeName) && !registeredSchemaKeys.Contains(typeName))
-        {
-            var schema = BuildSchema(type, typeName, methodName, jsonSerializerOptions);
-            if (schema != null)
-            {
-                // returning schema itself if it's simple type
-                return schema;
-            }
-        }
-
-        // returning ref if it's enum or regular type with properties
-        return new JsonSchemaBuilder()
-            .Ref($"#/components/schemas/{typeName}")
-            .Build();
+        return BuildSchema(type, typeName, methodName, propertySummary, jsonSerializerOptions);
     }
 
-    private JsonSchema? BuildSchema(Type type, string typeName, string methodName, JsonSerializerOptions jsonSerializerOptions)
+    private JsonSchema BuildSchema(Type type, string typeName, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
+        if (registeredSchemas.ContainsKey(typeName) || registeredSchemaKeys.Contains(typeName))
+        {
+            return CreateRefSchema(typeName, propertySummary);
+        }
+        
+        var itemType = type.GetEnumerableItemType();
+        if (typeof(IEnumerable).IsAssignableFrom(type) && itemType != null)
+        {
+            var collectionScheme =  new JsonSchemaBuilder()
+                   .Type(SchemaValueType.Array)
+                   .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
+                   .TryAppendTitle(propertySummary)
+                   .Build();
+            // returning schema itself if it's collection
+            return collectionScheme;
+        }
+        
         if (type.IsEnum)
         {
-            // adding it just for the same logic as for normal types
-            registeredSchemaKeys.Add(typeName);
-            registeredSchemas[typeName] = new JsonSchemaBuilder()
-                .Enum(type.GetEnumNames())
-                .Build();
-            return null;
+            var enumSchema = new JsonSchemaBuilder()
+                             .Enum(type.GetEnumNames())
+                             .Build();
+            RegisterSchema(typeName, enumSchema);
+            // returning ref if it's enum or regular type with properties
+            return CreateRefSchema(typeName, propertySummary);
         }
 
+        var simpleTypeSchema = new JsonSchemaBuilder()
+                               .FromType(type)
+                               .TryAppendTitle(propertySummary)
+                               .Build();
         // can't check type.GetProperties() here because simple types have properties too
-        var schema = new JsonSchemaBuilder()
-            .FromType(type)
-            .Build();
-        if (schema.GetProperties() == null)
+        if (simpleTypeSchema.GetProperties() == null)
         {
+            // returning schema itself if it's simple type
             // string, int, bool, etc...
-            return schema;
+            return simpleTypeSchema;
         }
         
         if (defaultStringConvertedSimpleTypes.TryGetValue(type, out var format))
         {
-            return new JsonSchemaBuilder()
-                   .Type(SchemaValueType.String)
-                   .Format(format)
-                   .Build();
+            var simpleStringSchema = new JsonSchemaBuilder()
+                                     .Type(SchemaValueType.String)
+                                     .Format(format)
+                                     .TryAppendTitle(propertySummary)
+                                     .Build();
+            return simpleStringSchema;
         }
 
-        // required to break infinite recursion
+        // required to break infinite recursion by ref to same type in property
         registeredSchemaKeys.Add(typeName);
-        registeredSchemas[typeName] = new JsonSchemaBuilder()
-            .Type(SchemaValueType.Object)
-            .Properties(BuildPropertiesSchemas(type, methodName, jsonSerializerOptions))
-            .Build();
-        return null;
+        
+        var objectSchema = new JsonSchemaBuilder()
+              .Type(SchemaValueType.Object)
+              .Properties(BuildPropertiesSchemas(type, methodName, jsonSerializerOptions))
+              .Build();
+        RegisterSchema(typeName, objectSchema);
+        return CreateRefSchema(typeName, propertySummary);
+    }
+
+    private static JsonSchema CreateRefSchema(string typeName, string? propertySummary)
+    {
+        var refSchemaBuilder = new JsonSchemaBuilder()
+            .Ref($"#/components/schemas/{typeName}")
+            .TryAppendTitle(propertySummary);
+        
+        return refSchemaBuilder.Build();
+    }
+    
+    private void RegisterSchema(string key, JsonSchema schema)
+    {
+        registeredSchemaKeys.Add(key);
+        registeredSchemas[key] = schema;
     }
 
     private Dictionary<string, JsonSchema> BuildPropertiesSchemas(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions) =>
         type
             .GetProperties()
             .ToDictionary(p => jsonSerializerOptions.ConvertName(p.Name),
-                p => CreateOrRef(p.PropertyType, methodName, jsonSerializerOptions));
+                p => CreateOrRefInternal(p.PropertyType, methodName, p.GetXmlDocsSummary(), jsonSerializerOptions));
+}
+
+internal static class JsonSchemaBuilderExtensions
+{
+    public static JsonSchemaBuilder TryAppendTitle(this JsonSchemaBuilder builder, string? propertySummary)
+    {
+        if (propertySummary is { Length: > 0 })
+        {
+            builder.Title(propertySummary);
+        }
+        return builder;
+    }
 }

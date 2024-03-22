@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
 using Json.Schema;
@@ -366,6 +367,88 @@ internal class OpenRpcSchemaGeneratorTests
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
+    
+    [Test]
+    public void CreateOrRef_SummariesFromResultObjectPropertiesCollectedAsTitlesOnJsonSchema()
+    {
+        var type = typeof(TypeWithSummaries);
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        
+        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+
+        var expectedTypeName = $"{MethodName} {nameof(TypeWithSummaries)}";
+        var expectedTypeNameInner = $"{MethodName} {nameof(TypeWithSummariesInner)}";
+        var expectedTypeNameInnerEnum = $"{MethodName} {nameof(TypeWithSummariesInnerEnum)}";
+
+        actualSchema.Should().BeEquivalentTo(new JsonSchemaBuilder()
+                                             .Ref($"#/components/schemas/{expectedTypeName}")
+                                             .Build());
+        
+        var actualSchemas = schemaGenerator.GetAllSchemas();
+        
+        var expectedSchemas = new Dictionary<string, JsonSchema>
+        {
+            [expectedTypeNameInner] = new JsonSchemaBuilder()
+                                      .Type(SchemaValueType.Object)
+                                      .Properties(new Dictionary<string, JsonSchema>
+                                      {
+                                          ["inner_prop1"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                                                                   .Title("InnerProp1")
+                                                                                   .Build()
+                                      })
+                                      .Build(),
+            [expectedTypeNameInnerEnum] = new JsonSchemaBuilder()
+                                          .Enum("Bla")
+                                          .Build(),
+            [expectedTypeName] = new JsonSchemaBuilder()
+                                 .Type(SchemaValueType.Object)
+                                 .Properties(new Dictionary<string, JsonSchema>
+                                 {
+                                     ["prop1"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                                                                        .Title("Prop1")
+                                                                        .Build(),
+                                     ["prop2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                                                                        .Title("Prop2")
+                                                                        .Build(),
+                                     ["prop3"] = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+                                                                        .Items(new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                                                                                                      .Build())
+                                                                        .Title("Prop3")
+                                                                        .Build(),
+                                     ["prop4"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInnerEnum}")
+                                                                        .Title("Prop4")
+                                                                        .Build(),
+                                     ["prop5"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                                                        .Format(Formats.Duration)
+                                                                        .Title("Prop5")
+                                                                        .Build()
+                                 })
+                                 .Build(),
+        };
+
+        actualSchemas.Count.Should().Be(expectedSchemas.Count);
+
+        var actualKeys = actualSchemas.Keys.ToArray();
+        var actualValues = actualSchemas.Values.ToArray();
+        
+        var expectedKeys = expectedSchemas.Keys.ToArray();
+        var expectedValues = expectedSchemas.Values.ToArray();
+        
+        actualKeys.Length.Should().Be(expectedKeys.Length);
+        actualValues.Length.Should().Be(expectedValues.Length);
+        
+        for (var i = 0; i < expectedSchemas.Count; i++)
+        {
+            var actualKey = actualKeys[i];
+            var actualValue = actualValues[i];
+        
+            var expectedKey = expectedKeys[i];
+            var expectedValue = expectedValues[i];
+        
+            actualKey.Should().BeEquivalentTo(expectedKey);
+            actualValue.Should().BeEquivalentTo(expectedValue);
+        }
+    }
 
     [Test]
     public void GetAllSchemas_ChangingCollection_DontAffectInnerCollection()
@@ -402,6 +485,45 @@ internal class OpenRpcSchemaGeneratorTests
     private record AnotherTypeWithProperties(bool BoolProperty);
     
     private record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
+    
+    private class TypeWithSummaries
+    {
+        /// <summary>
+        /// Prop1
+        /// </summary>
+        public TypeWithSummariesInner Prop1 { get; set; }
 
+        /// <summary>
+        /// Prop2
+        /// </summary>
+        public TypeWithSummariesInner Prop2 { get; set; }
+        
+        /// <summary>
+        /// Prop3
+        /// </summary>
+        public TypeWithSummariesInner[] Prop3 { get; set; }
+        
+        /// <summary>
+        /// Prop4
+        /// </summary>
+        public TypeWithSummariesInnerEnum Prop4 { get; set; }
+        
+        /// <summary>
+        /// Prop5
+        /// </summary>
+        public TimeSpan Prop5 { get; set; }
+    }
+    private class TypeWithSummariesInner
+    {
+        /// <summary>
+        /// InnerProp1
+        /// </summary>
+        public string InnerProp1 { get; set; }
+    }
+    private enum TypeWithSummariesInnerEnum 
+    {
+        Bla
+    }
+    
     private record CustomSimpleType;
 }
