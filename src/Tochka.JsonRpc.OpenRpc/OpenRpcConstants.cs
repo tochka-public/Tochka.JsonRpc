@@ -43,7 +43,6 @@ public static class OpenRpcConstants
         WriteIndented = true,
         Converters =
         {
-            new JsonStringEnumConverter(JsonNamingPolicies.KebabCaseLower),
             new UriConverter()
         },
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull

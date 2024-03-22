@@ -61,7 +61,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             // adding it just for the same logic as for normal types
             registeredSchemaKeys.Add(typeName);
             registeredSchemas[typeName] = new JsonSchemaBuilder()
-                .Enum(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName))
+                .Enum(type.GetEnumNames())
                 .Build();
             return null;
         }

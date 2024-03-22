@@ -36,7 +36,6 @@
     <PackageReference Include="JsonSchema.Net" Version="4.1.1" />
     <PackageReference Include="JsonSchema.Net.Generation" Version="3.2.0" />
     <PackageReference Include="Namotion.Reflection" Version="2.1.2" />
-    <PackageReference Include="Yoh.Text.Json.NamingPolicies" Version="1.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

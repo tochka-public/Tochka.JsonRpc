@@ -75,7 +75,7 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
-                .Enum("one", "two")
+                .Enum("One", "Two")
                 .Build()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -137,7 +137,7 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
-                .Enum("one", "two")
+                .Enum("One", "Two")
                 .Build()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -229,7 +229,7 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
-                .Enum("one", "two")
+                .Enum("One", "Two")
                 .Build()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -312,6 +312,28 @@ internal class OpenRpcSchemaGeneratorTests
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
+    
+    [Test]
+    public void CreateOrRef_EnumValuesFormatedAsDeclared()
+    {
+        var type = typeof(Enum2);
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        
+        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+
+        var expectedTypeName = $"{MethodName} {nameof(Enum2)}";
+        var expectedSchema = new JsonSchemaBuilder()
+                             .Ref($"#/components/schemas/{expectedTypeName}")
+                             .Build();
+        actualSchema.Should().BeEquivalentTo(expectedSchema);
+        var expectedRegistrations = new Dictionary<string, JsonSchema>
+        {
+            [expectedTypeName] = new JsonSchemaBuilder()
+                                 .Enum("Value1", "ValueValue2", "value3", "value_value4")
+                                 .Build()
+        };
+        schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
+    }
 
     [Test]
     public void GetAllSchemas_ChangingCollection_DontAffectInnerCollection()
@@ -332,6 +354,15 @@ internal class OpenRpcSchemaGeneratorTests
     {
         One,
         Two
+    }
+    
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    private enum Enum2
+    {
+        Value1,
+        ValueValue2,
+        value3,
+        value_value4
     }
 
     private record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
