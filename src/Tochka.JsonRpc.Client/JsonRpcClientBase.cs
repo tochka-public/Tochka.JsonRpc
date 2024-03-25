@@ -180,7 +180,8 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var data = notification.WithSerializedParams(DataJsonSerializerOptions);
         context.WithSingle(data);
         using var content = CreateHttpContent(data);
-        var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
+        using var requestMessage = CreateRequestMessage(requestUrl, content, notification.Method);
+        var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
     }
 
@@ -193,7 +194,8 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var data = request.WithSerializedParams(DataJsonSerializerOptions);
         context.WithSingle(data);
         using var content = CreateHttpContent(data);
-        var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
+        using var requestMessage = CreateRequestMessage(requestUrl, content, request.Method);
+        var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
         var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
         context.WithHttpContent(httpResponseMessage.Content, contentString);
@@ -219,7 +221,9 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
         context.WithBatch(data);
         using var content = CreateHttpContent(data);
-        var httpResponseMessage = await Client.PostAsync(requestUrl, content, cancellationToken);
+        var methodName = BuildMethodName(data.Select(static x => x.Method));
+        using var request = CreateRequestMessage(requestUrl, content, methodName);
+        var httpResponseMessage = await Client.SendAsync(request, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
         if (context.ExpectedBatchResponseCount == 0)
         {
@@ -258,15 +262,18 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     {
         var data = call.WithSerializedParams(DataJsonSerializerOptions);
         using var content = CreateHttpContent(data);
-        return await Client.PostAsync(requestUrl, content, cancellationToken);
+        using var httpRequestMessage = CreateRequestMessage(requestUrl, content, call.Method);
+        return await Client.SendAsync(httpRequestMessage, cancellationToken);
     }
 
     // internal virtual for mocking in tests
     internal virtual async Task<HttpResponseMessage> SendInternal(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
     {
-        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions));
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
         using var content = CreateHttpContent(data);
-        return await Client.PostAsync(requestUrl, content, cancellationToken);
+        var methodName = BuildMethodName(data.Select(static x => x.Method));
+        using var message = CreateRequestMessage(requestUrl, content, methodName);
+        return await Client.SendAsync(message, cancellationToken);
     }
 
     // internal virtual for mocking in tests
@@ -306,6 +313,20 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
         Log.LogTrace("Client initialized: user-agent {userAgent}", client.DefaultRequestHeaders.UserAgent);
     }
+
+    private static HttpRequestMessage CreateRequestMessage(string? requestUrl, HttpContent content, string methodName)
+    {
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, requestUrl)
+        {
+            Content = content
+        };
+
+        httpRequestMessage.Options.Set(new HttpRequestOptionsKey<string>("outgoing_http_request_method_name"), methodName);
+        return httpRequestMessage;
+    }
+
+    private static string BuildMethodName(IEnumerable<string> calls)
+        => string.Join(",", calls.Select(static x => x));
 
     private static readonly string DefaultUserAgent = typeof(JsonRpcClientBase).Namespace!;
 }

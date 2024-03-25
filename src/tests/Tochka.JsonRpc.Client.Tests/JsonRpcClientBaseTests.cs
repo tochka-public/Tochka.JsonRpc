@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -536,9 +537,34 @@ internal class JsonRpcClientBaseTests
         handlerMock.VerifyNoOutstandingExpectation();
     }
 
+    [Test]
+    public async Task SendBatchInternal_BatchWithRequests_Check_HttpNameOptions_Set()
+    {
+        var calls = Array.Empty<ICall>();
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+
+        var response = await clientMock.Object.SendInternal(RequestUrl, calls, CancellationToken.None);
+
+        response.RequestMessage.Options.Count(static x => x.Key == OptionName).Should().Be(1);
+    }
+
+    [Test]
+    public async Task Send_ChainsToInternalMethodCheck_HttpNameOptions_Set()
+    {
+        var call = new Notification<object>(Method, null);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+
+        var response = await clientMock.Object.SendInternal(RequestUrl, call, new CancellationToken());
+
+        response.RequestMessage.Options.Count(static x => x.Key == OptionName).Should().Be(1);
+    }
+
     private const string BaseUrl = "https://localhost/";
     private const string Method = "method";
     private const string RequestUrl = "request-url";
     private const string PostUrl = $"{BaseUrl}{RequestUrl}";
     private const string ResponseContent = "response-content";
+    private const string OptionName = "outgoing_http_request_method_name";
 }
