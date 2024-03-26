@@ -77,7 +77,7 @@ public static class JsonRpcConstants
     public const int LogStringLimit = 5000;
 
     /// <summary>
-    /// A key in http request options that contains the name of the method to be called, for batch, an array of methods to be called
+    /// HttpRequest.Options item with string[], contains method name to be called. Multiple names for batch requests
     /// </summary>
-    public const string OutgoingHttpRequestOption = "outgoing_http_request_method_names";
+    public const string OutgoingHttpRequestOptionMethodNameKey = "tochka_outgoing_http_request_method_name";
 }

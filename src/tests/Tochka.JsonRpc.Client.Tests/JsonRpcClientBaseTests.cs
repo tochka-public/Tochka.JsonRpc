@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -12,6 +11,7 @@ using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Services;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -540,13 +540,16 @@ internal class JsonRpcClientBaseTests
     [Test]
     public async Task SendBatchInternal_BatchWithRequests_Check_HttpNameOptions_Set()
     {
-        var calls = Array.Empty<ICall>();
+        var batch = new List<ICall> { new Request<object>(new NullRpcId(), Method, null), new Request<object>(new NullRpcId(), OtherMethod, null) };
         handlerMock.Expect(HttpMethod.Post, PostUrl)
             .Respond(HttpStatusCode.OK);
 
-        var response = await clientMock.Object.SendInternal(RequestUrl, calls, CancellationToken.None);
+        var response = await clientMock.Object.SendInternal(RequestUrl, batch, CancellationToken.None);
 
-        response.RequestMessage.Options.Count(static x => x.Key == OptionName).Should().Be(1);
+        response.RequestMessage.Options.TryGetValue(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey), out var methodNames);
+        methodNames.Length.Should().Be(2);
+        methodNames[0].Should().Be(Method);
+        methodNames[1].Should().Be(OtherMethod);
     }
 
     [Test]
@@ -558,13 +561,15 @@ internal class JsonRpcClientBaseTests
 
         var response = await clientMock.Object.SendInternal(RequestUrl, call, new CancellationToken());
 
-        response.RequestMessage.Options.Count(static x => x.Key == OptionName).Should().Be(1);
+        response.RequestMessage.Options.TryGetValue(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey), out var methodNames);
+        methodNames.Length.Should().Be(1);
+        methodNames[0].Should().Be(Method);
     }
 
     private const string BaseUrl = "https://localhost/";
     private const string Method = "method";
+    private const string OtherMethod = "other_method";
     private const string RequestUrl = "request-url";
     private const string PostUrl = $"{BaseUrl}{RequestUrl}";
     private const string ResponseContent = "response-content";
-    private const string OptionName = "outgoing_http_request_method_name";
 }

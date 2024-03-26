@@ -321,7 +321,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
             Content = content
         };
 
-        httpRequestMessage.Options.Set(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOption), methodNames);
+        httpRequestMessage.Options.Set(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey), methodNames);
         return httpRequestMessage;
     }
 
