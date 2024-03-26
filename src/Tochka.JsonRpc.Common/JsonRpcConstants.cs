@@ -75,4 +75,9 @@ public static class JsonRpcConstants
     /// Restriction for logging long texts
     /// </summary>
     public const int LogStringLimit = 5000;
+
+    /// <summary>
+    /// A key in http request options that contains the name of the method to be called, for batch, an array of methods to be called
+    /// </summary>
+    public const string OutgoingHttpRequestOption = "outgoing_http_request_method_names";
 }
