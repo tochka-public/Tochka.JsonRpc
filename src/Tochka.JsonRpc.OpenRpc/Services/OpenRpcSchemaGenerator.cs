@@ -34,14 +34,17 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     
     private JsonSchema CreateOrRefInternal(Type type, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
-        var typeName = type.Name;
-        if (!typeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
+        // Unwrap nullable type
+        var clearType = Nullable.GetUnderlyingType(type) ?? type; 
+        
+        var clearTypeName = clearType.Name;
+        if (!clearTypeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
         {
             // adding method name in case it uses not default serializer settings
-            typeName = $"{methodName} {typeName}";
+            clearTypeName = $"{methodName} {clearTypeName}";
         }
 
-        return BuildSchema(type, typeName, methodName, propertySummary, jsonSerializerOptions);
+        return BuildSchema(clearType, clearTypeName, methodName, propertySummary, jsonSerializerOptions);
     }
 
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
@@ -66,7 +69,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         if (type.IsEnum)
         {
             var enumSchema = new JsonSchemaBuilder()
-                             .Enum(type.GetEnumNames())
+                             .Enum(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName))
                              .Build();
             RegisterSchema(typeName, enumSchema);
             // returning ref if it's enum or regular type with properties
