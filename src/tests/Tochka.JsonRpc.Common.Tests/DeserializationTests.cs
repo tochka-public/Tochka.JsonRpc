@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
@@ -469,7 +470,7 @@ internal class DeserializationTests
         var id = 123.565;
         var json = $$"""
                      {
-                         "id": {{id}},
+                         "id": {{id.ToString(CultureInfo.InvariantCulture)}},
                          "method": "{{method}}",
                          "jsonrpc": "2.0"
                      }
@@ -882,7 +883,7 @@ internal class DeserializationTests
         var id = 123.565;
         var json = $$"""
                      {
-                         "id": {{id}},
+                         "id": {{id.ToString(CultureInfo.InvariantCulture)}},
                          "result": {},
                          "jsonrpc": "2.0"
                      }
