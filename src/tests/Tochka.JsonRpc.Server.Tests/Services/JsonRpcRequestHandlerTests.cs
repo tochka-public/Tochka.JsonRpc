@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -282,7 +283,7 @@ internal class JsonRpcRequestHandlerTests
         var id = new FloatNumberRpcId(floatId);
         var rawCall = JsonDocument.Parse($$"""
                                            {
-                                               "id": {{floatId}},
+                                               "id": {{floatId.ToString(CultureInfo.InvariantCulture)}},
                                                "method": "{{MethodName}}",
                                                "jsonrpc": "2.0"
                                            }

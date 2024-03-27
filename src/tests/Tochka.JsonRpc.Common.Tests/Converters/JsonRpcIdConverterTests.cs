@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 using FluentAssertions;
 using Moq;
@@ -142,7 +143,7 @@ internal class JsonRpcIdConverterTests
         var deserialized = JsonSerializer.Deserialize<IRpcId>(idJson, JsonRpcSerializerOptions.Headers);
         var serialized = JsonSerializer.Serialize<IRpcId>(deserialized, JsonRpcSerializerOptions.Headers);
 
-        deserialized.Should().BeOfType<FloatNumberRpcId>().Subject.Value.ToString()
+        deserialized.Should().BeOfType<FloatNumberRpcId>().Subject.Value.ToString(CultureInfo.InvariantCulture)
             .Should().Be(serialized);
     }
 
