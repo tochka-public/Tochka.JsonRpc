@@ -176,3 +176,4 @@ Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.get -> System.Text.Json.Js
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.set -> void
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.Response.set -> void
+const Tochka.JsonRpc.Common.JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey = "tochka_outgoing_http_request_method_name" -> string!

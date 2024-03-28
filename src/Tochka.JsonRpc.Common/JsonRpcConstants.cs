@@ -75,4 +75,9 @@ public static class JsonRpcConstants
     /// Restriction for logging long texts
     /// </summary>
     public const int LogStringLimit = 5000;
+
+    /// <summary>
+    /// HttpRequest.Options item with string[], contains method name to be called. Multiple names for batch requests
+    /// </summary>
+    public const string OutgoingHttpRequestOptionMethodNameKey = "tochka_outgoing_http_request_method_name";
 }
