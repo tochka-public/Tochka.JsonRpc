@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using FluentAssertions;
 using Moq;
@@ -134,7 +135,7 @@ internal class BatchJsonRpcResultTests
         {
             new UntypedResponse(new StringRpcId(StringId), JsonDocument.Parse($"{stringIdResult}")),
             new UntypedResponse(new NumberRpcId(IntId), JsonDocument.Parse($"{intIdResult}")),
-            new UntypedResponse(new FloatNumberRpcId(FloatId), JsonDocument.Parse($"{floatIdResult}")),
+            new UntypedResponse(new FloatNumberRpcId(FloatId), JsonDocument.Parse($"{floatIdResult.ToString(CultureInfo.InvariantCulture)}")),
             new UntypedResponse(new NullRpcId(), JsonDocument.Parse($"{nullIdResult}"))
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -219,7 +220,7 @@ internal class BatchJsonRpcResultTests
         {
             new UntypedResponse(new StringRpcId(StringId), JsonDocument.Parse($"{stringIdResult}")),
             new UntypedResponse(new NumberRpcId(IntId), JsonDocument.Parse($"{intIdResult}")),
-            new UntypedResponse(new FloatNumberRpcId(FloatId), JsonDocument.Parse($"{floatIdResult}")),
+            new UntypedResponse(new FloatNumberRpcId(FloatId), JsonDocument.Parse($"{floatIdResult.ToString(CultureInfo.InvariantCulture)}")),
             new UntypedResponse(new NullRpcId(), JsonDocument.Parse($"{nullIdResult}"))
         };
         callContextMock.Setup(static c => c.BatchResponse)
@@ -427,7 +428,7 @@ internal class BatchJsonRpcResultTests
         {
             new UntypedErrorResponse(new StringRpcId(StringId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{stringIdErrorData}"))),
             new UntypedErrorResponse(new NumberRpcId(IntId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{intIdErrorData}"))),
-            new UntypedErrorResponse(new FloatNumberRpcId(FloatId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{floatIdErrorData}"))),
+            new UntypedErrorResponse(new FloatNumberRpcId(FloatId), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{floatIdErrorData.ToString(CultureInfo.InvariantCulture)}"))),
             new UntypedErrorResponse(new NullRpcId(), new Error<JsonDocument>(1, "message", JsonDocument.Parse($"{nullIdErrorData}")))
         };
         callContextMock.Setup(static c => c.BatchResponse)
