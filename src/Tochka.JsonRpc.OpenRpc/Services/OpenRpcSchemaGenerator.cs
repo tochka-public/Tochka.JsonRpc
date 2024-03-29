@@ -34,18 +34,36 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     
     private JsonSchema CreateOrRefInternal(Type type, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
-        // Unwrap nullable type
-        var clearType = Nullable.GetUnderlyingType(type) ?? type; 
+        var clearType = TryUnwrapNullableType(type); 
         
         var clearTypeName = clearType.Name;
         if (!clearTypeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
         {
-            // adding method name in case it uses not default serializer settings
-            clearTypeName = $"{methodName} {clearTypeName}";
+            clearTypeName = $"{methodName} {clearTypeName}" + GetGenericTypeArgumentNames(clearType);
         }
 
         return BuildSchema(clearType, clearTypeName, methodName, propertySummary, jsonSerializerOptions);
     }
+
+    private static Type TryUnwrapNullableType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
+
+    private static string? GetGenericTypeArgumentNames(Type type)
+    {
+        if (type.GenericTypeArguments.Length > 0)
+        {
+            List<string> typeArgumentNames = new(type.GenericTypeArguments.Length);
+            
+            foreach (var typeArgument in type.GenericTypeArguments)
+            {
+                var clearTypeArgument = TryUnwrapNullableType(typeArgument);
+                var clearTypeArgumentName = clearTypeArgument.Name + GetGenericTypeArgumentNames(clearTypeArgument);
+                typeArgumentNames.Add(clearTypeArgumentName);
+            }
+            return $"[{string.Join(',', typeArgumentNames)}]";
+        }
+        return null;
+    }
+
 
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
