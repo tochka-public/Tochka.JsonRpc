@@ -1961,3 +1961,16 @@ public class CustomExceptionsLoggingFilter : IExceptionFilter
 ```
 
 </details>
+
+<details>
+<summary>Логирование ошибок</summary>
+
+Можно включить логирование ошибочных ответов формата: Id - Code - Message - Data
+
+```cs
+app.UseJsonRpc()
+    .WithJsonRpcResponseErrorLogging()
+```
+
+</details>
+

@@ -1960,3 +1960,15 @@ public class CustomExceptionsLoggingFilter : IExceptionFilter
 ```
 
 </details>
+
+<details>
+<summary>Error logging</summary>
+
+You can enable logging of erroneous responses in the format: Id - Code - Message - Data
+
+```cs
+app.UseJsonRpc()
+    .WithJsonRpcResponseErrorLogging()
+```
+
+</details>
