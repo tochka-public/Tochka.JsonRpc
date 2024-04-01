@@ -28,7 +28,9 @@ public static class DependencyInjectionExtensions
     /// <summary>
     /// Register services required for JSON-RPC calls processing and configure server options
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection" /> to add services to
+    /// </param>
     /// <param name="configureOptions">Delegate used to configure server options</param>
     public static IServiceCollection AddJsonRpcServer(this IServiceCollection services, Action<JsonRpcServerOptions> configureOptions)
     {
@@ -73,7 +75,9 @@ public static class DependencyInjectionExtensions
     /// <summary>
     /// Register services required for JSON-RPC calls processing
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" /> to add services to</param>
+    /// <param name="services">
+    /// The <see cref="IServiceCollection" /> to add services to
+    /// </param>
     [ExcludeFromCodeCoverage]
     public static IServiceCollection AddJsonRpcServer(this IServiceCollection services) => services.AddJsonRpcServer(static _ => { });
 
@@ -97,6 +101,14 @@ public static class DependencyInjectionExtensions
     /// <returns></returns>
     [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
     public static IApplicationBuilder WithJsonRpcRequestLogging(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcRequestLoggingMiddleware>();
+
+    /// <summary>
+    /// Log error responses. Includes batch responses. Call it after UseJsonRpc()
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
+    public static IApplicationBuilder WithJsonRpcResponseErrorHandling(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcErrorLoggingMiddleware>();
 
     private static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
         where T : class
