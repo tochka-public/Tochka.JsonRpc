@@ -108,7 +108,7 @@ public static class DependencyInjectionExtensions
     /// <param name="app"></param>
     /// <returns></returns>
     [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
-    public static IApplicationBuilder WithJsonRpcResponseErrorHandling(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcErrorLoggingMiddleware>();
+    public static IApplicationBuilder WithJsonRpcResponseErrorLogging(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcErrorLoggingMiddleware>();
 
     private static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
         where T : class
