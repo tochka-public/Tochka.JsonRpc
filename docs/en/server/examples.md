@@ -1968,7 +1968,7 @@ You can enable logging of erroneous responses in the format: Id - Code - Message
 
 ```cs
 app.UseJsonRpc()
-    .WithJsonRpcResponseErrorHandling()
+    .WithJsonRpcResponseErrorLogging()
 ```
 
 </details>

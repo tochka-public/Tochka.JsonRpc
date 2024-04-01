@@ -1969,7 +1969,7 @@ public class CustomExceptionsLoggingFilter : IExceptionFilter
 
 ```cs
 app.UseJsonRpc()
-    .WithJsonRpcResponseErrorHandling()
+    .WithJsonRpcResponseErrorLogging()
 ```
 
 </details>
