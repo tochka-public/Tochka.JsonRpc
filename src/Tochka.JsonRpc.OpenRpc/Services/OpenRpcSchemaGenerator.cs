@@ -38,7 +38,6 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     private JsonSchema CreateOrRefInternal(Type type, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
         var clearType = TryUnwrapNullableType(type);
-
         var clearTypeName = GetClearTypeName(methodName, clearType);
 
         return BuildSchema(clearType, clearTypeName, methodName, propertySummary, jsonSerializerOptions);
@@ -69,11 +68,12 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
                 var clearTypeArgumentName = clearTypeArgument.Name + GetGenericTypeArgumentNames(clearTypeArgument);
                 typeArgumentNames.Add(clearTypeArgumentName);
             }
+
             return $"[{string.Join(',', typeArgumentNames)}]";
         }
+
         return null;
     }
-
 
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
@@ -85,7 +85,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         var itemType = type.GetEnumerableItemType();
         if (typeof(IEnumerable).IsAssignableFrom(type) && itemType != null)
         {
-            var collectionScheme =  new JsonSchemaBuilder()
+            var collectionScheme = new JsonSchemaBuilder()
                    .Type(SchemaValueType.Array)
                    .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
                    .TryAppendTitle(propertySummary)
@@ -130,26 +130,17 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         registeredSchemaKeys.Add(typeName);
 
         var propertiesSchemas = BuildPropertiesSchemas(type, typeName, methodName, jsonSerializerOptions);
-
         requiredPropsForSchemas.TryGetValue(typeName, out var requiredProperties);
 
-        JsonSchema objectSchema;
+        var jsonSchemaBuilder = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Properties(propertiesSchemas);
         if (requiredProperties is not null)
         {
-            objectSchema = new JsonSchemaBuilder()
-                           .Type(SchemaValueType.Object)
-                           .Properties(propertiesSchemas)
-                           .Required(requiredProperties)
-                           .Build();
-        }
-        else
-        {
-            objectSchema = new JsonSchemaBuilder()
-                           .Type(SchemaValueType.Object)
-                           .Properties(propertiesSchemas)
-                           .Build();
+            jsonSchemaBuilder.Required(requiredProperties);
         }
 
+        var objectSchema = jsonSchemaBuilder.Build();
         RegisterSchema(typeName, objectSchema);
         return CreateRefSchema(typeName, propertySummary);
     }
@@ -169,37 +160,31 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         registeredSchemas[key] = schema;
     }
 
-    private Dictionary<string, JsonSchema> BuildPropertiesSchemas(Type type, string typeName, string methodName,
-        JsonSerializerOptions jsonSerializerOptions)
-    {
-        var properties = type.GetProperties().ToList();
-        properties.ForEach(p => CheckRequiredState(p, typeName, methodName, jsonSerializerOptions));
+    private Dictionary<string, JsonSchema> BuildPropertiesSchemas(Type type, string typeName, string methodName, JsonSerializerOptions jsonSerializerOptions) =>
+        type
+            .GetProperties()
+            .ToDictionary(p => jsonSerializerOptions.ConvertName(p.Name),
+                p =>
+                {
+                    TrySetRequiredState(p, typeName, methodName, jsonSerializerOptions);
+                    return CreateOrRefInternal(p.PropertyType, methodName, p.GetXmlDocsSummary(), jsonSerializerOptions);
+                });
 
-        return properties.ToDictionary(p => jsonSerializerOptions.ConvertName(p.Name),
-                p => CreateOrRefInternal(p.PropertyType, methodName, p.GetXmlDocsSummary(), jsonSerializerOptions));
-    }
-
-    private void CheckRequiredState(PropertyInfo propertyInfo, string typeName, string methodName, JsonSerializerOptions jsonSerializerOptions)
+    private void TrySetRequiredState(PropertyInfo propertyInfo, string typeName, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         if (propertyInfo.PropertyType.IsGenericType)
         {
-            // need get names of properties which are possible can be null in a generic type
             var propertiesInGenericType = propertyInfo.PropertyType.GetProperties();
 
             var genericPropertiesContext = nullabilityInfoContext.Create(propertyInfo);
             var clearGenericTypeName = GetClearTypeName(methodName, propertyInfo.PropertyType);
+            var propsNullabilityInfo = genericPropertiesContext.GenericTypeArguments.Zip(propertiesInGenericType,
+                (nullabilityInfo, propInfo) => new { nullabilityInfo, propInfo });
 
-            for (var i = 0; i < genericPropertiesContext.GenericTypeArguments.Length; i++)
+            foreach (var requiredPropState in propsNullabilityInfo.Where(x => x.nullabilityInfo.ReadState is NullabilityState.NotNull))
             {
-                var genericNullabilityState = genericPropertiesContext.GenericTypeArguments[i];
-                var genericPropRequired = genericNullabilityState.ReadState is NullabilityState.NotNull;
-                if (genericPropRequired)
-                {
-                    var prop = propertiesInGenericType[i];
-                    TryAddRequiredMember(clearGenericTypeName, prop.Name, jsonSerializerOptions);
-                }
+                TryAddRequiredMember(clearGenericTypeName, requiredPropState.propInfo.Name, jsonSerializerOptions);
             }
-
         }
 
         var propContext = nullabilityInfoContext.Create(propertyInfo);
@@ -213,17 +198,13 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     private void TryAddRequiredMember(string typeName, string propertyName, JsonSerializerOptions jsonSerializerOptions)
     {
         var clearPropertyName = jsonSerializerOptions.ConvertName(propertyName);
-        if (requiredPropsForSchemas.TryGetValue(typeName, out var requiredProperties))
+        var requiredProperties = requiredPropsForSchemas.GetValueOrDefault(typeName) ?? new List<string>();
+        if (!requiredProperties.Contains(clearPropertyName))
         {
-            if (!requiredProperties.Contains(clearPropertyName))
-            {
-                requiredProperties.Add(clearPropertyName);
-            }
+            requiredProperties.Add(clearPropertyName);
         }
-        else
-        {
-            requiredPropsForSchemas.Add(typeName, new List<string> { clearPropertyName });
-        }
+
+        requiredPropsForSchemas.TryAdd(typeName, requiredProperties);
     }
 }
 
@@ -235,6 +216,7 @@ internal static class JsonSchemaBuilderExtensions
         {
             builder.Title(propertySummary);
         }
+
         return builder;
     }
 }
