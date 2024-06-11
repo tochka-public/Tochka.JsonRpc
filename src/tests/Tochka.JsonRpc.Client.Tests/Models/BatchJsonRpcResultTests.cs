@@ -6,6 +6,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Models;
+using Tochka.JsonRpc.Client.Models.Batch;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -311,7 +312,7 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        var result = batchJsonRpcResult.AsAnyError(new StringRpcId(StringId));
+        var result = batchJsonRpcResult.Advanced.AsAnyError(new StringRpcId(StringId));
 
         result.Should().BeEquivalentTo(error);
     }
@@ -324,7 +325,7 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        var result = batchJsonRpcResult.AsAnyError(new StringRpcId(StringId));
+        var result = batchJsonRpcResult.Advanced.AsAnyError(new StringRpcId(StringId));
 
         result.Should().BeNull();
     }
@@ -340,7 +341,7 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        var result = batchJsonRpcResult.AsAnyError(new StringRpcId(StringId));
+        var result = batchJsonRpcResult.Advanced.AsAnyError(new StringRpcId(StringId));
 
         result.Should().BeNull();
     }
@@ -363,10 +364,10 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        batchJsonRpcResult.AsAnyError(new StringRpcId(StringId)).Should().BeEquivalentTo(stringIdError);
-        batchJsonRpcResult.AsAnyError(new NumberRpcId(IntId)).Should().BeEquivalentTo(intIdError);
-        batchJsonRpcResult.AsAnyError(new FloatNumberRpcId(FloatId)).Should().BeEquivalentTo(floatIdError);
-        batchJsonRpcResult.AsAnyError(new NullRpcId()).Should().BeEquivalentTo(nullIdError);
+        batchJsonRpcResult.Advanced.AsAnyError(new StringRpcId(StringId)).Should().BeEquivalentTo(stringIdError);
+        batchJsonRpcResult.Advanced.AsAnyError(new NumberRpcId(IntId)).Should().BeEquivalentTo(intIdError);
+        batchJsonRpcResult.Advanced.AsAnyError(new FloatNumberRpcId(FloatId)).Should().BeEquivalentTo(floatIdError);
+        batchJsonRpcResult.Advanced.AsAnyError(new NullRpcId()).Should().BeEquivalentTo(nullIdError);
     }
 
     [Test]
@@ -381,7 +382,7 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        var result = batchJsonRpcResult.AsTypedError<TestData>(new StringRpcId(StringId));
+        var result = batchJsonRpcResult.Advanced.AsTypedError<TestData>(new StringRpcId(StringId));
 
         result.Code.Should().Be(error.Code);
         result.Message.Should().Be(error.Message);
@@ -396,7 +397,7 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        var result = batchJsonRpcResult.AsTypedError<TestData>(new StringRpcId(StringId));
+        var result = batchJsonRpcResult.Advanced.AsTypedError<TestData>(new StringRpcId(StringId));
 
         result.Should().BeNull();
     }
@@ -412,7 +413,7 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        var result = batchJsonRpcResult.AsTypedError<TestData>(new StringRpcId(StringId));
+        var result = batchJsonRpcResult.Advanced.AsTypedError<TestData>(new StringRpcId(StringId));
 
         result.Should().BeNull();
     }
@@ -435,10 +436,10 @@ internal class BatchJsonRpcResultTests
             .Returns(responses);
         Initialize();
 
-        batchJsonRpcResult.AsTypedError<int>(new StringRpcId(StringId)).Data.Should().Be(stringIdErrorData);
-        batchJsonRpcResult.AsTypedError<int>(new NumberRpcId(IntId)).Data.Should().Be(intIdErrorData);
-        batchJsonRpcResult.AsTypedError<double>(new FloatNumberRpcId(FloatId)).Data.Should().Be(floatIdErrorData);
-        batchJsonRpcResult.AsTypedError<int>(new NullRpcId()).Data.Should().Be(nullIdErrorData);
+        batchJsonRpcResult.Advanced.AsTypedError<int>(new StringRpcId(StringId)).Data.Should().Be(stringIdErrorData);
+        batchJsonRpcResult.Advanced.AsTypedError<int>(new NumberRpcId(IntId)).Data.Should().Be(intIdErrorData);
+        batchJsonRpcResult.Advanced.AsTypedError<double>(new FloatNumberRpcId(FloatId)).Data.Should().Be(floatIdErrorData);
+        batchJsonRpcResult.Advanced.AsTypedError<int>(new NullRpcId()).Data.Should().Be(nullIdErrorData);
     }
 
     // need to manually initialize it to update inner collections;

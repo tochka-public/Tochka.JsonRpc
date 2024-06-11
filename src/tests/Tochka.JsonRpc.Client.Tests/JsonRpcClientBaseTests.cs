@@ -10,6 +10,8 @@ using Moq;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Tochka.JsonRpc.Client.Models;
+using Tochka.JsonRpc.Client.Models.Batch;
+using Tochka.JsonRpc.Client.Models.Single;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;

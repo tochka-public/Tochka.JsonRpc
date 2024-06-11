@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Models;
+using Tochka.JsonRpc.Client.Models.Single;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -195,7 +196,7 @@ internal class SingleJsonRpcResultTests
             .Returns(new UntypedErrorResponse(new NullRpcId(), error));
         Initialize();
 
-        var result = singleJsonRpcResult.AsAnyError();
+        var result = singleJsonRpcResult.Advanced.AsAnyError();
 
         result.Should().BeEquivalentTo(error);
     }
@@ -207,7 +208,7 @@ internal class SingleJsonRpcResultTests
             .Returns((IResponse?) null);
         Initialize();
 
-        var result = singleJsonRpcResult.AsAnyError();
+        var result = singleJsonRpcResult.Advanced.AsAnyError();
 
         result.Should().BeNull();
     }
@@ -219,7 +220,7 @@ internal class SingleJsonRpcResultTests
             .Returns(new UntypedResponse(new NullRpcId(), null));
         Initialize();
 
-        var result = singleJsonRpcResult.AsAnyError();
+        var result = singleJsonRpcResult.Advanced.AsAnyError();
 
         result.Should().BeNull();
     }
@@ -232,7 +233,7 @@ internal class SingleJsonRpcResultTests
             .Returns(new UntypedErrorResponse(new NullRpcId(), error));
         Initialize();
 
-        var result = singleJsonRpcResult.AsTypedError<TestData>();
+        var result = singleJsonRpcResult.Advanced.AsTypedError<TestData>();
 
         result.Code.Should().Be(error.Code);
         result.Message.Should().Be(error.Message);
@@ -246,7 +247,7 @@ internal class SingleJsonRpcResultTests
             .Returns((IResponse?) null);
         Initialize();
 
-        var result = singleJsonRpcResult.AsTypedError<TestData>();
+        var result = singleJsonRpcResult.Advanced.AsTypedError<TestData>();
 
         result.Should().BeNull();
     }
@@ -258,7 +259,7 @@ internal class SingleJsonRpcResultTests
             .Returns(new UntypedResponse(new NullRpcId(), null));
         Initialize();
 
-        var result = singleJsonRpcResult.AsTypedError<TestData>();
+        var result = singleJsonRpcResult.Advanced.AsTypedError<TestData>();
 
         result.Should().BeNull();
     }
