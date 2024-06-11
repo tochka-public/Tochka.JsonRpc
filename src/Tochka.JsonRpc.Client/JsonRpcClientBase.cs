@@ -4,6 +4,8 @@ using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Client.Models;
+using Tochka.JsonRpc.Client.Models.Batch;
+using Tochka.JsonRpc.Client.Models.Single;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
@@ -146,7 +148,59 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var request = new Request<TParams>(id, method, parameters);
         return await SendRequestInternal(null, request, cancellationToken);
     }
+    
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, Request<TParams> request, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class =>
+        await SendRequestInternal<TParams, TResponse>(requestUrl, request, cancellationToken);
 
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(Request<TParams> request, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class =>
+        await SendRequestInternal<TParams, TResponse>(null, request, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class 
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        var request = new Request<TParams>(id, method, parameters);
+        return await SendRequestInternal<TParams, TResponse>(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string method, TParams? parameters, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class 
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        var request = new Request<TParams>(id, method, parameters);
+        return await SendRequestInternal<TParams, TResponse>(null, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class 
+    {
+        var request = new Request<TParams>(id, method, parameters);
+        return await SendRequestInternal<TParams, TResponse>(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class 
+    {
+        var request = new Request<TParams>(id, method, parameters);
+        return await SendRequestInternal<TParams, TResponse>(null, request, cancellationToken);
+    }
+    
     /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(requestUrl, calls, cancellationToken);
@@ -154,6 +208,14 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(null, calls, cancellationToken);
+    
+    /// <inheritdoc />
+    public async Task<IBatchJsonRpcResult<TResponse>?> SendBatch<TResponse>(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
+        await SendBatchInternal<TResponse>(requestUrl, calls, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<IBatchJsonRpcResult<TResponse>?> SendBatch<TResponse>(IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
+        await SendBatchInternal<TResponse>(null, calls, cancellationToken);
 
     /// <inheritdoc />
     public async Task<HttpResponseMessage> Send(string requestUrl, ICall call, CancellationToken cancellationToken) =>
@@ -189,16 +251,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     internal virtual async Task<ISingleJsonRpcResult> SendRequestInternal<TParams>(string? requestUrl, Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class
     {
-        var context = CreateContext();
-        context.WithRequestUrl(requestUrl);
-        var data = request.WithSerializedParams(DataJsonSerializerOptions);
-        context.WithSingle(data);
-        using var content = CreateHttpContent(data);
-        using var requestMessage = CreateRequestMessage(requestUrl, content, new[] { request.Method });
-        var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
-        context.WithHttpResponse(httpResponseMessage);
-        var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
-        context.WithHttpContent(httpResponseMessage.Content, contentString);
+        var (context, contentString) = await PrepareInternalRequestContext(requestUrl, request, cancellationToken);
         var responseWrapper = ParseBody(contentString);
         switch (responseWrapper)
         {
@@ -212,7 +265,43 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
                 throw new JsonRpcException(message, context);
         }
     }
-
+    
+    // internal virtual for mocking in tests
+    internal virtual async Task<ISingleJsonRpcResult<TResponse>> SendRequestInternal<TParams, TResponse>(string? requestUrl, Request<TParams> request, CancellationToken cancellationToken)
+        where TParams : class
+        where TResponse : class 
+    {
+        var (context, contentString) = await PrepareInternalRequestContext(requestUrl, request, cancellationToken);
+        var responseWrapper = ParseBody(contentString);
+        switch (responseWrapper)
+        {
+            case SingleResponseWrapper singleResponseWrapper:
+                context.WithSingleResponse(singleResponseWrapper.Response);
+                Log.LogTrace("Request id [{requestId}]: success", request.Id);
+                return new SingleJsonRpcResult<TResponse>(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
+            default:
+                var message = $"Expected single response, got [{responseWrapper}]";
+                Log.LogTrace("Request id [{requestId}] failed: {errorMessage}", request.Id, message);
+                throw new JsonRpcException(message, context);
+        }
+    }
+    
+    private async Task<(IJsonRpcCallContext, string)> PrepareInternalRequestContext<TParams>(string? requestUrl, Request<TParams> request,
+        CancellationToken cancellationToken) where TParams : class
+    {
+        var context = CreateContext();
+        context.WithRequestUrl(requestUrl);
+        var data = request.WithSerializedParams(DataJsonSerializerOptions);
+        context.WithSingle(data);
+        using var content = CreateHttpContent(data);
+        using var requestMessage = CreateRequestMessage(requestUrl, content, new[] { request.Method });
+        var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
+        context.WithHttpResponse(httpResponseMessage);
+        var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
+        context.WithHttpContent(httpResponseMessage.Content, contentString);
+        return (context, contentString);
+    }
+    
     // internal virtual for mocking in tests
     internal virtual async Task<IBatchJsonRpcResult?> SendBatchInternal(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
     {
@@ -256,6 +345,51 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
                 throw new JsonRpcException(message2, context);
         }
     }
+
+    // internal virtual for mocking in tests
+    internal virtual async Task<IBatchJsonRpcResult<TResponse>?> SendBatchInternal<TResponse>(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
+    {
+        var context = CreateContext();
+        context.WithRequestUrl(requestUrl);
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
+        context.WithBatch(data);
+        using var content = CreateHttpContent(data);
+        var methodNames = data.Select(static x => x.Method).ToArray();
+        using var request = CreateRequestMessage(requestUrl, content, methodNames);
+        var httpResponseMessage = await Client.SendAsync(request, cancellationToken);
+        context.WithHttpResponse(httpResponseMessage);
+        if (context.ExpectedBatchResponseCount == 0)
+        {
+            // from specification:
+            // "If there are no Response objects contained within the Response array as it is to be sent to the client,
+            // the server MUST NOT return an empty Array and should return nothing at all."
+            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Length);
+            return null;
+        }
+
+        var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
+        context.WithHttpContent(httpResponseMessage.Content, contentString);
+        var responseWrapper = ParseBody(contentString);
+        switch (responseWrapper)
+        {
+            case BatchResponseWrapper batchResponseWrapper:
+                context.WithBatchResponse(batchResponseWrapper.Responses);
+                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Length, batchResponseWrapper.Responses.Count);
+                return new BatchJsonRpcResult<TResponse>(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
+            case SingleResponseWrapper singleResponseWrapper:
+                // "If the batch rpc call itself fails to be recognized as an valid JSON or as an Array with at least one value,
+                // the response from the Server MUST be a single Response object."
+                context.WithSingleResponse(singleResponseWrapper.Response);
+                var message1 = $"Expected batch response, got single, id [{singleResponseWrapper.Response.Id}]";
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message1);
+                throw new JsonRpcException(message1, context);
+            default:
+                var message2 = $"Expected batch response, got [{responseWrapper?.GetType().Name}]";
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message2);
+                throw new JsonRpcException(message2, context);
+        }
+    }
+    
 
     // internal virtual for mocking in tests
     internal virtual async Task<HttpResponseMessage> SendInternal(string? requestUrl, ICall call, CancellationToken cancellationToken)

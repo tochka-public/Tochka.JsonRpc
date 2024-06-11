@@ -1,9 +1,7 @@
-﻿using System.Text.Json;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
-using Tochka.JsonRpc.Common.Models.Response.Errors;
 
-namespace Tochka.JsonRpc.Client.Models;
+namespace Tochka.JsonRpc.Client.Models.Batch;
 
 /// <summary>
 /// Result of batch JSON-RPC request
@@ -33,26 +31,45 @@ public interface IBatchJsonRpcResult
     /// <param name="id">Response id</param>
     /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
     bool HasError(IRpcId id);
-
+    
     /// <summary>
-    /// Get error without deserializing data
+    /// Advanced data for complex work with batch Result of JSON-RPC request
+    /// </summary>
+    /// <returns></returns>
+    IBatchJsonRpcResultAdvanced Advanced { get; init; }
+}
+
+/// <summary>
+/// Result of batch JSON-RPC request with typed response
+/// <typeparam name="TResponse">Type of response</typeparam>
+/// </summary>
+[PublicAPI]
+public interface IBatchJsonRpcResult<out TResponse>
+{
+    /// <summary>
+    /// Try to deserialize response result to typed response or throw if unable
     /// </summary>
     /// <param name="id">Response id</param>
-    /// <returns>Error or null if no response with given id or response has no error</returns>
-    Error<JsonDocument>? AsAnyError(IRpcId id);
+    /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
+    TResponse? GetResponseOrThrow(IRpcId id);
 
     /// <summary>
-    /// Get error with deserialized data
+    /// Get deserialized to typed response result
     /// </summary>
     /// <param name="id">Response id</param>
-    /// <typeparam name="TError">Type to deserialize error.data to</typeparam>
-    /// <returns>Error or null if no response with given id or response has no error</returns>
-    Error<TError>? AsTypedError<TError>(IRpcId id);
+    /// <returns>Result or null if no response with given id or response has error</returns>
+    TResponse? AsResponse(IRpcId id);
 
     /// <summary>
-    /// Get error with deserialized ExceptionInfo data
+    /// Check if response has error
     /// </summary>
     /// <param name="id">Response id</param>
-    /// <returns>Error or null if no response with given id or response has no error</returns>
-    Error<ExceptionInfo>? AsErrorWithExceptionInfo(IRpcId id);
+    /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
+    bool HasError(IRpcId id);
+
+    /// <summary>
+    /// Advanced data for complex work with batch Result of JSON-RPC request
+    /// </summary>
+    /// <returns></returns>
+    IBatchJsonRpcResultAdvanced Advanced { get; init; }
 }
