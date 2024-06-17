@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace Tochka.JsonRpc.Client.Models.Single;
+namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <summary>
 /// Result of single JSON-RPC request
@@ -47,13 +47,13 @@ public interface ISingleJsonRpcResult<out TResponse>
     /// </summary>
     /// <exception cref="JsonRpcException">if response has error</exception>
     TResponse? GetResponseOrThrow();
-    
+
     /// <summary>
     /// Get deserialized to typed response result
     /// </summary>
     /// <returns>Result or null if response has error</returns>
     TResponse? AsResponse();
-    
+
     /// <summary>
     /// Check if response has error
     /// </summary>

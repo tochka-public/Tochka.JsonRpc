@@ -5,16 +5,17 @@ using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
-namespace Tochka.JsonRpc.Client.Models.Batch;
+namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
-/// <inheritdoc cref="Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult" />
+/// <inheritdoc cref="IBatchJsonRpcResult" />
 [PublicAPI]
 public sealed class BatchJsonRpcResult : BatchJsonRpcResult<object>, IBatchJsonRpcResult
 {
     /// <summary></summary>
     public BatchJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions,
         JsonSerializerOptions dataJsonSerializerOptions) : base(context, headersJsonSerializerOptions, dataJsonSerializerOptions)
-    { }
+    {
+    }
 
     /// <inheritdoc />
     public TResponse? GetResponseOrThrow<TResponse>(IRpcId id) => Advanced.GetResponseOrThrow<TResponse>(id);
@@ -31,22 +32,22 @@ public class BatchJsonRpcResult<TResponse> : IBatchJsonRpcResult<TResponse>
     /// Context with all information about request and response
     /// </summary>
     protected readonly IJsonRpcCallContext Context;
-    
+
     /// <summary>
     /// JsonSerializerOptions used to process JSON-RPC root object. Does not affect JSON-RPC params/result/error.data
     /// </summary>
     protected readonly JsonSerializerOptions HeadersJsonSerializerOptions;
-    
+
     /// <summary>
     /// JsonSerializerOptions used to process JSON-RPC params/result/error.data. Does not affect JSON-RPC root object
     /// </summary>
     protected readonly JsonSerializerOptions DataJsonSerializerOptions;
-    
+
     /// <summary>
     /// Collection of responses if call was batch
     /// </summary>
     protected readonly Dictionary<IRpcId, IResponse> Responses;
-    
+
     /// <inheritdoc />
     public IBatchJsonRpcResultAdvanced Advanced { get; init; }
 
@@ -70,7 +71,7 @@ public class BatchJsonRpcResult<TResponse> : IBatchJsonRpcResult<TResponse>
 
     /// <inheritdoc />
     public TResponse? AsResponse(IRpcId id) => Advanced.AsResponse<TResponse>(id);
-    
+
     /// <inheritdoc />
     public bool HasError(IRpcId id)
     {
@@ -81,7 +82,7 @@ public class BatchJsonRpcResult<TResponse> : IBatchJsonRpcResult<TResponse>
 
         return response is UntypedErrorResponse;
     }
-    
+
     [ExcludeFromCodeCoverage]
     private static Dictionary<IRpcId, IResponse> CreateDictionary(IEnumerable<IResponse>? items) =>
         items?.ToDictionary(static x => x.Id, static x => x) ?? new Dictionary<IRpcId, IResponse>();

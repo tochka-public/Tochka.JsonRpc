@@ -5,7 +5,7 @@ using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
-namespace Tochka.JsonRpc.Client.Models.Single;
+namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <inheritdoc />
 public class SingleJsonSingleJsonRpcResultAdvanced : ISingleJsonRpcResultAdvanced
@@ -33,14 +33,14 @@ public class SingleJsonSingleJsonRpcResultAdvanced : ISingleJsonRpcResultAdvance
         UntypedErrorResponse untypedErrorResponse => throw new JsonRpcException($"Expected successful response with [{typeof(TResponse).Name}] params, got error", context.WithError(untypedErrorResponse)),
         _ => throw new ArgumentOutOfRangeException(nameof(response), response.GetType().Name)
     };
-    
+
     /// <inheritdoc />
     public TResponse? AsResponse<TResponse>() => response switch
     {
         UntypedResponse { Result: not null } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
         _ => default
     };
-    
+
     /// <inheritdoc />
     public Error<JsonDocument>? AsAnyError() => response switch
     {

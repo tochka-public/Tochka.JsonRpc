@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 
-namespace Tochka.JsonRpc.Client.Models.Batch;
+namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
 /// <summary>
 /// Result of batch JSON-RPC request
@@ -31,7 +31,7 @@ public interface IBatchJsonRpcResult
     /// <param name="id">Response id</param>
     /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
     bool HasError(IRpcId id);
-    
+
     /// <summary>
     /// Advanced data for complex work with batch Result of JSON-RPC request
     /// </summary>

@@ -6,7 +6,7 @@ using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
-namespace Tochka.JsonRpc.Client.Models.Batch;
+namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
 /// <inheritdoc />
 public class BatchJsonRpcResultAdvanced : IBatchJsonRpcResultAdvanced
@@ -53,7 +53,7 @@ public class BatchJsonRpcResultAdvanced : IBatchJsonRpcResultAdvanced
             _ => default
         };
     }
-    
+
     /// <inheritdoc />
     public Error<JsonDocument>? AsAnyError(IRpcId id)
     {

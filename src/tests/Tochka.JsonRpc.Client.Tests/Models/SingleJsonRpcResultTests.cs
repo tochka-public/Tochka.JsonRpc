@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Client.Models;
-using Tochka.JsonRpc.Client.Models.Single;
+using Tochka.JsonRpc.Client.Models.SingleResult;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response;

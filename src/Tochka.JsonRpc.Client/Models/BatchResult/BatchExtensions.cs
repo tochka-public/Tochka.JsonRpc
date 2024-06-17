@@ -2,7 +2,7 @@
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response;
 
-namespace Tochka.JsonRpc.Client.Models.Batch;
+namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
 /// <summary>
 /// Extensions for batch JSON-RPC responses

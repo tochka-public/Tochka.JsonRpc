@@ -4,8 +4,8 @@ using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Client.Models;
-using Tochka.JsonRpc.Client.Models.Batch;
-using Tochka.JsonRpc.Client.Models.Single;
+using Tochka.JsonRpc.Client.Models.BatchResult;
+using Tochka.JsonRpc.Client.Models.SingleResult;
 using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
@@ -148,7 +148,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var request = new Request<TParams>(id, method, parameters);
         return await SendRequestInternal(null, request, cancellationToken);
     }
-    
+
     /// <inheritdoc />
     public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class
@@ -164,7 +164,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
-        where TResponse : class 
+        where TResponse : class
     {
         var id = RpcIdGenerator.GenerateId();
         Log.LogTrace("Generated request id [{requestId}]", id);
@@ -175,7 +175,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
-        where TResponse : class 
+        where TResponse : class
     {
         var id = RpcIdGenerator.GenerateId();
         Log.LogTrace("Generated request id [{requestId}]", id);
@@ -186,7 +186,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
-        where TResponse : class 
+        where TResponse : class
     {
         var request = new Request<TParams>(id, method, parameters);
         return await SendRequestInternal<TParams, TResponse>(requestUrl, request, cancellationToken);
@@ -195,12 +195,12 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
-        where TResponse : class 
+        where TResponse : class
     {
         var request = new Request<TParams>(id, method, parameters);
         return await SendRequestInternal<TParams, TResponse>(null, request, cancellationToken);
     }
-    
+
     /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(requestUrl, calls, cancellationToken);
@@ -208,7 +208,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(null, calls, cancellationToken);
-    
+
     /// <inheritdoc />
     public async Task<IBatchJsonRpcResult<TResponse>?> SendBatch<TResponse>(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal<TResponse>(requestUrl, calls, cancellationToken);
@@ -265,11 +265,11 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
                 throw new JsonRpcException(message, context);
         }
     }
-    
+
     // internal virtual for mocking in tests
     internal virtual async Task<ISingleJsonRpcResult<TResponse>> SendRequestInternal<TParams, TResponse>(string? requestUrl, Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class
-        where TResponse : class 
+        where TResponse : class
     {
         var (context, contentString) = await PrepareInternalRequestContext(requestUrl, request, cancellationToken);
         var responseWrapper = ParseBody(contentString);
@@ -285,7 +285,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
                 throw new JsonRpcException(message, context);
         }
     }
-    
+
     private async Task<(IJsonRpcCallContext, string)> PrepareInternalRequestContext<TParams>(string? requestUrl, Request<TParams> request,
         CancellationToken cancellationToken) where TParams : class
     {
@@ -301,7 +301,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         context.WithHttpContent(httpResponseMessage.Content, contentString);
         return (context, contentString);
     }
-    
+
     // internal virtual for mocking in tests
     internal virtual async Task<IBatchJsonRpcResult?> SendBatchInternal(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
     {
@@ -389,7 +389,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
                 throw new JsonRpcException(message2, context);
         }
     }
-    
 
     // internal virtual for mocking in tests
     internal virtual async Task<HttpResponseMessage> SendInternal(string? requestUrl, ICall call, CancellationToken cancellationToken)

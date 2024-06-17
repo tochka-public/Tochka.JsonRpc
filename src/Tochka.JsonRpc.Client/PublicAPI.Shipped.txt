@@ -87,117 +87,117 @@ Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler
 Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler.JsonRpcRequestLoggingHandler(Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Client.HttpMessageHandlers.JsonRpcRequestLoggingHandler!>! logger) -> void
 static Tochka.JsonRpc.Client.Extensions.WithJsonRpcRequestLogging(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder! httpClientBuilder) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
 Tochka.JsonRpc.Client.JsonRpcClientBase.JsonRpcClientBase(System.Net.Http.HttpClient! client, Tochka.JsonRpc.Client.Services.IJsonRpcIdGenerator! jsonRpcIdGenerator, Microsoft.Extensions.Logging.ILogger! log) -> void
-readonly Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.Context -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
-readonly Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.DataJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
-readonly Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.HeadersJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
-readonly Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.Responses -> System.Collections.Generic.Dictionary<Tochka.JsonRpc.Common.Models.Id.IRpcId!, Tochka.JsonRpc.Common.Models.Response.IResponse!>!
-readonly Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.Context -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
-readonly Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.DataJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
-readonly Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.HeadersJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
-readonly Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.Response -> Tochka.JsonRpc.Common.Models.Response.IResponse?
-static Tochka.JsonRpc.Client.Models.Batch.BatchExtensions.TryGetResponse(this System.Collections.Generic.IReadOnlyDictionary<Tochka.JsonRpc.Common.Models.Id.IRpcId!, Tochka.JsonRpc.Common.Models.Response.IResponse!>! responses, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, out Tochka.JsonRpc.Common.Models.Response.IResponse? response) -> bool
-Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult?>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult?>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch<TResponse>(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>?>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch<TResponse>(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>?>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult?>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult?>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch<TResponse>(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>?>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch<TResponse>(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>?>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse!>!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult!>!
-Tochka.JsonRpc.Client.Models.Batch.BatchExtensions
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult.BatchJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced!
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.Advanced.init -> void
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.AsResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.BatchJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.GetResponseOrThrow(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResult<TResponse>.HasError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> bool
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced.AsAnyError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced.AsErrorWithExceptionInfo(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced.AsTypedError<TError>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced.BatchJsonRpcResultAdvanced(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Collections.Generic.Dictionary<Tochka.JsonRpc.Common.Models.Id.IRpcId!, Tochka.JsonRpc.Common.Models.Response.IResponse!>! responses, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
-Tochka.JsonRpc.Client.Models.Batch.BatchJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult.Advanced.get -> Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced!
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult.Advanced.init -> void
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult.HasError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> bool
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced!
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>.Advanced.init -> void
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>.AsResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>.GetResponseOrThrow(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResult<TResponse>.HasError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> bool
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced.AsAnyError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced.AsErrorWithExceptionInfo(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced.AsTypedError<TError>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
-Tochka.JsonRpc.Client.Models.Batch.IBatchJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult.Advanced.get -> Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced!
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult.Advanced.init -> void
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult.AsResponse<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult.GetResponseOrThrow<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult.HasError() -> bool
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse>
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced!
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse>.Advanced.init -> void
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse>.AsResponse() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse>.GetResponseOrThrow() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResult<TResponse>.HasError() -> bool
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced.AsAnyError() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced.AsErrorWithExceptionInfo() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced.AsResponse<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced.AsTypedError<TError>() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
-Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult.AsResponse<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult.GetResponseOrThrow<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult.SingleJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.Single.ISingleJsonRpcResultAdvanced!
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.Advanced.init -> void
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.AsResponse() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.GetResponseOrThrow() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.HasError() -> bool
-Tochka.JsonRpc.Client.Models.Single.SingleJsonRpcResult<TResponse>.SingleJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced.AsAnyError() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced.AsErrorWithExceptionInfo() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced.AsResponse<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced.AsTypedError<TError>() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>() -> TResponse?
-Tochka.JsonRpc.Client.Models.Single.SingleJsonSingleJsonRpcResultAdvanced.SingleJsonSingleJsonRpcResultAdvanced(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
+readonly Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.Context -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
+readonly Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.DataJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
+readonly Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.HeadersJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
+readonly Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.Responses -> System.Collections.Generic.Dictionary<Tochka.JsonRpc.Common.Models.Id.IRpcId!, Tochka.JsonRpc.Common.Models.Response.IResponse!>!
+readonly Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.Context -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
+readonly Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.DataJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
+readonly Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.HeadersJsonSerializerOptions -> System.Text.Json.JsonSerializerOptions!
+readonly Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.Response -> Tochka.JsonRpc.Common.Models.Response.IResponse?
+static Tochka.JsonRpc.Client.Models.BatchResult.BatchExtensions.TryGetResponse(this System.Collections.Generic.IReadOnlyDictionary<Tochka.JsonRpc.Common.Models.Id.IRpcId!, Tochka.JsonRpc.Common.Models.Response.IResponse!>! responses, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, out Tochka.JsonRpc.Common.Models.Response.IResponse? response) -> bool
+Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult?>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult?>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch<TResponse>(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>?>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendBatch<TResponse>(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>?>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.IJsonRpcClient.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult?>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult?>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch<TResponse>(string! requestUrl, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>?>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendBatch<TResponse>(System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Common.Models.Request.ICall!>! calls, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>?>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams, TResponse>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse!>!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! requestUrl, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(string! requestUrl, Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id, string! method, TParams? parameters, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.JsonRpcClientBase.SendRequest<TParams>(Tochka.JsonRpc.Common.Models.Request.Request<TParams!>! request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult!>!
+Tochka.JsonRpc.Client.Models.BatchResult.BatchExtensions
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult.BatchJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced!
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.Advanced.init -> void
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.AsResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.BatchJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.GetResponseOrThrow(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResult<TResponse>.HasError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> bool
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced.AsAnyError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced.AsErrorWithExceptionInfo(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced.AsTypedError<TError>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced.BatchJsonRpcResultAdvanced(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Collections.Generic.Dictionary<Tochka.JsonRpc.Common.Models.Id.IRpcId!, Tochka.JsonRpc.Common.Models.Response.IResponse!>! responses, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
+Tochka.JsonRpc.Client.Models.BatchResult.BatchJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult.Advanced.get -> Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced!
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult.Advanced.init -> void
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult.HasError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> bool
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced!
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>.Advanced.init -> void
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>.AsResponse(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>.GetResponseOrThrow(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResult<TResponse>.HasError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> bool
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced.AsAnyError(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced.AsErrorWithExceptionInfo(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced.AsResponse<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced.AsTypedError<TError>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
+Tochka.JsonRpc.Client.Models.BatchResult.IBatchJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>(Tochka.JsonRpc.Common.Models.Id.IRpcId! id) -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult.Advanced.get -> Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced!
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult.Advanced.init -> void
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult.AsResponse<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult.GetResponseOrThrow<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult.HasError() -> bool
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse>
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced!
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse>.Advanced.init -> void
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse>.AsResponse() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse>.GetResponseOrThrow() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResult<TResponse>.HasError() -> bool
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced.AsAnyError() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced.AsErrorWithExceptionInfo() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced.AsResponse<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced.AsTypedError<TError>() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
+Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult.AsResponse<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult.GetResponseOrThrow<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult.SingleJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.Advanced.get -> Tochka.JsonRpc.Client.Models.SingleResult.ISingleJsonRpcResultAdvanced!
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.Advanced.init -> void
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.AsResponse() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.GetResponseOrThrow() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.HasError() -> bool
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonRpcResult<TResponse>.SingleJsonRpcResult(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced.AsAnyError() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<System.Text.Json.JsonDocument!>?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced.AsErrorWithExceptionInfo() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<Tochka.JsonRpc.Common.Models.Response.Errors.ExceptionInfo!>?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced.AsResponse<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced.AsTypedError<TError>() -> Tochka.JsonRpc.Common.Models.Response.Errors.Error<TError>?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced.GetResponseOrThrow<TResponse>() -> TResponse?
+Tochka.JsonRpc.Client.Models.SingleResult.SingleJsonSingleJsonRpcResultAdvanced.SingleJsonSingleJsonRpcResultAdvanced(Tochka.JsonRpc.Client.Models.IJsonRpcCallContext! context, System.Text.Json.JsonSerializerOptions! headersJsonSerializerOptions, System.Text.Json.JsonSerializerOptions! dataJsonSerializerOptions) -> void
