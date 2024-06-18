@@ -2,13 +2,13 @@
 using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
-namespace Tochka.JsonRpc.Client.Models;
+namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <summary>
-/// Result of single JSON-RPC request
+/// Advanced data for complex work with single Result of JSON-RPC request
 /// </summary>
 [PublicAPI]
-public interface ISingleJsonRpcResult
+public interface ISingleJsonRpcResultAdvanced
 {
     /// <summary>
     /// Try to deserialize response result or throw if unable
@@ -23,11 +23,6 @@ public interface ISingleJsonRpcResult
     /// <typeparam name="TResponse">Type to deserialize result to</typeparam>
     /// <returns>Result or null if response has error</returns>
     TResponse? AsResponse<TResponse>();
-
-    /// <summary>
-    /// Check if response has error
-    /// </summary>
-    bool HasError();
 
     /// <summary>
     /// Get error without deserializing data

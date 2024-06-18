@@ -3,13 +3,13 @@ using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
-namespace Tochka.JsonRpc.Client.Models;
+namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
 /// <summary>
-/// Result of batch JSON-RPC request
+/// Advanced data for complex work with batch Result of JSON-RPC request
 /// </summary>
 [PublicAPI]
-public interface IBatchJsonRpcResult
+public interface IBatchJsonRpcResultAdvanced
 {
     /// <summary>
     /// Try to deserialize response result or throw if unable
@@ -26,13 +26,6 @@ public interface IBatchJsonRpcResult
     /// <typeparam name="TResponse">Type to deserialize result to</typeparam>
     /// <returns>Result or null if no response with given id or response has error</returns>
     TResponse? AsResponse<TResponse>(IRpcId id);
-
-    /// <summary>
-    /// Check if response has error
-    /// </summary>
-    /// <param name="id">Response id</param>
-    /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
-    bool HasError(IRpcId id);
 
     /// <summary>
     /// Get error without deserializing data

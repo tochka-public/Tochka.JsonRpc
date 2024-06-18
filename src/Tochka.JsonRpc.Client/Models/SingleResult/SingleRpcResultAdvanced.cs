@@ -1,16 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
-namespace Tochka.JsonRpc.Client.Models;
+namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <inheritdoc />
-[PublicAPI]
-public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
+public class SingleJsonSingleJsonRpcResultAdvanced : ISingleJsonRpcResultAdvanced
 {
     private readonly IJsonRpcCallContext context;
     private readonly JsonSerializerOptions headersJsonSerializerOptions;
@@ -18,17 +16,12 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
     private readonly IResponse? response;
 
     /// <summary></summary>
-    public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
+    public SingleJsonSingleJsonRpcResultAdvanced(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
     {
-        this.context = context;
-        if (context.BatchResponse != null)
-        {
-            throw new ArgumentOutOfRangeException(nameof(context), "Expected single response");
-        }
-
         response = context.SingleResponse;
         this.headersJsonSerializerOptions = headersJsonSerializerOptions;
         this.dataJsonSerializerOptions = dataJsonSerializerOptions;
+        this.context = context;
     }
 
     /// <inheritdoc />
@@ -47,9 +40,6 @@ public sealed class SingleJsonRpcResult : ISingleJsonRpcResult
         UntypedResponse { Result: not null } untypedResponse => untypedResponse.Result.Deserialize<TResponse>(dataJsonSerializerOptions),
         _ => default
     };
-
-    /// <inheritdoc />
-    public bool HasError() => response is UntypedErrorResponse;
 
     /// <inheritdoc />
     public Error<JsonDocument>? AsAnyError() => response switch

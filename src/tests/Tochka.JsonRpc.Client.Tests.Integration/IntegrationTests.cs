@@ -590,7 +590,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
-        response.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -637,7 +637,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
-        response.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -683,7 +683,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
-        response.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -777,7 +777,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
-        response.AsTypedError<ErrorWithResult>().Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<ErrorWithResult>().Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -823,7 +823,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeTrue();
-        response.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -1499,7 +1499,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id)).Should().BeTrue();
-        response.AsTypedError<TestData>(new StringRpcId(id)).Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>(new StringRpcId(id)).Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -1573,8 +1573,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id1)).Should().BeTrue();
         response.HasError(new StringRpcId(id2)).Should().BeTrue();
-        response.AsTypedError<TestData>(new StringRpcId(id1)).Should().BeEquivalentTo(expectedError);
-        response.AsTypedError<TestData>(new StringRpcId(id2)).Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>(new StringRpcId(id1)).Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>(new StringRpcId(id2)).Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -1645,7 +1645,7 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError(new StringRpcId(id1)).Should().BeTrue();
         response.HasError(new StringRpcId(id2)).Should().BeFalse();
-        response.AsTypedError<TestData>(new StringRpcId(id1)).Should().BeEquivalentTo(expectedError);
+        response.Advanced.AsTypedError<TestData>(new StringRpcId(id1)).Should().BeEquivalentTo(expectedError);
         response.GetResponseOrThrow<TestData>(new StringRpcId(id2)).Should().BeEquivalentTo(expectedResponseData);
     }
 
