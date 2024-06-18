@@ -10,8 +10,8 @@ namespace Tochka.JsonRpc.Client.Models.SingleResult;
 public sealed class SingleJsonRpcResult : SingleJsonRpcResult<object>, ISingleJsonRpcResult
 {
     /// <summary></summary>
-    public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions,
-        JsonSerializerOptions dataJsonSerializerOptions) : base(context, headersJsonSerializerOptions, dataJsonSerializerOptions)
+    public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
+        : base(context, headersJsonSerializerOptions, dataJsonSerializerOptions)
     {
     }
 

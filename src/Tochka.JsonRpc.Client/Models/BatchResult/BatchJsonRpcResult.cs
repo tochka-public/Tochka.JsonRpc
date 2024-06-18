@@ -12,8 +12,8 @@ namespace Tochka.JsonRpc.Client.Models.BatchResult;
 public sealed class BatchJsonRpcResult : BatchJsonRpcResult<object>, IBatchJsonRpcResult
 {
     /// <summary></summary>
-    public BatchJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions,
-        JsonSerializerOptions dataJsonSerializerOptions) : base(context, headersJsonSerializerOptions, dataJsonSerializerOptions)
+    public BatchJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
+        : base(context, headersJsonSerializerOptions, dataJsonSerializerOptions)
     {
     }
 

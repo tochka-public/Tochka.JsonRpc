@@ -17,8 +17,7 @@ public class BatchJsonRpcResultAdvanced : IBatchJsonRpcResultAdvanced
     private readonly IJsonRpcCallContext context;
 
     /// <summary></summary>
-    public BatchJsonRpcResultAdvanced(IJsonRpcCallContext context, Dictionary<IRpcId, IResponse> responses,
-        JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
+    public BatchJsonRpcResultAdvanced(IJsonRpcCallContext context, Dictionary<IRpcId, IResponse> responses, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)
     {
         this.context = context;
         this.responses = responses;
