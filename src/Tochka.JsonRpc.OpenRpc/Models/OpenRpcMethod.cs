@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
+using Json.Schema;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
@@ -18,8 +19,9 @@ public sealed record OpenRpcMethod(string Name)
 
     /// <summary>
     /// A list of tags for API documentation control. Tags can be used for logical grouping of methods by resources or any other qualifier.
+    /// The list can use the Reference Object to link to tags that are defined by the <see cref="OpenRpcTag" /> Object.
     /// </summary>
-    public List<OpenRpcTag>? Tags { get; set; }
+    public List<JsonSchema>? Tags { get; set; }
 
     /// <summary>
     /// A short summary of what the method does.

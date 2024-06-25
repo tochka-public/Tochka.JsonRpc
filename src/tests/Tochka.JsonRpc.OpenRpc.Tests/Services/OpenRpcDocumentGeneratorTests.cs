@@ -63,14 +63,18 @@ internal class OpenRpcDocumentGeneratorTests
         var servers = new List<OpenRpcServer>();
         var methods = new List<OpenRpcMethod>();
         var schemas = new Dictionary<string, JsonSchema>();
+        var tags = new Dictionary<string, OpenRpcTag>();
         documentGeneratorMock.Setup(g => g.GetServers(host, serverOptions.RoutePrefix))
             .Returns(servers)
             .Verifiable();
-        documentGeneratorMock.Setup(g => g.GetMethods(DocumentName, host))
+        documentGeneratorMock.Setup(g => g.GetMethods(DocumentName, host, tags))
             .Returns(methods)
             .Verifiable();
         schemaGeneratorMock.Setup(static g => g.GetAllSchemas())
             .Returns(schemas)
+            .Verifiable();
+        documentGeneratorMock.Setup(static g => g.GetControllersTags())
+            .Returns(tags)
             .Verifiable();
 
         var result = documentGeneratorMock.Object.Generate(info, DocumentName, host);
@@ -81,7 +85,8 @@ internal class OpenRpcDocumentGeneratorTests
             Methods = methods,
             Components = new()
             {
-                Schemas = schemas
+                Schemas = schemas,
+                Tags = tags
             }
         };
         result.Should().BeEquivalentTo(expected);
@@ -120,13 +125,14 @@ internal class OpenRpcDocumentGeneratorTests
                 0))
             .Verifiable();
         var method = new OpenRpcMethod("name");
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
+        var tags = new Dictionary<string, OpenRpcTag>();
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host, tags))
             .Returns(method)
             .Verifiable();
         openRpcOptions.DocInclusionPredicate = static (_, _) => true;
         openRpcOptions.IgnoreObsoleteActions = true;
 
-        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
+        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
 
         var expected = new[]
         {
@@ -158,19 +164,20 @@ internal class OpenRpcDocumentGeneratorTests
         var method1 = new OpenRpcMethod("name1");
         var method2 = new OpenRpcMethod("name2");
         var method3 = new OpenRpcMethod("name3");
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
+        var tags = new Dictionary<string, OpenRpcTag>();
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host, tags))
             .Returns(method1)
             .Verifiable();
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription2, host))
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription2, host, tags))
             .Returns(method2)
             .Verifiable();
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription3, host))
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription3, host, tags))
             .Returns(method3)
             .Verifiable();
         openRpcOptions.DocInclusionPredicate = static (_, _) => true;
         openRpcOptions.IgnoreObsoleteActions = false;
 
-        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
+        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
 
         var expected = new[]
         {
@@ -199,12 +206,13 @@ internal class OpenRpcDocumentGeneratorTests
                 0))
             .Verifiable();
         var method = new OpenRpcMethod("name");
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
+        var tags = new Dictionary<string, OpenRpcTag>();
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host, tags))
             .Returns(method)
             .Verifiable();
         openRpcOptions.DocInclusionPredicate = static (_, _) => true;
 
-        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
+        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
 
         var expected = new[]
         {
@@ -230,12 +238,13 @@ internal class OpenRpcDocumentGeneratorTests
                 0))
             .Verifiable();
         var method = new OpenRpcMethod("name");
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
+        var tags = new Dictionary<string, OpenRpcTag>();
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host, tags))
             .Returns(method)
             .Verifiable();
         openRpcOptions.DocInclusionPredicate = (_, d) => d == apiDescription1;
 
-        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
+        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
 
         var expected = new[]
         {
@@ -262,15 +271,16 @@ internal class OpenRpcDocumentGeneratorTests
             .Verifiable();
         var method1 = new OpenRpcMethod("a");
         var method2 = new OpenRpcMethod("b");
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host))
+        var tags = new Dictionary<string, OpenRpcTag>();
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host, tags))
             .Returns(method1)
             .Verifiable();
-        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription2, host))
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription2, host, tags))
             .Returns(method2)
             .Verifiable();
         openRpcOptions.DocInclusionPredicate = static (_, _) => true;
 
-        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host);
+        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
 
         var expected = new[]
         {
@@ -292,6 +302,7 @@ internal class OpenRpcDocumentGeneratorTests
         var methodServers = new List<OpenRpcServer>();
         var methodParamsStructure = new OpenRpcParamStructure();
         var parametersMetadata = new JsonRpcActionParametersMetadata();
+        var tags = new Dictionary<string, OpenRpcTag>();
         description.ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         documentGeneratorMock.Setup(g => g.GetMethodParams(description, MethodName, parametersMetadata, serverOptions.DefaultDataJsonSerializerOptions))
             .Returns(methodParams)
@@ -306,7 +317,7 @@ internal class OpenRpcDocumentGeneratorTests
             .Returns(methodParamsStructure)
             .Verifiable();
 
-        var result = documentGeneratorMock.Object.GetMethod(description, host);
+        var result = documentGeneratorMock.Object.GetMethod(description, host, tags);
 
         var expected = new OpenRpcMethod(MethodName)
         {
@@ -332,6 +343,7 @@ internal class OpenRpcDocumentGeneratorTests
         var methodServers = new List<OpenRpcServer>();
         var methodParamsStructure = new OpenRpcParamStructure();
         var parametersMetadata = new JsonRpcActionParametersMetadata();
+        var tags = new Dictionary<string, OpenRpcTag>();
         var serializerOptionsProvider = new SnakeCaseJsonSerializerOptionsProvider();
         description.ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         description.ActionDescriptor.EndpointMetadata.Add(new JsonRpcSerializerOptionsAttribute(serializerOptionsProvider.GetType()));
@@ -349,7 +361,7 @@ internal class OpenRpcDocumentGeneratorTests
             .Returns(methodParamsStructure)
             .Verifiable();
 
-        var result = documentGeneratorMock.Object.GetMethod(description, host);
+        var result = documentGeneratorMock.Object.GetMethod(description, host, tags);
 
         var expected = new OpenRpcMethod(MethodName)
         {
@@ -375,6 +387,7 @@ internal class OpenRpcDocumentGeneratorTests
         var methodServers = new List<OpenRpcServer>();
         var methodParamsStructure = new OpenRpcParamStructure();
         var parametersMetadata = new JsonRpcActionParametersMetadata();
+        var tags = new Dictionary<string, OpenRpcTag>();
         description.ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         documentGeneratorMock.Setup(g => g.GetMethodParams(description, MethodName, parametersMetadata, serverOptions.DefaultDataJsonSerializerOptions))
             .Returns(methodParams)
@@ -389,7 +402,7 @@ internal class OpenRpcDocumentGeneratorTests
             .Returns(methodParamsStructure)
             .Verifiable();
 
-        var result = documentGeneratorMock.Object.GetMethod(description, host);
+        var result = documentGeneratorMock.Object.GetMethod(description, host, tags);
 
         var expected = new OpenRpcMethod(MethodName)
         {
@@ -417,6 +430,7 @@ internal class OpenRpcDocumentGeneratorTests
         var methodServers = new List<OpenRpcServer>();
         var methodParamsStructure = new OpenRpcParamStructure();
         var parametersMetadata = new JsonRpcActionParametersMetadata();
+        var tags = new Dictionary<string, OpenRpcTag>();
         description.ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         documentGeneratorMock.Setup(g => g.GetMethodParams(description, MethodName, parametersMetadata, serverOptions.DefaultDataJsonSerializerOptions))
             .Returns(methodParams)
@@ -431,7 +445,7 @@ internal class OpenRpcDocumentGeneratorTests
             .Returns(methodParamsStructure)
             .Verifiable();
 
-        var result = documentGeneratorMock.Object.GetMethod(description, host);
+        var result = documentGeneratorMock.Object.GetMethod(description, host, tags);
 
         var expected = new OpenRpcMethod(MethodName)
         {
@@ -459,6 +473,7 @@ internal class OpenRpcDocumentGeneratorTests
         var methodServers = new List<OpenRpcServer>();
         var methodParamsStructure = new OpenRpcParamStructure();
         var parametersMetadata = new JsonRpcActionParametersMetadata();
+        var tags = new Dictionary<string, OpenRpcTag>();
         description.ActionDescriptor.EndpointMetadata.Add(parametersMetadata);
         documentGeneratorMock.Setup(g => g.GetMethodParams(description, MethodName, parametersMetadata, serverOptions.DefaultDataJsonSerializerOptions))
             .Returns(methodParams)
@@ -473,7 +488,7 @@ internal class OpenRpcDocumentGeneratorTests
             .Returns(methodParamsStructure)
             .Verifiable();
 
-        var result = documentGeneratorMock.Object.GetMethod(description, host);
+        var result = documentGeneratorMock.Object.GetMethod(description, host, tags);
 
         var expected = new OpenRpcMethod(MethodName)
         {
