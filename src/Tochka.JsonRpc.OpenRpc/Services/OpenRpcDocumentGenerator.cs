@@ -65,6 +65,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         var tags = apiDescriptionsProvider.ApiDescriptionGroups.Items
             .SelectMany(static g => g.Items)
             .Select(x => serverOptions.DefaultDataJsonSerializerOptions.ConvertName((x.ActionDescriptor as ControllerActionDescriptor)!.ControllerName))
+            .Where(x => !string.IsNullOrEmpty(x))
             .Distinct();
 
         return tags.ToDictionary(static x => x, static x => new OpenRpcTag(x));
