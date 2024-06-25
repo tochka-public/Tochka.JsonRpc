@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
+using Json.Schema;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -44,16 +45,31 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     }
 
     /// <inheritdoc />
-    public Models.OpenRpc Generate(OpenRpcInfo info, string documentName, Uri host) =>
-        new(info)
+    public Models.OpenRpc Generate(OpenRpcInfo info, string documentName, Uri host)
+    {
+        var tags = GetControllersTags();
+        return new(info)
         {
             Servers = GetServers(host, serverOptions.RoutePrefix.Value),
-            Methods = GetMethods(documentName, host),
+            Methods = GetMethods(documentName, host, tags),
             Components = new()
             {
-                Schemas = schemaGenerator.GetAllSchemas()
+                Schemas = schemaGenerator.GetAllSchemas(),
+                Tags = tags
             }
         };
+    }
+
+    internal virtual Dictionary<string, OpenRpcTag> GetControllersTags()
+    {
+        var tags = apiDescriptionsProvider.ApiDescriptionGroups.Items
+            .SelectMany(static g => g.Items)
+            .Select(x => serverOptions.DefaultDataJsonSerializerOptions.ConvertName((x.ActionDescriptor as ControllerActionDescriptor)!.ControllerName))
+            .Where(x => !string.IsNullOrEmpty(x))
+            .Distinct();
+
+        return tags.ToDictionary(static x => x, static x => new OpenRpcTag(x));
+    }
 
     // internal virtual for mocking in tests
     internal virtual List<OpenRpcServer> GetServers(Uri host, string? route)
@@ -68,20 +84,22 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     }
 
     // internal virtual for mocking in tests
-    internal virtual List<OpenRpcMethod> GetMethods(string documentName, Uri host) =>
+    internal virtual List<OpenRpcMethod> GetMethods(string documentName, Uri host, Dictionary<string, OpenRpcTag> tags) =>
         apiDescriptionsProvider.ApiDescriptionGroups.Items
             .SelectMany(static g => g.Items)
             .Where(d => !openRpcOptions.IgnoreObsoleteActions || !IsObsoleteTransitive(d))
             .Where(static d => d.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
             .Where(d => openRpcOptions.DocInclusionPredicate(documentName, d))
-            .Select(d => GetMethod(d, host))
+            .Select(d => GetMethod(d, host, tags))
             .OrderBy(static m => m.Name)
             .ToList();
 
     // internal virtual for mocking in tests
-    internal virtual OpenRpcMethod GetMethod(ApiDescription apiDescription, Uri host)
+    internal virtual OpenRpcMethod GetMethod(ApiDescription apiDescription, Uri host, Dictionary<string, OpenRpcTag> tags)
     {
-        var methodInfo = (apiDescription.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo;
+        var actionDescriptor = apiDescription.ActionDescriptor as ControllerActionDescriptor;
+        var methodInfo = actionDescriptor?.MethodInfo;
+        var controllerName = actionDescriptor?.ControllerName;
         var parametersMetadata = apiDescription.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
         var serializerMetadata = apiDescription.ActionDescriptor.EndpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
         var jsonSerializerOptionsProviderType = serializerMetadata?.ProviderType;
@@ -97,8 +115,22 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             Result = GetResultContentDescriptor(apiDescription, methodName, jsonSerializerOptions),
             Deprecated = IsObsoleteTransitive(apiDescription),
             Servers = GetMethodServers(apiDescription, host),
-            ParamStructure = GetParamsStructure(parametersMetadata)
+            ParamStructure = GetParamsStructure(parametersMetadata),
+            Tags = GetMethodTags(controllerName, tags)
         };
+    }
+
+    internal virtual List<JsonSchema>? GetMethodTags(string? controllerName, Dictionary<string, OpenRpcTag> tags)
+    {
+        if (string.IsNullOrEmpty(controllerName))
+        {
+            return null;
+        }
+
+        controllerName = serverOptions.DefaultDataJsonSerializerOptions.ConvertName(controllerName);
+        return tags.TryGetValue(controllerName, out _)
+            ? new List<JsonSchema> { new JsonSchemaBuilder().Ref($"#/components/tags/{controllerName}").Build() }
+            : null;
     }
 
     // internal virtual for mocking in tests
