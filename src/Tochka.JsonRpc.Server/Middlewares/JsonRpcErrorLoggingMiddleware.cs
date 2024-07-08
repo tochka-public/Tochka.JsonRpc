@@ -31,7 +31,7 @@ public class JsonRpcErrorLoggingMiddleware
         var response = httpContext.GetJsonRpcResponse() as UntypedErrorResponse;
         if (response?.Error != null)
         {
-            logger.LogInformation("JsonRpc Error: Id = {ResponseId}, Code = {Code}, Message = {Message}, Data = {Data}", response.Id, response.Error.Code, response.Error.Message, response.Error.Data?.ToString());
+            logger.LogInformation("JsonRpc Error: Id = {ResponseId}, Code = {Code}, Message = {Message}, Data = {Data}", response.Id, response.Error.Code, response.Error.Message, response.Error.Data?.RootElement.ToString());
         }
     }
 }
