@@ -156,7 +156,7 @@ Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Servers.get -> System.Collections.Ge
 Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Servers.set -> void
 Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Summary.get -> string?
 Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Summary.set -> void
-Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Tags.get -> System.Collections.Generic.List<Tochka.JsonRpc.OpenRpc.Models.OpenRpcTag!>?
+Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Tags.get -> System.Collections.Generic.List<Json.Schema.JsonSchema!>?
 Tochka.JsonRpc.OpenRpc.Models.OpenRpcMethod.Tags.set -> void
 Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure
 Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure.ByName = 1 -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcParamStructure
