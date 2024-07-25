@@ -13,7 +13,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Swagger.Tests;
 
 [TestFixture]
-internal class JsonRpcSchemaGeneratorTests
+public class JsonRpcSchemaGeneratorTests
 {
     private SchemaGeneratorOptions schemaGeneratorOptions;
     private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
@@ -82,5 +82,5 @@ internal class JsonRpcSchemaGeneratorTests
     private const string MethodName = "method";
 
     [JsonRpcTypeMetadata(typeof(SnakeCaseJsonSerializerOptionsProvider), MethodName)]
-    private record TypeWithMetadata;
+    private sealed record TypeWithMetadata;
 }

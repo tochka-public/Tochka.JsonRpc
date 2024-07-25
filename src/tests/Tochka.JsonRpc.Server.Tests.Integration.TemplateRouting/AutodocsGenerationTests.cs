@@ -10,7 +10,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 namespace Tochka.JsonRpc.Server.Tests.Integration.TemplateRouting;
 
 [TestFixture]
-internal class AutodocsGenerationTests : IntegrationTestsBase<Program>
+internal sealed class AutodocsGenerationTests : IntegrationTestsBase<Program>
 {
     [TestCase("jsonrpc_v1", "/api/v1/jsonrpc/CustomRoute/route#check")]
     [TestCase("jsonrpc_v1", "/api/v1/jsonrpc/OldVersion#check")]

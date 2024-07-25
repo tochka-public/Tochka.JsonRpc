@@ -13,7 +13,6 @@ public class SendNotificationBenchmark
     public TestData Data { get; set; }
 
     private MockHttpMessageHandler handlerMock;
-    private OldJsonRpcClient oldClient;
     private NewJsonRpcClient newClient;
 
     [GlobalSetup]
@@ -22,15 +21,11 @@ public class SendNotificationBenchmark
         handlerMock = new MockHttpMessageHandler();
         handlerMock.When("*").Respond(HttpStatusCode.OK);
 
-        oldClient = new OldJsonRpcClient(handlerMock.ToHttpClient());
         newClient = new NewJsonRpcClient(handlerMock.ToHttpClient());
     }
 
     [Benchmark(Baseline = true)]
     public async Task New() => await newClient.SendNotification(Method, Data, CancellationToken.None);
-
-    [Benchmark]
-    public async Task Old() => await oldClient.SendNotification(Method, Data, CancellationToken.None);
 
     private const string Method = "method";
 

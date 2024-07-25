@@ -13,7 +13,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Services;
 
 [TestFixture]
-internal class JsonRpcErrorFactoryTests
+public class JsonRpcErrorFactoryTests
 {
     private JsonRpcServerOptions options;
     private Mock<JsonRpcErrorFactory> errorFactoryMock;

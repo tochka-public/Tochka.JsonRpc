@@ -5,7 +5,7 @@ using Tochka.JsonRpc.Client.Services;
 namespace Tochka.JsonRpc.Client.Tests.Services;
 
 [TestFixture]
-internal class JsonRpcIdGeneratorTests
+public class JsonRpcIdGeneratorTests
 {
     private JsonRpcIdGenerator generator;
 

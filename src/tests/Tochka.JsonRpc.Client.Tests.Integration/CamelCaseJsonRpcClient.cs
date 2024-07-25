@@ -7,7 +7,7 @@ using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
-internal class CamelCaseJsonRpcClient : JsonRpcClientBase
+public class CamelCaseJsonRpcClient : JsonRpcClientBase
 {
     public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.CamelCase;
 

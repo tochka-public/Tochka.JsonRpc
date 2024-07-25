@@ -23,7 +23,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Binding;
 
 [TestFixture]
-internal class JsonRpcModelBinderTests
+public class JsonRpcModelBinderTests
 {
     private Mock<IJsonRpcParamsParser> paramsParserMock;
     private Mock<IJsonRpcParameterBinder> parameterBinderMock;

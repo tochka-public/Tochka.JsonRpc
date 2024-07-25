@@ -24,7 +24,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Extensions;
 
 [TestFixture]
-internal class DependencyInjectionExtensionsTests
+public class DependencyInjectionExtensionsTests
 {
     [Test]
     public void AddJsonRpcServer_RegisterServices()
@@ -51,11 +51,14 @@ internal class DependencyInjectionExtensionsTests
         result.Remove((typeof(IApiVersionDescriptionProvider), typeof(DefaultApiVersionDescriptionProvider), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
         // one of services registered by calling AddApiVersioning
-        result.Remove((typeof(IApiVersionSetBuilderFactory), typeof(DefaultApiVersionSetBuilderFactory), ServiceLifetime.Singleton)).Should().BeTrue();
+        result.Remove((typeof(IApiVersionSelector), null, ServiceLifetime.Singleton)).Should().BeTrue();
         // one of services registered by calling AddApiVersioning.AddMvc
         result.Remove((typeof(IControllerNameConvention), typeof(DefaultControllerNameConvention), ServiceLifetime.Singleton)).Should().BeTrue();
         // one of services registered by calling AddApiVersioning.AddApiExplorer
-        result.Remove((typeof(IApiVersionDescriptionProviderFactory), null, ServiceLifetime.Transient)).Should().BeTrue();
+        var x = result.Single(x => x.ServiceType == typeof(IApiVersionDescriptionProviderFactory));
+        x.ImplementationType.Should().NotBeNull("can't check type directly because it is internal");
+        x.Lifetime.Should().Be(ServiceLifetime.Transient);
+        result.Remove(x).Should().BeTrue();
     }
 
     [Test]

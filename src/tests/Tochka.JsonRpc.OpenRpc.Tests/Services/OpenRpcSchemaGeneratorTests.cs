@@ -8,12 +8,13 @@ using Json.Schema;
 using Json.Schema.Generation;
 using NUnit.Framework;
 using Tochka.JsonRpc.OpenRpc.Services;
-using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-internal class OpenRpcSchemaGeneratorTests
+[SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "For tests")]
+[SuppressMessage("Naming", "CA1712:Do not prefix enum values with type name", Justification = "For tests")]
+public class OpenRpcSchemaGeneratorTests
 {
     private OpenRpcSchemaGenerator schemaGenerator;
 
@@ -62,7 +63,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_CollectionWithEnumItems_ReturnSchemaWithRefForItems()
     {
         var type = typeof(IEnumerable<Enum>);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -87,7 +88,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_CollectionWithItemsWithProperties_ReturnSchemaWithRefForItems()
     {
         var type = typeof(IEnumerable<TypeWithProperties>);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -129,7 +130,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_Enum_ReturnRef()
     {
         var type = typeof(Enum);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -151,7 +152,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_NullableEnum_ReturnRef()
     {
         var type = typeof(Enum?);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -205,7 +206,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithProperties_ReturnRef()
     {
         var type = typeof(TypeWithProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -244,7 +245,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithSomeNullableProperties_ReturnRef()
     {
         var type = typeof(TypeWithSomeNullableProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -283,7 +284,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_AlreadyRegisteredEnum_DontRegisterAgain()
     {
         var type = typeof(Enum);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
         schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
@@ -306,7 +307,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_AlreadyRegisteredTypeWithProperties_DontRegisterAgain()
     {
         var type = typeof(TypeWithProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
         schemaGenerator.CreateOrRef(typeof(AnotherTypeWithProperties), MethodName, jsonSerializerOptions);
@@ -346,7 +347,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_AlreadyRegisteredTypeWithPropertiesWithAnotherMethodName_RegisterAgain()
     {
         var type = typeof(AnotherTypeWithProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
         var anotherMethodName = "anotherMethodName";
 
         var result1 = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
@@ -410,7 +411,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_DefaultSimpleTypesFormattedAsString()
     {
         var type = typeof(TypeWithSimpleProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -442,7 +443,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_SummariesFromResultObjectPropertiesCollectedAsTitlesOnJsonSchema()
     {
         var type = typeof(TypeWithSummaries);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -538,7 +539,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyParsedCorrectly_OneTypeArgument()
     {
         var type = typeof(TypeWithGenericProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -602,7 +603,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithSomeNullableGenericPropertiesHasCorrectRequiredState_Prop1Optional_Prop2Required()
     {
         var type = typeof(TypeWithSomeNullableGenericProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -666,7 +667,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyParsedCorrectly_TwoTypeArgument()
     {
         var type = typeof(TypeWithGenericTwoTypesProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -712,7 +713,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithSomeNullableGenericPropertiesHasCorrectRequiredState_AllOptional()
     {
         var type = typeof(TypeWithNullableGenericTwoTypesProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -756,7 +757,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyParsedCorrectly_ChildGeneric()
     {
         var type = typeof(TypeWithChildGenericTypyProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -813,7 +814,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyHasCorrectRequiredState_ChildGenericNullable()
     {
         var type = typeof(TypeWithNullableChildGenericTypyProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -884,15 +885,15 @@ internal class OpenRpcSchemaGeneratorTests
         value_value4
     }
 
-    private record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
+    private sealed record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
 
-    private record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
+    private sealed record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
 
-    private record AnotherTypeWithProperties(bool BoolProperty);
+    private sealed record AnotherTypeWithProperties(bool BoolProperty);
 
-    private record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
+    private sealed record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
 
-    private class TypeWithSummaries
+    private sealed class TypeWithSummaries
     {
         /// <summary>
         /// Prop1
@@ -919,7 +920,7 @@ internal class OpenRpcSchemaGeneratorTests
         /// </summary>
         public TimeSpan Prop5 { get; set; }
     }
-    private class TypeWithSummariesInner
+    private sealed class TypeWithSummariesInner
     {
         /// <summary>
         /// InnerProp1
@@ -931,15 +932,15 @@ internal class OpenRpcSchemaGeneratorTests
         Bla
     }
 
-    private record CustomSimpleType;
+    private sealed record CustomSimpleType;
 
-    private class TypeWithGenericProperties
+    private sealed class TypeWithGenericProperties
     {
         public GenericOneType<TypeWithGenericPropertiesFirstEnum> Property1 { get; set; }
         public GenericOneType<TypeWithGenericPropertiesSecondEnum?> Property2 { get; set; }
     }
 
-    private class TypeWithSomeNullableGenericProperties
+    private sealed class TypeWithSomeNullableGenericProperties
     {
         public GenericOneType<TypeWithGenericPropertiesFirstEnum>? Property1 { get; set; }
         public GenericOneType<TypeWithGenericPropertiesSecondEnum?> Property2 { get; set; }
@@ -955,33 +956,33 @@ internal class OpenRpcSchemaGeneratorTests
         TypeWithGenericPropertiesSecondEnum
     }
 
-    private class GenericOneType<T>
+    private sealed class GenericOneType<T>
     {
         public T GenericProperty { get; set; }
     }
 
-    private class TypeWithGenericTwoTypesProperty
+    private sealed class TypeWithGenericTwoTypesProperty
     {
         public GenericTwoType<string, bool> Property1 { get; set; }
     }
 
-    private class TypeWithNullableGenericTwoTypesProperty
+    private sealed class TypeWithNullableGenericTwoTypesProperty
     {
         public GenericTwoType<string?, bool?>? Property1 { get; set; }
     }
 
-    private class GenericTwoType<T,U>
+    private sealed class GenericTwoType<T,U>
     {
         public T GenericProperty1 { get; set; }
         public U GenericProperty2 { get; set; }
     }
 
-    private class TypeWithChildGenericTypyProperty
+    private sealed class TypeWithChildGenericTypyProperty
     {
         public GenericTwoType<string, GenericOneType<bool>> Property1 { get; set; }
     }
 
-    private class TypeWithNullableChildGenericTypyProperty
+    private sealed class TypeWithNullableChildGenericTypyProperty
     {
         public GenericTwoType<string, GenericOneType<bool>?> Property1 { get; set; }
     }

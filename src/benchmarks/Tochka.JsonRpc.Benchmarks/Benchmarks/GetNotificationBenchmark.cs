@@ -3,7 +3,6 @@ using BenchmarkDotNet.Attributes;
 using Tochka.JsonRpc.Benchmarks.Data;
 using Tochka.JsonRpc.Benchmarks.EdjCaseApp;
 using Tochka.JsonRpc.Benchmarks.NewWebApp;
-using Tochka.JsonRpc.Benchmarks.OldWebApp;
 using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
@@ -15,17 +14,14 @@ public class GetNotificationBenchmark
     public string Notification { get; set; }
 
     private HttpClient newClient;
-    private HttpClient oldClient;
     private HttpClient edjCaseClient;
 
     [GlobalSetup]
     public void Setup()
     {
         var newFactory = new NewApplicationFactory().WithWebHostBuilder(static _ => { });
-        var oldFactory = new OldApplicationFactory().WithWebHostBuilder(static _ => { });
         var edjCaseFactory = new EdjCaseApplicationFactory().WithWebHostBuilder(static _ => { });
         newClient = newFactory.CreateClient();
-        oldClient = oldFactory.CreateClient();
         edjCaseClient = edjCaseFactory.CreateClient();
     }
 
@@ -34,13 +30,6 @@ public class GetNotificationBenchmark
     {
         using var request = new StringContent(Notification, Encoding.UTF8, "application/json");
         return await newClient.PostAsync("api/jsonrpc", request);
-    }
-
-    [Benchmark]
-    public async Task<HttpResponseMessage?> Old()
-    {
-        using var request = new StringContent(Notification, Encoding.UTF8, "application/json");
-        return await oldClient.PostAsync("api/jsonrpc", request);
     }
 
     [Benchmark]

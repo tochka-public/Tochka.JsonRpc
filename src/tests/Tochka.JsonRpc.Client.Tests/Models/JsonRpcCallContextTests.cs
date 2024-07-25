@@ -17,7 +17,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 namespace Tochka.JsonRpc.Client.Tests.Models;
 
 [TestFixture]
-internal class JsonRpcCallContextTests
+public class JsonRpcCallContextTests
 {
     private JsonRpcCallContext jsonRpcCallContext;
 

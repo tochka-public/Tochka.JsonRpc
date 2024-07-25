@@ -18,7 +18,7 @@ using Tochka.JsonRpc.TestUtils;
 namespace Tochka.JsonRpc.Common.Tests;
 
 [TestFixture]
-internal class DeserializationTests
+public class DeserializationTests
 {
     private readonly JsonSerializerOptions headersJsonSerializerOptions = JsonRpcSerializerOptions.Headers;
     private readonly JsonSerializerOptions snakeCaseSerializerOptions = JsonRpcSerializerOptions.SnakeCase;

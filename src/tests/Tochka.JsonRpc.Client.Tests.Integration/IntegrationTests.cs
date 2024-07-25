@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
@@ -23,7 +24,8 @@ using Tochka.JsonRpc.TestUtils.Integration;
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
 [TestFixture]
-internal class IntegrationTests : IntegrationTestsBase<Program>
+[SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance", Justification = "This is test code")]
+internal sealed class IntegrationTests : IntegrationTestsBase<Program>
 {
     private Mock<IResponseProvider> responseProviderMock;
     private Mock<IRequestValidator> requestValidatorMock;

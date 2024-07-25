@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Tochka.JsonRpc.Common.Tests;
 
 [TestFixture]
-internal class UtilsTests
+public class UtilsTests
 {
     [Test]
     public void DeserializeErrorData_DataIsNull_ReturnDefault()
@@ -182,7 +182,7 @@ internal class UtilsTests
     {
     }
 
-    private class ErrorDataConverter : JsonConverter<ErrorData>
+    private sealed class ErrorDataConverter : JsonConverter<ErrorData>
     {
         public override ErrorData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
             new(reader.GetString());
@@ -192,7 +192,7 @@ internal class UtilsTests
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Just for tests")]
-    private class IErrorDataConverter : JsonConverter<IErrorData>
+    private sealed class IErrorDataConverter : JsonConverter<IErrorData>
     {
         public override IErrorData? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
             JsonSerializer.Deserialize<ErrorData>(ref reader, options);
@@ -201,5 +201,5 @@ internal class UtilsTests
             throw new NotImplementedException();
     }
 
-    private record ErrorData(string A) : IErrorData;
+    private sealed record ErrorData(string A) : IErrorData;
 }

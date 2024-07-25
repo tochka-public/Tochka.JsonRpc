@@ -21,7 +21,7 @@ using Tochka.JsonRpc.TestUtils;
 namespace Tochka.JsonRpc.OpenRpc.Tests;
 
 [TestFixture]
-internal class ExtensionsTests
+public class ExtensionsTests
 {
     [Test]
     public void AddOpenRpc_RegisterServices()

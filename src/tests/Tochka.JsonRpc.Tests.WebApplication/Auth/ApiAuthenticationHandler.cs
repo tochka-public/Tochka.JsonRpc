@@ -7,7 +7,7 @@ namespace Tochka.JsonRpc.Tests.WebApplication.Auth;
 
 internal class ApiAuthenticationHandler : AuthenticationHandler<ApiAuthenticationOptions>
 {
-    public ApiAuthenticationHandler(IOptionsMonitor<ApiAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+    public ApiAuthenticationHandler(IOptionsMonitor<ApiAuthenticationOptions> options, ILoggerFactory logger, UrlEncoder encoder) : base(options, logger, encoder)
     {
     }
 

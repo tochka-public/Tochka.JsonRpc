@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Converters;
-using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.Common;
 
@@ -23,7 +22,7 @@ public static class JsonRpcSerializerOptions
     /// </remarks>
     public static JsonSerializerOptions Headers { get; } = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         Converters =
         {
             new RequestWrapperConverter(),
@@ -43,12 +42,12 @@ public static class JsonRpcSerializerOptions
     /// </summary>
     public static JsonSerializerOptions SnakeCase { get; } = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower,
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         /*
          * Bug: dotnet6 JsonStringEnumConverter ignores policy on deserialization.
          * Fixed in dotnet7 so use JsonStringEnumConverter after upgrading and remove `Macross.Json.Extensions` dependency
          */
-        Converters = { new JsonStringEnumMemberConverter(JsonNamingPolicies.SnakeCaseLower) },
+        Converters = { new JsonStringEnumMemberConverter(JsonNamingPolicy.SnakeCaseLower) },
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };

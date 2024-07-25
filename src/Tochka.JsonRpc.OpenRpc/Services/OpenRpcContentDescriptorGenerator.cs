@@ -20,11 +20,11 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
     /// <inheritdoc />
     public OpenRpcContentDescriptor GenerateForType(ContextualType type, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
-        var name = jsonSerializerOptions.ConvertName(type.TypeName);
+        var name = jsonSerializerOptions.ConvertName(type.Name);
         var summary = type.GetXmlDocsSummary();
         var description = type.GetXmlDocsRemarks();
         const bool required = false; // this method only used for collection items, collection can be empty => it's always optional
-        var deprecated = type.GetAttribute<ObsoleteAttribute>() != null;
+        var deprecated = type.GetAttribute<ObsoleteAttribute>(true) != null;
 
         return Generate(type, methodName, jsonSerializerOptions, name, summary, description, required, deprecated);
     }
@@ -37,7 +37,7 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
         var summary = propertyInfo.GetXmlDocsSummary();
         var description = propertyInfo.GetXmlDocsRemarks();
         var required = !parameterMetadata.IsOptional;
-        var deprecated = propertyInfo.GetContextAttribute<ObsoleteAttribute>() != null;
+        var deprecated = propertyInfo.GetAttribute<ObsoleteAttribute>(true) != null;
 
         return Generate(type, methodName, jsonSerializerOptions, name, summary, description, required, deprecated);
     }
@@ -49,8 +49,8 @@ public class OpenRpcContentDescriptorGenerator : IOpenRpcContentDescriptorGenera
         var name = jsonSerializerOptions.ConvertName(propertyInfo.Name);
         var summary = propertyInfo.GetXmlDocsSummary();
         var description = propertyInfo.GetXmlDocsRemarks();
-        var required = propertyInfo.GetContextAttribute<RequiredAttribute>() != null;
-        var deprecated = propertyInfo.GetContextAttribute<ObsoleteAttribute>() != null;
+        var required = propertyInfo.GetAttribute<RequiredAttribute>(true) != null;
+        var deprecated = propertyInfo.GetAttribute<ObsoleteAttribute>(true) != null;
 
         return Generate(type, methodName, jsonSerializerOptions, name, summary, description, required, deprecated);
     }

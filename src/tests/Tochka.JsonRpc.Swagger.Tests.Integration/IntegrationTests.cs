@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -9,7 +10,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 namespace Tochka.JsonRpc.Swagger.Tests.Integration;
 
 [TestFixture]
-internal class IntegrationTests : IntegrationTestsBase<Program>
+internal sealed class IntegrationTests : IntegrationTestsBase<Program>
 {
     [TestCase("jsonrpc_v1", "/api/jsonrpc/custom/controller#custom_controller_route")]
     [TestCase("rest", "/notification")]
@@ -59,8 +60,8 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
-    
-    
+
+
     [Test]
     public async Task TimeSpan_ParsingAsString()
     {
@@ -74,9 +75,9 @@ internal class IntegrationTests : IntegrationTestsBase<Program>
                     .GetProperty("schemas")
                     .GetProperty(nameof(TestObject))
                     .GetProperty("properties")
-                    .GetProperty(nameof(TestObject.Ts).ToLower())
+                    .GetProperty(nameof(TestObject.Ts).ToLower(CultureInfo.InvariantCulture))
                     .TryGetProperty("type", out var typePropertyJson).Should().BeTrue();
-        
+
         typePropertyJson.GetString().Should().Be("string");
     }
 }

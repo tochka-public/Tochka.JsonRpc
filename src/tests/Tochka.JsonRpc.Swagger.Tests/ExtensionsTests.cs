@@ -19,12 +19,11 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Tests.WebApplication;
-using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.Swagger.Tests;
 
 [TestFixture]
-internal class ExtensionsTests
+public class ExtensionsTests
 {
     [Test]
     public void AddSwaggerWithJsonRpc_RegisterServices()
@@ -440,13 +439,13 @@ internal class ExtensionsTests
         typeMock.Verify();
     }
 
-    private class JsonSerializerOptionsProviderKebabCase : IJsonSerializerOptionsProvider
+    private sealed class JsonSerializerOptionsProviderKebabCase : IJsonSerializerOptionsProvider
     {
-        public JsonSerializerOptions Options => new() { PropertyNamingPolicy = JsonNamingPolicies.KebabCaseLower };
+        public JsonSerializerOptions Options => new() { PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower };
     }
 
-    private class KebabCaseUpperProvider : IJsonSerializerOptionsProvider
+    private sealed class KebabCaseUpperProvider : IJsonSerializerOptionsProvider
     {
-        public JsonSerializerOptions Options => new() { PropertyNamingPolicy = JsonNamingPolicies.KebabCaseUpper };
+        public JsonSerializerOptions Options => new() { PropertyNamingPolicy = JsonNamingPolicy.KebabCaseUpper };
     }
 }

@@ -10,7 +10,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 namespace Tochka.JsonRpc.Server.Tests.Integration.TemplateRouting;
 
 [TestFixture]
-internal class TemplateRoutingTests : IntegrationTestsBase<Program>
+internal sealed class TemplateRoutingTests : IntegrationTestsBase<Program>
 {
     [Test]
     public async Task VersionedController_V1Route_RouteSuccessfully()

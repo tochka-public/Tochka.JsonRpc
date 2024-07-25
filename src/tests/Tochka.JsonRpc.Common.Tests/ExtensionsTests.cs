@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Tochka.JsonRpc.Common.Tests;
 
 [TestFixture]
-internal class ExtensionsTests
+public class ExtensionsTests
 {
     [Test]
     public void Get_SeveralOccurrences_ReturnFirst()
@@ -57,5 +57,5 @@ internal class ExtensionsTests
         result.Should().Be(name);
     }
 
-    private record TestClass(int A);
+    private sealed record TestClass(int A);
 }

@@ -13,7 +13,7 @@ using Tochka.JsonRpc.OpenRpc.Services;
 namespace Tochka.JsonRpc.OpenRpc.Tests;
 
 [TestFixture]
-internal class OpenRpcMiddlewareTests
+public class OpenRpcMiddlewareTests
 {
     private Mock<RequestDelegate> requestDelegateMock;
     private OpenRpcOptions options;

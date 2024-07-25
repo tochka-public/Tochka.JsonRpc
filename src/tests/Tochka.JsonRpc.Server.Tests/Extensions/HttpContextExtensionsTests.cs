@@ -11,7 +11,7 @@ using Tochka.JsonRpc.Server.Extensions;
 namespace Tochka.JsonRpc.Server.Tests.Extensions;
 
 [TestFixture]
-internal class HttpContextExtensionsTests
+public class HttpContextExtensionsTests
 {
     [Test]
     public void GetJsonRpcCall_NoFeature_ReturnNull()

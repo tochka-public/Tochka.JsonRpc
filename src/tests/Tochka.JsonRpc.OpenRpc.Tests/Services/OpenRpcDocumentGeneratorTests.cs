@@ -28,7 +28,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-internal class OpenRpcDocumentGeneratorTests
+public class OpenRpcDocumentGeneratorTests
 {
     private Mock<IApiDescriptionGroupCollectionProvider> apiDescriptionsProviderMock;
     private Mock<IOpenRpcSchemaGenerator> schemaGeneratorMock;
@@ -872,17 +872,17 @@ internal class OpenRpcDocumentGeneratorTests
 
     [Obsolete]
     [UsedImplicitly]
-    private class ObsoleteType
+    private sealed class ObsoleteType
     {
         public static void ObsoleteTypeMethod()
         {
         }
     }
 
-    private record RequestChild<T>(IRpcId Id, string Method, T? Params, string Jsonrpc = JsonRpcConstants.Version) : Request<T>(Id, Method, Params, Jsonrpc)
+    private sealed record RequestChild<T>(IRpcId Id, string Method, T? Params, string Jsonrpc = JsonRpcConstants.Version) : Request<T>(Id, Method, Params, Jsonrpc)
         where T : class;
 
-    private record ResponseChild<T>(IRpcId Id, T? Result, string Jsonrpc = JsonRpcConstants.Version) : Response<T>(Id, Result, Jsonrpc);
+    private sealed record ResponseChild<T>(IRpcId Id, T? Result, string Jsonrpc = JsonRpcConstants.Version) : Response<T>(Id, Result, Jsonrpc);
 
-    private record TypeWithProperties(int IntProperty, string StringProperty);
+    private sealed record TypeWithProperties(int IntProperty, string StringProperty);
 }

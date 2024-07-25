@@ -3,4 +3,4 @@
 namespace Tochka.JsonRpc.Benchmarks;
 
 [UsedImplicitly]
-internal record SimpleResponse<T>(T? Result);
+public record SimpleResponse<T>(T? Result);

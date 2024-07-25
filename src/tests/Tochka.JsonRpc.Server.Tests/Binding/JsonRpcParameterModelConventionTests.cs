@@ -16,7 +16,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Binding;
 
 [TestFixture]
-internal class JsonRpcParameterModelConventionTests
+public class JsonRpcParameterModelConventionTests
 {
     private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private JsonRpcServerOptions options;

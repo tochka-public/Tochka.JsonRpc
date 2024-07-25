@@ -25,7 +25,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.ApiExplorer.Tests;
 
 [TestFixture]
-internal class JsonRpcDescriptionProviderTests
+public class JsonRpcDescriptionProviderTests
 {
     private JsonRpcDescriptionProvider descriptionProvider;
     private Mock<ITypeEmitter> typeEmitterMock;

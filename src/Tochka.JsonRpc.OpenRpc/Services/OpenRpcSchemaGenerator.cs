@@ -45,7 +45,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
     private static Type TryUnwrapNullableType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
 
-    private string GetClearTypeName(string methodName, Type clearType)
+    private static string GetClearTypeName(string methodName, Type clearType)
     {
         var clearTypeName = clearType.Name;
         if (!clearTypeName.StartsWith($"{methodName} ", StringComparison.Ordinal))

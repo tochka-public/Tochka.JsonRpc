@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Tochka.JsonRpc.OpenRpc.Converters;
-using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.OpenRpc;
 
@@ -43,7 +42,7 @@ public static class OpenRpcConstants
         WriteIndented = true,
         Converters =
         {
-            new JsonStringEnumConverter(JsonNamingPolicies.KebabCaseLower),
+            new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower),
             new UriConverter()
         },
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull

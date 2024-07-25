@@ -13,7 +13,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 
 namespace Tochka.JsonRpc.Server.Tests.Integration;
 
-internal class NotificationTests : IntegrationTestsBase<Program>
+internal sealed class NotificationTests : IntegrationTestsBase<Program>
 {
     private Mock<IResponseProvider> responseProviderMock;
     private Mock<IRequestValidator> requestValidatorMock;

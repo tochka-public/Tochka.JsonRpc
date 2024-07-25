@@ -51,7 +51,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
             return this;
         }
 
-        if (requestUrl.StartsWith("/", StringComparison.Ordinal))
+        if (requestUrl.StartsWith('/'))
         {
             throw new ArgumentException("Request url should not start with '/' to prevent unexpected behavior when joining url parts", nameof(requestUrl));
         }
