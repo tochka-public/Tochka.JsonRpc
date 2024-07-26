@@ -1361,7 +1361,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task DefaultObjectParams_NullParams_SetNull()
+    public async Task DefaultObjectParams_NullParams_SetDefault()
     {
         const string requestJson = """
                                    {
@@ -1371,7 +1371,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                        "jsonrpc": "2.0"
                                    }
                                    """;
-        object? expectedRequestData = null;
+        object? expectedRequestData = "123";
         var responseData = TestData.Plain;
         var expectedResponseJson = $$"""
                                      {

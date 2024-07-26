@@ -720,7 +720,7 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task DefaultObjectParams_NullParams_SetNull()
+    public async Task DefaultObjectParams_NullParams_SetDefault()
     {
         const string requestJson = """
             {
@@ -729,7 +729,7 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
                 "jsonrpc": "2.0"
             }
             """;
-        object? expectedRequestData = null;
+        object? expectedRequestData = "123";
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
