@@ -12,7 +12,7 @@ using Tochka.JsonRpc.Server.Serialization;
 namespace Tochka.JsonRpc.ApiExplorer.Tests;
 
 [TestFixture]
-internal class TypeEmitterTests
+public class TypeEmitterTests
 {
     private TypeEmitter typeEmitter;
 
@@ -435,7 +435,7 @@ internal class TypeEmitterTests
     public record NestedClass;
 }
 
-internal record NonPublicClass;
+internal sealed record NonPublicClass;
 
 // ReSharper disable once MemberCanBeInternal
 public sealed record SealedClass;

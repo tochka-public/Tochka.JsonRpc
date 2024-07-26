@@ -10,9 +10,6 @@ var app = builder.Build();
 
 app.UseJsonRpc();
 app.UseRouting();
-app.UseEndpoints(c =>
-{
-    c.MapControllers();
-});
+app.MapControllers();
 
 await app.RunAsync();

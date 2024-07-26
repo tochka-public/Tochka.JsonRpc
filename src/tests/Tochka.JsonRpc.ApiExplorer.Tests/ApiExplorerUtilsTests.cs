@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Tochka.JsonRpc.ApiExplorer.Tests;
 
 [TestFixture]
-internal class ApiExplorerUtilsTests
+public class ApiExplorerUtilsTests
 {
     [Test]
     public void GetDocumentName_TypeIsNull_ReturnDefault()
@@ -46,9 +46,9 @@ internal class ApiExplorerUtilsTests
         result.Should().Be($"{defaultName}_pascalcaseprovider");
     }
 
-    private record SnakeCaseJsonSerializerOptionsProvider;
+    private sealed record SnakeCaseJsonSerializerOptionsProvider;
 
-    private record JsonSerializerOptionsProviderCamelCase;
+    private sealed record JsonSerializerOptionsProviderCamelCase;
 
-    private record PascalCaseProvider;
+    private sealed record PascalCaseProvider;
 }

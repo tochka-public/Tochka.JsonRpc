@@ -9,7 +9,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Integration;
 
 [TestFixture]
-internal class IntegrationTests : IntegrationTestsBase<Program>
+internal sealed class IntegrationTests : IntegrationTestsBase<Program>
 {
     [TestCase("custom_controller_route")]
     [TestCase("auto_doc_experiments")]

@@ -8,12 +8,13 @@ using Json.Schema;
 using Json.Schema.Generation;
 using NUnit.Framework;
 using Tochka.JsonRpc.OpenRpc.Services;
-using Yoh.Text.Json.NamingPolicies;
 
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-internal class OpenRpcSchemaGeneratorTests
+[SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "For tests")]
+[SuppressMessage("Naming", "CA1712:Do not prefix enum values with type name", Justification = "For tests")]
+public class OpenRpcSchemaGeneratorTests
 {
     private OpenRpcSchemaGenerator schemaGenerator;
 
@@ -32,8 +33,8 @@ internal class OpenRpcSchemaGeneratorTests
             .Type(SchemaValueType.Array)
             .Items(new JsonSchemaBuilder()
                 .FromType<string>()
-                .Build())
-            .Build();
+                .BuildWithoutUri())
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>();
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -51,8 +52,8 @@ internal class OpenRpcSchemaGeneratorTests
             .Type(SchemaValueType.Array)
             .Items(new JsonSchemaBuilder()
                 .FromType<CustomSimpleType>()
-                .Build())
-            .Build();
+                .BuildWithoutUri())
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>();
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -62,7 +63,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_CollectionWithEnumItems_ReturnSchemaWithRefForItems()
     {
         var type = typeof(IEnumerable<Enum>);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -71,14 +72,14 @@ internal class OpenRpcSchemaGeneratorTests
             .Type(SchemaValueType.Array)
             .Items(new JsonSchemaBuilder()
                 .Ref($"#/components/schemas/{expectedTypeName}")
-                .Build())
-            .Build();
+                .BuildWithoutUri())
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -87,7 +88,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_CollectionWithItemsWithProperties_ReturnSchemaWithRefForItems()
     {
         var type = typeof(IEnumerable<TypeWithProperties>);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -96,8 +97,8 @@ internal class OpenRpcSchemaGeneratorTests
             .Type(SchemaValueType.Array)
             .Items(new JsonSchemaBuilder()
                 .Ref($"#/components/schemas/{expectedTypeName}")
-                .Build())
-            .Build();
+                .BuildWithoutUri())
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedAnotherTypeName = $"{MethodName} {nameof(AnotherTypeWithProperties)}";
         var expectedRegistrations = new Dictionary<string, JsonSchema>
@@ -106,21 +107,21 @@ internal class OpenRpcSchemaGeneratorTests
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().Build(),
-                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().Build(),
-                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").Build(),
-                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").Build()
+                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().BuildWithoutUri(),
+                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().BuildWithoutUri(),
+                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").BuildWithoutUri(),
+                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").BuildWithoutUri()
                 })
                 .Required("int_property", "string_property", "nested_property", "another_property")
-                .Build(),
+                .BuildWithoutUri(),
             [expectedAnotherTypeName] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().Build()
+                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().BuildWithoutUri()
                 })
                 .Required("bool_property")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -129,20 +130,20 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_Enum_ReturnRef()
     {
         var type = typeof(Enum);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName}")
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -151,20 +152,20 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_NullableEnum_ReturnRef()
     {
         var type = typeof(Enum?);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                                  .Enum("one", "two")
-                                 .Build()
+                                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -179,7 +180,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
             .FromType<string>()
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>();
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -195,7 +196,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
             .FromType<CustomSimpleType>()
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>();
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -205,14 +206,14 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithProperties_ReturnRef()
     {
         var type = typeof(TypeWithProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName}")
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedAnotherTypeName = $"{MethodName} {nameof(AnotherTypeWithProperties)}";
         var expectedRegistrations = new Dictionary<string, JsonSchema>
@@ -221,21 +222,21 @@ internal class OpenRpcSchemaGeneratorTests
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().Build(),
-                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().Build(),
-                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").Build(),
-                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").Build()
+                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().BuildWithoutUri(),
+                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().BuildWithoutUri(),
+                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").BuildWithoutUri(),
+                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").BuildWithoutUri()
                 })
                 .Required("int_property", "string_property", "nested_property", "another_property")
-                .Build(),
+                .BuildWithoutUri(),
             [expectedAnotherTypeName] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().Build()
+                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().BuildWithoutUri()
                 })
                 .Required("bool_property")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -244,14 +245,14 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithSomeNullableProperties_ReturnRef()
     {
         var type = typeof(TypeWithSomeNullableProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithSomeNullableProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName}")
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedAnotherTypeName = $"{MethodName} {nameof(AnotherTypeWithProperties)}";
         var expectedRegistrations = new Dictionary<string, JsonSchema>
@@ -260,21 +261,21 @@ internal class OpenRpcSchemaGeneratorTests
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().Build(),
-                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().Build(),
-                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").Build(),
-                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").Build()
+                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().BuildWithoutUri(),
+                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().BuildWithoutUri(),
+                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").BuildWithoutUri(),
+                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").BuildWithoutUri()
                 })
                 .Required("string_property", "nested_property")
-                .Build(),
+                .BuildWithoutUri(),
             [expectedAnotherTypeName] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().Build()
+                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().BuildWithoutUri()
                 })
                 .Required("bool_property")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -283,7 +284,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_AlreadyRegisteredEnum_DontRegisterAgain()
     {
         var type = typeof(Enum);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
         schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
@@ -291,13 +292,13 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName}")
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -306,7 +307,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_AlreadyRegisteredTypeWithProperties_DontRegisterAgain()
     {
         var type = typeof(TypeWithProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
         schemaGenerator.CreateOrRef(typeof(AnotherTypeWithProperties), MethodName, jsonSerializerOptions);
@@ -314,7 +315,7 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedTypeName = $"{MethodName} {nameof(TypeWithProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName}")
-            .Build();
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedAnotherTypeName = $"{MethodName} {nameof(AnotherTypeWithProperties)}";
         var expectedRegistrations = new Dictionary<string, JsonSchema>
@@ -323,21 +324,21 @@ internal class OpenRpcSchemaGeneratorTests
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().Build(),
-                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().Build(),
-                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").Build(),
-                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").Build()
+                    ["int_property"] = new JsonSchemaBuilder().FromType<int>().BuildWithoutUri(),
+                    ["string_property"] = new JsonSchemaBuilder().FromType<string>().BuildWithoutUri(),
+                    ["nested_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeName}").BuildWithoutUri(),
+                    ["another_property"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedAnotherTypeName}").BuildWithoutUri()
                 })
                 .Required("int_property", "string_property", "nested_property", "another_property")
-                .Build(),
+                .BuildWithoutUri(),
             [expectedAnotherTypeName] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().Build()
+                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().BuildWithoutUri()
                 })
                 .Required("bool_property")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -346,7 +347,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_AlreadyRegisteredTypeWithPropertiesWithAnotherMethodName_RegisterAgain()
     {
         var type = typeof(AnotherTypeWithProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
         var anotherMethodName = "anotherMethodName";
 
         var result1 = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
@@ -356,10 +357,10 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedTypeName2 = $"{anotherMethodName} {nameof(AnotherTypeWithProperties)}";
         var expectedSchema1 = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName1}")
-            .Build();
+            .BuildWithoutUri();
         var expectedSchema2 = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{expectedTypeName2}")
-            .Build();
+            .BuildWithoutUri();
         result1.Should().BeEquivalentTo(expectedSchema1);
         result2.Should().BeEquivalentTo(expectedSchema2);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
@@ -368,18 +369,18 @@ internal class OpenRpcSchemaGeneratorTests
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().Build()
+                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().BuildWithoutUri()
                 })
                 .Required("bool_property")
-                .Build(),
+                .BuildWithoutUri(),
             [expectedTypeName2] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
                 {
-                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().Build()
+                    ["bool_property"] = new JsonSchemaBuilder().FromType<bool>().BuildWithoutUri()
                 })
                 .Required("bool_property")
-                .Build()
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -395,13 +396,13 @@ internal class OpenRpcSchemaGeneratorTests
         var expectedTypeName = $"{MethodName} {nameof(Enum2)}";
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
         actualSchema.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                                  .Enum("Value1", "ValueValue2", "value3", "value_value4")
-                                 .Build()
+                                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -410,14 +411,14 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_DefaultSimpleTypesFormattedAsString()
     {
         var type = typeof(TypeWithSimpleProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithSimpleProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
         actualSchema.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
@@ -425,15 +426,15 @@ internal class OpenRpcSchemaGeneratorTests
                                  .Type(SchemaValueType.Object)
                                  .Properties(new Dictionary<string, JsonSchema>
                                  {
-                                     ["date_time"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).Build(),
-                                     ["date_time_offset"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).Build(),
-                                     ["date_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Date).Build(),
-                                     ["time_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Time).Build(),
-                                     ["time_span"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Duration).Build(),
-                                     ["guid"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Uuid).Build()
+                                     ["date_time"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).BuildWithoutUri(),
+                                     ["date_time_offset"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).BuildWithoutUri(),
+                                     ["date_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Date).BuildWithoutUri(),
+                                     ["time_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Time).BuildWithoutUri(),
+                                     ["time_span"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Duration).BuildWithoutUri(),
+                                     ["guid"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Uuid).BuildWithoutUri()
                                  })
                                  .Required("date_time", "date_time_offset", "date_only", "time_only", "time_span", "guid")
-                                 .Build()
+                                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -442,7 +443,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_SummariesFromResultObjectPropertiesCollectedAsTitlesOnJsonSchema()
     {
         var type = typeof(TypeWithSummaries);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -452,7 +453,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         actualSchema.Should().BeEquivalentTo(new JsonSchemaBuilder()
                                              .Ref($"#/components/schemas/{expectedTypeName}")
-                                             .Build());
+                                             .BuildWithoutUri());
 
         var actualSchemas = schemaGenerator.GetAllSchemas();
 
@@ -464,38 +465,38 @@ internal class OpenRpcSchemaGeneratorTests
                                       {
                                           ["inner_prop1"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
                                                                                    .Title("InnerProp1")
-                                                                                   .Build()
+                                                                                   .BuildWithoutUri()
                                       })
                                       .Required("inner_prop1")
-                                      .Build(),
+                                      .BuildWithoutUri(),
             [expectedTypeNameInnerEnum] = new JsonSchemaBuilder()
                                           .Enum("bla")
-                                          .Build(),
+                                          .BuildWithoutUri(),
             [expectedTypeName] = new JsonSchemaBuilder()
                                  .Type(SchemaValueType.Object)
                                  .Properties(new Dictionary<string, JsonSchema>
                                  {
                                      ["prop1"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
                                                                         .Title("Prop1")
-                                                                        .Build(),
+                                                                        .BuildWithoutUri(),
                                      ["prop2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
                                                                         .Title("Prop2")
-                                                                        .Build(),
+                                                                        .BuildWithoutUri(),
                                      ["prop3"] = new JsonSchemaBuilder().Type(SchemaValueType.Array)
                                                                         .Items(new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
-                                                                                                      .Build())
+                                                                                                      .BuildWithoutUri())
                                                                         .Title("Prop3")
-                                                                        .Build(),
+                                                                        .BuildWithoutUri(),
                                      ["prop4"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInnerEnum}")
                                                                         .Title("Prop4")
-                                                                        .Build(),
+                                                                        .BuildWithoutUri(),
                                      ["prop5"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
                                                                         .Format(Formats.Duration)
                                                                         .Title("Prop5")
-                                                                        .Build()
+                                                                        .BuildWithoutUri()
                                  })
                                  .Required("prop1", "prop2", "prop3", "prop4", "prop5")
-                                 .Build(),
+                                 .BuildWithoutUri(),
         };
 
         actualSchemas.Count.Should().Be(expectedSchemas.Count);
@@ -538,7 +539,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyParsedCorrectly_OneTypeArgument()
     {
         var type = typeof(TypeWithGenericProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -550,7 +551,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
@@ -558,42 +559,42 @@ internal class OpenRpcSchemaGeneratorTests
         {
             [expectedFirstEnumTypeName] = new JsonSchemaBuilder()
                                           .Enum("type_with_generic_properties_first_enum")
-                                          .Build(),
+                                          .BuildWithoutUri(),
             [expectedSecondEnumTypeName] = new JsonSchemaBuilder()
                                            .Enum("type_with_generic_properties_second_enum")
-                                           .Build(),
+                                           .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
                                             .Type(SchemaValueType.Object)
                                             .Properties(new Dictionary<string, JsonSchema>
                                             {
                                                 ["generic_property"] = new JsonSchemaBuilder()
                                                                        .Ref($"#/components/schemas/{expectedFirstEnumTypeName}")
-                                                                       .Build()
+                                                                       .BuildWithoutUri()
                                             })
                                             .Required("generic_property")
-                                            .Build(),
+                                            .BuildWithoutUri(),
             [expectedProperty2Name] = new JsonSchemaBuilder()
                                             .Type(SchemaValueType.Object)
                                             .Properties(new Dictionary<string, JsonSchema>
                                             {
                                                 ["generic_property"] = new JsonSchemaBuilder()
                                                                        .Ref($"#/components/schemas/{expectedSecondEnumTypeName}")
-                                                                       .Build()
+                                                                       .BuildWithoutUri()
                                             })
-                                            .Build(),
+                                            .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
                                                       .Type(SchemaValueType.Object)
                                                       .Properties(new Dictionary<string, JsonSchema>
                                                       {
                                                           ["property1"] = new JsonSchemaBuilder()
                                                                           .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                                          .Build(),
+                                                                          .BuildWithoutUri(),
                                                           ["property2"] = new JsonSchemaBuilder()
                                                                           .Ref($"#/components/schemas/{expectedProperty2Name}")
-                                                                          .Build()
+                                                                          .BuildWithoutUri()
                                                       })
                                                       .Required("property1", "property2")
-                                                      .Build()
+                                                      .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -602,7 +603,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithSomeNullableGenericPropertiesHasCorrectRequiredState_Prop1Optional_Prop2Required()
     {
         var type = typeof(TypeWithSomeNullableGenericProperties);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -614,7 +615,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
@@ -622,42 +623,42 @@ internal class OpenRpcSchemaGeneratorTests
         {
             [expectedFirstEnumTypeName] = new JsonSchemaBuilder()
                                           .Enum("type_with_generic_properties_first_enum")
-                                          .Build(),
+                                          .BuildWithoutUri(),
             [expectedSecondEnumTypeName] = new JsonSchemaBuilder()
                                            .Enum("type_with_generic_properties_second_enum")
-                                           .Build(),
+                                           .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
                                             .Type(SchemaValueType.Object)
                                             .Properties(new Dictionary<string, JsonSchema>
                                             {
                                                 ["generic_property"] = new JsonSchemaBuilder()
                                                                        .Ref($"#/components/schemas/{expectedFirstEnumTypeName}")
-                                                                       .Build()
+                                                                       .BuildWithoutUri()
                                             })
                                             .Required("generic_property")
-                                            .Build(),
+                                            .BuildWithoutUri(),
             [expectedProperty2Name] = new JsonSchemaBuilder()
                                             .Type(SchemaValueType.Object)
                                             .Properties(new Dictionary<string, JsonSchema>
                                             {
                                                 ["generic_property"] = new JsonSchemaBuilder()
                                                                        .Ref($"#/components/schemas/{expectedSecondEnumTypeName}")
-                                                                       .Build()
+                                                                       .BuildWithoutUri()
                                             })
-                                            .Build(),
+                                            .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
                                                       .Type(SchemaValueType.Object)
                                                       .Properties(new Dictionary<string, JsonSchema>
                                                       {
                                                           ["property1"] = new JsonSchemaBuilder()
                                                                           .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                                          .Build(),
+                                                                          .BuildWithoutUri(),
                                                           ["property2"] = new JsonSchemaBuilder()
                                                                           .Ref($"#/components/schemas/{expectedProperty2Name}")
-                                                                          .Build()
+                                                                          .BuildWithoutUri()
                                                       })
                                                       .Required("property2")
-                                                      .Build()
+                                                      .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -666,7 +667,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyParsedCorrectly_TwoTypeArgument()
     {
         var type = typeof(TypeWithGenericTwoTypesProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -675,7 +676,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
@@ -687,23 +688,23 @@ internal class OpenRpcSchemaGeneratorTests
                                        {
                                            ["generic_property1"] = new JsonSchemaBuilder()
                                                                .Type(SchemaValueType.String)
-                                                               .Build(),
+                                                               .BuildWithoutUri(),
                                            ["generic_property2"] = new JsonSchemaBuilder()
                                                                 .Type(SchemaValueType.Boolean)
-                                                                .Build()
+                                                                .BuildWithoutUri()
                                        })
                                        .Required("generic_property1", "generic_property2")
-                                       .Build(),
+                                       .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
                                                             .Type(SchemaValueType.Object)
                                                             .Properties(new Dictionary<string, JsonSchema>
                                                             {
                                                                 ["property1"] = new JsonSchemaBuilder()
                                                                                 .Ref($"#/components/schemas/{expectedProperty1TypeName}")
-                                                                                .Build()
+                                                                                .BuildWithoutUri()
                                                             })
                                                             .Required("property1")
-                                                            .Build()
+                                                            .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -712,7 +713,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithSomeNullableGenericPropertiesHasCorrectRequiredState_AllOptional()
     {
         var type = typeof(TypeWithNullableGenericTwoTypesProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -721,7 +722,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
@@ -733,21 +734,21 @@ internal class OpenRpcSchemaGeneratorTests
                                        {
                                            ["generic_property1"] = new JsonSchemaBuilder()
                                                                .Type(SchemaValueType.String)
-                                                               .Build(),
+                                                               .BuildWithoutUri(),
                                            ["generic_property2"] = new JsonSchemaBuilder()
                                                                 .Type(SchemaValueType.Boolean)
-                                                                .Build()
+                                                                .BuildWithoutUri()
                                        })
-                                       .Build(),
+                                       .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
                                                             .Type(SchemaValueType.Object)
                                                             .Properties(new Dictionary<string, JsonSchema>
                                                             {
                                                                 ["property1"] = new JsonSchemaBuilder()
                                                                                 .Ref($"#/components/schemas/{expectedProperty1TypeName}")
-                                                                                .Build()
+                                                                                .BuildWithoutUri()
                                                             })
-                                                            .Build()
+                                                            .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -756,7 +757,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyParsedCorrectly_ChildGeneric()
     {
         var type = typeof(TypeWithChildGenericTypyProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -766,7 +767,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
@@ -778,32 +779,33 @@ internal class OpenRpcSchemaGeneratorTests
                                                       {
                                                           ["generic_property"] = new JsonSchemaBuilder()
                                                                                  .Type(SchemaValueType.Boolean)
-                                                                                 .Build()
+                                                                                 .BuildWithoutUri()
                                                       })
-                                                      .Required("generic_property"),
+                                                      .Required("generic_property")
+                                                      .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
                                       .Type(SchemaValueType.Object)
                                       .Properties(new Dictionary<string, JsonSchema>
                                       {
                                           ["generic_property1"] = new JsonSchemaBuilder()
                                                                   .Type(SchemaValueType.String)
-                                                                  .Build(),
+                                                                  .BuildWithoutUri(),
                                           ["generic_property2"] = new JsonSchemaBuilder()
                                                                   .Ref($"#/components/schemas/{expectedProperty1ChildGenericTypeName}")
-                                                                  .Build()
+                                                                  .BuildWithoutUri()
                                       })
                                       .Required("generic_property1", "generic_property2")
-                                      .Build(),
+                                      .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
                                        .Type(SchemaValueType.Object)
                                        .Properties(new Dictionary<string, JsonSchema>
                                        {
                                            ["property1"] = new JsonSchemaBuilder()
                                                            .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                           .Build()
+                                                           .BuildWithoutUri()
                                        })
                                        .Required("property1")
-                                       .Build()
+                                       .BuildWithoutUri()
         };
 
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -813,7 +815,7 @@ internal class OpenRpcSchemaGeneratorTests
     public void CreateOrRef_TypeWithGenericPropertyHasCorrectRequiredState_ChildGenericNullable()
     {
         var type = typeof(TypeWithNullableChildGenericTypyProperty);
-        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
@@ -823,7 +825,7 @@ internal class OpenRpcSchemaGeneratorTests
 
         var expectedSchema = new JsonSchemaBuilder()
                              .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .Build();
+                             .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
@@ -835,32 +837,33 @@ internal class OpenRpcSchemaGeneratorTests
                                                       {
                                                           ["generic_property"] = new JsonSchemaBuilder()
                                                                                  .Type(SchemaValueType.Boolean)
-                                                                                 .Build()
+                                                                                 .BuildWithoutUri()
                                                       })
-                                                      .Required("generic_property"),
+                                                      .Required("generic_property")
+                                                      .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
                                       .Type(SchemaValueType.Object)
                                       .Properties(new Dictionary<string, JsonSchema>
                                       {
                                           ["generic_property1"] = new JsonSchemaBuilder()
                                                                   .Type(SchemaValueType.String)
-                                                                  .Build(),
+                                                                  .BuildWithoutUri(),
                                           ["generic_property2"] = new JsonSchemaBuilder()
                                                                   .Ref($"#/components/schemas/{expectedProperty1ChildGenericTypeName}")
-                                                                  .Build()
+                                                                  .BuildWithoutUri()
                                       })
                                       .Required("generic_property1")
-                                      .Build(),
+                                      .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
                                        .Type(SchemaValueType.Object)
                                        .Properties(new Dictionary<string, JsonSchema>
                                        {
                                            ["property1"] = new JsonSchemaBuilder()
                                                            .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                           .Build()
+                                                           .BuildWithoutUri()
                                        })
                                        .Required("property1")
-                                       .Build()
+                                       .BuildWithoutUri()
         };
 
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -884,15 +887,15 @@ internal class OpenRpcSchemaGeneratorTests
         value_value4
     }
 
-    private record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
+    private sealed record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
 
-    private record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
+    private sealed record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
 
-    private record AnotherTypeWithProperties(bool BoolProperty);
+    private sealed record AnotherTypeWithProperties(bool BoolProperty);
 
-    private record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
+    private sealed record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
 
-    private class TypeWithSummaries
+    private sealed class TypeWithSummaries
     {
         /// <summary>
         /// Prop1
@@ -919,7 +922,7 @@ internal class OpenRpcSchemaGeneratorTests
         /// </summary>
         public TimeSpan Prop5 { get; set; }
     }
-    private class TypeWithSummariesInner
+    private sealed class TypeWithSummariesInner
     {
         /// <summary>
         /// InnerProp1
@@ -931,15 +934,15 @@ internal class OpenRpcSchemaGeneratorTests
         Bla
     }
 
-    private record CustomSimpleType;
+    private sealed record CustomSimpleType;
 
-    private class TypeWithGenericProperties
+    private sealed class TypeWithGenericProperties
     {
         public GenericOneType<TypeWithGenericPropertiesFirstEnum> Property1 { get; set; }
         public GenericOneType<TypeWithGenericPropertiesSecondEnum?> Property2 { get; set; }
     }
 
-    private class TypeWithSomeNullableGenericProperties
+    private sealed class TypeWithSomeNullableGenericProperties
     {
         public GenericOneType<TypeWithGenericPropertiesFirstEnum>? Property1 { get; set; }
         public GenericOneType<TypeWithGenericPropertiesSecondEnum?> Property2 { get; set; }
@@ -955,33 +958,33 @@ internal class OpenRpcSchemaGeneratorTests
         TypeWithGenericPropertiesSecondEnum
     }
 
-    private class GenericOneType<T>
+    private sealed class GenericOneType<T>
     {
         public T GenericProperty { get; set; }
     }
 
-    private class TypeWithGenericTwoTypesProperty
+    private sealed class TypeWithGenericTwoTypesProperty
     {
         public GenericTwoType<string, bool> Property1 { get; set; }
     }
 
-    private class TypeWithNullableGenericTwoTypesProperty
+    private sealed class TypeWithNullableGenericTwoTypesProperty
     {
         public GenericTwoType<string?, bool?>? Property1 { get; set; }
     }
 
-    private class GenericTwoType<T,U>
+    private sealed class GenericTwoType<T,U>
     {
         public T GenericProperty1 { get; set; }
         public U GenericProperty2 { get; set; }
     }
 
-    private class TypeWithChildGenericTypyProperty
+    private sealed class TypeWithChildGenericTypyProperty
     {
         public GenericTwoType<string, GenericOneType<bool>> Property1 { get; set; }
     }
 
-    private class TypeWithNullableChildGenericTypyProperty
+    private sealed class TypeWithNullableChildGenericTypyProperty
     {
         public GenericTwoType<string, GenericOneType<bool>?> Property1 { get; set; }
     }

@@ -17,7 +17,7 @@ using Tochka.JsonRpc.Common.Models.Response;
 namespace Tochka.JsonRpc.Swagger.Tests;
 
 [TestFixture]
-internal class JsonRpcPropertiesFilterTests
+public class JsonRpcPropertiesFilterTests
 {
     private JsonRpcPropertiesFilter propertiesFilter;
 
@@ -412,7 +412,7 @@ internal class JsonRpcPropertiesFilterTests
     private const string MethodName = "method";
 
     [JsonRpcTypeMetadata(typeof(object), MethodName)]
-    private record CallWithMetadata(string Jsonrpc, string Method) : ICall
+    private sealed record CallWithMetadata(string Jsonrpc, string Method) : ICall
     {
         public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions) => throw new NotImplementedException();
     }

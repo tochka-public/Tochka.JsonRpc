@@ -13,7 +13,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 
 namespace Tochka.JsonRpc.Server.Tests.Integration;
 
-internal class BatchTests : IntegrationTestsBase<Program>
+internal sealed class BatchTests : IntegrationTestsBase<Program>
 {
     private Mock<IResponseProvider> responseProviderMock;
     private Mock<IRequestValidator> requestValidatorMock;
@@ -2124,7 +2124,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task DefaultObjectParams_NullParams_SetNull()
+    public async Task DefaultObjectParams_NullParams_SetDefault()
     {
         const string requestJson = """
             [
@@ -2142,7 +2142,7 @@ internal class BatchTests : IntegrationTestsBase<Program>
                 }
             ]
             """;
-        object? expectedRequestData = null;
+        object? expectedRequestData = "123";
         var responseData = TestData.Plain;
         var expectedResponseJson = $$"""
             [

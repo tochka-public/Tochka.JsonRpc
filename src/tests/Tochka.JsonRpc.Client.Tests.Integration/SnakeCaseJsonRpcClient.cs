@@ -8,7 +8,7 @@ using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Client.Tests.Integration;
 
-internal class SnakeCaseJsonRpcClient : JsonRpcClientBase
+public class SnakeCaseJsonRpcClient : JsonRpcClientBase
 {
     public override JsonSerializerOptions DataJsonSerializerOptions => JsonRpcSerializerOptions.SnakeCase;
 

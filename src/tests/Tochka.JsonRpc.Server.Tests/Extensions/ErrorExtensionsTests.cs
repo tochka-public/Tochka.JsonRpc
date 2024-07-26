@@ -11,7 +11,7 @@ using Tochka.JsonRpc.Server.Extensions;
 namespace Tochka.JsonRpc.Server.Tests.Extensions;
 
 [TestFixture]
-internal class ErrorExtensionsTests
+public class ErrorExtensionsTests
 {
     [Test]
     public void ThrowAsException_ThrowJsonRpcErrorExceptionWithError()

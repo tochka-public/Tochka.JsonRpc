@@ -15,7 +15,7 @@ using Tochka.JsonRpc.TestUtils;
 namespace Tochka.JsonRpc.Server.Tests.Binding;
 
 [TestFixture]
-internal class JsonRpcParameterBinderTests
+public class JsonRpcParameterBinderTests
 {
     private JsonRpcParameterBinder parameterBinder;
 

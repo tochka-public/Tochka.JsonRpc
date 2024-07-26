@@ -9,7 +9,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Services;
 
 /// <inheritdoc />
-internal class JsonRpcRequestValidator : IJsonRpcRequestValidator
+internal partial class JsonRpcRequestValidator : IJsonRpcRequestValidator
 {
     private readonly TemplateMatcher templateMatcher;
 
@@ -68,5 +68,8 @@ internal class JsonRpcRequestValidator : IJsonRpcRequestValidator
     }
 
     // internal for tests
-    internal static readonly Regex RouteWithWildcardSuffixRegex = new(@"^.*?\{\*.*?}/?$"); // "smth/{*smth}" or "smth/{*smth}/"
+    internal static readonly Regex RouteWithWildcardSuffixRegex = RouteWithWildcardSuffix(); // "smth/{*smth}" or "smth/{*smth}/"
+
+    [GeneratedRegex(@"^.*?\{\*.*?}/?$")]
+    private static partial Regex RouteWithWildcardSuffix();
 }

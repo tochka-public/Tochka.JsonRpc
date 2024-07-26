@@ -10,7 +10,7 @@ using Tochka.JsonRpc.TestUtils;
 namespace Tochka.JsonRpc.Common.Tests.Converters;
 
 [TestFixture]
-internal class CallConverterTests
+public class CallConverterTests
 {
     [Test]
     public void Serialize_UntypedRequest()

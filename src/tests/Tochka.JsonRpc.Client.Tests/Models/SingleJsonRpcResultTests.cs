@@ -16,7 +16,7 @@ using Tochka.JsonRpc.TestUtils;
 namespace Tochka.JsonRpc.Client.Tests.Models;
 
 [TestFixture]
-internal class SingleJsonRpcResultTests
+public class SingleJsonRpcResultTests
 {
     private Mock<IJsonRpcCallContext> callContextMock;
     private JsonSerializerOptions headersJsonSerializerOptions;

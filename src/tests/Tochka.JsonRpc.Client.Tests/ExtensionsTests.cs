@@ -13,7 +13,7 @@ using Tochka.JsonRpc.Client.Tests.TestHelpers;
 namespace Tochka.JsonRpc.Client.Tests;
 
 [TestFixture]
-internal class ExtensionsTests
+public class ExtensionsTests
 {
     [Test]
     public void AddJsonRpcClientWithInterface_RegisterServices()

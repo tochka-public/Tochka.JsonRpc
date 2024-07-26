@@ -15,7 +15,7 @@ using Tochka.JsonRpc.Server.Routing;
 namespace Tochka.JsonRpc.Server.Tests.Routing;
 
 [TestFixture]
-internal class JsonRpcMatcherPolicyTests
+public class JsonRpcMatcherPolicyTests
 {
     private JsonRpcMatcherPolicy matcherPolicy;
 

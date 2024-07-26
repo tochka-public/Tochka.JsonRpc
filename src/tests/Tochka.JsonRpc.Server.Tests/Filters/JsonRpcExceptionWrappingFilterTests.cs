@@ -18,7 +18,7 @@ using Tochka.JsonRpc.Server.Services;
 namespace Tochka.JsonRpc.Server.Tests.Filters;
 
 [TestFixture]
-internal class JsonRpcExceptionWrappingFilterTests
+public class JsonRpcExceptionWrappingFilterTests
 {
     private Mock<IJsonRpcErrorFactory> errorFactoryMock;
     private JsonRpcExceptionWrappingFilter exceptionWrappingFilter;

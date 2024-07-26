@@ -20,7 +20,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests;
 
 [TestFixture]
-internal class JsonRpcMiddlewareTests
+public class JsonRpcMiddlewareTests
 {
     private Mock<RequestDelegate> nextMock;
     private Mock<IJsonRpcRequestHandler> requestHandlerMock;

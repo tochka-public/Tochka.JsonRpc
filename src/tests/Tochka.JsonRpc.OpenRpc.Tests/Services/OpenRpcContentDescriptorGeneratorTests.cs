@@ -14,7 +14,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-internal class OpenRpcContentDescriptorGeneratorTests
+public class OpenRpcContentDescriptorGeneratorTests
 {
     private Mock<IOpenRpcSchemaGenerator> schemaGeneratorMock;
     private OpenRpcContentDescriptorGenerator contentDescriptorGenerator;
@@ -33,7 +33,7 @@ internal class OpenRpcContentDescriptorGeneratorTests
         var type = typeof(TypeWithXmlDocs).ToContextualType();
         var propertyNamingPolicyMock = new Mock<JsonNamingPolicy>();
         var serializedName = "serializedName";
-        propertyNamingPolicyMock.Setup(o => o.ConvertName(type.TypeName))
+        propertyNamingPolicyMock.Setup(o => o.ConvertName(type.Name))
             .Returns(serializedName)
             .Verifiable();
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = propertyNamingPolicyMock.Object };
@@ -241,13 +241,13 @@ internal class OpenRpcContentDescriptorGeneratorTests
 
     /// <summary>summary</summary>
     /// <remarks>description</remarks>
-    private record TypeWithXmlDocs;
+    private sealed record TypeWithXmlDocs;
 
     [Obsolete]
-    private record ObsoleteType;
+    private sealed record ObsoleteType;
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
-    private record TypeWithProperties
+    private sealed record TypeWithProperties
     {
         /// <summary>summary</summary>
         /// <remarks>description</remarks>

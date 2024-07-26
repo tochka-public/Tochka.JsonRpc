@@ -26,7 +26,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Filters;
 
 [TestFixture]
-internal class JsonRpcResultFilterTests
+public class JsonRpcResultFilterTests
 {
     private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private JsonRpcServerOptions options;

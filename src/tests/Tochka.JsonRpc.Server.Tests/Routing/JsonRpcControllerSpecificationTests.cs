@@ -10,7 +10,7 @@ using Tochka.JsonRpc.Server.Routing;
 namespace Tochka.JsonRpc.Server.Tests.Routing;
 
 [TestFixture]
-internal class JsonRpcControllerSpecificationTests
+public class JsonRpcControllerSpecificationTests
 {
     private JsonRpcControllerSpecification specification;
 

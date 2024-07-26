@@ -61,11 +61,8 @@ app.UseSwaggerUI(c =>
 app.UseJsonRpc();
 app.UseRouting();
 app.UseAuthorization();
-app.UseEndpoints(c =>
-{
-    c.MapControllers();
-    c.MapSwagger(); // swagger routing, alternative - UseSwagger()
-    c.MapOpenRpc(); // OpenRpc routing, alternative - UseOpenRpc()
-});
+app.MapControllers();
+app.MapSwagger(); // swagger routing, alternative - UseSwagger()
+app.MapOpenRpc(); // OpenRpc routing, alternative - UseOpenRpc()
 
 await app.RunAsync();

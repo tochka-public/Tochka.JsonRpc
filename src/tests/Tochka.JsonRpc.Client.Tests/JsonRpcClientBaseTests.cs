@@ -23,7 +23,7 @@ using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 namespace Tochka.JsonRpc.Client.Tests;
 
 [TestFixture]
-internal class JsonRpcClientBaseTests
+public class JsonRpcClientBaseTests
 {
     private Mock<JsonRpcClientBase> clientMock;
     private MockHttpMessageHandler handlerMock;

@@ -8,7 +8,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests;
 
 [TestFixture]
-internal class ServerUtilsTests
+public class ServerUtilsTests
 {
     [Test]
     public void GetDataJsonSerializerOptions_NoCustomSerializer_ReturnDefaultDataJsonSerializerOptions()

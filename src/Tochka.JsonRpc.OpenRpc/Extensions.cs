@@ -2,6 +2,7 @@
 using System.Reflection;
 using Asp.Versioning.ApiExplorer;
 using JetBrains.Annotations;
+using Json.Schema;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
@@ -118,5 +119,12 @@ public static class Extensions
         {
             throw new InvalidOperationException($"Unable to find the required services. Please add all the required services by calling '{nameof(IServiceCollection)}.{nameof(AddOpenRpc)}' in the application startup code.");
         }
+    }
+
+    public static JsonSchema BuildWithoutUri(this JsonSchemaBuilder builder)
+    {
+        var result = builder.Build();
+        result.BaseUri = null!;
+        return result;
     }
 }

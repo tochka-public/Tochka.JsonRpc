@@ -14,7 +14,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Binding;
 
 [TestFixture]
-internal class JsonRpcParamsParserTests
+public class JsonRpcParamsParserTests
 {
     private JsonRpcParamsParser paramsParser;
 

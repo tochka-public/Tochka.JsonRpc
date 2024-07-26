@@ -29,11 +29,8 @@ app.UseSwaggerUI(c =>
 });
 app.UseJsonRpc();
 app.UseRouting();
-app.UseEndpoints(static c =>
-{
-    c.MapControllers();
-    c.MapSwagger();
-    c.MapOpenRpc();
-});
+app.MapControllers();
+app.MapSwagger();
+app.MapOpenRpc();
 
 await app.RunAsync();

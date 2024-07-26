@@ -16,7 +16,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Routing;
 
 [TestFixture]
-internal class JsonRpcActionModelConventionTests
+public class JsonRpcActionModelConventionTests
 {
     private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private JsonRpcServerOptions options;

@@ -11,7 +11,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Tests.Services;
 
 [TestFixture]
-internal class JsonRpcRequestValidatorTests
+public class JsonRpcRequestValidatorTests
 {
     private JsonRpcServerOptions options;
     private JsonRpcRequestValidator validator;

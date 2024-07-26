@@ -13,12 +13,14 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Swagger.Tests;
 
 [TestFixture]
-internal class JsonRpcSchemaGeneratorTests
+public class JsonRpcSchemaGeneratorTests
 {
     private SchemaGeneratorOptions schemaGeneratorOptions;
     private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
     private JsonRpcServerOptions jsonRpcServerOptions;
     private Mock<JsonRpcSchemaGenerator> schemaGeneratorMock;
+
+    private sealed class Foo;
 
     [SetUp]
     public void Setup()
@@ -36,7 +38,7 @@ internal class JsonRpcSchemaGeneratorTests
     [Test]
     public void GenerateSchema_NoMetadata_UseDefaultDataJsonSerializerOptions()
     {
-        var modelType = Mock.Of<Type>();
+        var modelType = typeof(Foo);
         var schemaRepository = new SchemaRepository();
         var serializerOptions = jsonRpcServerOptions.DefaultDataJsonSerializerOptions;
         var generatedSchema = new OpenApiSchema();
@@ -82,5 +84,5 @@ internal class JsonRpcSchemaGeneratorTests
     private const string MethodName = "method";
 
     [JsonRpcTypeMetadata(typeof(SnakeCaseJsonSerializerOptionsProvider), MethodName)]
-    private record TypeWithMetadata;
+    private sealed record TypeWithMetadata;
 }

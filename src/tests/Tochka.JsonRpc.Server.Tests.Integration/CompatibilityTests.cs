@@ -13,7 +13,7 @@ using Tochka.JsonRpc.TestUtils.Integration;
 namespace Tochka.JsonRpc.Server.Tests.Integration;
 
 [TestFixture]
-internal class CompatibilityTests : IntegrationTestsBase<Program>
+internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
 {
     [Test]
     public async Task Authorization_NotAuthorizedButRequired_Return401()

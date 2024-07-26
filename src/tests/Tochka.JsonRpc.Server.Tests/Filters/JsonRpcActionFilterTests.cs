@@ -15,7 +15,7 @@ using Tochka.JsonRpc.Server.Filters;
 namespace Tochka.JsonRpc.Server.Tests.Filters;
 
 [TestFixture]
-internal class JsonRpcActionFilterTests
+public class JsonRpcActionFilterTests
 {
     private JsonRpcActionFilter actionFilter;
 

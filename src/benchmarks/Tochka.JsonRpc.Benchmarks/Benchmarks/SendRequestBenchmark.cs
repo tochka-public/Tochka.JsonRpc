@@ -10,7 +10,6 @@ using Tochka.JsonRpc.Benchmarks.Data;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.TestUtils;
-using OldId = Tochka.JsonRpc.V1.Common.Models.Id.StringRpcId;
 using NewId = Tochka.JsonRpc.Common.Models.Id.StringRpcId;
 
 namespace Tochka.JsonRpc.Benchmarks.Benchmarks;
@@ -33,7 +32,6 @@ public class SendRequestBenchmark
     [ParamsSource(nameof(ResponseKeys))]
     public string Response { get; set; }
 
-    private readonly OldId oldId = new(Id.ToString());
     private readonly NewId newId = new(Id.ToString());
     private readonly RpcId edjCaseId = new(Id.ToString());
 
@@ -41,7 +39,6 @@ public class SendRequestBenchmark
     private Dictionary<string, object?> edjCaseData;
 
     private MockHttpMessageHandler handlerMock;
-    private OldJsonRpcClient oldClient;
     private NewJsonRpcClient newClient;
     private RpcClient edjCaseClient;
 
@@ -56,7 +53,6 @@ public class SendRequestBenchmark
         handlerMock.When($"{Constants.BaseUrl}{Responses.PlainKey}")
             .Respond(static _ => new StringContent(PlainResponse, Encoding.UTF8, "application/json"));
 
-        oldClient = new OldJsonRpcClient(handlerMock.ToHttpClient());
         newClient = new NewJsonRpcClient(handlerMock.ToHttpClient());
         var httpClientFactoryMock = new Mock<IHttpClientFactory>();
         httpClientFactoryMock.Setup(static f => f.CreateClient(It.IsAny<string>()))
@@ -80,13 +76,6 @@ public class SendRequestBenchmark
         var response = await newClient.Send(Response, request, CancellationToken.None);
         var responseModel = await response.Content.ReadFromJsonAsync<SimpleResponse<TestData>>(JsonRpcSerializerOptions.SnakeCase, CancellationToken.None);
         return responseModel.Result;
-    }
-
-    [Benchmark]
-    public async Task<TestData> Old()
-    {
-        var response = await oldClient.SendRequest(Response, oldId, Method, Data, CancellationToken.None);
-        return response.GetResponseOrThrow<TestData>();
     }
 
     [Benchmark]
