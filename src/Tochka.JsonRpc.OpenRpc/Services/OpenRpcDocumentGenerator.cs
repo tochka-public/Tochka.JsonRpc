@@ -129,7 +129,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
 
         controllerName = serverOptions.DefaultDataJsonSerializerOptions.ConvertName(controllerName);
         return tags.TryGetValue(controllerName, out _)
-            ? new List<JsonSchema> { new JsonSchemaBuilder().Ref($"#/components/tags/{controllerName}").Build() }
+            ? new List<JsonSchema> { new JsonSchemaBuilder().Ref($"#/components/tags/{controllerName}").BuildWithoutUri() }
             : null;
     }
 

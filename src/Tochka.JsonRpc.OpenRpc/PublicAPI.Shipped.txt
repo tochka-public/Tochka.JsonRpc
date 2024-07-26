@@ -229,3 +229,4 @@ Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.CreateOrRef(System.Type! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.GetAllSchemas() -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>!
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.OpenRpcSchemaGenerator() -> void
+static Tochka.JsonRpc.OpenRpc.Extensions.BuildWithoutUri(this Json.Schema.JsonSchemaBuilder! builder) -> Json.Schema.JsonSchema!

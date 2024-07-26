@@ -89,7 +89,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
                    .Type(SchemaValueType.Array)
                    .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
                    .TryAppendTitle(propertySummary)
-                   .Build();
+                   .BuildWithoutUri();
             // returning schema itself if it's collection
             return collectionScheme;
         }
@@ -98,7 +98,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         {
             var enumSchema = new JsonSchemaBuilder()
                              .Enum(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName))
-                             .Build();
+                             .BuildWithoutUri();
             RegisterSchema(typeName, enumSchema);
             // returning ref if it's enum or regular type with properties
             return CreateRefSchema(typeName, propertySummary);
@@ -107,7 +107,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         var simpleTypeSchema = new JsonSchemaBuilder()
                                .FromType(type)
                                .TryAppendTitle(propertySummary)
-                               .Build();
+                               .BuildWithoutUri();
         // can't check type.GetProperties() here because simple types have properties too
         if (simpleTypeSchema.GetProperties() == null)
         {
@@ -122,7 +122,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
                                      .Type(SchemaValueType.String)
                                      .Format(format)
                                      .TryAppendTitle(propertySummary)
-                                     .Build();
+                                     .BuildWithoutUri();
             return simpleStringSchema;
         }
 
@@ -140,7 +140,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             jsonSchemaBuilder.Required(requiredProperties);
         }
 
-        var objectSchema = jsonSchemaBuilder.Build();
+        var objectSchema = jsonSchemaBuilder.BuildWithoutUri();
         RegisterSchema(typeName, objectSchema);
         return CreateRefSchema(typeName, propertySummary);
     }
@@ -151,7 +151,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             .Ref($"#/components/schemas/{typeName}")
             .TryAppendTitle(propertySummary);
 
-        return refSchemaBuilder.Build();
+        return refSchemaBuilder.BuildWithoutUri();
     }
 
     private void RegisterSchema(string key, JsonSchema schema)
