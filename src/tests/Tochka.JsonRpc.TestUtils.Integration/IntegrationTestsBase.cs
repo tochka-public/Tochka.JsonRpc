@@ -28,5 +28,6 @@ public abstract class IntegrationTestsBase<TEntryPoint>
 
     protected virtual void SetupServices(IServiceCollection services)
     {
+        // override to add services
     }
 }
