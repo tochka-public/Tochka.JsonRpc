@@ -31,13 +31,15 @@ public class JsonRpcParameterModelConventionTests
         parameterModelConvention = new JsonRpcParameterModelConvention(serializerOptionsProviders, Options.Create(options));
     }
 
+    private sealed class Foo;
+
     [Test]
     public void Apply_ActionNotFromJsonRpcController_DoNothing()
     {
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         parameterInfo.Setup(static i => i.ParameterType)
-            .Returns(Mock.Of<Type>());
+            .Returns(typeof(Foo));
         var parameterModel = new ParameterModel(parameterInfo.Object, new List<object>())
         {
             Action = new ActionModel(Mock.Of<MethodInfo>(), new List<object>())
@@ -59,7 +61,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         parameterInfo.Setup(static i => i.ParameterType)
-            .Returns(Mock.Of<Type>());
+            .Returns(typeof(Foo));
         var controllerAttributes = new List<object>
         {
             new JsonRpcControllerAttribute()
@@ -90,7 +92,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         parameterInfo.Setup(static i => i.ParameterType)
-            .Returns(Mock.Of<Type>());
+            .Returns(typeof(Foo));
         var controllerAttributes = new List<object>
         {
             new JsonRpcControllerAttribute()
@@ -122,7 +124,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         parameterInfo.Setup(static i => i.ParameterType)
-            .Returns(Mock.Of<Type>());
+            .Returns(typeof(Foo));
         var controllerAttributes = new List<object>
         {
             new JsonRpcControllerAttribute()
@@ -148,7 +150,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         var position = 123;
-        var type = Mock.Of<Type>();
+        var type = typeof(Foo);
         parameterInfo.Setup(static i => i.ParameterType)
             .Returns(type);
         parameterInfo.Setup(static i => i.Position)
@@ -187,7 +189,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         var position = 123;
-        var type = Mock.Of<Type>();
+        var type = typeof(Foo);
         parameterInfo.Setup(static i => i.ParameterType)
             .Returns(type);
         parameterInfo.Setup(static i => i.Position)
@@ -228,7 +230,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         var position = 123;
-        var type = Mock.Of<Type>();
+        var type = typeof(Foo);
         parameterInfo.Setup(static i => i.ParameterType)
             .Returns(type);
         parameterInfo.Setup(static i => i.Position)
@@ -267,7 +269,7 @@ public class JsonRpcParameterModelConventionTests
         var selector = new SelectorModel();
         var parameterInfo = new Mock<ParameterInfo>();
         var position = 123;
-        var type = Mock.Of<Type>();
+        var type = typeof(Foo);
         parameterInfo.Setup(static i => i.ParameterType)
             .Returns(type);
         parameterInfo.Setup(static i => i.Position)
@@ -310,7 +312,7 @@ public class JsonRpcParameterModelConventionTests
         };
         var parameterInfo = new Mock<ParameterInfo>();
         var position = 123;
-        var type = Mock.Of<Type>();
+        var type = typeof(Foo);
         parameterInfo.Setup(static i => i.ParameterType)
             .Returns(type);
         parameterInfo.Setup(static i => i.Position)
@@ -346,7 +348,7 @@ public class JsonRpcParameterModelConventionTests
         };
         var parameterInfo = new Mock<ParameterInfo>();
         var position = 123;
-        var type = Mock.Of<Type>();
+        var type = typeof(Foo);
         parameterInfo.Setup(static i => i.ParameterType)
             .Returns(type);
         parameterInfo.Setup(static i => i.Position)

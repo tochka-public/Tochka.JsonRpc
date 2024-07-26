@@ -30,6 +30,12 @@ public class JsonRpcDescriptionProviderTests
     private JsonRpcDescriptionProvider descriptionProvider;
     private Mock<ITypeEmitter> typeEmitterMock;
 
+    private sealed class Foo;
+
+    private sealed class Bar;
+
+    private sealed class Baz;
+
     [SetUp]
     public void Setup()
     {
@@ -103,9 +109,9 @@ public class JsonRpcDescriptionProviderTests
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Foo));
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -125,9 +131,9 @@ public class JsonRpcDescriptionProviderTests
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         context.Results.First().GroupName = groupName;
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Foo));
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -148,13 +154,13 @@ public class JsonRpcDescriptionProviderTests
                 It.IsAny<Type>(),
                 It.IsAny<IReadOnlyDictionary<string, Type>>(),
                 serializerOptionsProviderType))
-            .Returns(Mock.Of<Type>)
+            .Returns(typeof(Foo))
             .Verifiable();
         typeEmitterMock.Setup(e => e.CreateResponseType(It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<Type>(),
                 serializerOptionsProviderType))
-            .Returns(Mock.Of<Type>)
+            .Returns(typeof(Bar))
             .Verifiable();
 
         descriptionProvider.OnProvidersExecuting(context);
@@ -170,11 +176,11 @@ public class JsonRpcDescriptionProviderTests
     {
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
-        var requestType = Mock.Of<Type>();
+        var requestType = typeof(Foo);
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
             .Returns(requestType);
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -201,9 +207,9 @@ public class JsonRpcDescriptionProviderTests
         context.Results.First().ParameterDescriptions.Add(parameter2);
         context.Results.First().ParameterDescriptions.Add(parameter3);
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>());
+            .Returns(typeof(Foo));
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -232,9 +238,9 @@ public class JsonRpcDescriptionProviderTests
         context.Results.First().ParameterDescriptions.Add(parameter5);
         context.Results.First().ParameterDescriptions.Add(parameter6);
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>());
+            .Returns(typeof(Foo));
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -255,8 +261,8 @@ public class JsonRpcDescriptionProviderTests
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         var arrayParameter = new ApiParameterDescription { Name = "array", Source = BindingSource.Custom };
         var defaultParameter = new ApiParameterDescription { Name = "default", Source = BindingSource.Custom };
-        var arrayParameterType = Mock.Of<Type>();
-        var defaultParameterType = Mock.Of<Type>();
+        var arrayParameterType = typeof(Foo);
+        var defaultParameterType = typeof(Bar);
         var defaultParameterOriginalName = "original";
         var parametersMetadata = new JsonRpcActionParametersMetadata
         {
@@ -274,10 +280,10 @@ public class JsonRpcDescriptionProviderTests
                 arrayParameterType,
                 It.Is<IReadOnlyDictionary<string, Type>>(static d => d.Count == 0),
                 It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>)
+            .Returns(typeof(Foo))
             .Verifiable();
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -295,8 +301,8 @@ public class JsonRpcDescriptionProviderTests
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         var objectParameter = new ApiParameterDescription { Name = "object", Source = BindingSource.Custom };
         var defaultParameter = new ApiParameterDescription { Name = "default", Source = BindingSource.Custom };
-        var objectParameterType = Mock.Of<Type>();
-        var defaultParameterType = Mock.Of<Type>();
+        var objectParameterType = typeof(Foo);
+        var defaultParameterType = typeof(Bar);
         var defaultParameterOriginalName = "original";
         var parametersMetadata = new JsonRpcActionParametersMetadata
         {
@@ -316,10 +322,10 @@ public class JsonRpcDescriptionProviderTests
                     d.ContainsKey(defaultParameterOriginalName)
                     && d[defaultParameterOriginalName] == defaultParameterType),
                 It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>)
+            .Returns(typeof(Foo))
             .Verifiable();
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -336,7 +342,7 @@ public class JsonRpcDescriptionProviderTests
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
         var defaultParameter = new ApiParameterDescription { Name = "default", Source = BindingSource.Custom };
-        var defaultParameterType = Mock.Of<Type>();
+        var defaultParameterType = typeof(Foo);
         var defaultParameterOriginalName = "original";
         var parametersMetadata = new JsonRpcActionParametersMetadata
         {
@@ -353,10 +359,10 @@ public class JsonRpcDescriptionProviderTests
                     d.ContainsKey(defaultParameterOriginalName)
                     && d[defaultParameterOriginalName] == defaultParameterType),
                 It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>)
+            .Returns(typeof(Foo))
             .Verifiable();
         typeEmitterMock.Setup(static e => e.CreateResponseType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
 
         descriptionProvider.OnProvidersExecuting(context);
 
@@ -371,11 +377,11 @@ public class JsonRpcDescriptionProviderTests
     {
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
-        var initialResponseType = new ApiResponseType { Type = Mock.Of<Type>() };
+        var initialResponseType = new ApiResponseType { Type = typeof(Foo) };
         context.Results.First().SupportedResponseTypes.Add(initialResponseType);
-        var responseType = Mock.Of<Type>();
+        var responseType = typeof(Bar);
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Baz));
         typeEmitterMock.Setup(e => e.CreateResponseType(It.IsAny<string>(),
                 It.IsAny<string>(),
                 initialResponseType.Type,
@@ -396,14 +402,16 @@ public class JsonRpcDescriptionProviderTests
         description.SupportedResponseTypes.Single().Type.Should().Be(responseType);
     }
 
+
+
     [Test]
     public void OnProvidersExecuting_DoesntHaveResponseType_WrapResponseWithObjectBaseType()
     {
         var context = GetContext();
         context.Results.First().ActionDescriptor.EndpointMetadata.Add(new JsonRpcMethodAttribute(Method));
-        var responseType = Mock.Of<Type>();
+        var responseType = typeof(Foo);
         typeEmitterMock.Setup(static e => e.CreateRequestType(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<IReadOnlyDictionary<string, Type>>(), It.IsAny<Type?>()))
-            .Returns(Mock.Of<Type>);
+            .Returns(typeof(Bar));
         typeEmitterMock.Setup(e => e.CreateResponseType(It.IsAny<string>(),
                 It.IsAny<string>(),
                 typeof(object),

@@ -20,6 +20,8 @@ public class JsonRpcSchemaGeneratorTests
     private JsonRpcServerOptions jsonRpcServerOptions;
     private Mock<JsonRpcSchemaGenerator> schemaGeneratorMock;
 
+    private sealed class Foo;
+
     [SetUp]
     public void Setup()
     {
@@ -36,7 +38,7 @@ public class JsonRpcSchemaGeneratorTests
     [Test]
     public void GenerateSchema_NoMetadata_UseDefaultDataJsonSerializerOptions()
     {
-        var modelType = Mock.Of<Type>();
+        var modelType = typeof(Foo);
         var schemaRepository = new SchemaRepository();
         var serializerOptions = jsonRpcServerOptions.DefaultDataJsonSerializerOptions;
         var generatedSchema = new OpenApiSchema();

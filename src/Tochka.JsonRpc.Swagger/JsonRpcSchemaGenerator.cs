@@ -34,7 +34,7 @@ public class JsonRpcSchemaGenerator : ISchemaGenerator
     /// <inheritdoc />
     public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null, ApiParameterRouteInfo? routeInfo = null)
     {
-        var typeMetadata = modelType.GetCustomAttributes(typeof(JsonRpcTypeMetadataAttribute), true).SingleOrDefault() as JsonRpcTypeMetadataAttribute;
+        var typeMetadata = modelType.GetCustomAttribute<JsonRpcTypeMetadataAttribute>();
         var serializerOptions = typeMetadata?.SerializerOptionsProviderType == null
             ? options.DefaultDataJsonSerializerOptions
             : ServerUtils.GetJsonSerializerOptions(serializerOptionsProviders, typeMetadata.SerializerOptionsProviderType);
