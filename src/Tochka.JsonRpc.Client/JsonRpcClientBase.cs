@@ -286,22 +286,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         }
     }
 
-    private async Task<(IJsonRpcCallContext, string)> PrepareInternalRequestContext<TParams>(string? requestUrl, Request<TParams> request,
-        CancellationToken cancellationToken) where TParams : class
-    {
-        var context = CreateContext();
-        context.WithRequestUrl(requestUrl);
-        var data = request.WithSerializedParams(DataJsonSerializerOptions);
-        context.WithSingle(data);
-        using var content = CreateHttpContent(data);
-        using var requestMessage = CreateRequestMessage(requestUrl, content, new[] { request.Method });
-        var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
-        context.WithHttpResponse(httpResponseMessage);
-        var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
-        context.WithHttpContent(httpResponseMessage.Content, contentString);
-        return (context, contentString);
-    }
-
     // internal virtual for mocking in tests
     internal virtual async Task<IBatchJsonRpcResult?> SendBatchInternal(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
     {
@@ -436,6 +420,22 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     [ExcludeFromCodeCoverage]
     protected internal virtual async Task<string> GetContent(HttpContent content, CancellationToken cancellationToken) =>
         await content.ReadAsStringAsync(cancellationToken);
+
+    private async Task<(IJsonRpcCallContext, string)> PrepareInternalRequestContext<TParams>(string? requestUrl, Request<TParams> request, CancellationToken cancellationToken)
+        where TParams : class
+    {
+        var context = CreateContext();
+        context.WithRequestUrl(requestUrl);
+        var data = request.WithSerializedParams(DataJsonSerializerOptions);
+        context.WithSingle(data);
+        using var content = CreateHttpContent(data);
+        using var requestMessage = CreateRequestMessage(requestUrl, content, new[] { request.Method });
+        var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
+        context.WithHttpResponse(httpResponseMessage);
+        var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
+        context.WithHttpContent(httpResponseMessage.Content, contentString);
+        return (context, contentString);
+    }
 
     /// <summary>
     /// Set User-Agent header

@@ -65,7 +65,7 @@ public static class Extensions
 
             c.IncludeXmlComments(xmlPath);
             c.SupportNonNullableReferenceTypes();
-            
+
             // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2505
             c.MapType<TimeSpan>(() => new OpenApiSchema
             {

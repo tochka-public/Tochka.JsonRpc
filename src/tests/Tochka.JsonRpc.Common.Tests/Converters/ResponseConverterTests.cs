@@ -22,13 +22,14 @@ public class ResponseConverterTests
 
         var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "result": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.TrimAllLines().Should().Be(expected);
     }
 
@@ -42,17 +43,18 @@ public class ResponseConverterTests
 
         var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": null
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": null
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.TrimAllLines().Should().Be(expected);
     }
 
@@ -68,13 +70,14 @@ public class ResponseConverterTests
     public void Deserialize_Response()
     {
         const string id = "id";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
@@ -88,17 +91,18 @@ public class ResponseConverterTests
         const string id = "id";
         const int errorCode = 123;
         const string errorMessage = "message";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": null
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": null
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
@@ -110,11 +114,11 @@ public class ResponseConverterTests
     public void Deserialize_NoId_Throw()
     {
         var request = """
-            {
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+                      {
+                          "result": null,
+                          "jsonrpc": "2.0"
+                      }
+                      """;
 
         var action = () => JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
@@ -125,12 +129,13 @@ public class ResponseConverterTests
     public void Deserialize_NoVersion_Throw()
     {
         const string id = "id";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "result": null
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": null
+              }
+              """;
 
         var action = () => JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
@@ -141,12 +146,13 @@ public class ResponseConverterTests
     public void Deserialize_NoResultAndError_Throw()
     {
         const string id = "id";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var action = () => JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
@@ -157,18 +163,19 @@ public class ResponseConverterTests
     public void Deserialize_BothResultAndError_Throw()
     {
         const string id = "id";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "result": null,
-                "error": {
-                    "code": 123,
-                    "message": "message",
-                    "data": null
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": null,
+                  "error": {
+                      "code": 123,
+                      "message": "message",
+                      "data": null
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var action = () => JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 

@@ -43,38 +43,6 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         return BuildSchema(clearType, clearTypeName, methodName, propertySummary, jsonSerializerOptions);
     }
 
-    private static Type TryUnwrapNullableType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
-
-    private static string GetClearTypeName(string methodName, Type clearType)
-    {
-        var clearTypeName = clearType.Name;
-        if (!clearTypeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
-        {
-            clearTypeName = $"{methodName} {clearTypeName}" + GetGenericTypeArgumentNames(clearType);
-        }
-
-        return clearTypeName;
-    }
-
-    private static string? GetGenericTypeArgumentNames(Type type)
-    {
-        if (type.GenericTypeArguments.Length > 0)
-        {
-            List<string> typeArgumentNames = new(type.GenericTypeArguments.Length);
-
-            foreach (var typeArgument in type.GenericTypeArguments)
-            {
-                var clearTypeArgument = TryUnwrapNullableType(typeArgument);
-                var clearTypeArgumentName = clearTypeArgument.Name + GetGenericTypeArgumentNames(clearTypeArgument);
-                typeArgumentNames.Add(clearTypeArgumentName);
-            }
-
-            return $"[{string.Join(',', typeArgumentNames)}]";
-        }
-
-        return null;
-    }
-
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
     {
         if (registeredSchemas.ContainsKey(typeName) || registeredSchemaKeys.Contains(typeName))
@@ -86,10 +54,10 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         if (typeof(IEnumerable).IsAssignableFrom(type) && itemType != null)
         {
             var collectionScheme = new JsonSchemaBuilder()
-                   .Type(SchemaValueType.Array)
-                   .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
-                   .TryAppendTitle(propertySummary)
-                   .BuildWithoutUri();
+                .Type(SchemaValueType.Array)
+                .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
+                .TryAppendTitle(propertySummary)
+                .BuildWithoutUri();
             // returning schema itself if it's collection
             return collectionScheme;
         }
@@ -97,17 +65,17 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         if (type.IsEnum)
         {
             var enumSchema = new JsonSchemaBuilder()
-                             .Enum(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName))
-                             .BuildWithoutUri();
+                .Enum(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName))
+                .BuildWithoutUri();
             RegisterSchema(typeName, enumSchema);
             // returning ref if it's enum or regular type with properties
             return CreateRefSchema(typeName, propertySummary);
         }
 
         var simpleTypeSchema = new JsonSchemaBuilder()
-                               .FromType(type)
-                               .TryAppendTitle(propertySummary)
-                               .BuildWithoutUri();
+            .FromType(type)
+            .TryAppendTitle(propertySummary)
+            .BuildWithoutUri();
         // can't check type.GetProperties() here because simple types have properties too
         if (simpleTypeSchema.GetProperties() == null)
         {
@@ -119,10 +87,10 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         if (defaultStringConvertedSimpleTypes.TryGetValue(type, out var format))
         {
             var simpleStringSchema = new JsonSchemaBuilder()
-                                     .Type(SchemaValueType.String)
-                                     .Format(format)
-                                     .TryAppendTitle(propertySummary)
-                                     .BuildWithoutUri();
+                .Type(SchemaValueType.String)
+                .Format(format)
+                .TryAppendTitle(propertySummary)
+                .BuildWithoutUri();
             return simpleStringSchema;
         }
 
@@ -133,8 +101,8 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         requiredPropsForSchemas.TryGetValue(typeName, out var requiredProperties);
 
         var jsonSchemaBuilder = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .Properties(propertiesSchemas);
+            .Type(SchemaValueType.Object)
+            .Properties(propertiesSchemas);
         if (requiredProperties is not null)
         {
             jsonSchemaBuilder.Required(requiredProperties);
@@ -143,15 +111,6 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         var objectSchema = jsonSchemaBuilder.BuildWithoutUri();
         RegisterSchema(typeName, objectSchema);
         return CreateRefSchema(typeName, propertySummary);
-    }
-
-    private static JsonSchema CreateRefSchema(string typeName, string? propertySummary)
-    {
-        var refSchemaBuilder = new JsonSchemaBuilder()
-            .Ref($"#/components/schemas/{typeName}")
-            .TryAppendTitle(propertySummary);
-
-        return refSchemaBuilder.BuildWithoutUri();
     }
 
     private void RegisterSchema(string key, JsonSchema schema)
@@ -205,5 +164,46 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         }
 
         requiredPropsForSchemas.TryAdd(typeName, requiredProperties);
+    }
+
+    private static Type TryUnwrapNullableType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
+
+    private static string GetClearTypeName(string methodName, Type clearType)
+    {
+        var clearTypeName = clearType.Name;
+        if (!clearTypeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
+        {
+            clearTypeName = $"{methodName} {clearTypeName}" + GetGenericTypeArgumentNames(clearType);
+        }
+
+        return clearTypeName;
+    }
+
+    private static string? GetGenericTypeArgumentNames(Type type)
+    {
+        if (type.GenericTypeArguments.Length > 0)
+        {
+            List<string> typeArgumentNames = new(type.GenericTypeArguments.Length);
+
+            foreach (var typeArgument in type.GenericTypeArguments)
+            {
+                var clearTypeArgument = TryUnwrapNullableType(typeArgument);
+                var clearTypeArgumentName = clearTypeArgument.Name + GetGenericTypeArgumentNames(clearTypeArgument);
+                typeArgumentNames.Add(clearTypeArgumentName);
+            }
+
+            return $"[{string.Join(',', typeArgumentNames)}]";
+        }
+
+        return null;
+    }
+
+    private static JsonSchema CreateRefSchema(string typeName, string? propertySummary)
+    {
+        var refSchemaBuilder = new JsonSchemaBuilder()
+            .Ref($"#/components/schemas/{typeName}")
+            .TryAppendTitle(propertySummary);
+
+        return refSchemaBuilder.BuildWithoutUri();
     }
 }

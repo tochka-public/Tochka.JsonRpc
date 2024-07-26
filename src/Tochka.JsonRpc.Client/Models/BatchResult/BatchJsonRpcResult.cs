@@ -28,6 +28,9 @@ public sealed class BatchJsonRpcResult : BatchJsonRpcResult<object>, IBatchJsonR
 [PublicAPI]
 public class BatchJsonRpcResult<TResponse> : IBatchJsonRpcResult<TResponse>
 {
+    /// <inheritdoc />
+    public IBatchJsonRpcResultAdvanced Advanced { get; init; }
+
     /// <summary>
     /// Context with all information about request and response
     /// </summary>
@@ -47,9 +50,6 @@ public class BatchJsonRpcResult<TResponse> : IBatchJsonRpcResult<TResponse>
     /// Collection of responses if call was batch
     /// </summary>
     protected readonly Dictionary<IRpcId, IResponse> Responses;
-
-    /// <inheritdoc />
-    public IBatchJsonRpcResultAdvanced Advanced { get; init; }
 
     /// <inheritdoc cref="IBatchJsonRpcResult{TResponse}" />
     public BatchJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)

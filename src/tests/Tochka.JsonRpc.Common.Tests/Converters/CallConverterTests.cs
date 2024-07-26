@@ -21,14 +21,15 @@ public class CallConverterTests
 
         var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.TrimAllLines().Should().Be(expected);
     }
 
@@ -40,13 +41,14 @@ public class CallConverterTests
 
         var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
 
-        var expected = $$"""
-            {
-                "method": "{{method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.TrimAllLines().Should().Be(expected);
     }
 
@@ -63,14 +65,15 @@ public class CallConverterTests
     {
         const string id = "id";
         const string method = "method";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
 
@@ -81,13 +84,14 @@ public class CallConverterTests
     public void Deserialize_Notification()
     {
         const string method = "method";
-        var request = $$"""
-            {
-                "method": "{{method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
 
@@ -98,13 +102,14 @@ public class CallConverterTests
     public void Deserialize_NoMethod_Throw()
     {
         const string id = "id";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "params": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var action = () => JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
 
@@ -116,13 +121,14 @@ public class CallConverterTests
     {
         const string id = "id";
         const string method = "method";
-        var request = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": null
-            }
-            """;
+        var request =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": null
+              }
+              """;
 
         var action = () => JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
 

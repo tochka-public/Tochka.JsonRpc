@@ -18,8 +18,6 @@ public static class BatchExtensions
     /// <returns>true if the object contains an element that has the specified key; otherwise, false.</returns>
     /// <exception cref="ArgumentNullException">key is null</exception>
     [ExcludeFromCodeCoverage]
-    public static bool TryGetResponse(this IReadOnlyDictionary<IRpcId, IResponse> responses,
-        IRpcId id,
-        [NotNullWhen(true)] out IResponse? response) =>
+    public static bool TryGetResponse(this IReadOnlyDictionary<IRpcId, IResponse> responses, IRpcId id, [NotNullWhen(true)] out IResponse? response) =>
         responses.TryGetValue(id, out response);
 }

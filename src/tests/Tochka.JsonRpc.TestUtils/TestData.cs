@@ -95,7 +95,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         new[] { 1, 2, 3 },
         null);
 
-    public const string PlainRequiredSnakeCaseJson = """
+    public const string PlainRequiredSnakeCaseJson =
+        """
         {
             "bool_field": true,
             "string_field": "123",
@@ -111,7 +112,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         }
         """;
 
-    public const string PlainFullSnakeCaseJson = """
+    public const string PlainFullSnakeCaseJson =
+        """
         {
             "bool_field": true,
             "string_field": "123",
@@ -129,7 +131,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         }
         """;
 
-    public const string PlainRequiredCamelCaseJson = """
+    public const string PlainRequiredCamelCaseJson =
+        """
         {
             "boolField": true,
             "stringField": "123",
@@ -145,7 +148,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         }
         """;
 
-    public const string PlainFullCamelCaseJson = """
+    public const string PlainFullCamelCaseJson =
+        """
         {
             "boolField": true,
             "stringField": "123",
@@ -182,7 +186,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
             new[] { 4, 5, 6 },
             null));
 
-    public const string NestedRequiredSnakeCaseJson = """
+    public const string NestedRequiredSnakeCaseJson =
+        """
         {
             "bool_field": true,
             "string_field": "123",
@@ -211,7 +216,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         }
         """;
 
-    public const string NestedFullSnakeCaseJson = """
+    public const string NestedFullSnakeCaseJson =
+        """
         {
             "bool_field": true,
             "string_field": "123",
@@ -243,7 +249,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         }
         """;
 
-    public const string NestedRequiredCamelCaseJson = """
+    public const string NestedRequiredCamelCaseJson =
+        """
         {
             "boolField": true,
             "stringField": "123",
@@ -272,7 +279,8 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
         }
         """;
 
-    public const string NestedFullCamelCaseJson = """
+    public const string NestedFullCamelCaseJson =
+        """
         {
             "boolField": true,
             "stringField": "123",

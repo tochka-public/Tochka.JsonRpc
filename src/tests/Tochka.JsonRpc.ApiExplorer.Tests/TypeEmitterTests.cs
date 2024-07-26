@@ -431,12 +431,5 @@ public class TypeEmitterTests
     private const string ActionFullName = "namespace.controller.action";
     private const string MethodName = "method";
 
-    // ReSharper disable once MemberCanBePrivate.Global
     public record NestedClass;
 }
-
-// ReSharper disable once MemberCanBeInternal
-
-// ReSharper disable once MemberCanBeInternal
-
-// ReSharper disable once MemberCanBeInternal

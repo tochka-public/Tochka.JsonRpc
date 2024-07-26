@@ -18,13 +18,13 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Tochka.JsonRpc.ApiExplorer\Tochka.JsonRpc.ApiExplorer.csproj" />
-      <ProjectReference Include="..\Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj" />
-      <ProjectReference Include="..\Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.csproj" />
-      <ProjectReference Include="..\Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj" />
-      <ProjectReference Include="..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
-      <ProjectReference Include="..\Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tochka.JsonRpc.ApiExplorer\Tochka.JsonRpc.ApiExplorer.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
+    <ProjectReference Include="..\Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj" />
+  </ItemGroup>
 
 </Project>

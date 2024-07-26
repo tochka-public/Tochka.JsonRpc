@@ -32,13 +32,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -51,13 +52,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -70,13 +72,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -87,13 +90,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -106,15 +110,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{data[0]}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{data[0]}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -127,15 +132,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{data[0]}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{data[0]}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -148,13 +154,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -167,13 +174,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": {{TestData.PlainFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -186,15 +194,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -207,15 +216,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -228,15 +238,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -249,15 +260,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -270,13 +282,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": {{TestData.NestedFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -289,13 +302,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": {{TestData.NestedFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -308,15 +322,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -329,15 +344,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -350,15 +366,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -371,15 +388,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -397,14 +415,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -418,14 +437,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -439,14 +459,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -458,14 +479,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -477,14 +499,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": {{id}},
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": {{id}},
+                      "method": "{{Method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -496,14 +519,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -514,14 +538,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": null,
-                "method": "{{Method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": null,
+                      "method": "{{Method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -535,16 +560,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{data[0]}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{data[0]}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -558,16 +584,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{data[0]}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{data[0]}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -581,14 +608,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -602,14 +630,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.PlainFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": {{TestData.PlainFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -623,16 +652,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -646,16 +676,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -669,16 +700,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -692,16 +724,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.PlainFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.PlainFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -715,14 +748,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": {{TestData.NestedFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -736,14 +770,15 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": {{TestData.NestedFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": {{TestData.NestedFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -757,16 +792,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -780,16 +816,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -803,16 +840,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -826,16 +864,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{Method}}",
-                "params": [
-                    {{TestData.NestedFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": [
+                          {{TestData.NestedFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -852,13 +891,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -871,13 +911,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": [],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": [],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -888,13 +929,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -908,13 +950,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": {{id}},
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": {{id}},
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -928,13 +971,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -948,12 +992,12 @@ public class SerializationTests
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
         var expected = """
-            {
-                "id": null,
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+                       {
+                           "id": null,
+                           "result": {},
+                           "jsonrpc": "2.0"
+                       }
+                       """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -966,13 +1010,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {{data}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {{data}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -985,15 +1030,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": [
-                    {{data[0]}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": [
+                          {{data[0]}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1007,15 +1053,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {
-                    "error": "{{error}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {
+                          "error": "{{error}}"
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1028,13 +1075,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {{TestData.PlainFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1047,13 +1095,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {{TestData.PlainFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {{TestData.PlainFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1066,15 +1115,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": [
-                    {{TestData.PlainFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": [
+                          {{TestData.PlainFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1087,15 +1137,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": [
-                    {{TestData.PlainFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": [
+                          {{TestData.PlainFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1108,13 +1159,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {{TestData.NestedFullSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {{TestData.NestedFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1127,13 +1179,14 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": {{TestData.NestedFullCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": {{TestData.NestedFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1146,15 +1199,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": [
-                    {{TestData.NestedFullSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": [
+                          {{TestData.NestedFullSnakeCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1167,15 +1221,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "result": [
-                    {{TestData.NestedFullCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "result": [
+                          {{TestData.NestedFullCamelCaseJson}}
+                      ],
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1191,17 +1246,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {}
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {}
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1217,17 +1273,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": []
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": []
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1241,17 +1298,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": null
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": null
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1267,17 +1325,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{data}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {{data}}
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1293,19 +1352,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{data[0]}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": [
+                              {{data[0]}}
+                          ]
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1322,19 +1382,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {
-                        "result": "{{result}}"
-                    }
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {
+                              "result": "{{result}}"
+                          }
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1350,17 +1411,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainFullSnakeCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {{TestData.PlainFullSnakeCaseJson}}
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1376,17 +1438,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainFullCamelCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {{TestData.PlainFullCamelCaseJson}}
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1402,19 +1465,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.PlainFullSnakeCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": [
+                              {{TestData.PlainFullSnakeCaseJson}}
+                          ]
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1430,19 +1494,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.PlainFullCamelCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": [
+                              {{TestData.PlainFullCamelCaseJson}}
+                          ]
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1458,17 +1523,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.NestedFullSnakeCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {{TestData.NestedFullSnakeCaseJson}}
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1484,17 +1550,18 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.NestedFullCamelCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": {{TestData.NestedFullCamelCaseJson}}
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1510,19 +1577,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.NestedFullSnakeCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": [
+                              {{TestData.NestedFullSnakeCaseJson}}
+                          ]
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1538,19 +1606,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            {
-                "id": "{{Id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.NestedFullCamelCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{Id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}",
+                          "data": [
+                              {{TestData.NestedFullCamelCaseJson}}
+                          ]
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1570,15 +1639,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1594,15 +1664,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1618,15 +1689,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1642,15 +1714,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1667,20 +1740,21 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      },
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1697,16 +1771,17 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{id}}",
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1725,22 +1800,23 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{id1}}",
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      },
+                      {
+                          "id": "{{id2}}",
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1758,21 +1834,22 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(batch, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id}}",
-                    "method": "{{Method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      },
+                      {
+                          "id": "{{id}}",
+                          "method": "{{Method}}",
+                          "params": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1793,15 +1870,16 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{Id}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{Id}}",
+                          "result": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1821,20 +1899,21 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{id1}}",
+                          "result": {},
+                          "jsonrpc": "2.0"
+                      },
+                      {
+                          "id": "{{id2}}",
+                          "result": {},
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1854,19 +1933,20 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{Id}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {}
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{Id}}",
+                          "error": {
+                              "code": {{errorCode}},
+                              "message": "{{errorMessage}}",
+                              "data": {}
+                          },
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1889,28 +1969,29 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {}
-                    },
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {}
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{id1}}",
+                          "error": {
+                              "code": {{errorCode}},
+                              "message": "{{errorMessage}}",
+                              "data": {}
+                          },
+                          "jsonrpc": "2.0"
+                      },
+                      {
+                          "id": "{{id2}}",
+                          "error": {
+                              "code": {{errorCode}},
+                              "message": "{{errorMessage}}",
+                              "data": {}
+                          },
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 
@@ -1933,24 +2014,25 @@ public class SerializationTests
 
         var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}",
-                        "data": {}
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{id1}}",
+                          "result": {},
+                          "jsonrpc": "2.0"
+                      },
+                      {
+                          "id": "{{id2}}",
+                          "error": {
+                              "code": {{errorCode}},
+                              "message": "{{errorMessage}}",
+                              "data": {}
+                          },
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.Should().Be(expected);
     }
 

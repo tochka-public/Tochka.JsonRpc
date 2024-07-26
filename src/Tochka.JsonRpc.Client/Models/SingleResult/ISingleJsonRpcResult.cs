@@ -9,6 +9,12 @@ namespace Tochka.JsonRpc.Client.Models.SingleResult;
 public interface ISingleJsonRpcResult
 {
     /// <summary>
+    /// Advanced data for complex work with single Result of JSON-RPC request
+    /// </summary>
+    /// <returns></returns>
+    ISingleJsonRpcResultAdvanced Advanced { get; init; }
+
+    /// <summary>
     /// Try to deserialize response result or throw if unable
     /// </summary>
     /// <typeparam name="TResponse">Type to deserialize result to</typeparam>
@@ -26,14 +32,7 @@ public interface ISingleJsonRpcResult
     /// Check if response has error
     /// </summary>
     bool HasError();
-
-    /// <summary>
-    /// Advanced data for complex work with single Result of JSON-RPC request
-    /// </summary>
-    /// <returns></returns>
-    ISingleJsonRpcResultAdvanced Advanced { get; init; }
 }
-
 
 /// <summary>
 /// Result of single JSON-RPC request with typed response
@@ -42,6 +41,12 @@ public interface ISingleJsonRpcResult
 [PublicAPI]
 public interface ISingleJsonRpcResult<out TResponse>
 {
+    /// <summary>
+    /// Advanced data for complex work with single Result of JSON-RPC request
+    /// </summary>
+    /// <returns></returns>
+    ISingleJsonRpcResultAdvanced Advanced { get; init; }
+
     /// <summary>
     /// Try to deserialize response result to typed response or throw if unable
     /// </summary>
@@ -58,10 +63,4 @@ public interface ISingleJsonRpcResult<out TResponse>
     /// Check if response has error
     /// </summary>
     bool HasError();
-
-    /// <summary>
-    /// Advanced data for complex work with single Result of JSON-RPC request
-    /// </summary>
-    /// <returns></returns>
-    ISingleJsonRpcResultAdvanced Advanced { get; init; }
 }

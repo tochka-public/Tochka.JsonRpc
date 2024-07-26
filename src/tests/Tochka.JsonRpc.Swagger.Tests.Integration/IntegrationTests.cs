@@ -61,7 +61,6 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-
     [Test]
     public async Task TimeSpan_ParsingAsString()
     {
@@ -72,11 +71,13 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         var responseJson = JsonDocument.Parse(responseContent);
 
         responseJson.RootElement.GetProperty("components")
-                    .GetProperty("schemas")
-                    .GetProperty(nameof(TestObject))
-                    .GetProperty("properties")
-                    .GetProperty(nameof(TestObject.Ts).ToLower(CultureInfo.InvariantCulture))
-                    .TryGetProperty("type", out var typePropertyJson).Should().BeTrue();
+            .GetProperty("schemas")
+            .GetProperty(nameof(TestObject))
+            .GetProperty("properties")
+            .GetProperty(nameof(TestObject.Ts).ToLower(CultureInfo.InvariantCulture))
+            .TryGetProperty("type", out var typePropertyJson)
+            .Should()
+            .BeTrue();
 
         typePropertyJson.GetString().Should().Be("string");
     }

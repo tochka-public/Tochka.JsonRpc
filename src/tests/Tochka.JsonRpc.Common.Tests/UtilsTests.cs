@@ -137,14 +137,15 @@ public class UtilsTests
     {
         const string property1 = "prop1";
         const string property2 = "prop2";
-        var json = $$"""
-            {
-                "{{property1}}": "value1",
-                "{{property2}}": {
-                    "prop3": "value3"
-                }
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "{{property1}}": "value1",
+                  "{{property2}}": {
+                      "prop3": "value3"
+                  }
+              }
+              """;
         var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
         reader.Read();
 
@@ -158,17 +159,18 @@ public class UtilsTests
     {
         const string property1 = "prop1";
         const string property2 = "prop2";
-        var json = $$"""
-            [
-                {
-                    "{{property1}}": "value1",
-                    "{{property2}}": "value2"
-                },
-                {
-                    "prop3": "value3"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "{{property1}}": "value1",
+                      "{{property2}}": "value2"
+                  },
+                  {
+                      "prop3": "value3"
+                  }
+              ]
+              """;
         var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
         reader.Read(); // to start reading properties from '{'
         reader.Read();

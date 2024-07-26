@@ -67,9 +67,9 @@ internal partial class JsonRpcRequestValidator : IJsonRpcRequestValidator
             .Replace("[area]", "{area}");
     }
 
-    // internal for tests
-    internal static readonly Regex RouteWithWildcardSuffixRegex = RouteWithWildcardSuffix(); // "smth/{*smth}" or "smth/{*smth}/"
-
     [GeneratedRegex(@"^.*?\{\*.*?}/?$")]
     private static partial Regex RouteWithWildcardSuffix();
+
+    // internal for tests
+    internal static readonly Regex RouteWithWildcardSuffixRegex = RouteWithWildcardSuffix(); // "smth/{*smth}" or "smth/{*smth}/"
 }

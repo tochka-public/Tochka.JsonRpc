@@ -14,7 +14,7 @@ public static class Extensions
     /// </summary>
     /// <param name="collection">Collection of objects</param>
     /// <typeparam name="T">Type of item to get</typeparam>
-    /// <returns>First item of type <typeparamref name="T"/> if found, null otherwise</returns>
+    /// <returns>First item of type <typeparamref name="T" /> if found, null otherwise</returns>
     public static T? Get<T>(this IEnumerable<object> collection)
         where T : class => collection.FirstOrDefault(static x => x is T) as T;
 

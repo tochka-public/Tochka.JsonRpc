@@ -63,17 +63,18 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
 
-        var expectedResponse = $$"""
-                                 {
-                                     "id": 123,
-                                     "error": {
-                                         "code": -32603,
-                                         "message": "Internal error",
-                                         "data": "{{BusinessLogicExceptionWrappingFilter.ErrorData}}"
-                                     },
-                                     "jsonrpc": "2.0"
-                                 }
-                                 """.TrimAllLines();
+        var expectedResponse =
+            $$"""
+                  {
+                      "id": 123,
+                      "error": {
+                          "code": -32603,
+                          "message": "Internal error",
+                          "data": "{{BusinessLogicExceptionWrappingFilter.ErrorData}}"
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
         responseContent.TrimAllLines().Should().Be(expectedResponse);

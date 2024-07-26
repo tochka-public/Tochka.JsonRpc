@@ -20,8 +20,6 @@ public class JsonRpcSchemaGeneratorTests
     private JsonRpcServerOptions jsonRpcServerOptions;
     private Mock<JsonRpcSchemaGenerator> schemaGeneratorMock;
 
-    private sealed class Foo;
-
     [SetUp]
     public void Setup()
     {
@@ -82,6 +80,8 @@ public class JsonRpcSchemaGeneratorTests
     }
 
     private const string MethodName = "method";
+
+    private sealed class Foo;
 
     [JsonRpcTypeMetadata(typeof(SnakeCaseJsonSerializerOptionsProvider), MethodName)]
     private sealed record TypeWithMetadata;

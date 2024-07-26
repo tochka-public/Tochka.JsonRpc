@@ -23,13 +23,14 @@ public class ResponseWrapperConverterTests
 
         var serialized = JsonSerializer.Serialize(wrapper, JsonRpcSerializerOptions.Headers);
 
-        var expected = $$"""
-            {
-                "id": "{{id}}",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "result": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         serialized.TrimAllLines().Should().Be(expected);
     }
 
@@ -41,15 +42,16 @@ public class ResponseWrapperConverterTests
 
         var serialized = JsonSerializer.Serialize(request, JsonRpcSerializerOptions.Headers);
 
-        var expected = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "result": null,
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """.TrimAllLines();
+        var expected =
+            $$"""
+                  [
+                      {
+                          "id": "{{id}}",
+                          "result": null,
+                          "jsonrpc": "2.0"
+                      }
+                  ]
+                  """.TrimAllLines();
         serialized.TrimAllLines().Should().Be(expected);
     }
 
@@ -65,12 +67,12 @@ public class ResponseWrapperConverterTests
     public void Deserialize_Single()
     {
         var json = """
-            {
-                "id": "id",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+                   {
+                       "id": "id",
+                       "result": null,
+                       "jsonrpc": "2.0"
+                   }
+                   """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, JsonRpcSerializerOptions.Headers);
 

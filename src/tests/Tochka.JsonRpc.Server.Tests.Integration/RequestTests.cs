@@ -35,23 +35,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task StringId_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "process_anything",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "process_anything",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -71,23 +73,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task IntId_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "process_anything",
-                                         "id": 123,
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "process_anything",
+                  "id": 123,
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": 123,
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": 123,
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -107,23 +111,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task NullId_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "process_anything",
-                                         "id": null,
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "process_anything",
+                  "id": null,
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": null,
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": null,
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -143,23 +149,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task ActionOnly_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "action_only",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "action_only",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -179,23 +187,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task ControllerAndAction_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "simple_json_rpc.controller_and_action",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "simple_json_rpc.controller_and_action",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -215,25 +225,27 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task BindingStyleDefault_ObjectParams_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "binding_style_default",
-                                         "id": "123",
-                                         "params": {
-                                             "data": {{TestData.PlainRequiredSnakeCaseJson}}
-                                         },
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "binding_style_default",
+                  "id": "123",
+                  "params": {
+                      "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -253,25 +265,27 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task BindingStyleDefault_ArrayParams_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "binding_style_default",
-                                         "id": "123",
-                                         "params": [
-                                             {{TestData.PlainRequiredSnakeCaseJson}}
-                                         ],
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "binding_style_default",
+                  "id": "123",
+                  "params": [
+                      {{TestData.PlainRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -430,23 +444,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task BindingStyleObject_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "binding_style_object",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "binding_style_object",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -608,25 +624,27 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task BindingStyleArray_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "binding_style_array",
-                                         "id": "123",
-                                         "params": [
-                                             {{TestData.PlainRequiredSnakeCaseJson}}
-                                         ],
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "binding_style_array",
+                  "id": "123",
+                  "params": [
+                      {{TestData.PlainRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = new List<TestData> { TestData.Plain };
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -762,13 +780,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         var expectedRequestData = new List<TestData>();
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -939,13 +958,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1010,13 +1030,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    }
                                    """;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1083,13 +1104,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1190,13 +1212,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = new List<object?>();
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1297,13 +1320,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1335,13 +1359,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1373,13 +1398,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1410,13 +1436,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = "123";
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1518,13 +1545,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1555,13 +1583,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = null;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1628,13 +1657,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         object? expectedRequestData = new List<object?>();
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         object? actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
@@ -1664,13 +1694,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    }
                                    """;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         responseProviderMock.Setup(static p => p.GetJsonRpcResponse())
             .Returns(responseData);
@@ -1686,23 +1717,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task SnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "snake_case_params",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "snake_case_params",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1722,23 +1755,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task CamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "camelCaseParams",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredCamelCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "camelCaseParams",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullCamelCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1758,23 +1793,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task NestedSnakeCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "snake_case_params",
-                                         "id": "123",
-                                         "params": {{TestData.NestedRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "snake_case_params",
+                  "id": "123",
+                  "params": {{TestData.NestedRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.NestedFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.NestedFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1794,23 +1831,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task NestedCamelCaseParams_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "camelCaseParams",
-                                         "id": "123",
-                                         "params": {{TestData.NestedRequiredCamelCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "camelCaseParams",
+                  "id": "123",
+                  "params": {{TestData.NestedRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Nested;
         var responseData = TestData.Nested;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.NestedFullCamelCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.NestedFullCamelCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1853,13 +1892,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1879,23 +1919,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task CustomActionRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "custom_action_route",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "custom_action_route",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -1915,23 +1957,25 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task CustomControllerRoute_DeserializeSuccessfully()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "custom_controller_route",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "custom_controller_route",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedRequestData = TestData.Plain;
         var responseData = TestData.Plain;
-        var expectedResponseJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "result": {{TestData.PlainFullSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+        var expectedResponseJson =
+            $$"""
+                  {
+                      "id": "123",
+                      "result": {{TestData.PlainFullSnakeCaseJson}},
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
 
         TestData actualRequestData = null;
         requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
@@ -2185,13 +2229,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task NoMethod_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": null,
@@ -2219,14 +2264,15 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task MethodNull_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": null,
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": null,
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": "123",
@@ -2254,14 +2300,15 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task MethodEmpty_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": "123",
@@ -2289,14 +2336,15 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task MethodWhiteSpace_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": " ",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": " ",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": "123",
@@ -2324,14 +2372,15 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task InvalidJsonRpcVersion_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "process_anything",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "3.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "process_anything",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "3.0"
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": "123",
@@ -2359,15 +2408,16 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task InvalidJson_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         123
-                                         "method": "process_anything",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  123
+                  "method": "process_anything",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": null,
@@ -2395,13 +2445,14 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     [Test]
     public async Task NoJsonRpc_ReturnError()
     {
-        const string requestJson = $$"""
-                                     {
-                                         "method": "process_anything",
-                                         "id": "123",
-                                         "params": {{TestData.PlainRequiredSnakeCaseJson}}
-                                     }
-                                     """;
+        const string requestJson =
+            $$"""
+              {
+                  "method": "process_anything",
+                  "id": "123",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}}
+              }
+              """;
         var expectedResponseJson = """
                                    {
                                        "id": null,

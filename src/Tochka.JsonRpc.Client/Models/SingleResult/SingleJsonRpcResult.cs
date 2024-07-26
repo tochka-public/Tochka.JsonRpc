@@ -22,11 +22,13 @@ public sealed class SingleJsonRpcResult : SingleJsonRpcResult<object>, ISingleJs
     public TResponse? AsResponse<TResponse>() => Advanced.AsResponse<TResponse>();
 }
 
-
 /// <inheritdoc />
 [PublicAPI]
 public class SingleJsonRpcResult<TResponse> : ISingleJsonRpcResult<TResponse>
 {
+    /// <inheritdoc />
+    public ISingleJsonRpcResultAdvanced Advanced { get; init; }
+
     /// <summary>
     /// Context with all information about request and response
     /// </summary>
@@ -46,9 +48,6 @@ public class SingleJsonRpcResult<TResponse> : ISingleJsonRpcResult<TResponse>
     /// Response if call was request
     /// </summary>
     protected readonly IResponse? Response;
-
-    /// <inheritdoc />
-    public ISingleJsonRpcResultAdvanced Advanced { get; init; }
 
     /// <summary></summary>
     public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)

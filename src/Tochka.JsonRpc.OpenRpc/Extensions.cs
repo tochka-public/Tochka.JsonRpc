@@ -113,18 +113,18 @@ public static class Extensions
         return endpoints.MapGet(options.DocumentPath, requestDelegate);
     }
 
+    public static JsonSchema BuildWithoutUri(this JsonSchemaBuilder builder)
+    {
+        var result = builder.Build();
+        result.BaseUri = null!;
+        return result;
+    }
+
     private static void EnsureRequiredServicesRegistered(IServiceProvider services)
     {
         if (services.GetService<OpenRpcMarkerService>() == null)
         {
             throw new InvalidOperationException($"Unable to find the required services. Please add all the required services by calling '{nameof(IServiceCollection)}.{nameof(AddOpenRpc)}' in the application startup code.");
         }
-    }
-
-    public static JsonSchema BuildWithoutUri(this JsonSchemaBuilder builder)
-    {
-        var result = builder.Build();
-        result.BaseUri = null!;
-        return result;
     }
 }

@@ -6,13 +6,14 @@ namespace Tochka.JsonRpc.Benchmarks.Data;
 
 internal static class Responses
 {
-    public static string GetResponse(Guid id, TestData result) => $$"""
-        {
-            "id": "{{id}}",
-            "result": {{JsonSerializer.Serialize(result, JsonRpcSerializerOptions.SnakeCase)}},
-            "jsonrpc": "2.0"
-        }
-        """;
+    public static string GetResponse(Guid id, TestData result) =>
+        $$"""
+          {
+              "id": "{{id}}",
+              "result": {{JsonSerializer.Serialize(result, JsonRpcSerializerOptions.SnakeCase)}},
+              "jsonrpc": "2.0"
+          }
+          """;
 
     public const string PlainKey = "plain";
     public const string NestedKey = "nested";

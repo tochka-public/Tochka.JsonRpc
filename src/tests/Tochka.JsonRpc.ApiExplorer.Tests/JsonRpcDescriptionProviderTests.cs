@@ -30,12 +30,6 @@ public class JsonRpcDescriptionProviderTests
     private JsonRpcDescriptionProvider descriptionProvider;
     private Mock<ITypeEmitter> typeEmitterMock;
 
-    private sealed class Foo;
-
-    private sealed class Bar;
-
-    private sealed class Baz;
-
     [SetUp]
     public void Setup()
     {
@@ -402,8 +396,6 @@ public class JsonRpcDescriptionProviderTests
         description.SupportedResponseTypes.Single().Type.Should().Be(responseType);
     }
 
-
-
     [Test]
     public void OnProvidersExecuting_DoesntHaveResponseType_WrapResponseWithObjectBaseType()
     {
@@ -448,4 +440,10 @@ public class JsonRpcDescriptionProviderTests
 
     private const string Method = "method";
     private const string Route = "/api/jsonrpc";
+
+    private sealed class Foo;
+
+    private sealed class Bar;
+
+    private sealed class Baz;
 }

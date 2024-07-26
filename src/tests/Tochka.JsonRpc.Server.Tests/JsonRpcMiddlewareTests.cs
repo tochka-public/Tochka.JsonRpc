@@ -58,13 +58,14 @@ public class JsonRpcMiddlewareTests
     [Test]
     public async Task InvokeAsync_EncodingIsNull_UseUTF8()
     {
-        var json = $$"""
-                     {
-                         "id": {{Id}},
-                         "method": "{{MethodName}}",
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
         var httpContext = new DefaultHttpContext
         {
             Request =
@@ -104,13 +105,14 @@ public class JsonRpcMiddlewareTests
     [Test]
     public async Task InvokeAsync_EncodingSet_UseEncoding()
     {
-        var json = $$"""
-                     {
-                         "id": {{Id}},
-                         "method": "{{MethodName}}",
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
         var encoding = "utf-32";
         var httpContext = new DefaultHttpContext
         {
@@ -151,13 +153,14 @@ public class JsonRpcMiddlewareTests
     [Test]
     public async Task InvokeAsync_JsonExceptionDuringProcessing_WrapParseException()
     {
-        var json = $$"""
-                     {
-                         "id": {{Id}},
-                         "method": "{{MethodName}}",
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
         var httpContext = new DefaultHttpContext
         {
             Request =
@@ -202,13 +205,14 @@ public class JsonRpcMiddlewareTests
     [Test]
     public async Task InvokeAsync_ExceptionDuringProcessing_WrapGeneralException()
     {
-        var json = $$"""
-                     {
-                         "id": {{Id}},
-                         "method": "{{MethodName}}",
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
         var httpContext = new DefaultHttpContext
         {
             Request =
@@ -253,13 +257,14 @@ public class JsonRpcMiddlewareTests
     [Test]
     public async Task InvokeAsync_NullResult_DontSetResponse()
     {
-        var json = $$"""
-                     {
-                         "id": {{Id}},
-                         "method": "{{MethodName}}",
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
         var httpContext = new DefaultHttpContext
         {
             Request =

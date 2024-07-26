@@ -143,8 +143,11 @@ public class JsonRpcIdConverterTests
         var deserialized = JsonSerializer.Deserialize<IRpcId>(idJson, JsonRpcSerializerOptions.Headers);
         var serialized = JsonSerializer.Serialize<IRpcId>(deserialized, JsonRpcSerializerOptions.Headers);
 
-        deserialized.Should().BeOfType<FloatNumberRpcId>().Subject.Value.ToString(CultureInfo.InvariantCulture)
-            .Should().Be(serialized);
+        deserialized.Should()
+            .BeOfType<FloatNumberRpcId>()
+            .Subject.Value.ToString(CultureInfo.InvariantCulture)
+            .Should()
+            .Be(serialized);
     }
 
     [Test]

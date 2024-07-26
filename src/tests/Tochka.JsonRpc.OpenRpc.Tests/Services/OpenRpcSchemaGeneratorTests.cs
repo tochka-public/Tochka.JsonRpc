@@ -158,14 +158,14 @@ public class OpenRpcSchemaGeneratorTests
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedTypeName}")
+            .BuildWithoutUri();
         result.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
-                                 .Enum("one", "two")
-                                 .BuildWithoutUri()
+                .Enum("one", "two")
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -395,14 +395,14 @@ public class OpenRpcSchemaGeneratorTests
 
         var expectedTypeName = $"{MethodName} {nameof(Enum2)}";
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedTypeName}")
+            .BuildWithoutUri();
         actualSchema.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
-                                 .Enum("Value1", "ValueValue2", "value3", "value_value4")
-                                 .BuildWithoutUri()
+                .Enum("Value1", "ValueValue2", "value3", "value_value4")
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -417,24 +417,24 @@ public class OpenRpcSchemaGeneratorTests
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithSimpleProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedTypeName}")
+            .BuildWithoutUri();
         actualSchema.Should().BeEquivalentTo(expectedSchema);
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedTypeName] = new JsonSchemaBuilder()
-                                 .Type(SchemaValueType.Object)
-                                 .Properties(new Dictionary<string, JsonSchema>
-                                 {
-                                     ["date_time"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).BuildWithoutUri(),
-                                     ["date_time_offset"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).BuildWithoutUri(),
-                                     ["date_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Date).BuildWithoutUri(),
-                                     ["time_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Time).BuildWithoutUri(),
-                                     ["time_span"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Duration).BuildWithoutUri(),
-                                     ["guid"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Uuid).BuildWithoutUri()
-                                 })
-                                 .Required("date_time", "date_time_offset", "date_only", "time_only", "time_span", "guid")
-                                 .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["date_time"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).BuildWithoutUri(),
+                    ["date_time_offset"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.DateTime).BuildWithoutUri(),
+                    ["date_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Date).BuildWithoutUri(),
+                    ["time_only"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Time).BuildWithoutUri(),
+                    ["time_span"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Duration).BuildWithoutUri(),
+                    ["guid"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Format(Formats.Uuid).BuildWithoutUri()
+                })
+                .Required("date_time", "date_time_offset", "date_only", "time_only", "time_span", "guid")
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -451,52 +451,53 @@ public class OpenRpcSchemaGeneratorTests
         var expectedTypeNameInner = $"{MethodName} {nameof(TypeWithSummariesInner)}";
         var expectedTypeNameInnerEnum = $"{MethodName} {nameof(TypeWithSummariesInnerEnum)}";
 
-        actualSchema.Should().BeEquivalentTo(new JsonSchemaBuilder()
-                                             .Ref($"#/components/schemas/{expectedTypeName}")
-                                             .BuildWithoutUri());
+        actualSchema.Should()
+            .BeEquivalentTo(new JsonSchemaBuilder()
+                .Ref($"#/components/schemas/{expectedTypeName}")
+                .BuildWithoutUri());
 
         var actualSchemas = schemaGenerator.GetAllSchemas();
 
         var expectedSchemas = new Dictionary<string, JsonSchema>
         {
             [expectedTypeNameInner] = new JsonSchemaBuilder()
-                                      .Type(SchemaValueType.Object)
-                                      .Properties(new Dictionary<string, JsonSchema>
-                                      {
-                                          ["inner_prop1"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                                                                                   .Title("InnerProp1")
-                                                                                   .BuildWithoutUri()
-                                      })
-                                      .Required("inner_prop1")
-                                      .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["inner_prop1"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                        .Title("InnerProp1")
+                        .BuildWithoutUri()
+                })
+                .Required("inner_prop1")
+                .BuildWithoutUri(),
             [expectedTypeNameInnerEnum] = new JsonSchemaBuilder()
-                                          .Enum("bla")
-                                          .BuildWithoutUri(),
+                .Enum("bla")
+                .BuildWithoutUri(),
             [expectedTypeName] = new JsonSchemaBuilder()
-                                 .Type(SchemaValueType.Object)
-                                 .Properties(new Dictionary<string, JsonSchema>
-                                 {
-                                     ["prop1"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
-                                                                        .Title("Prop1")
-                                                                        .BuildWithoutUri(),
-                                     ["prop2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
-                                                                        .Title("Prop2")
-                                                                        .BuildWithoutUri(),
-                                     ["prop3"] = new JsonSchemaBuilder().Type(SchemaValueType.Array)
-                                                                        .Items(new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
-                                                                                                      .BuildWithoutUri())
-                                                                        .Title("Prop3")
-                                                                        .BuildWithoutUri(),
-                                     ["prop4"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInnerEnum}")
-                                                                        .Title("Prop4")
-                                                                        .BuildWithoutUri(),
-                                     ["prop5"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
-                                                                        .Format(Formats.Duration)
-                                                                        .Title("Prop5")
-                                                                        .BuildWithoutUri()
-                                 })
-                                 .Required("prop1", "prop2", "prop3", "prop4", "prop5")
-                                 .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["prop1"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                        .Title("Prop1")
+                        .BuildWithoutUri(),
+                    ["prop2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                        .Title("Prop2")
+                        .BuildWithoutUri(),
+                    ["prop3"] = new JsonSchemaBuilder().Type(SchemaValueType.Array)
+                        .Items(new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                            .BuildWithoutUri())
+                        .Title("Prop3")
+                        .BuildWithoutUri(),
+                    ["prop4"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInnerEnum}")
+                        .Title("Prop4")
+                        .BuildWithoutUri(),
+                    ["prop5"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                        .Format(Formats.Duration)
+                        .Title("Prop5")
+                        .BuildWithoutUri()
+                })
+                .Required("prop1", "prop2", "prop3", "prop4", "prop5")
+                .BuildWithoutUri()
         };
 
         actualSchemas.Count.Should().Be(expectedSchemas.Count);
@@ -550,51 +551,51 @@ public class OpenRpcSchemaGeneratorTests
         var expectedSecondEnumTypeName = $"{MethodName} {nameof(TypeWithGenericPropertiesSecondEnum)}";
 
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedParentTypeName}")
+            .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedFirstEnumTypeName] = new JsonSchemaBuilder()
-                                          .Enum("type_with_generic_properties_first_enum")
-                                          .BuildWithoutUri(),
+                .Enum("type_with_generic_properties_first_enum")
+                .BuildWithoutUri(),
             [expectedSecondEnumTypeName] = new JsonSchemaBuilder()
-                                           .Enum("type_with_generic_properties_second_enum")
-                                           .BuildWithoutUri(),
+                .Enum("type_with_generic_properties_second_enum")
+                .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
-                                            .Type(SchemaValueType.Object)
-                                            .Properties(new Dictionary<string, JsonSchema>
-                                            {
-                                                ["generic_property"] = new JsonSchemaBuilder()
-                                                                       .Ref($"#/components/schemas/{expectedFirstEnumTypeName}")
-                                                                       .BuildWithoutUri()
-                                            })
-                                            .Required("generic_property")
-                                            .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedFirstEnumTypeName}")
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property")
+                .BuildWithoutUri(),
             [expectedProperty2Name] = new JsonSchemaBuilder()
-                                            .Type(SchemaValueType.Object)
-                                            .Properties(new Dictionary<string, JsonSchema>
-                                            {
-                                                ["generic_property"] = new JsonSchemaBuilder()
-                                                                       .Ref($"#/components/schemas/{expectedSecondEnumTypeName}")
-                                                                       .BuildWithoutUri()
-                                            })
-                                            .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedSecondEnumTypeName}")
+                        .BuildWithoutUri()
+                })
+                .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
-                                                      .Type(SchemaValueType.Object)
-                                                      .Properties(new Dictionary<string, JsonSchema>
-                                                      {
-                                                          ["property1"] = new JsonSchemaBuilder()
-                                                                          .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                                          .BuildWithoutUri(),
-                                                          ["property2"] = new JsonSchemaBuilder()
-                                                                          .Ref($"#/components/schemas/{expectedProperty2Name}")
-                                                                          .BuildWithoutUri()
-                                                      })
-                                                      .Required("property1", "property2")
-                                                      .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["property1"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1Name}")
+                        .BuildWithoutUri(),
+                    ["property2"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty2Name}")
+                        .BuildWithoutUri()
+                })
+                .Required("property1", "property2")
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -614,51 +615,51 @@ public class OpenRpcSchemaGeneratorTests
         var expectedSecondEnumTypeName = $"{MethodName} {nameof(TypeWithGenericPropertiesSecondEnum)}";
 
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedParentTypeName}")
+            .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedFirstEnumTypeName] = new JsonSchemaBuilder()
-                                          .Enum("type_with_generic_properties_first_enum")
-                                          .BuildWithoutUri(),
+                .Enum("type_with_generic_properties_first_enum")
+                .BuildWithoutUri(),
             [expectedSecondEnumTypeName] = new JsonSchemaBuilder()
-                                           .Enum("type_with_generic_properties_second_enum")
-                                           .BuildWithoutUri(),
+                .Enum("type_with_generic_properties_second_enum")
+                .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
-                                            .Type(SchemaValueType.Object)
-                                            .Properties(new Dictionary<string, JsonSchema>
-                                            {
-                                                ["generic_property"] = new JsonSchemaBuilder()
-                                                                       .Ref($"#/components/schemas/{expectedFirstEnumTypeName}")
-                                                                       .BuildWithoutUri()
-                                            })
-                                            .Required("generic_property")
-                                            .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedFirstEnumTypeName}")
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property")
+                .BuildWithoutUri(),
             [expectedProperty2Name] = new JsonSchemaBuilder()
-                                            .Type(SchemaValueType.Object)
-                                            .Properties(new Dictionary<string, JsonSchema>
-                                            {
-                                                ["generic_property"] = new JsonSchemaBuilder()
-                                                                       .Ref($"#/components/schemas/{expectedSecondEnumTypeName}")
-                                                                       .BuildWithoutUri()
-                                            })
-                                            .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedSecondEnumTypeName}")
+                        .BuildWithoutUri()
+                })
+                .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
-                                                      .Type(SchemaValueType.Object)
-                                                      .Properties(new Dictionary<string, JsonSchema>
-                                                      {
-                                                          ["property1"] = new JsonSchemaBuilder()
-                                                                          .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                                          .BuildWithoutUri(),
-                                                          ["property2"] = new JsonSchemaBuilder()
-                                                                          .Ref($"#/components/schemas/{expectedProperty2Name}")
-                                                                          .BuildWithoutUri()
-                                                      })
-                                                      .Required("property2")
-                                                      .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["property1"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1Name}")
+                        .BuildWithoutUri(),
+                    ["property2"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty2Name}")
+                        .BuildWithoutUri()
+                })
+                .Required("property2")
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -675,36 +676,36 @@ public class OpenRpcSchemaGeneratorTests
         var expectedProperty1TypeName = $"{MethodName} GenericTwoType`2[String,Boolean]";
 
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedParentTypeName}")
+            .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedProperty1TypeName] = new JsonSchemaBuilder()
-                                       .Type(SchemaValueType.Object)
-                                       .Properties(new Dictionary<string, JsonSchema>
-                                       {
-                                           ["generic_property1"] = new JsonSchemaBuilder()
-                                                               .Type(SchemaValueType.String)
-                                                               .BuildWithoutUri(),
-                                           ["generic_property2"] = new JsonSchemaBuilder()
-                                                                .Type(SchemaValueType.Boolean)
-                                                                .BuildWithoutUri()
-                                       })
-                                       .Required("generic_property1", "generic_property2")
-                                       .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property1"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
+                        .BuildWithoutUri(),
+                    ["generic_property2"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Boolean)
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property1", "generic_property2")
+                .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
-                                                            .Type(SchemaValueType.Object)
-                                                            .Properties(new Dictionary<string, JsonSchema>
-                                                            {
-                                                                ["property1"] = new JsonSchemaBuilder()
-                                                                                .Ref($"#/components/schemas/{expectedProperty1TypeName}")
-                                                                                .BuildWithoutUri()
-                                                            })
-                                                            .Required("property1")
-                                                            .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["property1"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1TypeName}")
+                        .BuildWithoutUri()
+                })
+                .Required("property1")
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -721,34 +722,34 @@ public class OpenRpcSchemaGeneratorTests
         var expectedProperty1TypeName = $"{MethodName} GenericTwoType`2[String,Boolean]";
 
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedParentTypeName}")
+            .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedProperty1TypeName] = new JsonSchemaBuilder()
-                                       .Type(SchemaValueType.Object)
-                                       .Properties(new Dictionary<string, JsonSchema>
-                                       {
-                                           ["generic_property1"] = new JsonSchemaBuilder()
-                                                               .Type(SchemaValueType.String)
-                                                               .BuildWithoutUri(),
-                                           ["generic_property2"] = new JsonSchemaBuilder()
-                                                                .Type(SchemaValueType.Boolean)
-                                                                .BuildWithoutUri()
-                                       })
-                                       .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property1"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
+                        .BuildWithoutUri(),
+                    ["generic_property2"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Boolean)
+                        .BuildWithoutUri()
+                })
+                .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
-                                                            .Type(SchemaValueType.Object)
-                                                            .Properties(new Dictionary<string, JsonSchema>
-                                                            {
-                                                                ["property1"] = new JsonSchemaBuilder()
-                                                                                .Ref($"#/components/schemas/{expectedProperty1TypeName}")
-                                                                                .BuildWithoutUri()
-                                                            })
-                                                            .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["property1"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1TypeName}")
+                        .BuildWithoutUri()
+                })
+                .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
@@ -766,46 +767,46 @@ public class OpenRpcSchemaGeneratorTests
         var expectedProperty1ChildGenericTypeName = $"{MethodName} GenericOneType`1[Boolean]";
 
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedParentTypeName}")
+            .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedProperty1ChildGenericTypeName] = new JsonSchemaBuilder()
-                                                      .Type(SchemaValueType.Object)
-                                                      .Properties(new Dictionary<string, JsonSchema>
-                                                      {
-                                                          ["generic_property"] = new JsonSchemaBuilder()
-                                                                                 .Type(SchemaValueType.Boolean)
-                                                                                 .BuildWithoutUri()
-                                                      })
-                                                      .Required("generic_property")
-                                                      .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Boolean)
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property")
+                .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
-                                      .Type(SchemaValueType.Object)
-                                      .Properties(new Dictionary<string, JsonSchema>
-                                      {
-                                          ["generic_property1"] = new JsonSchemaBuilder()
-                                                                  .Type(SchemaValueType.String)
-                                                                  .BuildWithoutUri(),
-                                          ["generic_property2"] = new JsonSchemaBuilder()
-                                                                  .Ref($"#/components/schemas/{expectedProperty1ChildGenericTypeName}")
-                                                                  .BuildWithoutUri()
-                                      })
-                                      .Required("generic_property1", "generic_property2")
-                                      .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property1"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
+                        .BuildWithoutUri(),
+                    ["generic_property2"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1ChildGenericTypeName}")
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property1", "generic_property2")
+                .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
-                                       .Type(SchemaValueType.Object)
-                                       .Properties(new Dictionary<string, JsonSchema>
-                                       {
-                                           ["property1"] = new JsonSchemaBuilder()
-                                                           .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                           .BuildWithoutUri()
-                                       })
-                                       .Required("property1")
-                                       .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["property1"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1Name}")
+                        .BuildWithoutUri()
+                })
+                .Required("property1")
+                .BuildWithoutUri()
         };
 
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -824,46 +825,46 @@ public class OpenRpcSchemaGeneratorTests
         var expectedProperty1ChildGenericTypeName = $"{MethodName} GenericOneType`1[Boolean]";
 
         var expectedSchema = new JsonSchemaBuilder()
-                             .Ref($"#/components/schemas/{expectedParentTypeName}")
-                             .BuildWithoutUri();
+            .Ref($"#/components/schemas/{expectedParentTypeName}")
+            .BuildWithoutUri();
 
         actualSchema.Should().BeEquivalentTo(expectedSchema);
 
         var expectedRegistrations = new Dictionary<string, JsonSchema>
         {
             [expectedProperty1ChildGenericTypeName] = new JsonSchemaBuilder()
-                                                      .Type(SchemaValueType.Object)
-                                                      .Properties(new Dictionary<string, JsonSchema>
-                                                      {
-                                                          ["generic_property"] = new JsonSchemaBuilder()
-                                                                                 .Type(SchemaValueType.Boolean)
-                                                                                 .BuildWithoutUri()
-                                                      })
-                                                      .Required("generic_property")
-                                                      .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Boolean)
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property")
+                .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
-                                      .Type(SchemaValueType.Object)
-                                      .Properties(new Dictionary<string, JsonSchema>
-                                      {
-                                          ["generic_property1"] = new JsonSchemaBuilder()
-                                                                  .Type(SchemaValueType.String)
-                                                                  .BuildWithoutUri(),
-                                          ["generic_property2"] = new JsonSchemaBuilder()
-                                                                  .Ref($"#/components/schemas/{expectedProperty1ChildGenericTypeName}")
-                                                                  .BuildWithoutUri()
-                                      })
-                                      .Required("generic_property1")
-                                      .BuildWithoutUri(),
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["generic_property1"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
+                        .BuildWithoutUri(),
+                    ["generic_property2"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1ChildGenericTypeName}")
+                        .BuildWithoutUri()
+                })
+                .Required("generic_property1")
+                .BuildWithoutUri(),
             [expectedParentTypeName] = new JsonSchemaBuilder()
-                                       .Type(SchemaValueType.Object)
-                                       .Properties(new Dictionary<string, JsonSchema>
-                                       {
-                                           ["property1"] = new JsonSchemaBuilder()
-                                                           .Ref($"#/components/schemas/{expectedProperty1Name}")
-                                                           .BuildWithoutUri()
-                                       })
-                                       .Required("property1")
-                                       .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["property1"] = new JsonSchemaBuilder()
+                        .Ref($"#/components/schemas/{expectedProperty1Name}")
+                        .BuildWithoutUri()
+                })
+                .Required("property1")
+                .BuildWithoutUri()
         };
 
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -887,13 +888,20 @@ public class OpenRpcSchemaGeneratorTests
         value_value4
     }
 
-    private sealed record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
+    private enum TypeWithSummariesInnerEnum
+    {
+        Bla
+    }
 
-    private sealed record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
+    private enum TypeWithGenericPropertiesFirstEnum
+    {
+        TypeWithGenericPropertiesFirstEnum
+    }
 
-    private sealed record AnotherTypeWithProperties(bool BoolProperty);
-
-    private sealed record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
+    private enum TypeWithGenericPropertiesSecondEnum
+    {
+        TypeWithGenericPropertiesSecondEnum
+    }
 
     private sealed class TypeWithSummaries
     {
@@ -922,6 +930,7 @@ public class OpenRpcSchemaGeneratorTests
         /// </summary>
         public TimeSpan Prop5 { get; set; }
     }
+
     private sealed class TypeWithSummariesInner
     {
         /// <summary>
@@ -929,12 +938,6 @@ public class OpenRpcSchemaGeneratorTests
         /// </summary>
         public string InnerProp1 { get; set; }
     }
-    private enum TypeWithSummariesInnerEnum
-    {
-        Bla
-    }
-
-    private sealed record CustomSimpleType;
 
     private sealed class TypeWithGenericProperties
     {
@@ -946,16 +949,6 @@ public class OpenRpcSchemaGeneratorTests
     {
         public GenericOneType<TypeWithGenericPropertiesFirstEnum>? Property1 { get; set; }
         public GenericOneType<TypeWithGenericPropertiesSecondEnum?> Property2 { get; set; }
-    }
-
-    private enum TypeWithGenericPropertiesFirstEnum
-    {
-        TypeWithGenericPropertiesFirstEnum
-    }
-
-    private enum TypeWithGenericPropertiesSecondEnum
-    {
-        TypeWithGenericPropertiesSecondEnum
     }
 
     private sealed class GenericOneType<T>
@@ -973,7 +966,7 @@ public class OpenRpcSchemaGeneratorTests
         public GenericTwoType<string?, bool?>? Property1 { get; set; }
     }
 
-    private sealed class GenericTwoType<T,U>
+    private sealed class GenericTwoType<T, U>
     {
         public T GenericProperty1 { get; set; }
         public U GenericProperty2 { get; set; }
@@ -988,4 +981,14 @@ public class OpenRpcSchemaGeneratorTests
     {
         public GenericTwoType<string, GenericOneType<bool>?> Property1 { get; set; }
     }
+
+    private sealed record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
+
+    private sealed record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
+
+    private sealed record AnotherTypeWithProperties(bool BoolProperty);
+
+    private sealed record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
+
+    private sealed record CustomSimpleType;
 }

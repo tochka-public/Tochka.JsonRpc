@@ -3,7 +3,6 @@ using System.Linq;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.ApplicationModels;
-using Asp.Versioning.Builder;
 using Asp.Versioning.Conventions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;

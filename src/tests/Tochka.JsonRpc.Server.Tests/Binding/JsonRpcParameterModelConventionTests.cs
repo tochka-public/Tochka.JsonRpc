@@ -31,8 +31,6 @@ public class JsonRpcParameterModelConventionTests
         parameterModelConvention = new JsonRpcParameterModelConvention(serializerOptionsProviders, Options.Create(options));
     }
 
-    private sealed class Foo;
-
     [Test]
     public void Apply_ActionNotFromJsonRpcController_DoNothing()
     {
@@ -381,4 +379,6 @@ public class JsonRpcParameterModelConventionTests
     }
 
     private const string ParameterName = "parameterName";
+
+    private sealed class Foo;
 }

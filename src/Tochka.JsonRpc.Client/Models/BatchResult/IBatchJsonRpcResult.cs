@@ -10,6 +10,12 @@ namespace Tochka.JsonRpc.Client.Models.BatchResult;
 public interface IBatchJsonRpcResult
 {
     /// <summary>
+    /// Advanced data for complex work with batch Result of JSON-RPC request
+    /// </summary>
+    /// <returns></returns>
+    IBatchJsonRpcResultAdvanced Advanced { get; init; }
+
+    /// <summary>
     /// Try to deserialize response result or throw if unable
     /// </summary>
     /// <param name="id">Response id</param>
@@ -31,12 +37,6 @@ public interface IBatchJsonRpcResult
     /// <param name="id">Response id</param>
     /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
     bool HasError(IRpcId id);
-
-    /// <summary>
-    /// Advanced data for complex work with batch Result of JSON-RPC request
-    /// </summary>
-    /// <returns></returns>
-    IBatchJsonRpcResultAdvanced Advanced { get; init; }
 }
 
 /// <summary>
@@ -46,6 +46,12 @@ public interface IBatchJsonRpcResult
 [PublicAPI]
 public interface IBatchJsonRpcResult<out TResponse>
 {
+    /// <summary>
+    /// Advanced data for complex work with batch Result of JSON-RPC request
+    /// </summary>
+    /// <returns></returns>
+    IBatchJsonRpcResultAdvanced Advanced { get; init; }
+
     /// <summary>
     /// Try to deserialize response result to typed response or throw if unable
     /// </summary>
@@ -66,10 +72,4 @@ public interface IBatchJsonRpcResult<out TResponse>
     /// <param name="id">Response id</param>
     /// <exception cref="JsonRpcException">if no response with given id or response has error</exception>
     bool HasError(IRpcId id);
-
-    /// <summary>
-    /// Advanced data for complex work with batch Result of JSON-RPC request
-    /// </summary>
-    /// <returns></returns>
-    IBatchJsonRpcResultAdvanced Advanced { get; init; }
 }

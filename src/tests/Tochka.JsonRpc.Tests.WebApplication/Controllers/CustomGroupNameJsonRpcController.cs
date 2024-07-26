@@ -7,6 +7,6 @@ namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 public class CustomGroupNameJsonRpcController : JsonRpcControllerBase
 {
     public bool CustomGroup() => true;
-    
+
     public TestObject TestObjectTypes() => new();
 }

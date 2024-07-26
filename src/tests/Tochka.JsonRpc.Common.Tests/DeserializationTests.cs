@@ -30,13 +30,14 @@ public class DeserializationTests
     public void Notification_EmptyObjectParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": {},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -51,13 +52,14 @@ public class DeserializationTests
     public void Notification_EmptyArrayParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": [],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": [],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -74,13 +76,14 @@ public class DeserializationTests
     public void Notification_NullParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -94,12 +97,13 @@ public class DeserializationTests
     public void Notification_NoParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -114,13 +118,14 @@ public class DeserializationTests
     {
         var method = "method";
         var parameter = 123;
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": {{parameter}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": {{parameter}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -136,15 +141,16 @@ public class DeserializationTests
     {
         var method = "method";
         var parameter = 123;
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": [
-                    {{parameter}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": [
+                      {{parameter}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -161,13 +167,14 @@ public class DeserializationTests
     public void Notification_PlainSnakeCaseObjectParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -182,13 +189,14 @@ public class DeserializationTests
     public void Notification_PlainCamelCaseObjectParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": {{TestData.PlainRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": {{TestData.PlainRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -203,15 +211,16 @@ public class DeserializationTests
     public void Notification_PlainSnakeCaseArrayParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.PlainRequiredSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.PlainRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -229,15 +238,16 @@ public class DeserializationTests
     public void Notification_PlainCamelCaseArrayParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.PlainRequiredCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.PlainRequiredCamelCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -255,13 +265,14 @@ public class DeserializationTests
     public void Notification_NestedSnakeCaseObjectParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": {{TestData.NestedRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": {{TestData.NestedRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -276,13 +287,14 @@ public class DeserializationTests
     public void Notification_NestedCamelCaseObjectParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": {{TestData.NestedRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": {{TestData.NestedRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -297,15 +309,16 @@ public class DeserializationTests
     public void Notification_NestedSnakeCaseArrayParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.NestedRequiredSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.NestedRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -323,15 +336,16 @@ public class DeserializationTests
     public void Notification_NestedCamelCaseArrayParams()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.NestedRequiredCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.NestedRequiredCamelCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -354,14 +368,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": {},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -378,14 +393,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": [],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": [],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -404,14 +420,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -426,13 +443,14 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -447,13 +465,14 @@ public class DeserializationTests
     {
         var method = "method";
         var id = 123;
-        var json = $$"""
-            {
-                "id": {{id}},
-                "method": "{{method}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": {{id}},
+                  "method": "{{method}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -468,20 +487,20 @@ public class DeserializationTests
     {
         var method = "method";
         var id = 123.565;
-        var json = $$"""
-                     {
-                         "id": {{id.ToString(CultureInfo.InvariantCulture)}},
-                         "method": "{{method}}",
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{id.ToString(CultureInfo.InvariantCulture)}},
+                  "method": "{{method}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
         deserialized.Should().BeOfType<SingleRequestWrapper>();
         var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
         var expected = new UntypedRequest(new FloatNumberRpcId(id), method, null);
-
 
         request.Should().BeEquivalentTo(expected);
     }
@@ -491,13 +510,14 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -511,13 +531,14 @@ public class DeserializationTests
     public void Request_NullId()
     {
         var method = "method";
-        var json = $$"""
-            {
-                "id": null,
-                "method": "{{method}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": null,
+                  "method": "{{method}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -533,14 +554,15 @@ public class DeserializationTests
         var method = "method";
         var id = "123";
         var parameter = 123;
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": {{parameter}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": {{parameter}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -558,16 +580,17 @@ public class DeserializationTests
         var method = "method";
         var id = "123";
         var parameter = 123;
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": [
-                    {{parameter}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": [
+                      {{parameter}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -586,14 +609,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -610,14 +634,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": {{TestData.PlainRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": {{TestData.PlainRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -634,16 +659,17 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.PlainRequiredSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.PlainRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -663,16 +689,17 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.PlainRequiredCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.PlainRequiredCamelCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -692,14 +719,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": {{TestData.NestedRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": {{TestData.NestedRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -716,14 +744,15 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": {{TestData.NestedRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": {{TestData.NestedRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -740,16 +769,17 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.NestedRequiredSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.NestedRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -769,16 +799,17 @@ public class DeserializationTests
     {
         var method = "method";
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "method": "{{method}}",
-                "params": [
-                    {{TestData.NestedRequiredCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "method": "{{method}}",
+                  "params": [
+                      {{TestData.NestedRequiredCamelCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -801,13 +832,14 @@ public class DeserializationTests
     public void RequestResponse_EmptyObjectResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -822,13 +854,14 @@ public class DeserializationTests
     public void RequestResponse_EmptyArrayResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": [],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": [],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -845,13 +878,14 @@ public class DeserializationTests
     public void RequestResponse_NullResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": null,
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": null,
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -863,13 +897,14 @@ public class DeserializationTests
     public void RequestResponse_IntId()
     {
         var id = 123;
-        var json = $$"""
-            {
-                "id": {{id}},
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": {{id}},
+                  "result": {},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -881,13 +916,14 @@ public class DeserializationTests
     public void RequestResponse_FloatId()
     {
         var id = 123.565;
-        var json = $$"""
-                     {
-                         "id": {{id.ToString(CultureInfo.InvariantCulture)}},
-                         "result": {},
-                         "jsonrpc": "2.0"
-                     }
-                     """;
+        var json =
+            $$"""
+              {
+                  "id": {{id.ToString(CultureInfo.InvariantCulture)}},
+                  "result": {},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -899,13 +935,14 @@ public class DeserializationTests
     public void RequestResponse_StringId()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -917,12 +954,12 @@ public class DeserializationTests
     public void RequestResponse_NullId()
     {
         var json = """
-            {
-                "id": null,
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+                   {
+                       "id": null,
+                       "result": {},
+                       "jsonrpc": "2.0"
+                   }
+                   """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -935,13 +972,14 @@ public class DeserializationTests
     {
         var id = "123";
         var result = 123;
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {{result}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {{result}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -957,15 +995,16 @@ public class DeserializationTests
     {
         var id = "123";
         var result = 123;
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": [
-                    {{result}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": [
+                      {{result}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -983,15 +1022,16 @@ public class DeserializationTests
     {
         var id = "123";
         var error = "errorValue";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {
-                    "error": "{{error}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {
+                      "error": "{{error}}"
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1007,13 +1047,14 @@ public class DeserializationTests
     public void RequestResponse_PlainSnakeCaseObjectResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.PlainRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {{TestData.PlainRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1029,13 +1070,14 @@ public class DeserializationTests
     public void RequestResponse_PlainCamelCaseObjectResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.PlainRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {{TestData.PlainRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1051,15 +1093,16 @@ public class DeserializationTests
     public void RequestResponse_PlainSnakeCaseArrayResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": [
-                    {{TestData.PlainRequiredSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": [
+                      {{TestData.PlainRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1077,15 +1120,16 @@ public class DeserializationTests
     public void RequestResponse_PlainCamelCaseArrayResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": [
-                    {{TestData.PlainRequiredCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": [
+                      {{TestData.PlainRequiredCamelCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1103,13 +1147,14 @@ public class DeserializationTests
     public void RequestResponse_NestedSnakeCaseObjectResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.NestedRequiredSnakeCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {{TestData.NestedRequiredSnakeCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1125,13 +1170,14 @@ public class DeserializationTests
     public void RequestResponse_NestedCamelCaseObjectResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": {{TestData.NestedRequiredCamelCaseJson}},
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": {{TestData.NestedRequiredCamelCaseJson}},
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1147,15 +1193,16 @@ public class DeserializationTests
     public void RequestResponse_NestedSnakeCaseArrayResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": [
-                    {{TestData.NestedRequiredSnakeCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": [
+                      {{TestData.NestedRequiredSnakeCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1173,15 +1220,16 @@ public class DeserializationTests
     public void RequestResponse_NestedCamelCaseArrayResult()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "result": [
-                    {{TestData.NestedRequiredCamelCaseJson}}
-                ],
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "result": [
+                      {{TestData.NestedRequiredCamelCaseJson}}
+                  ],
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1201,17 +1249,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {}
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1229,17 +1278,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": []
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": []
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1259,17 +1309,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": null
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": null
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1286,16 +1337,17 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}"
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}"
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1313,17 +1365,18 @@ public class DeserializationTests
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var errorData = 123;
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{errorData}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {{errorData}}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1342,19 +1395,20 @@ public class DeserializationTests
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var errorData = 123;
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{errorData}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": [
+                          {{errorData}}
+                      ]
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1375,19 +1429,20 @@ public class DeserializationTests
         var errorCode = 123;
         var errorMessage = "errorMessage";
         var result = "resultValue";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {
-                        "result": "{{result}}"
-                    }
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {
+                          "result": "{{result}}"
+                      }
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1406,17 +1461,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainRequiredSnakeCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {{TestData.PlainRequiredSnakeCaseJson}}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1435,17 +1491,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.PlainRequiredCamelCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {{TestData.PlainRequiredCamelCaseJson}}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1464,19 +1521,20 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.PlainRequiredSnakeCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": [
+                          {{TestData.PlainRequiredSnakeCaseJson}}
+                      ]
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1497,19 +1555,20 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.PlainRequiredCamelCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": [
+                          {{TestData.PlainRequiredCamelCaseJson}}
+                      ]
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1530,17 +1589,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.NestedRequiredSnakeCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {{TestData.NestedRequiredSnakeCaseJson}}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1559,17 +1619,18 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": {{TestData.NestedRequiredCamelCaseJson}}
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": {{TestData.NestedRequiredCamelCaseJson}}
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1588,19 +1649,20 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.NestedRequiredSnakeCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": [
+                          {{TestData.NestedRequiredSnakeCaseJson}}
+                      ]
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1621,19 +1683,20 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "error": {
-                    "code": {{errorCode}},
-                    "message": "{{errorMessage}}",
-                    "data": [
-                        {{TestData.NestedRequiredCamelCaseJson}}
-                    ]
-                },
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "error": {
+                      "code": {{errorCode}},
+                      "message": "{{errorMessage}}",
+                      "data": [
+                          {{TestData.NestedRequiredCamelCaseJson}}
+                      ]
+                  },
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1652,12 +1715,13 @@ public class DeserializationTests
     public void RequestResponse_NeitherResultNorError_ThrowJsonRpcFormatException()
     {
         var id = "123";
-        var json = $$"""
-            {
-                "id": "{{id}}",
-                "jsonrpc": "2.0"
-            }
-            """;
+        var json =
+            $$"""
+              {
+                  "id": "{{id}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1668,11 +1732,11 @@ public class DeserializationTests
     public void RequestResponse_NoId_ThrowJsonRpcFormatException()
     {
         var json = """
-            {
-                "result": {},
-                "jsonrpc": "2.0"
-            }
-            """;
+                   {
+                       "result": {},
+                       "jsonrpc": "2.0"
+                   }
+                   """;
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1683,8 +1747,8 @@ public class DeserializationTests
     public void RequestResponse_RootElementNotObject_ThrowJsonRpcFormatException()
     {
         var json = """
-            123
-            """;
+                   123
+                   """;
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1695,12 +1759,12 @@ public class DeserializationTests
     public void RequestResponse_UnsupportedIdType_ThrowJsonRpcFormatException()
     {
         var json = """
-            {
-                "id": {},
-                "jsonrpc": "2.0",
-                "result": {}
-            }
-            """;
+                   {
+                       "id": {},
+                       "jsonrpc": "2.0",
+                       "result": {}
+                   }
+                   """;
 
         var act = () => JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1715,15 +1779,16 @@ public class DeserializationTests
     public void Batch_1Notification()
     {
         var method = "method";
-        var json = $$"""
-            [
-                {
-                    "method": "{{method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "method": "{{method}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -1742,20 +1807,21 @@ public class DeserializationTests
     {
         var method1 = "method1";
         var method2 = "method2";
-        var json = $$"""
-            [
-                {
-                    "method": "{{method1}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "method": "{{method2}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "method": "{{method1}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  },
+                  {
+                      "method": "{{method2}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -1775,16 +1841,17 @@ public class DeserializationTests
     {
         var id = "123";
         var method = "method";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "method": "{{method}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id}}",
+                      "method": "{{method}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -1805,22 +1872,23 @@ public class DeserializationTests
         var id2 = "456";
         var method1 = "method1";
         var method2 = "method2";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "method": "{{method1}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "method": "{{method2}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id1}}",
+                      "method": "{{method1}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  },
+                  {
+                      "id": "{{id2}}",
+                      "method": "{{method2}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -1841,21 +1909,22 @@ public class DeserializationTests
         var id1 = "123";
         var method1 = "method1";
         var method2 = "method2";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "method": "{{method1}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "method": "{{method2}}",
-                    "params": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id1}}",
+                      "method": "{{method1}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  },
+                  {
+                      "method": "{{method2}}",
+                      "params": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
 
@@ -1878,15 +1947,16 @@ public class DeserializationTests
     public void BatchResponse_1Response()
     {
         var id = "123";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id}}",
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1903,20 +1973,21 @@ public class DeserializationTests
     {
         var id1 = "123";
         var id2 = "546";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id1}}",
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  },
+                  {
+                      "id": "{{id2}}",
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1935,18 +2006,19 @@ public class DeserializationTests
         var id = "123";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}"
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}"
+                      },
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -1965,26 +2037,27 @@ public class DeserializationTests
         var id2 = "456";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}"
-                    },
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}"
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id1}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}"
+                      },
+                      "jsonrpc": "2.0"
+                  },
+                  {
+                      "id": "{{id2}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}"
+                      },
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 
@@ -2004,23 +2077,24 @@ public class DeserializationTests
         var id2 = "456";
         var errorCode = 123;
         var errorMessage = "errorMessage";
-        var json = $$"""
-            [
-                {
-                    "id": "{{id1}}",
-                    "result": {},
-                    "jsonrpc": "2.0"
-                },
-                {
-                    "id": "{{id2}}",
-                    "error": {
-                        "code": {{errorCode}},
-                        "message": "{{errorMessage}}"
-                    },
-                    "jsonrpc": "2.0"
-                }
-            ]
-            """;
+        var json =
+            $$"""
+              [
+                  {
+                      "id": "{{id1}}",
+                      "result": {},
+                      "jsonrpc": "2.0"
+                  },
+                  {
+                      "id": "{{id2}}",
+                      "error": {
+                          "code": {{errorCode}},
+                          "message": "{{errorMessage}}"
+                      },
+                      "jsonrpc": "2.0"
+                  }
+              ]
+              """;
 
         var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
 

@@ -102,21 +102,22 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
 
-        var expectedResponse = $$"""
-                                 {
-                                     "id": 123,
-                                     "error": {
-                                         "code": -32602,
-                                         "message": "Invalid params",
-                                         "data": {
-                                             "Str": [
-                                                 "{{ModelValidator.Error}}"
-                                             ]
-                                         }
-                                     },
-                                     "jsonrpc": "2.0"
-                                 }
-                                 """.TrimAllLines();
+        var expectedResponse =
+            $$"""
+                  {
+                      "id": 123,
+                      "error": {
+                          "code": -32602,
+                          "message": "Invalid params",
+                          "data": {
+                              "Str": [
+                                  "{{ModelValidator.Error}}"
+                              ]
+                          }
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
         responseContent.TrimAllLines().Should().Be(expectedResponse);
@@ -139,21 +140,22 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
 
-        var expectedResponse = $$"""
-                                 {
-                                     "id": 123,
-                                     "error": {
-                                         "code": -32603,
-                                         "message": "Internal error",
-                                         "data": {
-                                             "": [
-                                                 "{{StringValidator.Error}}"
-                                             ]
-                                         }
-                                     },
-                                     "jsonrpc": "2.0"
-                                 }
-                                 """.TrimAllLines();
+        var expectedResponse =
+            $$"""
+                  {
+                      "id": 123,
+                      "error": {
+                          "code": -32603,
+                          "message": "Internal error",
+                          "data": {
+                              "": [
+                                  "{{StringValidator.Error}}"
+                              ]
+                          }
+                      },
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
         responseContent.TrimAllLines().Should().Be(expectedResponse);
@@ -163,27 +165,29 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
     public async Task FluentValidation_ValidRequest_ReturnJsonRpcResponse()
     {
         var str = "123";
-        var requestContent = $$"""
-                               {
-                                   "id": 123,
-                                   "method": "validate",
-                                   "jsonrpc": "2.0",
-                                   "params": {
-                                      "str": "{{str}}"
-                                   }
-                               }
-                               """;
+        var requestContent =
+            $$"""
+              {
+                  "id": 123,
+                  "method": "validate",
+                  "jsonrpc": "2.0",
+                  "params": {
+                     "str": "{{str}}"
+                  }
+              }
+              """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
 
-        var expectedResponse = $$"""
-                                 {
-                                     "id": 123,
-                                     "result": "{{str}}",
-                                     "jsonrpc": "2.0"
-                                 }
-                                 """.TrimAllLines();
+        var expectedResponse =
+            $$"""
+                  {
+                      "id": 123,
+                      "result": "{{str}}",
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
         responseContent.TrimAllLines().Should().Be(expectedResponse);

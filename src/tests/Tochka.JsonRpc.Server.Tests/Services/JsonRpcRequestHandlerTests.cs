@@ -47,12 +47,12 @@ public class JsonRpcRequestHandlerTests
     {
         var id = new NumberRpcId(Id);
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": {{methodName}},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "id": {{Id}},
+                                               "method": {{methodName}},
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -74,11 +74,11 @@ public class JsonRpcRequestHandlerTests
     public async Task ProcessJsonRpcRequest_SingleNotificationMethodIsEmpty_ReturnNull(string methodName)
     {
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "method": {{methodName}},
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "method": {{methodName}},
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -98,12 +98,12 @@ public class JsonRpcRequestHandlerTests
     {
         var id = new NumberRpcId(Id);
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": "{{MethodName}}",
-                "jsonrpc": {{version}}
-            }
-            """);
+                                           {
+                                               "id": {{Id}},
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": {{version}}
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -128,11 +128,11 @@ public class JsonRpcRequestHandlerTests
     public async Task ProcessJsonRpcRequest_SingleNotificationUnsupportedVersion_ReturnNull(string version)
     {
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": {{version}}
-            }
-            """);
+                                           {
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": {{version}}
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -147,12 +147,12 @@ public class JsonRpcRequestHandlerTests
     {
         var id = new NumberRpcId(Id);
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "id": {{Id}},
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -177,11 +177,11 @@ public class JsonRpcRequestHandlerTests
     public async Task ProcessJsonRpcRequest_SingleNotificationNextThrows_ReturnNull()
     {
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -200,12 +200,12 @@ public class JsonRpcRequestHandlerTests
     {
         var id = new NumberRpcId(Id);
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "id": {{Id}},
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -230,11 +230,11 @@ public class JsonRpcRequestHandlerTests
     public async Task ProcessJsonRpcRequest_SingleNotificationNextRemovesFeature_ReturnNull()
     {
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -254,12 +254,12 @@ public class JsonRpcRequestHandlerTests
     {
         var id = new NumberRpcId(Id);
         var rawCall = JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """);
+                                           {
+                                               "id": {{Id}},
+                                               "method": "{{MethodName}}",
+                                               "jsonrpc": "2.0"
+                                           }
+                                           """);
         var requestWrapper = new SingleRequestWrapper(rawCall);
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -328,18 +328,18 @@ public class JsonRpcRequestHandlerTests
         var requestWrapper = new BatchRequestWrapper(new List<JsonDocument>
         {
             JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """),
+                                 {
+                                     "id": {{Id}},
+                                     "method": "{{MethodName}}",
+                                     "jsonrpc": "2.0"
+                                 }
+                                 """),
             JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """)
+                                 {
+                                     "method": "{{MethodName}}",
+                                     "jsonrpc": "2.0"
+                                 }
+                                 """)
         });
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -363,18 +363,18 @@ public class JsonRpcRequestHandlerTests
         var requestWrapper = new BatchRequestWrapper(new List<JsonDocument>
         {
             JsonDocument.Parse($$"""
-            {
-                "id": {{Id}},
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """),
+                                 {
+                                     "id": {{Id}},
+                                     "method": "{{MethodName}}",
+                                     "jsonrpc": "2.0"
+                                 }
+                                 """),
             JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """)
+                                 {
+                                     "method": "{{MethodName}}",
+                                     "jsonrpc": "2.0"
+                                 }
+                                 """)
         });
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
@@ -403,17 +403,17 @@ public class JsonRpcRequestHandlerTests
         var requestWrapper = new BatchRequestWrapper(new List<JsonDocument>
         {
             JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """),
+                                 {
+                                     "method": "{{MethodName}}",
+                                     "jsonrpc": "2.0"
+                                 }
+                                 """),
             JsonDocument.Parse($$"""
-            {
-                "method": "{{MethodName}}",
-                "jsonrpc": "2.0"
-            }
-            """)
+                                 {
+                                     "method": "{{MethodName}}",
+                                     "jsonrpc": "2.0"
+                                 }
+                                 """)
         });
         var httpContext = new DefaultHttpContext();
         var nextMock = new Mock<RequestDelegate>();
