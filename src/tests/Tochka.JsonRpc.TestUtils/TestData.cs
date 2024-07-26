@@ -306,10 +306,3 @@ public record TestData(bool BoolField, string StringField, int IntField, double 
 
     #endregion
 }
-
-public enum TestEnum
-{
-    One,
-    Two,
-    ThreeFour
-}

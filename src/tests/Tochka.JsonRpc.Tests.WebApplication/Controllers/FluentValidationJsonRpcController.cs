@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Attributes;
@@ -27,22 +26,4 @@ public class FluentValidationJsonRpcController : JsonRpcControllerBase
             ? Ok(errorFactory.InternalError(validationResult.ToDictionary()))
             : Ok(model.Str);
     }
-}
-
-public record ValidationModel(string? Str);
-
-[UsedImplicitly]
-public class ModelValidator : AbstractValidator<ValidationModel>
-{
-    public ModelValidator() => RuleFor(static m => m.Str).NotEmpty().WithMessage(Error);
-
-    internal const string Error = "Str is empty";
-}
-
-[UsedImplicitly]
-public class StringValidator : AbstractValidator<string>
-{
-    public StringValidator() => RuleFor(static x => x).MinimumLength(3).WithMessage(Error);
-
-    internal const string Error = "Str is too short";
 }

@@ -435,17 +435,8 @@ public class TypeEmitterTests
     public record NestedClass;
 }
 
-internal sealed record NonPublicClass;
+// ReSharper disable once MemberCanBeInternal
 
 // ReSharper disable once MemberCanBeInternal
-public sealed record SealedClass;
 
 // ReSharper disable once MemberCanBeInternal
-public record ClassWithEmptyConstructor
-{
-    public string A { get; init; }
-    public object B { get; init; }
-}
-
-// ReSharper disable once MemberCanBeInternal
-public record ClassWithoutEmptyConstructor(string A, object B);
