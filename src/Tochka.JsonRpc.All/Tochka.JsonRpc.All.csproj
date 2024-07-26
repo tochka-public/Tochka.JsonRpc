@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Company>Tochka</Company>
+    <Description>Metapackage for Tochka.JsonRpc</Description>
+    <Copyright>Tochka</Copyright>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://tochka-public.github.io/Tochka.JsonRpc</PackageProjectUrl>
+    <Authors>Tochka</Authors>
+    <Product>Tochka.JsonRpc</Product>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeContentInPack>false</IncludeContentInPack>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Tochka.JsonRpc.ApiExplorer\Tochka.JsonRpc.ApiExplorer.csproj" />
+      <ProjectReference Include="..\Tochka.JsonRpc.Client\Tochka.JsonRpc.Client.csproj" />
+      <ProjectReference Include="..\Tochka.JsonRpc.Common\Tochka.JsonRpc.Common.csproj" />
+      <ProjectReference Include="..\Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj" />
+      <ProjectReference Include="..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
+      <ProjectReference Include="..\Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj" />
+    </ItemGroup>
+
+</Project>
