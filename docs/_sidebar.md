@@ -39,7 +39,6 @@
     - [Сериализация](/ru/client/serialization)
     - [Ответы](/ru/client/responses)
 - **Links**
-  - [Legacy docs (1.x)](https://github.com/tochka-public/Tochka.JsonRpc/tree/master/docs/v1)
   - [Readme ➪](https://github.com/tochka-public/Tochka.JsonRpc/blob/master/README.md)
   - [Nuget ➪](https://www.nuget.org/profiles/tochka-public)
   - [JSON-RPC 2.0 Specification ➪](https://www.jsonrpc.org/specification)
