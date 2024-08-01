@@ -94,6 +94,85 @@ internal class OpenRpcDocumentGeneratorTests
     }
 
     [Test]
+    public void GetControllersTagsReturnsTagsWithControllerName()
+    {
+        var apiDescription1 = GetValidDescription(controllerName: "JsonRpc");
+        var apiDescription2 = GetValidDescription(controllerName: "Test");
+        var apiDescription3 = GetValidDescription(controllerName: string.Empty);
+        apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
+            .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
+                {
+                    new(null, new[] { apiDescription1 }),
+                    new(null, new[] { apiDescription2 }),
+                    new(null, new[] { apiDescription3 }),
+                },
+                0))
+            .Verifiable();
+
+        var result = documentGeneratorMock.Object.GetControllersTags();
+        var expected = new Dictionary<string, OpenRpcTag>()
+        {
+            { "json_rpc", new OpenRpcTag("json_rpc") },
+            { "test", new OpenRpcTag("test") },
+        };
+
+        result.Should().BeEquivalentTo(expected, static options => options.WithStrictOrdering());
+        apiDescriptionsProviderMock.Verify();
+        documentGeneratorMock.Verify();
+    }
+
+    [Test]
+    public void GetMethodTagsReturnNewRefSchemaTag()
+    {
+        var apiDescription1 = GetValidDescription(controllerName: "JsonRpc");
+        var controllerName = (apiDescription1.ActionDescriptor as ControllerActionDescriptor).ControllerName;
+        var expected = new Dictionary<string, OpenRpcTag>()
+        {
+            { "json_rpc", new OpenRpcTag("json_rpc") },
+        };
+        var result = documentGeneratorMock.Object.GetMethodTags(controllerName, expected);
+
+        result.Should().HaveCount(1);
+        result.Single().Keywords.Single().Should().BeOfType<RefKeyword>();
+        apiDescriptionsProviderMock.Verify();
+        documentGeneratorMock.Verify();
+    }
+
+    [Test]
+    public void GetMethodsReturnsMethodWithTags()
+    {
+        var apiDescription1 = GetValidDescription(controllerName: "JsonRpc");
+
+        var host = new Uri(Host);
+        apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
+            .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
+                {
+                    new(null, new[] { apiDescription1 })
+                },
+                0))
+            .Verifiable();
+
+        var method1 = new OpenRpcMethod("a"){ Tags = new List<JsonSchema> { new JsonSchemaBuilder().Ref($"#/components/tags/json_rpc").Build() } };
+        var tags = new Dictionary<string, OpenRpcTag>
+        {
+            { "json_rpc", new OpenRpcTag("json_rpc") }
+        };
+        documentGeneratorMock.Setup(g => g.GetMethod(apiDescription1, host, tags))
+            .Returns(method1)
+            .Verifiable();
+        openRpcOptions.DocInclusionPredicate = static (_, _) => true;
+
+        var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
+        var expected = new[]
+        {
+            method1,
+        };
+        result.Should().BeEquivalentTo(expected, static options => options.WithStrictOrdering());
+        apiDescriptionsProviderMock.Verify();
+        documentGeneratorMock.Verify();
+    }
+
+    [Test]
     public void GetServers_ReturnsOneServerWithDefaultNameAndUrl()
     {
         var host = new Uri(Host);
@@ -835,7 +914,7 @@ internal class OpenRpcDocumentGeneratorTests
         result.Should().Be(OpenRpcParamStructure.Either);
     }
 
-    private static ApiDescription GetValidDescription(Action? action = null) => new()
+    private static ApiDescription GetValidDescription(Action? action = null, string? controllerName = null) => new()
     {
         ActionDescriptor = new ControllerActionDescriptor
         {
@@ -843,6 +922,7 @@ internal class OpenRpcDocumentGeneratorTests
             {
                 new JsonRpcControllerAttribute()
             },
+            ControllerName = controllerName,
             MethodInfo = action?.Method ?? ((Action) ValidMethod).Method
         },
         Properties =
