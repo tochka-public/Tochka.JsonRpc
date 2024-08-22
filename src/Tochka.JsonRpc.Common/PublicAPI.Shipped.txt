@@ -90,6 +90,15 @@ Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Params.get -> TParams?
 Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Params.init -> void
 Tochka.JsonRpc.Common.Models.Request.Request<TParams>.Request(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, string! Method, TParams? Params, string! Jsonrpc = "2.0") -> void
 Tochka.JsonRpc.Common.Models.Request.Request<TParams>.WithSerializedParams(System.Text.Json.JsonSerializerOptions! serializerOptions) -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!
+Tochka.JsonRpc.Common.Models.Request.Request
+Tochka.JsonRpc.Common.Models.Request.Request.Id.get -> Tochka.JsonRpc.Common.Models.Id.IRpcId!
+Tochka.JsonRpc.Common.Models.Request.Request.Id.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request.Jsonrpc.get -> string!
+Tochka.JsonRpc.Common.Models.Request.Request.Jsonrpc.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request.Method.get -> string!
+Tochka.JsonRpc.Common.Models.Request.Request.Method.init -> void
+Tochka.JsonRpc.Common.Models.Request.Request.Request(Tochka.JsonRpc.Common.Models.Id.IRpcId! Id, string! Method, string! Jsonrpc = "2.0") -> void
+Tochka.JsonRpc.Common.Models.Request.Request.WithSerializedParams(System.Text.Json.JsonSerializerOptions! serializerOptions) -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!
 Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall
 Tochka.JsonRpc.Common.Models.Request.Untyped.UntypedNotification
 Tochka.JsonRpc.Common.Models.Request.Untyped.UntypedNotification.UntypedNotification(string! Method, System.Text.Json.JsonDocument? Params, string! Jsonrpc = "2.0") -> void

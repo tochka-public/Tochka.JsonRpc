@@ -252,7 +252,20 @@ public interface IJsonRpcClient
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
         where TParams : class
         where TResponse : class;
-
+    
+    /// <summary>
+    /// Send request to given url. Expects HTTP 200 with JSON-RPC response
+    /// </summary>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="id">JSON-RPC request id. Can be null</param>
+    /// <param name="method">JSON-RPC method</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
+    Task<ISingleJsonRpcResult> SendRequest(string requestUrl, IRpcId id, string method, CancellationToken cancellationToken);
+    
     /// <summary>
     /// Send batch of requests or notifications to given url. Expects HTTP 200 with batch JSON-RPC response if batch contains at least one request
     /// </summary>
