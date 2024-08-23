@@ -18,7 +18,6 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
     {
         var bindingStyle = parameterMetadata.BindingStyle;
         var jsonValueKind = parameters?.RootElement.ValueKind;
-        var hasParamsNode = rawCall.RootElement.TryGetProperty(JsonRpcConstants.ParamsProperty, out _);
         return jsonValueKind switch
         {
             JsonValueKind.Object => ParseObject(parameters!.RootElement, parameterMetadata.PropertyName, bindingStyle),

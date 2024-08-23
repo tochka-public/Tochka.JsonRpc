@@ -38,7 +38,6 @@ public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string
 /// </summary>
 /// <param name="Id">Identifier established by the Client</param>
 /// <param name="Method">Name of the method to be invoked</param>
-/// <param name="Params">Parameter values to be used during the invocation of the method</param>
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
