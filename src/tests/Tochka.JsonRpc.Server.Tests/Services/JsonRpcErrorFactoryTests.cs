@@ -40,7 +40,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.ParseError(errorData);
 
-        var expected = new Error<object>(-32700, "Parse error", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.ParseError, "Parse error", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -56,7 +56,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.InvalidRequest(errorData);
 
-        var expected = new Error<object>(-32600, "Invalid Request", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.InvalidRequest, "Invalid Request", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -72,7 +72,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.MethodNotFound(errorData);
 
-        var expected = new Error<object>(-32601, "Method not found", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.MethodNotFound, "Method not found", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -88,7 +88,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.InvalidParams(errorData);
 
-        var expected = new Error<object>(-32602, "Invalid params", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.InvalidParams, "Invalid params", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -104,7 +104,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.InternalError(errorData);
 
-        var expected = new Error<object>(-32603, "Internal error", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.InternalError, "Internal error", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -215,7 +215,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.Exception(exception);
 
-        var expected = new Error<object>(-32601, "Method not found", new { Method = methodName });
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.MethodNotFound, "Method not found", new { Method = methodName });
         result.Should().BeEquivalentTo(expected);
     }
 
@@ -241,7 +241,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.Exception(exception);
 
-        var expected = new Error<object>(-32600, "Invalid Request", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.InvalidRequest, "Invalid Request", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -274,7 +274,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.HttpError(httpCode, errorData);
 
-        var expected = new Error<object>(-32602, "Invalid params", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.InvalidParams, "Invalid params", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -291,7 +291,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.HttpError(httpCode, errorData);
 
-        var expected = new Error<object>(-32601, "Method not found", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.MethodNotFound, "Method not found", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -323,7 +323,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.HttpError(415, errorData);
 
-        var expected = new Error<object>(-32700, "Parse error", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.ParseError, "Parse error", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
@@ -339,7 +339,7 @@ public class JsonRpcErrorFactoryTests
 
         var result = errorFactoryMock.Object.HttpError(500, errorData);
 
-        var expected = new Error<object>(-32603, "Internal error", wrappedData);
+        var expected = new Error<object>(JsonRpcPreDefinedErrorCodes.InternalError, "Internal error", wrappedData);
         result.Should().BeEquivalentTo(expected);
         errorFactoryMock.Verify();
     }
