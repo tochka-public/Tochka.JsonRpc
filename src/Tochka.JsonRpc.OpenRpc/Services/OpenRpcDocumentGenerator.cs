@@ -76,7 +76,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             var controllerSummary = actionDescriptor?.ControllerTypeInfo.GetXmlDocsSummary();
             var route = apiDescription.RelativePath?.Split('#').First();
 
-            if (string.IsNullOrWhiteSpace(route) || $"/{route}" == serverOptions.RoutePrefix)
+            if (string.IsNullOrWhiteSpace(route) || $"/{route}" == serverOptions.RoutePrefix || servers.Any(x => x.Url.AbsolutePath.Contains(route, StringComparison.OrdinalIgnoreCase)))
             {
                 continue;
             }
