@@ -136,10 +136,11 @@ public class OpenRpcDocumentGeneratorTests
     {
         var apiDescription1 = GetValidDescription();
         var apiDescription2 = GetValidDescription();
-        var path = "default/path";
+        var firstPath = "first/path";
+        var secondPath = "second/path";
         serverOptions.RoutePrefix = "/";
-        apiDescription1.RelativePath = $"{path}#{MethodName}";
-        apiDescription2.RelativePath = $"{path}#{MethodName}";
+        apiDescription1.RelativePath = $"{firstPath}#{MethodName}";
+        apiDescription2.RelativePath = $"{secondPath}#{MethodName}";
 
         apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
             .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
@@ -155,6 +156,32 @@ public class OpenRpcDocumentGeneratorTests
         apiDescriptionsProviderMock.Verify();
         documentGeneratorMock.Verify();
         result.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void GetServersSameRouteReturnsOnlyOne()
+    {
+        var apiDescription1 = GetValidDescription();
+        var apiDescription2 = GetValidDescription();
+        var samePath = "default/path";
+        serverOptions.RoutePrefix = "/";
+        apiDescription1.RelativePath = $"{samePath}#{MethodName}";
+        apiDescription2.RelativePath = $"{samePath}#{MethodName}";
+
+        apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
+            .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
+                {
+                    new(null, new[] { apiDescription1 }),
+                    new(null, new[] { apiDescription2 }),
+                },
+                0))
+            .Verifiable();
+
+        var result = documentGeneratorMock.Object.GetServers(new Uri(Host));
+
+        apiDescriptionsProviderMock.Verify();
+        documentGeneratorMock.Verify();
+        result.Should().HaveCount(1);
     }
 
     [Test]
