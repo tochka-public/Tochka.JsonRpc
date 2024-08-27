@@ -50,7 +50,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
         var tags = GetControllersTags();
         return new(info)
         {
-            Servers = GetServers(host, serverOptions.RoutePrefix.Value),
+            Servers = GetServers(host),
             Methods = GetMethods(documentName, host, tags),
             Components = new()
             {
@@ -58,6 +58,33 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
                 Tags = tags
             }
         };
+    }
+
+    // internal virtual for mocking in tests
+    internal virtual List<OpenRpcServer> GetServers(Uri host)
+    {
+        var apiDescriptions = apiDescriptionsProvider.ApiDescriptionGroups.Items
+            .SelectMany(static g => g.Items)
+            .Where(d => !openRpcOptions.IgnoreObsoleteActions || !IsObsoleteTransitive(d))
+            .Where(static d => d.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
+            .ToArray();
+
+        List<OpenRpcServer> servers = [];
+        foreach (var apiDescription in apiDescriptions)
+        {
+            var actionDescriptor = apiDescription.ActionDescriptor as ControllerActionDescriptor;
+            var controllerSummary = actionDescriptor?.ControllerTypeInfo.GetXmlDocsSummary();
+            var route = apiDescription.RelativePath?.Split('#').First();
+
+            if (string.IsNullOrWhiteSpace(route) || $"/{route}" == serverOptions.RoutePrefix)
+            {
+                continue;
+            }
+
+            servers.AddRange(GetServers(host, route, string.IsNullOrEmpty(controllerSummary) ? null : controllerSummary));
+        }
+
+        return servers;
     }
 
     internal virtual Dictionary<string, OpenRpcTag> GetControllersTags()
@@ -72,10 +99,13 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     }
 
     // internal virtual for mocking in tests
-    internal virtual List<OpenRpcServer> GetServers(Uri host, string? route)
+    internal virtual List<OpenRpcServer> GetServers(Uri host, string? route, string? serverSummary)
     {
         var uriBuilder = new UriBuilder(host) { Path = route };
-        var server = new OpenRpcServer(openRpcOptions.DefaultServerName, uriBuilder.Uri);
+        var server = new OpenRpcServer(openRpcOptions.DefaultServerName, uriBuilder.Uri)
+        {
+            Summary = serverSummary
+        };
 
         return new List<OpenRpcServer>
         {
@@ -178,13 +208,15 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
     internal virtual List<OpenRpcServer>? GetMethodServers(ApiDescription apiDescription, Uri host)
     {
         var route = apiDescription.RelativePath?.Split('#').First();
+        var actionDescriptor = apiDescription.ActionDescriptor as ControllerActionDescriptor;
+        var controllerSummary = actionDescriptor?.ControllerTypeInfo.GetXmlDocsSummary();
 
         if (string.IsNullOrWhiteSpace(route) || $"/{route}" == serverOptions.RoutePrefix)
         {
             return null;
         }
 
-        return GetServers(host, route);
+        return GetServers(host, route, string.IsNullOrEmpty(controllerSummary) ? null : controllerSummary);
     }
 
     // internal virtual for mocking in tests
