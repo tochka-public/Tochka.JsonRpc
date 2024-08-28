@@ -59,8 +59,8 @@ internal class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
         for (var i = 0; i < candidates.Count; i++)
         {
             var candidate = candidates[i];
-            var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>()!;
-            var methodMatches = call.Method == jsonRpcMetadata.Method;
+            var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>();
+            var methodMatches = call.Method == jsonRpcMetadata?.Method;
             candidates.SetValidity(i, methodMatches);
             if (methodMatches)
             {
