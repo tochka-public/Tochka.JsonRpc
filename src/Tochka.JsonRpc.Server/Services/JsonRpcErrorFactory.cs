@@ -25,23 +25,23 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
 
     /// <inheritdoc />
     public IError ParseError(object? errorData) =>
-        new Error<object>(-32700, "Parse error", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.ParseError, "Parse error", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError InvalidRequest(object? errorData) =>
-        new Error<object>(-32600, "Invalid Request", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InvalidRequest, "Invalid Request", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError MethodNotFound(object? errorData) =>
-        new Error<object>(-32601, "Method not found", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.MethodNotFound, "Method not found", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError InvalidParams(object? errorData) =>
-        new Error<object>(-32602, "Invalid params", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InvalidParams, "Invalid params", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError InternalError(object? errorData) =>
-        new Error<object>(-32603, "Internal error", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InternalError, "Internal error", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError ServerError(int code, object? errorData) =>
@@ -120,7 +120,11 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     /// </summary>
     /// <param name="code">error.code</param>
     [ExcludeFromCodeCoverage]
-    protected static bool IsSpecial(int code) => code is -32700 or -32600 or -32601 or -32602 or -32603;
+    protected static bool IsSpecial(int code) => code is JsonRpcErrorCodes.ParseError
+        or JsonRpcErrorCodes.InvalidRequest
+        or JsonRpcErrorCodes.MethodNotFound
+        or JsonRpcErrorCodes.InvalidParams
+        or JsonRpcErrorCodes.InternalError;
 
     /// <summary>
     /// Check if code is reserved for server implementation in specification
