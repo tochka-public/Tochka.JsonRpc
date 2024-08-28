@@ -1,9 +1,9 @@
 namespace Tochka.JsonRpc.Common;
 
 /// <summary>
-/// Reserved pre-defined JSON-RPC error codes
+/// Reserved predefined JSON-RPC error codes
 /// </summary>
-public static class JsonRpcPreDefinedErrorCodes
+public static class JsonRpcErrorCodes
 {
     /// <summary>
     /// Invalid JSON was received by the server.

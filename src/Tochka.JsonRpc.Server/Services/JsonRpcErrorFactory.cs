@@ -25,23 +25,23 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
 
     /// <inheritdoc />
     public IError ParseError(object? errorData) =>
-        new Error<object>(JsonRpcPreDefinedErrorCodes.ParseError, "Parse error", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.ParseError, "Parse error", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError InvalidRequest(object? errorData) =>
-        new Error<object>(JsonRpcPreDefinedErrorCodes.InvalidRequest, "Invalid Request", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InvalidRequest, "Invalid Request", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError MethodNotFound(object? errorData) =>
-        new Error<object>(JsonRpcPreDefinedErrorCodes.MethodNotFound, "Method not found", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.MethodNotFound, "Method not found", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError InvalidParams(object? errorData) =>
-        new Error<object>(JsonRpcPreDefinedErrorCodes.InvalidParams, "Invalid params", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InvalidParams, "Invalid params", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError InternalError(object? errorData) =>
-        new Error<object>(JsonRpcPreDefinedErrorCodes.InternalError, "Internal error", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InternalError, "Internal error", WrapExceptions(errorData));
 
     /// <inheritdoc />
     public IError ServerError(int code, object? errorData) =>
@@ -120,11 +120,11 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     /// </summary>
     /// <param name="code">error.code</param>
     [ExcludeFromCodeCoverage]
-    protected static bool IsSpecial(int code) => code is JsonRpcPreDefinedErrorCodes.ParseError
-        or JsonRpcPreDefinedErrorCodes.InvalidRequest
-        or JsonRpcPreDefinedErrorCodes.MethodNotFound
-        or JsonRpcPreDefinedErrorCodes.InvalidParams
-        or JsonRpcPreDefinedErrorCodes.InternalError;
+    protected static bool IsSpecial(int code) => code is JsonRpcErrorCodes.ParseError
+        or JsonRpcErrorCodes.InvalidRequest
+        or JsonRpcErrorCodes.MethodNotFound
+        or JsonRpcErrorCodes.InvalidParams
+        or JsonRpcErrorCodes.InternalError;
 
     /// <summary>
     /// Check if code is reserved for server implementation in specification
