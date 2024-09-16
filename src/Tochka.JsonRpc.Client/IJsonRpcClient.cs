@@ -253,42 +253,120 @@ public interface IJsonRpcClient
         where TParams : class
         where TResponse : class;
 
+    /// <summary>
+    /// Send request to given url. Expects HTTP 200 with JSON-RPC Rpc response
+    /// </summary>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="request">JSON-RPC request</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest(string requestUrl, Request request, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC response
+    /// </summary>
+    /// <param name="request">JSON-RPC request</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult> SendRequest(Request request, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Send request to given url. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC response
+    /// </summary>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="method">JSON-RPC method</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest(string requestUrl, string method, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Send request to BaseUrl. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC response
+    /// </summary>
+    /// <param name="method">JSON-RPC method</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult> SendRequest(string method, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Send request to given url. Expects HTTP 200 with JSON-RPC response
+    /// </summary>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="id">JSON-RPC request id. Can be null</param>
+    /// <param name="method">JSON-RPC method</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest(string requestUrl, IRpcId id, string method, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC response
+    /// </summary>
+    /// <param name="id">JSON-RPC request id. Can be null</param>
+    /// <param name="method">JSON-RPC method</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult> SendRequest(IRpcId id, string method, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Send request to given url. Expects HTTP 200 with JSON-RPC Rpc typed response
+    /// </summary>
+    /// <typeparam name="TResponse">Type of response</typeparam>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="request">JSON-RPC request</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, Request request, CancellationToken cancellationToken)
         where TResponse : class;
 
+    /// <summary>
+    /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC typed response
+    /// </summary>
+    /// <typeparam name="TResponse">Type of response</typeparam>
+    /// <param name="request">JSON-RPC request</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(Request request, CancellationToken cancellationToken)
         where TResponse : class;
 
     /// <summary>
-    /// 
+    /// Send request to given url. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC typed response
     /// </summary>
-    /// <param name="requestUrl"></param>
-    /// <param name="method"></param>
+    /// <typeparam name="TResponse">Type of response</typeparam>
+    /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
+    /// <param name="method">JSON-RPC method</param>
     /// <param name="cancellationToken"></param>
-    /// <typeparam name="TResponse"></typeparam>
-    /// <returns></returns>
+    /// <returns>Result to be inspected for response data or errors</returns>
+    /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
+    /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
+    /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, string method, CancellationToken cancellationToken)
         where TResponse : class;
 
     /// <summary>
     /// Send request to BaseUrl. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC typed response
     /// </summary>
-    /// <typeparam name="TParams">Type of params</typeparam>
     /// <typeparam name="TResponse">Type of response</typeparam>
     /// <param name="method">JSON-RPC method</param>
-    /// <param name="parameters">JSON-RPC params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
@@ -299,12 +377,10 @@ public interface IJsonRpcClient
     /// <summary>
     /// Send request to given url. Expects HTTP 200 with JSON-RPC typed response
     /// </summary>
-    /// <typeparam name="TParams">Type of params</typeparam>
     /// <typeparam name="TResponse">Type of response</typeparam>
     /// <param name="requestUrl">Relative path, appended to BaseAddress. Must not start with '/'</param>
     /// <param name="id">JSON-RPC request id. Can be null</param>
     /// <param name="method">JSON-RPC method</param>
-    /// <param name="parameters">JSON-RPC params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
@@ -316,11 +392,9 @@ public interface IJsonRpcClient
     /// <summary>
     /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC typed response
     /// </summary>
-    /// <typeparam name="TParams">Type of params</typeparam>
     /// <typeparam name="TResponse">Type of response</typeparam>
     /// <param name="id">JSON-RPC request id. Can be null</param>
     /// <param name="method">JSON-RPC method</param>
-    /// <param name="parameters">JSON-RPC params - This member MAY be omitted</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Result to be inspected for response data or errors</returns>
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>

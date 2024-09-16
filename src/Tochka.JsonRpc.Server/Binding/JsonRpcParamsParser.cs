@@ -120,28 +120,4 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
                 return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", JsonRpcConstants.ParamsProperty);
         }
     }
-
-    private IParseResult ParseNoParams(BindingStyle bindingStyle)
-    {
-        switch (bindingStyle)
-        {
-            // can't get properties for binding to arguments from missing params
-            case BindingStyle.Default:
-                return new ErrorParseResult("Can't bind method arguments from missing json params", JsonRpcConstants.ParamsProperty);
-
-            // will bind successfully if object has default value specified
-            case BindingStyle.Object:
-                log.LogTrace("Binding nothing to object argument");
-                return new NoParseResult(JsonRpcConstants.ParamsProperty);
-
-            // will bind successfully if collection has default value specified
-            case BindingStyle.Array:
-                log.LogTrace("Binding nothing to collection argument");
-                return new NoParseResult(JsonRpcConstants.ParamsProperty);
-
-            default:
-                log.LogWarning("Binding nothing failed");
-                return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", JsonRpcConstants.ParamsProperty);
-        }
-    }
 }

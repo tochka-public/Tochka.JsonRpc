@@ -34,7 +34,7 @@ public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string
 
 /// <inheritdoc />
 /// <summary>
-/// Request with typed params
+/// Request without params
 /// </summary>
 /// <param name="Id">Identifier established by the Client</param>
 /// <param name="Method">Name of the method to be invoked</param>

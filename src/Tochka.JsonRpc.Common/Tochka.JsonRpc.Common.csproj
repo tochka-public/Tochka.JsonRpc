@@ -41,8 +41,4 @@
     <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="PublicAPI.Unshipped.txt" />
-  </ItemGroup>
-
 </Project>

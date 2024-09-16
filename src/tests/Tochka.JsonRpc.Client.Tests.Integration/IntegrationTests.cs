@@ -270,9 +270,8 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         response.HasError().Should().BeFalse();
     }
 
-    
     [Test]
-    public async Task SendRequest_SendRequestWithPlainDataCamelCase_SerializeSuccessfully_Ololol()
+    public async Task SendRequest_SendRequestWithoutParams_WithPlainDataCamelCase_SerializeSuccessfully()
     {
         var id = Guid.NewGuid().ToString();
         var expectedRequestJson =
@@ -312,8 +311,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
-    
-    
+
     [Test]
     public async Task SendRequest_SendRequestWithIntId_SerializeSuccessfully()
     {
