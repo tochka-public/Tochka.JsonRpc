@@ -263,8 +263,6 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        //var response = await camelCaseJsonRpcClient.SendRequest1(RequestUrl, new StringRpcId(id), Method, CancellationToken.None);
-
         var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
@@ -272,6 +270,50 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         response.HasError().Should().BeFalse();
     }
 
+    
+    [Test]
+    public async Task SendRequest_SendRequestWithPlainDataCamelCase_SerializeSuccessfully_Ololol()
+    {
+        var id = Guid.NewGuid().ToString();
+        var expectedRequestJson =
+            $$"""
+                  {
+                      "id": "{{id}}",
+                      "method": "{{Method}}",
+                      "params": null,
+                      "jsonrpc": "2.0"
+                  }
+                  """.TrimAllLines();
+        var responseBody = JsonDocument.Parse($$"""
+                                                {
+                                                    "id": "{{id}}",
+                                                    "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                    "jsonrpc": "2.0"
+                                                }
+                                                """);
+        var expectedResponseData = TestData.Plain;
+
+        string actualContentType = null;
+        string actualRequestJson = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
+            .Callback<HttpRequest>(request =>
+            {
+                using var streamReader = new StreamReader(request.Body);
+                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualContentType = request.ContentType;
+            });
+        responseProviderMock.Setup(static p => p.GetResponse())
+            .Returns(responseBody);
+
+        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, CancellationToken.None);
+
+        actualContentType.Should().Contain("application/json");
+        actualRequestJson.Should().Be(expectedRequestJson);
+        response.HasError().Should().BeFalse();
+        response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
+    }
+    
+    
     [Test]
     public async Task SendRequest_SendRequestWithIntId_SerializeSuccessfully()
     {
