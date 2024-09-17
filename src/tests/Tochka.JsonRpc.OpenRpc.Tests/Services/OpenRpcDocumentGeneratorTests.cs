@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -20,6 +21,7 @@ using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.OpenRpc.Services;
+using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Serialization;
@@ -64,7 +66,15 @@ public class OpenRpcDocumentGeneratorTests
         var methods = new List<OpenRpcMethod>();
         var schemas = new Dictionary<string, JsonSchema>();
         var tags = new Dictionary<string, OpenRpcTag>();
-        documentGeneratorMock.Setup(g => g.GetServers(host, serverOptions.RoutePrefix))
+        var apiDescription = GetValidDescription(controllerName: "ValidJsonRpc");
+        apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
+            .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
+                {
+                    new(null, new[] { apiDescription }),
+                },
+                0))
+            .Verifiable();
+        documentGeneratorMock.Setup(g => g.GetServers(host, serverOptions.RoutePrefix, null))
             .Returns(servers)
             .Verifiable();
         documentGeneratorMock.Setup(g => g.GetMethods(DocumentName, host, tags))
@@ -90,7 +100,7 @@ public class OpenRpcDocumentGeneratorTests
             }
         };
         result.Should().BeEquivalentTo(expected);
-        documentGeneratorMock.Verify();
+        apiDescriptionsProviderMock.Verify();
     }
 
     [Test]
@@ -119,6 +129,55 @@ public class OpenRpcDocumentGeneratorTests
         result.Should().BeEquivalentTo(expected, static options => options.WithStrictOrdering());
         apiDescriptionsProviderMock.Verify();
         documentGeneratorMock.Verify();
+    }
+
+    [Test]
+    public void GetServersReturnsAllEndpoints()
+    {
+        var apiDescription1 = GetValidDescription();
+        var apiDescription2 = GetValidDescription();
+        var path = "default/path";
+        serverOptions.RoutePrefix = "/";
+        apiDescription1.RelativePath = $"{path}#{MethodName}";
+        apiDescription2.RelativePath = $"{path}#{MethodName}";
+
+        apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
+            .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
+                {
+                    new(null, new[] { apiDescription1 }),
+                    new(null, new[] { apiDescription2 }),
+                },
+                0))
+            .Verifiable();
+
+        var result = documentGeneratorMock.Object.GetServers(new Uri(Host));
+
+        apiDescriptionsProviderMock.Verify();
+        documentGeneratorMock.Verify();
+        result.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void GetServersPathAndRoutePrefixSameReturnsEmptyServers()
+    {
+        var apiDescription = GetValidDescription();
+        var path = "default/path";
+        serverOptions.RoutePrefix = "/default/path";
+        apiDescription.RelativePath = $"{path}#{MethodName}";
+
+        apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
+            .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
+                {
+                    new(null, new[] { apiDescription }),
+                },
+                0))
+            .Verifiable();
+
+        var result = documentGeneratorMock.Object.GetServers(new Uri(Host));
+
+        apiDescriptionsProviderMock.Verify();
+        documentGeneratorMock.Verify();
+        result.Should().BeEmpty();
     }
 
     [Test]
@@ -178,7 +237,7 @@ public class OpenRpcDocumentGeneratorTests
         var host = new Uri(Host);
         var route = "route";
 
-        var result = documentGeneratorMock.Object.GetServers(host, route);
+        var result = documentGeneratorMock.Object.GetServers(host, route, null);
 
         var expected = new OpenRpcServer(openRpcOptions.DefaultServerName, new Uri($"{Host}/{route}"));
         result.Should().HaveCount(1);
@@ -767,9 +826,10 @@ public class OpenRpcDocumentGeneratorTests
         var description = GetValidDescription();
         var host = new Uri(Host);
         var path = "different/path";
-        var servers = new List<OpenRpcServer> { new("name", new Uri($"{Host}{path}")) };
+        var server = new OpenRpcServer("JSON-RPC", new Uri($"{Host}/{path}"));
+        var servers = new List<OpenRpcServer> { server };
         description.RelativePath = $"{path}#{MethodName}";
-        documentGeneratorMock.Setup(g => g.GetServers(host, path))
+        documentGeneratorMock.Setup(g => g.GetServers(host, path, null))
             .Returns(servers)
             .Verifiable();
 
@@ -923,7 +983,8 @@ public class OpenRpcDocumentGeneratorTests
                 new JsonRpcControllerAttribute()
             },
             ControllerName = controllerName!,
-            MethodInfo = action?.Method ?? ((Action) ValidMethod).Method
+            MethodInfo = action?.Method ?? ((Action) ValidMethod).Method,
+            ControllerTypeInfo = new TypeDelegator(typeof(ValidJsonRpcController))
         },
         Properties =
         {
@@ -938,6 +999,13 @@ public class OpenRpcDocumentGeneratorTests
 
     private static void ValidMethod()
     {
+    }
+
+    private sealed class ValidJsonRpcController : JsonRpcControllerBase
+    {
+        public static void ValidJsonRpcMethod()
+        {
+        }
     }
 
     /// <summary>summary</summary>
