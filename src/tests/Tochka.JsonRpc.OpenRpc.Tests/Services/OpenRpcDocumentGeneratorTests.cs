@@ -922,7 +922,7 @@ public class OpenRpcDocumentGeneratorTests
             {
                 new JsonRpcControllerAttribute()
             },
-            ControllerName = controllerName,
+            ControllerName = controllerName!,
             MethodInfo = action?.Method ?? ((Action) ValidMethod).Method
         },
         Properties =
