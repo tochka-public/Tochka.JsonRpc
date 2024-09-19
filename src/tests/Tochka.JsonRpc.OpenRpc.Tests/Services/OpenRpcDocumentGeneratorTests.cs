@@ -1028,7 +1028,7 @@ public class OpenRpcDocumentGeneratorTests
     {
     }
 
-    private class ValidJsonRpcController : JsonRpcControllerBase
+    private sealed class ValidJsonRpcController : JsonRpcControllerBase
     {
         public void ValidJsonRpcMethod()
         {
