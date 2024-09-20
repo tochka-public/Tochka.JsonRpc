@@ -196,6 +196,177 @@ public class JsonRpcClientBaseTests
     }
 
     [Test]
+    public async Task SendRequestWithoutParams1_ChainsToInternalMethod()
+    {
+        var request = new Request(new NullRpcId(), Method, null);
+        clientMock.Setup(x => x.SendRequestInternal(RequestUrl, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(RequestUrl, request, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParams2_ChainsToInternalMethod()
+    {
+        var request = new Request(new NullRpcId(), Method, null);
+        clientMock.Setup(x => x.SendRequestInternal(null, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(request, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParams3_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        generatorMock.Setup(static g => g.GenerateId())
+            .Returns(id)
+            .Verifiable();
+        clientMock.Setup(x => x.SendRequestInternal(RequestUrl, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(RequestUrl, Method, new CancellationToken());
+
+        generatorMock.Verify();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParams4_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        generatorMock.Setup(static g => g.GenerateId())
+            .Returns(id)
+            .Verifiable();
+        clientMock.Setup(x => x.SendRequestInternal(null, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(Method, new CancellationToken());
+
+        generatorMock.Verify();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParams5_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        clientMock.Setup(x => x.SendRequestInternal(RequestUrl, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(RequestUrl, id, Method, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParams6_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        clientMock.Setup(x => x.SendRequestInternal(null, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest(id, Method, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParamsWithResponse1_ChainsToInternalMethod()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        clientMock.Setup(x => x.SendRequestInternal<IResponse>(null, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult<IResponse>>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest<IResponse>(request, CancellationToken.None);
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParamsWithResponse2_ChainsToInternalMethod()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        clientMock.Setup(x => x.SendRequestInternal<IResponse>(PostUrl, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult<IResponse>>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest<IResponse>(PostUrl, request, CancellationToken.None);
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParamsWithResponse3_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        generatorMock.Setup(static g => g.GenerateId())
+            .Returns(id)
+            .Verifiable();
+        clientMock.Setup(x => x.SendRequestInternal<IResponse>(RequestUrl, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult<IResponse>>())
+            .Verifiable();
+        await clientMock.Object.SendRequest<IResponse>(RequestUrl, Method, new CancellationToken());
+
+        generatorMock.Verify();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParamsWithResponse4_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        generatorMock.Setup(static g => g.GenerateId())
+            .Returns(id)
+            .Verifiable();
+        clientMock.Setup(x => x.SendRequestInternal<IResponse>(null, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult<IResponse>>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest<IResponse>(Method, new CancellationToken());
+
+        generatorMock.Verify();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParamsWithResponse5_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        clientMock.Setup(x => x.SendRequestInternal<IResponse>(RequestUrl, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult<IResponse>>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest<IResponse>(RequestUrl, id, Method, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestWithoutParamsWithResponse6_ChainsToInternalMethod()
+    {
+        var id = Mock.Of<IRpcId>();
+        clientMock.Setup(x => x.SendRequestInternal<IResponse>(null, It.Is<Request>(y => y.Method == Method && y.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ISingleJsonRpcResult<IResponse>>())
+            .Verifiable();
+
+        await clientMock.Object.SendRequest<IResponse>(id, Method, new CancellationToken());
+
+        clientMock.Verify();
+    }
+
+    [Test]
     public async Task SendBatch1_ChainsToInternalMethod()
     {
         var batch = Array.Empty<ICall>();
@@ -370,6 +541,148 @@ public class JsonRpcClientBaseTests
             .Verifiable();
 
         var act = async () => await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        await act.Should().ThrowAsync<JsonRpcException>();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestInternalWithoutParams_PostContentToRequestUrlAndParseResponse()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(Mock.Of<IJsonRpcCallContext>());
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(Mock.Of<IResponse>()))
+            .Verifiable();
+
+        await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestInternalWithoutParams_FillContext()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var response = new HttpResponseMessage();
+        var singleResponse = Mock.Of<IResponse>();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.When(PostUrl)
+            .Respond(() => Task.FromResult(response));
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(singleResponse))
+            .Verifiable();
+
+        await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
+        contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
+        contextMock.Verify(c => c.WithHttpResponse(response));
+        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
+        contextMock.Verify(c => c.WithSingleResponse(singleResponse));
+    }
+
+    [Test]
+    public async Task SendRequestInternalWithoutParams_ThrowOnBatchResponse()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new BatchResponseWrapper(new List<IResponse>()))
+            .Verifiable();
+
+        var act = async () => await clientMock.Object.SendRequestInternal(RequestUrl, request, CancellationToken.None);
+
+        await act.Should().ThrowAsync<JsonRpcException>();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestInternalWithoutParamsWithResponse_PostContentToRequestUrlAndParseResponse()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(Mock.Of<IJsonRpcCallContext>());
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(Mock.Of<IResponse>()))
+            .Verifiable();
+
+        await clientMock.Object.SendRequestInternal<IResponse>(RequestUrl, request, CancellationToken.None);
+
+        handlerMock.VerifyNoOutstandingRequest();
+        handlerMock.VerifyNoOutstandingExpectation();
+        clientMock.Verify();
+    }
+
+    [Test]
+    public async Task SendRequestInternalWithoutParamsWithResponse_FillContext()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        var response = new HttpResponseMessage();
+        var singleResponse = Mock.Of<IResponse>();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.When(PostUrl)
+            .Respond(() => Task.FromResult(response));
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new SingleResponseWrapper(singleResponse))
+            .Verifiable();
+
+        await clientMock.Object.SendRequestInternal<IResponse>(RequestUrl, request, CancellationToken.None);
+
+        contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
+        contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
+        contextMock.Verify(c => c.WithHttpResponse(response));
+        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
+        contextMock.Verify(c => c.WithSingleResponse(singleResponse));
+    }
+
+    [Test]
+    public async Task SendRequestInternalWithoutParamsWithResponse_ThrowOnBatchResponse()
+    {
+        var request = new Request(new NullRpcId(), Method);
+        var contextMock = new Mock<IJsonRpcCallContext>();
+        clientMock.Setup(static c => c.CreateContext())
+            .Returns(contextMock.Object);
+        handlerMock.Expect(HttpMethod.Post, PostUrl)
+            .Respond(HttpStatusCode.OK);
+        clientMock.Setup(static c => c.GetContent(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ResponseContent)
+            .Verifiable();
+        clientMock.Setup(static c => c.ParseBody(ResponseContent))
+            .Returns(new BatchResponseWrapper(new List<IResponse>()))
+            .Verifiable();
+
+        var act = async () => await clientMock.Object.SendRequestInternal<IResponse>(RequestUrl, request, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcException>();
         clientMock.Verify();
