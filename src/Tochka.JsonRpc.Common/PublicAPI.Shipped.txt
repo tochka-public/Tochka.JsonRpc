@@ -186,3 +186,9 @@ Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.set -> void
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.Response.set -> void
 const Tochka.JsonRpc.Common.JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey = "tochka_outgoing_http_request_method_name" -> string!
+const Tochka.JsonRpc.Common.JsonRpcErrorCodes.InternalError = -32603 -> int
+const Tochka.JsonRpc.Common.JsonRpcErrorCodes.InvalidParams = -32602 -> int
+const Tochka.JsonRpc.Common.JsonRpcErrorCodes.InvalidRequest = -32600 -> int
+const Tochka.JsonRpc.Common.JsonRpcErrorCodes.MethodNotFound = -32601 -> int
+const Tochka.JsonRpc.Common.JsonRpcErrorCodes.ParseError = -32700 -> int
+Tochka.JsonRpc.Common.JsonRpcErrorCodes
