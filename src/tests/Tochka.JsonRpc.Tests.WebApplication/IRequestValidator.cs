@@ -6,5 +6,5 @@ public interface IRequestValidator
 {
     void Validate(HttpRequest request);
     void Validate(TestData data);
-    void Validate(object? data);
+    void Validate(object? data = null);
 }

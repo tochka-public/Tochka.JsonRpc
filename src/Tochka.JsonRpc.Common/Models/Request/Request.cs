@@ -31,3 +31,26 @@ public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string
         return new UntypedRequest(Id, Method, serializedParams);
     }
 }
+
+/// <inheritdoc />
+/// <summary>
+/// Request without params
+/// </summary>
+/// <param name="Id">Identifier established by the Client</param>
+/// <param name="Method">Name of the method to be invoked</param>
+/// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
+[PublicAPI]
+[ExcludeFromCodeCoverage]
+public record Request(IRpcId Id, string Method, string Jsonrpc = JsonRpcConstants.Version) : ICall
+{
+    // required for autodoc metadata generation
+    internal Request() : this(null!)
+    {
+    }
+
+    /// <inheritdoc />
+    public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions)
+    {
+        return new UntypedRequest(Id, Method, null);
+    }
+}

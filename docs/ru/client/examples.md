@@ -55,6 +55,35 @@ var response = await myClient.CreateUser("user_login", token);
 <tr>
 <td valign="top">
 
+Request without params
+```cs
+public async Task<UserModel[]> GetUsers(CancellationToken token)
+{
+    var response = await SendRequest("users.get", token);
+    return response.GetResponseOrThrow<UserModel[]>();
+}
+
+var response = await myClient.GetUsers(token);
+```
+
+</td>
+<td>
+
+```json
+{
+    "id": "56249f26-9748-461c-aeaf-b74b6a244ac6",
+    "method": "users.get",
+    "params": null,
+    "jsonrpc": "2.0"
+}
+```
+
+</td>
+</tr>
+
+<tr>
+<td valign="top">
+
 Notification
 ```cs
 public async Task CreateUser(string login, CancellationToken token) =>

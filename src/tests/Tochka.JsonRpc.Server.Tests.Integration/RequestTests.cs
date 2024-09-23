@@ -355,7 +355,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                            "message": "Invalid params",
                                            "data": {
                                                "data": [
-                                                   "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
+                                                   "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                                                ]
                                            }
                                        },
@@ -532,7 +532,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                            "message": "Invalid params",
                                            "data": {
                                                "data": [
-                                                   "Bind value not found (expected JSON key = [params])"
+                                                   "Can't bind value = [null] by JSON key = [params] to required parameter"
                                                ]
                                            }
                                        },
@@ -716,7 +716,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                            "message": "Invalid params",
                                            "data": {
                                                "data": [
-                                                   "Bind value not found (expected JSON key = [params])"
+                                                   "Can't bind value = [null] by JSON key = [params] to required parameter"
                                                ]
                                            }
                                        },
@@ -859,8 +859,8 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                            "message": "Invalid params",
                                            "data": {
                                                "data": [
-                                                   "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
-                                               ]
+                                                   "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
+                                   ]
                                            }
                                        },
                                        "jsonrpc": "2.0"
@@ -985,7 +985,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task NullableObjectParams_WithoutParams_ReturnError()
+    public async Task NullableObjectParams_WithoutParams_DeserializeSuccessfully()
     {
         const string requestJson = """
                                    {
@@ -995,20 +995,12 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    }
                                    """;
         var expectedResponseJson = """
-                                   {
-                                       "id": "123",
-                                       "error": {
-                                           "code": -32602,
-                                           "message": "Invalid params",
-                                           "data": {
-                                               "data": [
-                                                   "Bind value not found (expected JSON key = [params])"
-                                               ]
-                                           }
-                                       },
-                                       "jsonrpc": "2.0"
-                                   }
-                                   """.TrimAllLines();
+                                     {
+                                         "id": "123",
+                                         "result": null,
+                                         "jsonrpc": "2.0"
+                                     }
+                                     """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1143,15 +1135,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
         var expectedResponseJson = """
                                    {
                                        "id": "123",
-                                       "error": {
-                                           "code": -32602,
-                                           "message": "Invalid params",
-                                           "data": {
-                                               "data": [
-                                                   "Bind value not found (expected JSON key = [params])"
-                                               ]
-                                           }
-                                       },
+                                       "result": null,
                                        "jsonrpc": "2.0"
                                    }
                                    """.TrimAllLines();
@@ -1291,7 +1275,7 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                            "message": "Invalid params",
                                            "data": {
                                                "data": [
-                                                   "Error while binding value by JSON key = [params] - Can't bind method arguments from missing json params"
+                                                   "Error while binding value by JSON key = [params] - Can't bind method arguments from null json params"
                                                ]
                                            }
                                        },

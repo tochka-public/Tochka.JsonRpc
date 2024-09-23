@@ -202,6 +202,100 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     }
 
     /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult> SendRequest(string requestUrl, Request request, CancellationToken cancellationToken)
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        return await SendRequestInternal(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult> SendRequest(Request request, CancellationToken cancellationToken)
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        return await SendRequestInternal(null, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult> SendRequest(string requestUrl, string method, CancellationToken cancellationToken)
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        var request = new Request(id, method);
+        return await SendRequestInternal(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult> SendRequest(string method, CancellationToken cancellationToken)
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        var request = new Request(id, method);
+        return await SendRequestInternal(null, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult> SendRequest(string requestUrl, IRpcId id, string method, CancellationToken cancellationToken)
+    {
+        var request = new Request(id, method);
+        return await SendRequestInternal(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult> SendRequest(IRpcId id, string method, CancellationToken cancellationToken)
+    {
+        var request = new Request(id, method);
+        return await SendRequestInternal(null, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, Request request, CancellationToken cancellationToken)
+        where TResponse : class
+        => await SendRequestInternal<TResponse>(requestUrl, request, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(Request request, CancellationToken cancellationToken)
+        where TResponse : class
+        => await SendRequestInternal<TResponse>(null, request, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, string method, CancellationToken cancellationToken)
+        where TResponse : class
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        var request = new Request(id, method);
+        return await SendRequestInternal<TResponse>(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string method, CancellationToken cancellationToken)
+        where TResponse : class
+    {
+        var id = RpcIdGenerator.GenerateId();
+        Log.LogTrace("Generated request id [{requestId}]", id);
+        var request = new Request(id, method);
+        return await SendRequestInternal<TResponse>(null, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, IRpcId id, string method, CancellationToken cancellationToken)
+        where TResponse : class
+    {
+        var request = new Request(id, method);
+        return await SendRequestInternal<TResponse>(requestUrl, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(IRpcId id, string method, CancellationToken cancellationToken)
+        where TResponse : class
+    {
+        var request = new Request(id, method);
+        return await SendRequestInternal<TResponse>(null, request, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<IBatchJsonRpcResult?> SendBatch(string requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken) =>
         await SendBatchInternal(requestUrl, calls, cancellationToken);
 
@@ -267,6 +361,24 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     }
 
     // internal virtual for mocking in tests
+    internal virtual async Task<ISingleJsonRpcResult> SendRequestInternal(string? requestUrl, Request request, CancellationToken cancellationToken)
+    {
+        var (context, contentString) = await PrepareInternalRequestContext(requestUrl, request, cancellationToken);
+        var responseWrapper = ParseBody(contentString);
+        switch (responseWrapper)
+        {
+            case SingleResponseWrapper singleResponseWrapper:
+                context.WithSingleResponse(singleResponseWrapper.Response);
+                Log.LogTrace("Request id [{requestId}]: success", request.Id);
+                return new SingleJsonRpcResult(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
+            default:
+                var message = $"Expected single response, got [{responseWrapper}]";
+                Log.LogTrace("Request id [{requestId}] failed: {errorMessage}", request.Id, message);
+                throw new JsonRpcException(message, context);
+        }
+    }
+
+    // internal virtual for mocking in tests
     internal virtual async Task<ISingleJsonRpcResult<TResponse>> SendRequestInternal<TParams, TResponse>(string? requestUrl, Request<TParams> request, CancellationToken cancellationToken)
         where TParams : class
         where TResponse : class
@@ -279,6 +391,27 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
                 context.WithSingleResponse(singleResponseWrapper.Response);
                 Log.LogTrace("Request id [{requestId}]: success", request.Id);
                 return new SingleJsonRpcResult<TResponse>(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
+            default:
+                var message = $"Expected single response, got [{responseWrapper}]";
+                Log.LogTrace("Request id [{requestId}] failed: {errorMessage}", request.Id, message);
+                throw new JsonRpcException(message, context);
+        }
+    }
+
+    // internal virtual for mocking in tests
+    internal virtual async Task<ISingleJsonRpcResult<TResponse>> SendRequestInternal<TResponse>(string? requestUrl, Request request, CancellationToken cancellationToken)
+        where TResponse : class
+    {
+        var (context, contentString) = await PrepareInternalRequestContext(requestUrl, request, cancellationToken);
+        var responseWrapper = ParseBody(contentString);
+        switch (responseWrapper)
+        {
+            case SingleResponseWrapper singleResponseWrapper:
+                context.WithSingleResponse(singleResponseWrapper.Response);
+                Log.LogTrace("Request id [{requestId}]: success", request.Id);
+                return new SingleJsonRpcResult<TResponse>(context,
+                    HeadersJsonSerializerOptions,
+                    DataJsonSerializerOptions);
             default:
                 var message = $"Expected single response, got [{responseWrapper}]";
                 Log.LogTrace("Request id [{requestId}] failed: {errorMessage}", request.Id, message);
@@ -421,8 +554,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     protected internal virtual async Task<string> GetContent(HttpContent content, CancellationToken cancellationToken) =>
         await content.ReadAsStringAsync(cancellationToken);
 
-    private async Task<(IJsonRpcCallContext, string)> PrepareInternalRequestContext<TParams>(string? requestUrl, Request<TParams> request, CancellationToken cancellationToken)
-        where TParams : class
+    private async Task<(IJsonRpcCallContext, string)> PrepareInternalRequestContext(string? requestUrl, ICall request, CancellationToken cancellationToken)
     {
         var context = CreateContext();
         context.WithRequestUrl(requestUrl);

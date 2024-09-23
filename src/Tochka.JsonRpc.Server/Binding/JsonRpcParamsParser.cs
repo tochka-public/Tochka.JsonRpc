@@ -18,13 +18,11 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
     {
         var bindingStyle = parameterMetadata.BindingStyle;
         var jsonValueKind = parameters?.RootElement.ValueKind;
-        var hasParamsNode = rawCall.RootElement.TryGetProperty(JsonRpcConstants.ParamsProperty, out _);
         return jsonValueKind switch
         {
             JsonValueKind.Object => ParseObject(parameters!.RootElement, parameterMetadata.PropertyName, bindingStyle),
             JsonValueKind.Array => ParseArray(parameters!.RootElement, parameterMetadata.Position, bindingStyle),
-            null when hasParamsNode => ParseNull(bindingStyle),
-            null => ParseNoParams(bindingStyle),
+            null => ParseNull(bindingStyle),
             _ => new ErrorParseResult($"Unsupported root JSON value kind: [{jsonValueKind}]", string.Empty)
         };
     }
@@ -119,30 +117,6 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
 
             default:
                 log.LogWarning("Binding null failed");
-                return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", JsonRpcConstants.ParamsProperty);
-        }
-    }
-
-    private IParseResult ParseNoParams(BindingStyle bindingStyle)
-    {
-        switch (bindingStyle)
-        {
-            // can't get properties for binding to arguments from missing params
-            case BindingStyle.Default:
-                return new ErrorParseResult("Can't bind method arguments from missing json params", JsonRpcConstants.ParamsProperty);
-
-            // will bind successfully if object has default value specified
-            case BindingStyle.Object:
-                log.LogTrace("Binding nothing to object argument");
-                return new NoParseResult(JsonRpcConstants.ParamsProperty);
-
-            // will bind successfully if collection has default value specified
-            case BindingStyle.Array:
-                log.LogTrace("Binding nothing to collection argument");
-                return new NoParseResult(JsonRpcConstants.ParamsProperty);
-
-            default:
-                log.LogWarning("Binding nothing failed");
                 return new ErrorParseResult($"Unknown {nameof(bindingStyle)} [{bindingStyle}]", JsonRpcConstants.ParamsProperty);
         }
     }

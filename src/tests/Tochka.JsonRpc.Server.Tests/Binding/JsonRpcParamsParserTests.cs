@@ -252,7 +252,7 @@ public class JsonRpcParamsParserTests
 
         var result = paramsParser.Parse(rawCall, null, parameterMetadata);
 
-        var expected = new ErrorParseResult("Can't bind method arguments from missing json params", JsonRpcConstants.ParamsProperty);
+        var expected = new ErrorParseResult("Can't bind method arguments from null json params", JsonRpcConstants.ParamsProperty);
         result.Should().BeEquivalentTo(expected);
     }
 

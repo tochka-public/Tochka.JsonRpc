@@ -497,7 +497,7 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task NullableObjectParams_WithoutParams_DontProcess()
+    public async Task NullableObjectParams_WithoutParams_DeserializeSuccessfully()
     {
         const string requestJson = """
                                    {
@@ -506,11 +506,19 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
                                    }
                                    """;
 
+        object? expectedRequestData = null;
+
+        object? actualRequestData = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
+            .Callback<object?>(requestData => actualRequestData = requestData)
+            .Verifiable();
+
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        requestValidatorMock.VerifyNoOtherCalls();
+        requestValidatorMock.Verify();
+        actualRequestData.Should().BeEquivalentTo(expectedRequestData);
     }
 
     [Test]
@@ -581,7 +589,7 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task NullableArrayParams_WithoutParams_DontProcess()
+    public async Task NullableArrayParams_WithoutParams_DeserializeSuccessfully()
     {
         const string requestJson = """
                                    {
@@ -589,12 +597,19 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
                                        "jsonrpc": "2.0"
                                    }
                                    """;
+        object? expectedRequestData = null;
+
+        object? actualRequestData = null;
+        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<object?>()))
+            .Callback<object?>(requestData => actualRequestData = requestData)
+            .Verifiable();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        requestValidatorMock.VerifyNoOtherCalls();
+        requestValidatorMock.Verify();
+        actualRequestData.Should().BeEquivalentTo(expectedRequestData);
     }
 
     [Test]

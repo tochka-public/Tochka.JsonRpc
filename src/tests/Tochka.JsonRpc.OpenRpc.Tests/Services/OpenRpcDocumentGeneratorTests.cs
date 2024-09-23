@@ -1009,7 +1009,7 @@ public class OpenRpcDocumentGeneratorTests
             {
                 new JsonRpcControllerAttribute()
             },
-            ControllerName = controllerName,
+            ControllerName = controllerName!,
             MethodInfo = action?.Method ?? ((Action) ValidMethod).Method,
             ControllerTypeInfo = new TypeDelegator(typeof(ValidJsonRpcController))
         },
@@ -1028,9 +1028,9 @@ public class OpenRpcDocumentGeneratorTests
     {
     }
 
-    private class ValidJsonRpcController : JsonRpcControllerBase
+    private sealed class ValidJsonRpcController : JsonRpcControllerBase
     {
-        public void ValidJsonRpcMethod()
+        public static void ValidJsonRpcMethod()
         {
         }
     }
