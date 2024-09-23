@@ -75,8 +75,8 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
         var methodStyleAttribute = selector.EndpointMetadata.Get<JsonRpcMethodStyleAttribute>();
         var methodStyle = methodStyleAttribute?.MethodStyle ?? options.DefaultMethodStyle;
 
-        var controllerName = jsonSerializerOptions.PropertyNamingPolicy!.ConvertName(action.Controller.ControllerName);
-        var actionName = jsonSerializerOptions.PropertyNamingPolicy.ConvertName(action.ActionName);
+        var controllerName = jsonSerializerOptions.ConvertName(action.Controller.ControllerName);
+        var actionName = jsonSerializerOptions.ConvertName(action.ActionName);
         return methodStyle switch
         {
             JsonRpcMethodStyle.ControllerAndAction => $"{controllerName}{JsonRpcConstants.ControllerMethodSeparator}{actionName}",

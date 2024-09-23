@@ -44,7 +44,7 @@ internal class JsonRpcParameterModelConvention : IParameterModelConvention
         foreach (var actionSelector in parameter.Action.Selectors)
         {
             var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(actionSelector.EndpointMetadata, options, serializerOptionsProviders);
-            var propertyName = jsonSerializerOptions.PropertyNamingPolicy!.ConvertName(parameter.ParameterName);
+            var propertyName = jsonSerializerOptions.ConvertName(parameter.ParameterName);
             var parametersMetadata = actionSelector.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
             if (parametersMetadata == null)
             {
