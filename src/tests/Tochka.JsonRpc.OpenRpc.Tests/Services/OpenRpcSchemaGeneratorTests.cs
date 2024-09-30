@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using Json.Schema;
 using Json.Schema.Generation;
@@ -398,19 +399,19 @@ internal class OpenRpcSchemaGeneratorTests
         
         var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
 
-        var expectedTypeName = $"{MethodName} {nameof(TypeWithSummaries)}";
-        var expectedTypeNameInner = $"{MethodName} {nameof(TypeWithSummariesInner)}";
-        var expectedTypeNameInnerEnum = $"{MethodName} {nameof(TypeWithSummariesInnerEnum)}";
+        var typeName = $"{MethodName} {nameof(TypeWithSummaries)}";
+        var typeNameInner = $"{MethodName} {nameof(TypeWithSummariesInner)}";
+        var typeNameInnerEnum = $"{MethodName} {nameof(TypeWithSummariesInnerEnum)}";
 
         actualSchema.Should().BeEquivalentTo(new JsonSchemaBuilder()
-                                             .Ref($"#/components/schemas/{expectedTypeName}")
+                                             .Ref($"#/components/schemas/{typeName}")
                                              .Build());
         
         var actualSchemas = schemaGenerator.GetAllSchemas();
         
         var expectedSchemas = new Dictionary<string, JsonSchema>
         {
-            [expectedTypeNameInner] = new JsonSchemaBuilder()
+            [typeNameInner] = new JsonSchemaBuilder()
                                       .Type(SchemaValueType.Object)
                                       .Properties(new Dictionary<string, JsonSchema>
                                       {
@@ -419,25 +420,25 @@ internal class OpenRpcSchemaGeneratorTests
                                                                                    .Build()
                                       })
                                       .Build(),
-            [expectedTypeNameInnerEnum] = new JsonSchemaBuilder()
+            [typeNameInnerEnum] = new JsonSchemaBuilder()
                                           .Enum("bla")
                                           .Build(),
-            [expectedTypeName] = new JsonSchemaBuilder()
+            [typeName] = new JsonSchemaBuilder()
                                  .Type(SchemaValueType.Object)
                                  .Properties(new Dictionary<string, JsonSchema>
                                  {
-                                     ["prop1"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                                     ["prop1"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInner}")
                                                                         .Title("Prop1")
                                                                         .Build(),
-                                     ["prop2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                                     ["prop2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInner}")
                                                                         .Title("Prop2")
                                                                         .Build(),
                                      ["prop3"] = new JsonSchemaBuilder().Type(SchemaValueType.Array)
-                                                                        .Items(new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInner}")
+                                                                        .Items(new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInner}")
                                                                                                       .Build())
                                                                         .Title("Prop3")
                                                                         .Build(),
-                                     ["prop4"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{expectedTypeNameInnerEnum}")
+                                     ["prop4"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInnerEnum}")
                                                                         .Title("Prop4")
                                                                         .Build(),
                                      ["prop5"] = new JsonSchemaBuilder().Type(SchemaValueType.String)
@@ -445,9 +446,46 @@ internal class OpenRpcSchemaGeneratorTests
                                                                         .Title("Prop5")
                                                                         .Build()
                                  })
-                                 .Build(),
+                                 .Build()
         };
 
+        CompareSchemas(actualSchemas, expectedSchemas);
+    }
+
+    [Test]
+    public void CreateOrRef_SystemTextJsonAttributesHandling()
+    {
+        var type = typeof(TypeWithJsonAttributes);
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicies.SnakeCaseLower };
+
+        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+
+        var typeName = $"{MethodName} {nameof(TypeWithJsonAttributes)}";
+        var typeNameInnerEnum = $"{MethodName} {nameof(TypeWithJsonAttributesEnum)}";
+
+        actualSchema.Should().BeEquivalentTo(new JsonSchemaBuilder().Ref($"#/components/schemas/{typeName}")
+                                                                    .Build());
+        var actualSchemas = schemaGenerator.GetAllSchemas();
+
+        var expectedSchemas = new Dictionary<string, JsonSchema>
+        {
+            [typeNameInnerEnum] = new JsonSchemaBuilder().Enum("MyEnumValue")
+                                                         .Build(),
+            [typeName] = new JsonSchemaBuilder()
+                         .Type(SchemaValueType.Object)
+                         .Properties(new Dictionary<string, JsonSchema>
+                         {
+                             ["custom_name_1"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
+                             ["custom_name_2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInnerEnum}").Build()
+                         })
+                         .Build()
+        };
+
+        CompareSchemas(actualSchemas, expectedSchemas);
+    }
+
+    private static void CompareSchemas(Dictionary<string, JsonSchema> actualSchemas, Dictionary<string, JsonSchema> expectedSchemas)
+    {
         actualSchemas.Count.Should().Be(expectedSchemas.Count);
 
         var actualKeys = actualSchemas.Keys.ToArray();
@@ -548,4 +586,22 @@ internal class OpenRpcSchemaGeneratorTests
     }
     
     private record CustomSimpleType;
+
+    private class TypeWithJsonAttributes
+    {
+        [JsonPropertyName("custom_name_1")]
+        public string Prop1 { get; set; }
+        
+        [JsonIgnore]
+        public string Prop2 { get; set; }
+        
+        [JsonPropertyName("custom_name_2")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public TypeWithJsonAttributesEnum Prop3 { get; set; }
+    }
+    
+    private enum TypeWithJsonAttributesEnum 
+    {
+        MyEnumValue
+    }
 }

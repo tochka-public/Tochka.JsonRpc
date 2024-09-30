@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Json.Schema;
 using Json.Schema.Generation;
@@ -32,10 +34,9 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     public JsonSchema CreateOrRef(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions) =>
         CreateOrRefInternal(type, methodName, null, jsonSerializerOptions);
     
-    private JsonSchema CreateOrRefInternal(Type type, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
+    private JsonSchema CreateOrRefInternal(Type type, string methodName, PropertyInfo? property, JsonSerializerOptions jsonSerializerOptions)
     {
-        // Unwrap nullable type
-        var clearType = Nullable.GetUnderlyingType(type) ?? type; 
+        var clearType = Nullable.GetUnderlyingType(type) ?? type;
         
         var clearTypeName = clearType.Name;
         if (!clearTypeName.StartsWith($"{methodName} ", StringComparison.Ordinal))
@@ -44,11 +45,13 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             clearTypeName = $"{methodName} {clearTypeName}";
         }
 
-        return BuildSchema(clearType, clearTypeName, methodName, propertySummary, jsonSerializerOptions);
+        return BuildSchema(clearType, clearTypeName, methodName, property, jsonSerializerOptions);
     }
 
-    private JsonSchema BuildSchema(Type type, string typeName, string methodName, string? propertySummary, JsonSerializerOptions jsonSerializerOptions)
+    private JsonSchema BuildSchema(Type type, string typeName, string methodName, PropertyInfo? property, JsonSerializerOptions jsonSerializerOptions)
     {
+        var propertySummary = property?.GetXmlDocsSummary();
+        
         if (registeredSchemas.ContainsKey(typeName) || registeredSchemaKeys.Contains(typeName))
         {
             return CreateRefSchema(typeName, propertySummary);
@@ -68,8 +71,24 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         
         if (type.IsEnum)
         {
+            List<string> enumValues = new();
+            
+            var converterOptions = GetSerializerOptionsByConverterAttribute(property);
+            if (converterOptions is not null)
+            {
+                foreach (var val in type.GetEnumValues())
+                {
+                    enumValues.Add(JsonSerializer.Serialize(val, converterOptions).Replace("\"", string.Empty));
+                }
+            }
+            else
+            {
+                enumValues.AddRange(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName));
+            }
+            
             var enumSchema = new JsonSchemaBuilder()
-                             .Enum(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName))
+                             .Enum(enumValues)
+                             .TryAppendTitle(type.GetXmlDocsSummary())
                              .Build();
             RegisterSchema(typeName, enumSchema);
             // returning ref if it's enum or regular type with properties
@@ -104,16 +123,17 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         var objectSchema = new JsonSchemaBuilder()
               .Type(SchemaValueType.Object)
               .Properties(BuildPropertiesSchemas(type, methodName, jsonSerializerOptions))
+              .TryAppendTitle(type.GetXmlDocsSummary())
               .Build();
         RegisterSchema(typeName, objectSchema);
         return CreateRefSchema(typeName, propertySummary);
     }
 
-    private static JsonSchema CreateRefSchema(string typeName, string? propertySummary)
+    private static JsonSchema CreateRefSchema(string typeName, string? summary)
     {
         var refSchemaBuilder = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{typeName}")
-            .TryAppendTitle(propertySummary);
+            .TryAppendTitle(summary);
         
         return refSchemaBuilder.Build();
     }
@@ -124,20 +144,61 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         registeredSchemas[key] = schema;
     }
 
-    private Dictionary<string, JsonSchema> BuildPropertiesSchemas(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions) =>
-        type
-            .GetProperties()
-            .ToDictionary(p => jsonSerializerOptions.ConvertName(p.Name),
-                p => CreateOrRefInternal(p.PropertyType, methodName, p.GetXmlDocsSummary(), jsonSerializerOptions));
+    private Dictionary<string, JsonSchema> BuildPropertiesSchemas(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions)
+    {
+        Dictionary<string, JsonSchema> schemas = new();
+        
+        var properties = type.GetProperties();
+
+        foreach (var property in properties)
+        {
+            if (property.GetCustomAttribute<JsonIgnoreAttribute>() is not null)
+                continue;
+            
+            var jsonPropertyName = property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
+                                   ?? jsonSerializerOptions.ConvertName(property.Name);
+            
+            var schema = CreateOrRefInternal(property.PropertyType, methodName, property, jsonSerializerOptions);
+            
+            schemas.Add(jsonPropertyName, schema);
+        }
+
+        return schemas;
+    }
+
+    private static JsonSerializerOptions? GetSerializerOptionsByConverterAttribute(PropertyInfo? property)
+    {
+        var converterAttribute = property?.GetCustomAttribute<JsonConverterAttribute>();
+        if (converterAttribute is { ConverterType: {} converterType })
+        {
+            if (Activator.CreateInstance(converterType) is JsonConverter converterInstance)
+            {
+                var options = new JsonSerializerOptions();
+                options.Converters.Add(converterInstance);
+                return options; 
+            }
+        }
+
+        return null;
+    }
 }
 
 internal static class JsonSchemaBuilderExtensions
 {
-    public static JsonSchemaBuilder TryAppendTitle(this JsonSchemaBuilder builder, string? propertySummary)
+    public static JsonSchemaBuilder TryAppendTitle(this JsonSchemaBuilder builder, string? summary)
     {
-        if (propertySummary is { Length: > 0 })
+        if (summary is { Length: > 0 })
         {
-            builder.Title(propertySummary);
+            var newLineIndex = summary.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+            if (newLineIndex >= 0)
+            {
+                builder.Title(summary[..newLineIndex] + "...")
+                       .Description(summary);
+            }
+            else
+            {
+                builder.Title(summary);
+            }
         }
         return builder;
     }
