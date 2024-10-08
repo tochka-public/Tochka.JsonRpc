@@ -46,11 +46,11 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, PropertyInfo? property, JsonSerializerOptions jsonSerializerOptions)
     {
-        var propertySummary = property?.GetXmlDocsSummary();
+        var propertyXmlDocs = new XmlDocValues(property?.GetXmlDocsSummary(), property?.GetXmlDocsRemarks());
         
         if (registeredSchemas.ContainsKey(typeName) || registeredSchemaKeys.Contains(typeName))
         {
-            return CreateRefSchema(typeName, propertySummary);
+            return CreateRefSchema(typeName, propertyXmlDocs);
         }
 
         var itemType = type.GetEnumerableItemType();
@@ -59,7 +59,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             var collectionScheme = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
                 .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
-                .TryAppendTitle(propertySummary)
+                .AppendXmlDocs(propertyXmlDocs)
                 .BuildWithoutUri();
             // returning schema itself if it's collection
             return collectionScheme;
@@ -75,16 +75,16 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             }
             var enumSchema = new JsonSchemaBuilder()
                 .Enum(enumValues)
-                .TryAppendTitle(type.GetXmlDocsSummary())
+                .AppendXmlDocs(new XmlDocValues(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()))
                 .BuildWithoutUri();
             RegisterSchema(typeName, enumSchema);
             // returning ref if it's enum or regular type with properties
-            return CreateRefSchema(typeName, propertySummary);
+            return CreateRefSchema(typeName, propertyXmlDocs);
         }
 
         var simpleTypeSchema = new JsonSchemaBuilder()
             .FromType(type)
-            .TryAppendTitle(propertySummary)
+            .AppendXmlDocs(propertyXmlDocs)
             .BuildWithoutUri();
         // can't check type.GetProperties() here because simple types have properties too
         if (simpleTypeSchema.GetProperties() == null)
@@ -99,7 +99,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             var simpleStringSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.String)
                 .Format(format)
-                .TryAppendTitle(propertySummary)
+                .AppendXmlDocs(propertyXmlDocs)
                 .BuildWithoutUri();
             return simpleStringSchema;
         }
@@ -113,7 +113,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         var jsonSchemaBuilder = new JsonSchemaBuilder()
             .Type(SchemaValueType.Object)
             .Properties(propertiesSchemas)
-            .TryAppendTitle(type.GetXmlDocsSummary());
+            .AppendXmlDocs(new XmlDocValues(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()));
         
         if (requiredProperties is not null)
         {
@@ -122,7 +122,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
         var objectSchema = jsonSchemaBuilder.BuildWithoutUri();
         RegisterSchema(typeName, objectSchema);
-        return CreateRefSchema(typeName, propertySummary);
+        return CreateRefSchema(typeName, propertyXmlDocs);
     }
 
     private void RegisterSchema(string key, JsonSchema schema)
@@ -244,11 +244,11 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         return null;
     }
 
-    private static JsonSchema CreateRefSchema(string typeName, string? summary)
+    private static JsonSchema CreateRefSchema(string typeName, XmlDocValues propertyXmlDocs)
     {
         var refSchemaBuilder = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{typeName}")
-            .TryAppendTitle(summary);
+            .AppendXmlDocs(propertyXmlDocs);
 
         return refSchemaBuilder.BuildWithoutUri();
     }
