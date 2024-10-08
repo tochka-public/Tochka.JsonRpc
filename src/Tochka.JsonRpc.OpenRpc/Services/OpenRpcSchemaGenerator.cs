@@ -67,19 +67,11 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
         if (type.IsEnum)
         {
-            List<string> enumValues = new();
-
-            var converterOptions = GetSerializerOptionsByConverterAttribute(property);
-            if (converterOptions is not null)
+            List<string> enumValues = [];
+            var enumSerializerOptions = GetSerializerOptionsByConverterAttribute(property) ?? jsonSerializerOptions;
+            foreach (var val in type.GetEnumValues())
             {
-                foreach (var val in type.GetEnumValues())
-                {
-                    enumValues.Add(JsonSerializer.Serialize(val, converterOptions).Replace("\"", string.Empty));
-                }
-            }
-            else
-            {
-                enumValues.AddRange(type.GetEnumNames().Select(jsonSerializerOptions.ConvertName));
+                enumValues.Add(JsonSerializer.Serialize(val, enumSerializerOptions).Replace("\"", string.Empty));
             }
             var enumSchema = new JsonSchemaBuilder()
                 .Enum(enumValues)
@@ -147,7 +139,9 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         foreach (var property in properties)
         {
             if (property.GetCustomAttribute<JsonIgnoreAttribute>() is not null)
+            {
                 continue;
+            }
             
             var jsonPropertyName = GetJsonPropertyName(property, jsonSerializerOptions);
             
