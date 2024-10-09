@@ -7,6 +7,7 @@ using Json.Schema;
 using Json.Schema.Generation;
 using Namotion.Reflection;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.OpenRpc.Models;
 
 namespace Tochka.JsonRpc.OpenRpc.Services;
 
@@ -46,7 +47,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, PropertyInfo? property, JsonSerializerOptions jsonSerializerOptions)
     {
-        var propertyXmlDocs = new XmlDocValues(property?.GetXmlDocsSummary(), property?.GetXmlDocsRemarks());
+        var propertyXmlDocs = new XmlDocValuesWrapper(property?.GetXmlDocsSummary(), property?.GetXmlDocsRemarks());
         
         if (registeredSchemas.ContainsKey(typeName) || registeredSchemaKeys.Contains(typeName))
         {
@@ -75,7 +76,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             }
             var enumSchema = new JsonSchemaBuilder()
                 .Enum(enumValues)
-                .AppendXmlDocs(new XmlDocValues(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()))
+                .AppendXmlDocs(new XmlDocValuesWrapper(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()))
                 .BuildWithoutUri();
             RegisterSchema(typeName, enumSchema);
             // returning ref if it's enum or regular type with properties
@@ -113,7 +114,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         var jsonSchemaBuilder = new JsonSchemaBuilder()
             .Type(SchemaValueType.Object)
             .Properties(propertiesSchemas)
-            .AppendXmlDocs(new XmlDocValues(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()));
+            .AppendXmlDocs(new XmlDocValuesWrapper(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()));
         
         if (requiredProperties is not null)
         {
@@ -244,7 +245,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         return null;
     }
 
-    private static JsonSchema CreateRefSchema(string typeName, XmlDocValues propertyXmlDocs)
+    private static JsonSchema CreateRefSchema(string typeName, XmlDocValuesWrapper propertyXmlDocs)
     {
         var refSchemaBuilder = new JsonSchemaBuilder()
             .Ref($"#/components/schemas/{typeName}")
