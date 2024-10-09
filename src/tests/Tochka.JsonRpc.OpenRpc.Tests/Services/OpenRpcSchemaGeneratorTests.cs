@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using Json.Schema;
 using Json.Schema.Generation;
@@ -869,6 +870,36 @@ public class OpenRpcSchemaGeneratorTests
 
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
     }
+    
+    [Test]
+    public void CreateOrRef_SystemTextJsonAttributesHandling()
+    {
+        var type = typeof(TypeWithJsonAttributes);
+        var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
+
+        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+
+        var typeName = $"{MethodName} {nameof(TypeWithJsonAttributes)}";
+        var typeNameInnerEnum = $"{MethodName} {nameof(TypeWithJsonAttributesEnum)}";
+
+        actualSchema.Should().BeEquivalentTo(new JsonSchemaBuilder().Ref($"#/components/schemas/{typeName}").BuildWithoutUri());
+        
+        var expectedSchemas = new Dictionary<string, JsonSchema>
+        {
+            [typeNameInnerEnum] = new JsonSchemaBuilder().Enum("MyEnumValue").BuildWithoutUri(),
+            [typeName] = new JsonSchemaBuilder()
+                         .Type(SchemaValueType.Object)
+                         .Properties(new Dictionary<string, JsonSchema>
+                         {
+                             ["custom_name_1"] = new JsonSchemaBuilder().Type(SchemaValueType.String).BuildWithoutUri(),
+                             ["custom_name_2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInnerEnum}").BuildWithoutUri()
+                         })
+                         .Required("custom_name_1", "custom_name_2")
+                         .BuildWithoutUri()
+        };
+        
+        schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedSchemas);
+    }
 
     private const string MethodName = "methodName";
 
@@ -991,4 +1022,22 @@ public class OpenRpcSchemaGeneratorTests
     private sealed record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
 
     private sealed record CustomSimpleType;
+    
+    private class TypeWithJsonAttributes
+    {
+        [JsonPropertyName("custom_name_1")]
+        public string Prop1 { get; set; }
+
+        [JsonIgnore]
+        public string Prop2 { get; set; }
+
+        [JsonPropertyName("custom_name_2")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public TypeWithJsonAttributesEnum Prop3 { get; set; }
+    }
+
+    private enum TypeWithJsonAttributesEnum 
+    {
+        MyEnumValue
+    }
 }
