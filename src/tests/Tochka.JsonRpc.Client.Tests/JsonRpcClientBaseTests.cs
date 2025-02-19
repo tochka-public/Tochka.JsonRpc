@@ -861,10 +861,10 @@ public class JsonRpcClientBaseTests
 
         var response = await clientMock.Object.SendInternal(RequestUrl, batch, CancellationToken.None);
 
-        response.RequestMessage.Options.TryGetValue(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey), out var methodNames);
-        methodNames.Length.Should().Be(2);
-        methodNames[0].Should().Be(Method);
-        methodNames[1].Should().Be(OtherMethod);
+        response.RequestMessage.Options.TryGetValue(JsonRpcConstants.JsonRpcClientCallsKey, out var calls);
+        calls.Count.Should().Be(2);
+        calls[0].Method.Should().Be(Method);
+        calls[1].Method.Should().Be(OtherMethod);
     }
 
     [Test]
@@ -876,9 +876,9 @@ public class JsonRpcClientBaseTests
 
         var response = await clientMock.Object.SendInternal(RequestUrl, call, new CancellationToken());
 
-        response.RequestMessage.Options.TryGetValue(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey), out var methodNames);
-        methodNames.Length.Should().Be(1);
-        methodNames[0].Should().Be(Method);
+        response.RequestMessage.Options.TryGetValue(JsonRpcConstants.JsonRpcClientCallsKey, out var calls);
+        calls.Count.Should().Be(1);
+        calls[0].Method.Should().Be(Method);
     }
 
     private const string BaseUrl = "https://localhost/";
