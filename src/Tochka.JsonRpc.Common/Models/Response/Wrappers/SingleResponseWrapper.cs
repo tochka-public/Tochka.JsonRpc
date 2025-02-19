@@ -10,4 +10,7 @@ namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 /// <param name="Response">Single response object</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record SingleResponseWrapper(IResponse Response) : IResponseWrapper;
+public sealed record SingleResponseWrapper
+(
+    IResponse Response
+) : IResponseWrapper;

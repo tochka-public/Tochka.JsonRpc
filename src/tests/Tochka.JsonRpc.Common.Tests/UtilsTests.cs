@@ -203,5 +203,8 @@ public class UtilsTests
             throw new NotImplementedException();
     }
 
-    private sealed record ErrorData(string A) : IErrorData;
+    private sealed record ErrorData
+    (
+        string A
+    ) : IErrorData;
 }

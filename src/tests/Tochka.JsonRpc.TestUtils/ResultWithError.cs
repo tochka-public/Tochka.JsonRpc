@@ -1,3 +1,6 @@
 ﻿namespace Tochka.JsonRpc.TestUtils;
 
-public record ResultWithError(string Error);
+public record ResultWithError
+(
+    string Error
+);

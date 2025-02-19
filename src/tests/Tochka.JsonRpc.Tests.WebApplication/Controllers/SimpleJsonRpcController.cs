@@ -60,7 +60,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
         requestValidator.Validate(data);
         return responseProvider.GetJsonRpcResponse();
     }
-    
+
     public TestData NullableDefaultParamsNoData(CancellationToken token)
     {
         requestValidator.Validate();

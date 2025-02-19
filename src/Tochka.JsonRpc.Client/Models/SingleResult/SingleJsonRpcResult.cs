@@ -7,7 +7,8 @@ namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <inheritdoc cref="ISingleJsonRpcResult" />
 [PublicAPI]
-public sealed class SingleJsonRpcResult : SingleJsonRpcResult<object>, ISingleJsonRpcResult
+public sealed class SingleJsonRpcResult : SingleJsonRpcResult<object>,
+    ISingleJsonRpcResult
 {
     /// <summary></summary>
     public SingleJsonRpcResult(IJsonRpcCallContext context, JsonSerializerOptions headersJsonSerializerOptions, JsonSerializerOptions dataJsonSerializerOptions)

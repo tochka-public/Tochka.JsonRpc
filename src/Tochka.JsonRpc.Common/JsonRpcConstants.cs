@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
-using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
 namespace Tochka.JsonRpc.Common;
@@ -81,5 +80,5 @@ public static class JsonRpcConstants
     /// <summary>
     /// HttpRequest.Options item, contains jsonrpc requests sent by client. Multiple items for batch requests
     /// </summary>
-    public static readonly HttpRequestOptionsKey<IReadOnlyList<IUntypedCall>> JsonRpcClientCallsKey = new HttpRequestOptionsKey<IReadOnlyList<IUntypedCall>>("tochka_jsonrpc_client_calls");
+    public static readonly HttpRequestOptionsKey<IReadOnlyList<IUntypedCall>> JsonRpcClientCallsKey = new("tochka_jsonrpc_client_calls");
 }

@@ -11,7 +11,10 @@ namespace Tochka.JsonRpc.Common.Models.Id;
 /// <param name="Value">Actual id value</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record FloatNumberRpcId(double Value) : IRpcId
+public sealed record FloatNumberRpcId
+(
+    double Value
+) : IRpcId
 {
     /// <inheritdoc />
     public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);

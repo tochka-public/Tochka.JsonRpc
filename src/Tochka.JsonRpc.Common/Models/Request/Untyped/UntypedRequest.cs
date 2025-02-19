@@ -11,5 +11,12 @@ namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record UntypedRequest(IRpcId Id, string Method, JsonDocument? Params, string Jsonrpc = JsonRpcConstants.Version)
-    : Request<JsonDocument>(Id, Method, Params, Jsonrpc), IUntypedCall;
+public sealed record UntypedRequest
+(
+    IRpcId Id,
+    string Method,
+    JsonDocument? Params,
+    string Jsonrpc = JsonRpcConstants.Version
+)
+    : Request<JsonDocument>(Id, Method, Params, Jsonrpc),
+        IUntypedCall;

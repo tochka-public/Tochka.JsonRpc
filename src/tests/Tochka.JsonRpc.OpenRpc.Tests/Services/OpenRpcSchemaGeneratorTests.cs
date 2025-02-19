@@ -888,14 +888,14 @@ public class OpenRpcSchemaGeneratorTests
         {
             [typeNameInnerEnum] = new JsonSchemaBuilder().Enum("MyEnumValue").BuildWithoutUri(),
             [typeName] = new JsonSchemaBuilder()
-                         .Type(SchemaValueType.Object)
-                         .Properties(new Dictionary<string, JsonSchema>
-                         {
-                             ["custom_name_1"] = new JsonSchemaBuilder().Type(SchemaValueType.String).BuildWithoutUri(),
-                             ["custom_name_2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInnerEnum}").BuildWithoutUri()
-                         })
-                         .Required("custom_name_1", "custom_name_2")
-                         .BuildWithoutUri()
+                .Type(SchemaValueType.Object)
+                .Properties(new Dictionary<string, JsonSchema>
+                {
+                    ["custom_name_1"] = new JsonSchemaBuilder().Type(SchemaValueType.String).BuildWithoutUri(),
+                    ["custom_name_2"] = new JsonSchemaBuilder().Ref($"#/components/schemas/{typeNameInnerEnum}").BuildWithoutUri()
+                })
+                .Required("custom_name_1", "custom_name_2")
+                .BuildWithoutUri()
         };
 
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedSchemas);
@@ -932,6 +932,11 @@ public class OpenRpcSchemaGeneratorTests
     private enum TypeWithGenericPropertiesSecondEnum
     {
         TypeWithGenericPropertiesSecondEnum
+    }
+
+    private enum TypeWithJsonAttributesEnum
+    {
+        MyEnumValue
     }
 
     private sealed class TypeWithSummaries
@@ -1013,16 +1018,6 @@ public class OpenRpcSchemaGeneratorTests
         public GenericTwoType<string, GenericOneType<bool>?> Property1 { get; set; }
     }
 
-    private sealed record TypeWithProperties(int IntProperty, string StringProperty, TypeWithProperties NestedProperty, AnotherTypeWithProperties AnotherProperty);
-
-    private sealed record TypeWithSomeNullableProperties(int? IntProperty, string StringProperty, TypeWithSomeNullableProperties NestedProperty, AnotherTypeWithProperties? AnotherProperty);
-
-    private sealed record AnotherTypeWithProperties(bool BoolProperty);
-
-    private sealed record TypeWithSimpleProperties(DateTime DateTime, DateTimeOffset DateTimeOffset, DateOnly DateOnly, TimeOnly TimeOnly, TimeSpan TimeSpan, Guid Guid);
-
-    private sealed record CustomSimpleType;
-
     private sealed class TypeWithJsonAttributes
     {
         [JsonPropertyName("custom_name_1")]
@@ -1036,8 +1031,36 @@ public class OpenRpcSchemaGeneratorTests
         public TypeWithJsonAttributesEnum Prop3 { get; set; }
     }
 
-    private enum TypeWithJsonAttributesEnum
-    {
-        MyEnumValue
-    }
+    private sealed record TypeWithProperties
+    (
+        int IntProperty,
+        string StringProperty,
+        TypeWithProperties NestedProperty,
+        AnotherTypeWithProperties AnotherProperty
+    );
+
+    private sealed record TypeWithSomeNullableProperties
+    (
+        int? IntProperty,
+        string StringProperty,
+        TypeWithSomeNullableProperties NestedProperty,
+        AnotherTypeWithProperties? AnotherProperty
+    );
+
+    private sealed record AnotherTypeWithProperties
+    (
+        bool BoolProperty
+    );
+
+    private sealed record TypeWithSimpleProperties
+    (
+        DateTime DateTime,
+        DateTimeOffset DateTimeOffset,
+        DateOnly DateOnly,
+        TimeOnly TimeOnly,
+        TimeSpan TimeSpan,
+        Guid Guid
+    );
+
+    private sealed record CustomSimpleType;
 }

@@ -64,5 +64,10 @@ public class CallConverter : JsonConverter<IUntypedCall>
         return new PropertiesInfo(hasId, hasMethod, hasVersion);
     }
 
-    private record PropertiesInfo(bool HasId, bool HasMethod, bool HasVersion);
+    private record PropertiesInfo
+    (
+        bool HasId,
+        bool HasMethod,
+        bool HasVersion
+    );
 }

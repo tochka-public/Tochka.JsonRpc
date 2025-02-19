@@ -81,7 +81,11 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
                 continue;
             }
 
-            servers.AddRange(GetServers(host, route, string.IsNullOrEmpty(controllerSummary) ? null : controllerSummary));
+            servers.AddRange(GetServers(host,
+                route,
+                string.IsNullOrEmpty(controllerSummary)
+                    ? null
+                    : controllerSummary));
         }
 
         return servers;
@@ -216,7 +220,11 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             return null;
         }
 
-        return GetServers(host, route, string.IsNullOrEmpty(controllerSummary) ? null : controllerSummary);
+        return GetServers(host,
+            route,
+            string.IsNullOrEmpty(controllerSummary)
+                ? null
+                : controllerSummary);
     }
 
     // internal virtual for mocking in tests

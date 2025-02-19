@@ -10,7 +10,10 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpc(OpenRpcInfo Info)
+public sealed record OpenRpc
+(
+    OpenRpcInfo Info
+)
 {
     /// <summary>
     /// REQUIRED. This string MUST be the semantic version number of the OpenRPC Specification version that the OpenRPC document uses.

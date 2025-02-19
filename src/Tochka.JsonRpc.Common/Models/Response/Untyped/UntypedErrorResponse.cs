@@ -12,5 +12,10 @@ namespace Tochka.JsonRpc.Common.Models.Response.Untyped;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record UntypedErrorResponse(IRpcId Id, Error<JsonDocument> Error, string Jsonrpc = JsonRpcConstants.Version)
+public sealed record UntypedErrorResponse
+(
+    IRpcId Id,
+    Error<JsonDocument> Error,
+    string Jsonrpc = JsonRpcConstants.Version
+)
     : ErrorResponse<JsonDocument>(Id, Error, Jsonrpc);

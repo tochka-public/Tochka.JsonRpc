@@ -11,4 +11,7 @@ namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 /// <param name="Call">Single call from request</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record SingleRequestWrapper(JsonDocument Call) : IRequestWrapper;
+public sealed record SingleRequestWrapper
+(
+    JsonDocument Call
+) : IRequestWrapper;

@@ -8,7 +8,11 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcError(int Code, string Message)
+public sealed record OpenRpcError
+(
+    int Code,
+    string Message
+)
 {
     /// <summary>
     /// REQUIRED. A Number that indicates the error type that occurred.

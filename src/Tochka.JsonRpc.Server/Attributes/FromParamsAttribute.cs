@@ -13,7 +13,8 @@ namespace Tochka.JsonRpc.Server.Attributes;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class FromParamsAttribute : Attribute, IBinderTypeProviderMetadata
+public sealed class FromParamsAttribute : Attribute,
+    IBinderTypeProviderMetadata
 {
     /// <summary>
     /// Style in which JSON-RPC params will be bound to parameter
