@@ -57,5 +57,8 @@ public class ExtensionsTests
         result.Should().Be(name);
     }
 
-    private sealed record TestClass(int A);
+    private sealed record TestClass
+    (
+        int A
+    );
 }

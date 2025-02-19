@@ -10,7 +10,10 @@ namespace Tochka.JsonRpc.Common.Models.Id;
 /// <param name="Value">Actual id value</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record StringRpcId(string Value) : IRpcId
+public sealed record StringRpcId
+(
+    string Value
+) : IRpcId
 {
     /// <inheritdoc />
     public override string ToString() => $"\"{Value}\"";

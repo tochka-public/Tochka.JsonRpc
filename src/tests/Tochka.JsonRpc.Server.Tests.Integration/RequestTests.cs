@@ -995,12 +995,12 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
                                    }
                                    """;
         var expectedResponseJson = """
-                                     {
-                                         "id": "123",
-                                         "result": null,
-                                         "jsonrpc": "2.0"
-                                     }
-                                     """.TrimAllLines();
+                                   {
+                                       "id": "123",
+                                       "result": null,
+                                       "jsonrpc": "2.0"
+                                   }
+                                   """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);

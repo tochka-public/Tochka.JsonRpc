@@ -44,7 +44,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         var responseContent = await response.Content.ReadAsStringAsync();
         var responseJson = JsonDocument.Parse(responseContent);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToArray();
+        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToList();
         methods.Should().Contain(m => m.GetProperty("name").GetString() == method);
     }
 
@@ -56,8 +56,8 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         var responseContent = await response.Content.ReadAsStringAsync();
         var responseJson = JsonDocument.Parse(responseContent);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToArray();
-        methods.Length.Should().Be(2);
+        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToList();
+        methods.Count.Should().Be(2);
         methods.Should().Contain(static m => m.GetProperty("name").GetString() == "custom_group");
         methods.Should().Contain(static m => m.GetProperty("name").GetString() == "test_object_types");
     }

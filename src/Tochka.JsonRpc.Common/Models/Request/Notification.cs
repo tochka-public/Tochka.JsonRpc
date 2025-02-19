@@ -14,7 +14,12 @@ namespace Tochka.JsonRpc.Common.Models.Request;
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public record Notification<TParams>(string Method, TParams? Params, string Jsonrpc = JsonRpcConstants.Version) : ICall<TParams>
+public record Notification<TParams>
+(
+    string Method,
+    TParams? Params,
+    string Jsonrpc = JsonRpcConstants.Version
+) : ICall<TParams>
     where TParams : class
 {
     /// <inheritdoc />

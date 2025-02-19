@@ -8,4 +8,9 @@ namespace Tochka.JsonRpc.Common.Models.Response.Errors;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record ExceptionInfo(string Type, string Message, object? Details);
+public sealed record ExceptionInfo
+(
+    string Type,
+    string Message,
+    object? Details
+);

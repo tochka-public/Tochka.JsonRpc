@@ -9,7 +9,11 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcInfo(string Title, string Version)
+public sealed record OpenRpcInfo
+(
+    string Title,
+    string Version
+)
 {
     /// <summary>
     /// REQUIRED. The title of the application.

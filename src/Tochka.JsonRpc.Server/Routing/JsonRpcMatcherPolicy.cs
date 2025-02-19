@@ -13,7 +13,8 @@ namespace Tochka.JsonRpc.Server.Routing;
 /// <summary>
 /// <see cref="MatcherPolicy" /> for JSON-RPC endpoints
 /// </summary>
-internal class JsonRpcMatcherPolicy : MatcherPolicy, IEndpointSelectorPolicy
+internal class JsonRpcMatcherPolicy : MatcherPolicy,
+    IEndpointSelectorPolicy
 {
     [ExcludeFromCodeCoverage]
     public override int Order => 0;

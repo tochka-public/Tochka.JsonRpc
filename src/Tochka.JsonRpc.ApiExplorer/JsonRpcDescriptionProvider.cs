@@ -38,7 +38,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     {
         var existingDescriptions = context.Results
             .Where(static x => x.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
-            .ToArray();
+            .ToList();
 
         foreach (var description in existingDescriptions)
         {
@@ -90,7 +90,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         var parametersMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>() ?? new JsonRpcActionParametersMetadata();
         var parametersToRemove = description.ParameterDescriptions
             .Where(p => parametersMetadata.Parameters.ContainsKey(p.Name) || p.Source == BindingSource.Body)
-            .ToArray();
+            .ToList();
         foreach (var parameterDescription in parametersToRemove)
         {
             description.ParameterDescriptions.Remove(parameterDescription);

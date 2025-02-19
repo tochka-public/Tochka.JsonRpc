@@ -45,7 +45,7 @@ internal sealed class AutodocsGenerationTests : IntegrationTestsBase<Program>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
         var responseJson = JsonDocument.Parse(responseContent);
-        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToArray();
+        var methods = responseJson.RootElement.GetProperty("methods").EnumerateArray().ToList();
         methods.Should()
             .Contain(m =>
                 m.GetProperty("name").GetString() == methodName

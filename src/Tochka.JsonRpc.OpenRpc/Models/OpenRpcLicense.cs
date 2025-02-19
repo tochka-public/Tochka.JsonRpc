@@ -8,7 +8,10 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcLicense(string Name)
+public sealed record OpenRpcLicense
+(
+    string Name
+)
 {
     /// <summary>
     /// REQUIRED. The license name used for the API.

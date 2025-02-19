@@ -48,7 +48,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
     private JsonSchema BuildSchema(Type type, string typeName, string methodName, PropertyInfo? property, JsonSerializerOptions jsonSerializerOptions)
     {
         var propertyXmlDocs = new XmlDocValuesWrapper(property?.GetXmlDocsSummary(), property?.GetXmlDocsRemarks());
-        
+
         if (registeredSchemas.ContainsKey(typeName) || registeredSchemaKeys.Contains(typeName))
         {
             return CreateRefSchema(typeName, propertyXmlDocs);
@@ -74,6 +74,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             {
                 enumValues.Add(JsonSerializer.Serialize(val, enumSerializerOptions).Replace("\"", string.Empty));
             }
+
             var enumSchema = new JsonSchemaBuilder()
                 .Enum(enumValues)
                 .AppendXmlDocs(new XmlDocValuesWrapper(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()))
@@ -115,7 +116,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             .Type(SchemaValueType.Object)
             .Properties(propertiesSchemas)
             .AppendXmlDocs(new XmlDocValuesWrapper(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()));
-        
+
         if (requiredProperties is not null)
         {
             jsonSchemaBuilder.Required(requiredProperties);
@@ -131,7 +132,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         registeredSchemaKeys.Add(key);
         registeredSchemas[key] = schema;
     }
-    
+
     private Dictionary<string, JsonSchema> BuildPropertiesSchemas(Type type, string typeName, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         Dictionary<string, JsonSchema> schemas = new();
@@ -143,9 +144,9 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             {
                 continue;
             }
-            
+
             var jsonPropertyName = GetJsonPropertyName(property, jsonSerializerOptions);
-            
+
             TrySetRequiredState(property, jsonPropertyName, typeName, methodName, jsonSerializerOptions);
             var schema = CreateOrRefInternal(property.PropertyType, methodName, property, jsonSerializerOptions);
             schemas.Add(jsonPropertyName, schema);
@@ -153,7 +154,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
         return schemas;
     }
-    
+
     private void TrySetRequiredState(PropertyInfo property, string jsonPropertyName, string typeName, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         if (property.PropertyType.IsGenericType)
@@ -191,28 +192,26 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         requiredPropsForSchemas.TryAdd(typeName, requiredProperties);
     }
 
-    private static string GetJsonPropertyName(PropertyInfo property, JsonSerializerOptions jsonSerializerOptions)
-    {
-        return property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
-               ?? jsonSerializerOptions.ConvertName(property.Name);
-    }
+    private static string GetJsonPropertyName(PropertyInfo property, JsonSerializerOptions jsonSerializerOptions) =>
+        property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
+        ?? jsonSerializerOptions.ConvertName(property.Name);
 
     private static JsonSerializerOptions? GetSerializerOptionsByConverterAttribute(PropertyInfo? property)
     {
         var converterAttribute = property?.GetCustomAttribute<JsonConverterAttribute>();
-        if (converterAttribute is { ConverterType: {} converterType })
+        if (converterAttribute is { ConverterType: { } converterType })
         {
             if (Activator.CreateInstance(converterType) is JsonConverter converterInstance)
             {
                 var options = new JsonSerializerOptions();
                 options.Converters.Add(converterInstance);
-                return options; 
+                return options;
             }
         }
 
         return null;
     }
-    
+
     private static Type TryUnwrapNullableType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
 
     private static string GetClearTypeName(string methodName, Type clearType)

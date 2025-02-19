@@ -72,5 +72,11 @@ public class ResponseConverter : JsonConverter<IResponse>
         return new PropertiesInfo(hasId, hasResult, hasError, hasVersion);
     }
 
-    private record PropertiesInfo(bool HasId, bool HasResult, bool HasError, bool HasVersion);
+    private record PropertiesInfo
+    (
+        bool HasId,
+        bool HasResult,
+        bool HasError,
+        bool HasVersion
+    );
 }

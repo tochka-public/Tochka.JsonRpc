@@ -33,7 +33,7 @@ internal class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
         var description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
         var jsonSerializerOptionProviderTypes = jsonSerializerOptionsProviders
             .Select(static p => p.GetType())
-            .ToArray();
+            .ToList();
         foreach (var versionDescription in provider.ApiVersionDescriptions)
         {
             var info = new OpenApiInfo

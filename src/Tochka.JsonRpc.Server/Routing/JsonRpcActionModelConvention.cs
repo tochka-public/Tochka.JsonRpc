@@ -33,7 +33,7 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
         var selectors = action.Selectors
             .SelectMany(s => CombineRoutes(s, action.Controller))
             .DistinctBy(static s => s.AttributeRouteModel!.Template!.ToLowerInvariant())
-            .ToArray();
+            .ToList();
         action.Selectors.Clear();
         foreach (var selector in selectors)
         {

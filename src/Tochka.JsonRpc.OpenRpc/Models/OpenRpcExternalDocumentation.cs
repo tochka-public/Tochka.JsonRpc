@@ -8,7 +8,10 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcExternalDocumentation(Uri Url)
+public sealed record OpenRpcExternalDocumentation
+(
+    Uri Url
+)
 {
     /// <summary>
     /// A verbose explanation of the target documentation. GitHub Flavored Markdown syntax MAY be used for rich text representation.

@@ -1,6 +1,17 @@
 ﻿namespace Tochka.JsonRpc.TestUtils;
 
-public record TestData(bool BoolField, string StringField, int IntField, double DoubleField, TestEnum EnumField, int[] ArrayField, string? NullableField, string? NotRequiredField = null, TestData? NestedField = null)
+public record TestData
+(
+    bool BoolField,
+    string StringField,
+    int IntField,
+    double DoubleField,
+    TestEnum EnumField,
+    int[] ArrayField,
+    string? NullableField,
+    string? NotRequiredField = null,
+    TestData? NestedField = null
+)
 {
     public Dictionary<string, object?> ToDictionary() => new()
     {

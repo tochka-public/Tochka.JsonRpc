@@ -30,7 +30,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-public class OpenRpcDocumentGeneratorTests
+internal sealed class OpenRpcDocumentGeneratorTests
 {
     private Mock<IApiDescriptionGroupCollectionProvider> apiDescriptionsProviderMock;
     private Mock<IOpenRpcSchemaGenerator> schemaGeneratorMock;
@@ -70,7 +70,7 @@ public class OpenRpcDocumentGeneratorTests
         apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
             .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
                 {
-                    new(null, new[] { apiDescription }),
+                    new(null, new[] { apiDescription })
                 },
                 0))
             .Verifiable();
@@ -114,16 +114,16 @@ public class OpenRpcDocumentGeneratorTests
                 {
                     new(null, new[] { apiDescription1 }),
                     new(null, new[] { apiDescription2 }),
-                    new(null, new[] { apiDescription3 }),
+                    new(null, new[] { apiDescription3 })
                 },
                 0))
             .Verifiable();
 
         var result = documentGeneratorMock.Object.GetControllersTags();
-        var expected = new Dictionary<string, OpenRpcTag>()
+        var expected = new Dictionary<string, OpenRpcTag>
         {
             { "json_rpc", new OpenRpcTag("json_rpc") },
-            { "test", new OpenRpcTag("test") },
+            { "test", new OpenRpcTag("test") }
         };
 
         result.Should().BeEquivalentTo(expected, static options => options.WithStrictOrdering());
@@ -146,7 +146,7 @@ public class OpenRpcDocumentGeneratorTests
             .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
                 {
                     new(null, new[] { apiDescription1 }),
-                    new(null, new[] { apiDescription2 }),
+                    new(null, new[] { apiDescription2 })
                 },
                 0))
             .Verifiable();
@@ -172,7 +172,7 @@ public class OpenRpcDocumentGeneratorTests
             .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
                 {
                     new(null, new[] { apiDescription1 }),
-                    new(null, new[] { apiDescription2 }),
+                    new(null, new[] { apiDescription2 })
                 },
                 0))
             .Verifiable();
@@ -195,7 +195,7 @@ public class OpenRpcDocumentGeneratorTests
         apiDescriptionsProviderMock.Setup(static p => p.ApiDescriptionGroups)
             .Returns(new ApiDescriptionGroupCollection(new List<ApiDescriptionGroup>
                 {
-                    new(null, new[] { apiDescription }),
+                    new(null, new[] { apiDescription })
                 },
                 0))
             .Verifiable();
@@ -212,9 +212,9 @@ public class OpenRpcDocumentGeneratorTests
     {
         var apiDescription1 = GetValidDescription(controllerName: "JsonRpc");
         var controllerName = (apiDescription1.ActionDescriptor as ControllerActionDescriptor).ControllerName;
-        var expected = new Dictionary<string, OpenRpcTag>()
+        var expected = new Dictionary<string, OpenRpcTag>
         {
-            { "json_rpc", new OpenRpcTag("json_rpc") },
+            { "json_rpc", new OpenRpcTag("json_rpc") }
         };
         var result = documentGeneratorMock.Object.GetMethodTags(controllerName, expected);
 
@@ -238,7 +238,7 @@ public class OpenRpcDocumentGeneratorTests
                 0))
             .Verifiable();
 
-        var method1 = new OpenRpcMethod("a"){ Tags = new List<JsonSchema> { new JsonSchemaBuilder().Ref($"#/components/tags/json_rpc").Build() } };
+        var method1 = new OpenRpcMethod("a") { Tags = new List<JsonSchema> { new JsonSchemaBuilder().Ref("#/components/tags/json_rpc").Build() } };
         var tags = new Dictionary<string, OpenRpcTag>
         {
             { "json_rpc", new OpenRpcTag("json_rpc") }
@@ -251,7 +251,7 @@ public class OpenRpcDocumentGeneratorTests
         var result = documentGeneratorMock.Object.GetMethods(DocumentName, host, tags);
         var expected = new[]
         {
-            method1,
+            method1
         };
         result.Should().BeEquivalentTo(expected, static options => options.WithStrictOrdering());
         apiDescriptionsProviderMock.Verify();
@@ -1028,13 +1028,6 @@ public class OpenRpcDocumentGeneratorTests
     {
     }
 
-    private sealed class ValidJsonRpcController : JsonRpcControllerBase
-    {
-        public static void ValidJsonRpcMethod()
-        {
-        }
-    }
-
     /// <summary>summary</summary>
     /// <remarks>description</remarks>
     private static void MethodWithDocs()
@@ -1045,6 +1038,13 @@ public class OpenRpcDocumentGeneratorTests
     private const string DocumentName = "documentName";
     private const string MethodName = "methodName";
 
+    private sealed class ValidJsonRpcController : JsonRpcControllerBase
+    {
+        public static void ValidJsonRpcMethod()
+        {
+        }
+    }
+
     [Obsolete]
     [UsedImplicitly]
     private sealed class ObsoleteType
@@ -1054,10 +1054,25 @@ public class OpenRpcDocumentGeneratorTests
         }
     }
 
-    private sealed record RequestChild<T>(IRpcId Id, string Method, T? Params, string Jsonrpc = JsonRpcConstants.Version) : Request<T>(Id, Method, Params, Jsonrpc)
+    private sealed record RequestChild<T>
+    (
+        IRpcId Id,
+        string Method,
+        T? Params,
+        string Jsonrpc = JsonRpcConstants.Version
+    ) : Request<T>(Id, Method, Params, Jsonrpc)
         where T : class;
 
-    private sealed record ResponseChild<T>(IRpcId Id, T? Result, string Jsonrpc = JsonRpcConstants.Version) : Response<T>(Id, Result, Jsonrpc);
+    private sealed record ResponseChild<T>
+    (
+        IRpcId Id,
+        T? Result,
+        string Jsonrpc = JsonRpcConstants.Version
+    ) : Response<T>(Id, Result, Jsonrpc);
 
-    private sealed record TypeWithProperties(int IntProperty, string StringProperty);
+    private sealed record TypeWithProperties
+    (
+        int IntProperty,
+        string StringProperty
+    );
 }

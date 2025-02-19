@@ -1,3 +1,7 @@
 ﻿namespace Tochka.JsonRpc.ApiExplorer.Tests;
 
-public record ClassWithoutEmptyConstructor(string A, object B);
+public record ClassWithoutEmptyConstructor
+(
+    string A,
+    object B
+);

@@ -11,4 +11,7 @@ namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 /// <param name="Calls">List of calls in batch request</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record BatchRequestWrapper(List<JsonDocument> Calls) : IRequestWrapper;
+public sealed record BatchRequestWrapper
+(
+    List<JsonDocument> Calls
+) : IRequestWrapper;

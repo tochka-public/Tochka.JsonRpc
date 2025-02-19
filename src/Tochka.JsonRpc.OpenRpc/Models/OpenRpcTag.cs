@@ -9,7 +9,10 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcTag(string Name)
+public sealed record OpenRpcTag
+(
+    string Name
+)
 {
     /// <summary>
     /// REQUIRED. The name of the tag.

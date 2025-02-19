@@ -14,7 +14,12 @@ namespace Tochka.JsonRpc.Common.Models.Response.Errors;
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
-public record Error<TData>(int Code, string Message, TData? Data) : IError
+public record Error<TData>
+(
+    int Code,
+    string Message,
+    TData? Data
+) : IError
 {
     object? IError.Data => Data;
 }

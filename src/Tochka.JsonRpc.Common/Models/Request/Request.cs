@@ -16,7 +16,13 @@ namespace Tochka.JsonRpc.Common.Models.Request;
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string Jsonrpc = JsonRpcConstants.Version) : ICall<TParams>
+public record Request<TParams>
+(
+    IRpcId Id,
+    string Method,
+    TParams? Params,
+    string Jsonrpc = JsonRpcConstants.Version
+) : ICall<TParams>
     where TParams : class
 {
     // required for autodoc metadata generation
@@ -41,7 +47,12 @@ public record Request<TParams>(IRpcId Id, string Method, TParams? Params, string
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public record Request(IRpcId Id, string Method, string Jsonrpc = JsonRpcConstants.Version) : ICall
+public record Request
+(
+    IRpcId Id,
+    string Method,
+    string Jsonrpc = JsonRpcConstants.Version
+) : ICall
 {
     // required for autodoc metadata generation
     internal Request() : this(null!)
@@ -49,8 +60,5 @@ public record Request(IRpcId Id, string Method, string Jsonrpc = JsonRpcConstant
     }
 
     /// <inheritdoc />
-    public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions)
-    {
-        return new UntypedRequest(Id, Method, null);
-    }
+    public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions) => new UntypedRequest(Id, Method, null);
 }

@@ -10,7 +10,10 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcLink(string Name)
+public sealed record OpenRpcLink
+(
+    string Name
+)
 {
     /// <summary>
     /// REQUIRED. Canonical name of the link.

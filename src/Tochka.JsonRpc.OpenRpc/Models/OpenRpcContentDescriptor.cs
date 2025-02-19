@@ -10,7 +10,11 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcContentDescriptor(string Name, JsonSchema Schema)
+public sealed record OpenRpcContentDescriptor
+(
+    string Name,
+    JsonSchema Schema
+)
 {
     /// <summary>
     /// REQUIRED. Name of the content that is being described

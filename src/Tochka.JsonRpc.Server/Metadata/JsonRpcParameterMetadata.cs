@@ -15,4 +15,12 @@ namespace Tochka.JsonRpc.Server.Metadata;
 /// <param name="Type"><see cref="Type" /> of action argument</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record JsonRpcParameterMetadata(string PropertyName, int Position, BindingStyle BindingStyle, bool IsOptional, string OriginalName, Type Type);
+public sealed record JsonRpcParameterMetadata
+(
+    string PropertyName,
+    int Position,
+    BindingStyle BindingStyle,
+    bool IsOptional,
+    string OriginalName,
+    Type Type
+);

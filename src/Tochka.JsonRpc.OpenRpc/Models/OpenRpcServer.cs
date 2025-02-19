@@ -8,7 +8,11 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcServer(string Name, Uri Url)
+public sealed record OpenRpcServer
+(
+    string Name,
+    Uri Url
+)
 {
     /// <summary>
     /// REQUIRED. A name to be used as the canonical name for the server.

@@ -1556,20 +1556,20 @@ internal sealed class BatchTests : IntegrationTestsBase<Program>
                                        }
                                    ]
                                    """;
-        var expectedResponseJson = $$"""
-                                     [
-                                         {
-                                             "id": "123",
-                                             "result": null,
-                                             "jsonrpc": "2.0"
-                                         },
-                                         {
-                                             "id": "456",
-                                             "result": null,
-                                             "jsonrpc": "2.0"
-                                         }
-                                     ]
-                                     """.TrimAllLines();
+        var expectedResponseJson = """
+                                   [
+                                       {
+                                           "id": "123",
+                                           "result": null,
+                                           "jsonrpc": "2.0"
+                                       },
+                                       {
+                                           "id": "456",
+                                           "result": null,
+                                           "jsonrpc": "2.0"
+                                       }
+                                   ]
+                                   """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);
@@ -1761,20 +1761,20 @@ internal sealed class BatchTests : IntegrationTestsBase<Program>
                                        }
                                    ]
                                    """;
-        var expectedResponseJson = $$"""
-                                     [
-                                         {
-                                             "id": "123",
-                                             "result": null,
-                                             "jsonrpc": "2.0"
-                                         },
-                                         {
-                                             "id": "456",
-                                             "result": null,
-                                             "jsonrpc": "2.0"
-                                         }
-                                     ]
-                                     """.TrimAllLines();
+        var expectedResponseJson = """
+                                   [
+                                       {
+                                           "id": "123",
+                                           "result": null,
+                                           "jsonrpc": "2.0"
+                                       },
+                                       {
+                                           "id": "456",
+                                           "result": null,
+                                           "jsonrpc": "2.0"
+                                       }
+                                   ]
+                                   """.TrimAllLines();
 
         using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
         var response = await ApiClient.PostAsync(JsonRpcUrl, request);

@@ -79,7 +79,7 @@ public class JsonRpcParamsParserTests
     }
 
     [Test]
-    public void Parse_JsonObjectToArray_ReturnErrorParseResult()
+    public void Parse_JsonObjectToList_ReturnErrorParseResult()
     {
         var rawCall = JsonDocument.Parse("{}");
         var parameters = JsonDocument.Parse("{}");
@@ -164,7 +164,7 @@ public class JsonRpcParamsParserTests
     }
 
     [Test]
-    public void Parse_JsonArrayToArray_ReturnSuccessParseResult()
+    public void Parse_JsonArrayToList_ReturnSuccessParseResult()
     {
         var rawCall = JsonDocument.Parse("{}");
         var parameters = JsonDocument.Parse("[]");
@@ -218,7 +218,7 @@ public class JsonRpcParamsParserTests
     }
 
     [Test]
-    public void Parse_NullJsonToArray_ReturnNullParseResult()
+    public void Parse_NullJsonToList_ReturnNullParseResult()
     {
         var rawCall = JsonDocument.Parse($$"""{ "{{JsonRpcConstants.ParamsProperty}}": {} }""");
         var bindingStyle = BindingStyle.Array;
@@ -270,7 +270,7 @@ public class JsonRpcParamsParserTests
     }
 
     [Test]
-    public void Parse_NoJsonToArray_ReturnNoParseResult()
+    public void Parse_NoJsonToList_ReturnNoParseResult()
     {
         var rawCall = JsonDocument.Parse("{}");
         var bindingStyle = BindingStyle.Array;

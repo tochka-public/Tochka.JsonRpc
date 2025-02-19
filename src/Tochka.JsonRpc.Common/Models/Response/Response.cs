@@ -14,7 +14,12 @@ namespace Tochka.JsonRpc.Common.Models.Response;
 /// <typeparam name="TResult">Type of result</typeparam>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public record Response<TResult>(IRpcId Id, TResult? Result, string Jsonrpc = JsonRpcConstants.Version) : IResponse
+public record Response<TResult>
+(
+    IRpcId Id,
+    TResult? Result,
+    string Jsonrpc = JsonRpcConstants.Version
+) : IResponse
 {
     // required for autodoc metadata generation
     internal Response() : this(null!)

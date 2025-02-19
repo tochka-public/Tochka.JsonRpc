@@ -8,7 +8,10 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// </summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record OpenRpcServerVariable(string Default)
+public sealed record OpenRpcServerVariable
+(
+    string Default
+)
 {
     /// <summary>
     /// An enumeration of string values to be used if the substitution options are from a limited set.

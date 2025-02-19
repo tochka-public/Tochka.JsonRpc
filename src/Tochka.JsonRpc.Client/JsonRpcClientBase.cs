@@ -10,6 +10,7 @@ using Tochka.JsonRpc.Client.Services;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request;
+using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
 namespace Tochka.JsonRpc.Client;
@@ -336,7 +337,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var data = notification.WithSerializedParams(DataJsonSerializerOptions);
         context.WithSingle(data);
         using var content = CreateHttpContent(data);
-        using var requestMessage = CreateRequestMessage(requestUrl, content, new[] { notification.Method });
+        using var requestMessage = CreateRequestMessage(requestUrl, content, [data]);
         var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
     }
@@ -424,11 +425,10 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     {
         var context = CreateContext();
         context.WithRequestUrl(requestUrl);
-        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToList();
         context.WithBatch(data);
         using var content = CreateHttpContent(data);
-        var methodNames = data.Select(static x => x.Method).ToArray();
-        using var request = CreateRequestMessage(requestUrl, content, methodNames);
+        using var request = CreateRequestMessage(requestUrl, content, data);
         var httpResponseMessage = await Client.SendAsync(request, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
         if (context.ExpectedBatchResponseCount == 0)
@@ -436,7 +436,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
             // from specification:
             // "If there are no Response objects contained within the Response array as it is to be sent to the client,
             // the server MUST NOT return an empty Array and should return nothing at all."
-            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Length);
+            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Count);
             return null;
         }
 
@@ -447,18 +447,18 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         {
             case BatchResponseWrapper batchResponseWrapper:
                 context.WithBatchResponse(batchResponseWrapper.Responses);
-                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Length, batchResponseWrapper.Responses.Count);
+                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Count, batchResponseWrapper.Responses.Count);
                 return new BatchJsonRpcResult(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
             case SingleResponseWrapper singleResponseWrapper:
                 // "If the batch rpc call itself fails to be recognized as an valid JSON or as an Array with at least one value,
                 // the response from the Server MUST be a single Response object."
                 context.WithSingleResponse(singleResponseWrapper.Response);
                 var message1 = $"Expected batch response, got single, id [{singleResponseWrapper.Response.Id}]";
-                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message1);
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Count, message1);
                 throw new JsonRpcException(message1, context);
             default:
                 var message2 = $"Expected batch response, got [{responseWrapper?.GetType().Name}]";
-                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message2);
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Count, message2);
                 throw new JsonRpcException(message2, context);
         }
     }
@@ -468,11 +468,10 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     {
         var context = CreateContext();
         context.WithRequestUrl(requestUrl);
-        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToList();
         context.WithBatch(data);
         using var content = CreateHttpContent(data);
-        var methodNames = data.Select(static x => x.Method).ToArray();
-        using var request = CreateRequestMessage(requestUrl, content, methodNames);
+        using var request = CreateRequestMessage(requestUrl, content, data);
         var httpResponseMessage = await Client.SendAsync(request, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
         if (context.ExpectedBatchResponseCount == 0)
@@ -480,7 +479,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
             // from specification:
             // "If there are no Response objects contained within the Response array as it is to be sent to the client,
             // the server MUST NOT return an empty Array and should return nothing at all."
-            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Length);
+            Log.LogTrace("Batch count [{batchCount}] success: no response expected", data.Count);
             return null;
         }
 
@@ -491,18 +490,18 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         {
             case BatchResponseWrapper batchResponseWrapper:
                 context.WithBatchResponse(batchResponseWrapper.Responses);
-                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Length, batchResponseWrapper.Responses.Count);
+                Log.LogTrace("Batch count [{batchCount}] success: response count [{responseCount}]", data.Count, batchResponseWrapper.Responses.Count);
                 return new BatchJsonRpcResult<TResponse>(context, HeadersJsonSerializerOptions, DataJsonSerializerOptions);
             case SingleResponseWrapper singleResponseWrapper:
                 // "If the batch rpc call itself fails to be recognized as an valid JSON or as an Array with at least one value,
                 // the response from the Server MUST be a single Response object."
                 context.WithSingleResponse(singleResponseWrapper.Response);
                 var message1 = $"Expected batch response, got single, id [{singleResponseWrapper.Response.Id}]";
-                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message1);
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Count, message1);
                 throw new JsonRpcException(message1, context);
             default:
                 var message2 = $"Expected batch response, got [{responseWrapper?.GetType().Name}]";
-                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Length, message2);
+                Log.LogTrace("Batch count [{batchCount}] failed: {errorMessage}", data.Count, message2);
                 throw new JsonRpcException(message2, context);
         }
     }
@@ -512,17 +511,16 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
     {
         var data = call.WithSerializedParams(DataJsonSerializerOptions);
         using var content = CreateHttpContent(data);
-        using var httpRequestMessage = CreateRequestMessage(requestUrl, content, new[] { call.Method });
+        using var httpRequestMessage = CreateRequestMessage(requestUrl, content, [data]);
         return await Client.SendAsync(httpRequestMessage, cancellationToken);
     }
 
     // internal virtual for mocking in tests
     internal virtual async Task<HttpResponseMessage> SendInternal(string? requestUrl, IEnumerable<ICall> calls, CancellationToken cancellationToken)
     {
-        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToArray();
+        var data = calls.Select(x => x.WithSerializedParams(DataJsonSerializerOptions)).ToList();
         using var content = CreateHttpContent(data);
-        var methodNames = data.Select(static x => x.Method).ToArray();
-        using var message = CreateRequestMessage(requestUrl, content, methodNames);
+        using var message = CreateRequestMessage(requestUrl, content, data);
         return await Client.SendAsync(message, cancellationToken);
     }
 
@@ -561,7 +559,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var data = request.WithSerializedParams(DataJsonSerializerOptions);
         context.WithSingle(data);
         using var content = CreateHttpContent(data);
-        using var requestMessage = CreateRequestMessage(requestUrl, content, new[] { request.Method });
+        using var requestMessage = CreateRequestMessage(requestUrl, content, [data]);
         var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
         var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
@@ -579,14 +577,14 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         Log.LogTrace("Client initialized: user-agent {userAgent}", client.DefaultRequestHeaders.UserAgent);
     }
 
-    private static HttpRequestMessage CreateRequestMessage(string? requestUrl, HttpContent content, string[] methodNames)
+    private static HttpRequestMessage CreateRequestMessage(string? requestUrl, HttpContent content, IReadOnlyList<IUntypedCall> calls)
     {
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, requestUrl)
         {
             Content = content
         };
 
-        httpRequestMessage.Options.Set(new HttpRequestOptionsKey<string[]>(JsonRpcConstants.OutgoingHttpRequestOptionMethodNameKey), methodNames);
+        httpRequestMessage.Options.Set(JsonRpcConstants.JsonRpcClientCallsKey, calls);
         return httpRequestMessage;
     }
 

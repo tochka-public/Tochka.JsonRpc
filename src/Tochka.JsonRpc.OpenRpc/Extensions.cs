@@ -113,6 +113,9 @@ public static class Extensions
         return endpoints.MapGet(options.DocumentPath, requestDelegate);
     }
 
+    /// <summary>
+    /// Create schema with empty BaseUri
+    /// </summary>
     public static JsonSchema BuildWithoutUri(this JsonSchemaBuilder builder)
     {
         var result = builder.Build();

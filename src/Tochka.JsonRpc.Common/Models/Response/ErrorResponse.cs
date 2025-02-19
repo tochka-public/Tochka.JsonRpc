@@ -15,4 +15,9 @@ namespace Tochka.JsonRpc.Common.Models.Response;
 /// <typeparam name="TError">Type of error</typeparam>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public record ErrorResponse<TError>(IRpcId Id, Error<TError> Error, string Jsonrpc = JsonRpcConstants.Version) : IResponse;
+public record ErrorResponse<TError>
+(
+    IRpcId Id,
+    Error<TError> Error,
+    string Jsonrpc = JsonRpcConstants.Version
+) : IResponse;

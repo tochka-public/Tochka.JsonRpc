@@ -412,7 +412,11 @@ public class JsonRpcPropertiesFilterTests
     private const string MethodName = "method";
 
     [JsonRpcTypeMetadata(typeof(object), MethodName)]
-    private sealed record CallWithMetadata(string Jsonrpc, string Method) : ICall
+    private sealed record CallWithMetadata
+    (
+        string Jsonrpc,
+        string Method
+    ) : ICall
     {
         public IUntypedCall WithSerializedParams(JsonSerializerOptions serializerOptions) => throw new NotImplementedException();
     }

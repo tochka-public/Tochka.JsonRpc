@@ -10,4 +10,7 @@ namespace Tochka.JsonRpc.Server.Binding.ParseResults;
 /// <param name="JsonKey">JSON key of parameter that was parsed</param>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed record NoParseResult(string JsonKey) : IParseResult;
+public sealed record NoParseResult
+(
+    string JsonKey
+) : IParseResult;
