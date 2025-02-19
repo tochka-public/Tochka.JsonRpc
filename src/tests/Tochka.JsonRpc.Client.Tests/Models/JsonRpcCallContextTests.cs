@@ -122,63 +122,6 @@ public class JsonRpcCallContextTests
     }
 
     [Test]
-    public void WithHttpContent_ContentStringShorterThanLimit_SetFullValueInProperty()
-    {
-        var contentString = "content";
-
-        jsonRpcCallContext.WithHttpContent(new StringContent(contentString), contentString);
-
-        jsonRpcCallContext.HttpContentInfo.Should().Be(contentString);
-    }
-
-    [Test]
-    public void WithHttpContent_ContentStringLongerThanLimit_SetTrimmedValueInProperty()
-    {
-        var contentString = new string('a', JsonRpcConstants.LogStringLimit * 2);
-
-        jsonRpcCallContext.WithHttpContent(new StringContent(contentString), contentString);
-
-        jsonRpcCallContext.HttpContentInfo.Should().Be(contentString[..JsonRpcConstants.LogStringLimit]);
-    }
-
-    [Test]
-    public void WithHttpContent_HttpContentIsNull_Throw()
-    {
-        var contentString = "content";
-
-        var action = () => jsonRpcCallContext.WithHttpContent(null, contentString);
-
-        action.Should().Throw<JsonRpcException>();
-        jsonRpcCallContext.HttpContentInfo.Should().Be(contentString);
-    }
-
-    [Test]
-    public void WithHttpContent_ContentLengthIsNull_Throw()
-    {
-        var contentString = "content";
-        var content = new StringContent(contentString);
-        content.Headers.ContentLength = null;
-
-        var action = () => jsonRpcCallContext.WithHttpContent(content, contentString);
-
-        action.Should().Throw<JsonRpcException>();
-        jsonRpcCallContext.HttpContentInfo.Should().Be(contentString);
-    }
-
-    [Test]
-    public void WithHttpContent_ContentLengthIsZero_Throw()
-    {
-        var contentString = "content";
-        var content = new StringContent(contentString);
-        content.Headers.ContentLength = 0;
-
-        var action = () => jsonRpcCallContext.WithHttpContent(null, contentString);
-
-        action.Should().Throw<JsonRpcException>();
-        jsonRpcCallContext.HttpContentInfo.Should().Be(contentString);
-    }
-
-    [Test]
     public void WithSingleResponse_SetProperty()
     {
         var id = new NullRpcId();

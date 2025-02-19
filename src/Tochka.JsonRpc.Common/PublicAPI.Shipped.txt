@@ -7,7 +7,6 @@ const Tochka.JsonRpc.Common.JsonRpcConstants.ExceptionCode = -32000 -> int
 const Tochka.JsonRpc.Common.JsonRpcConstants.IdProperty = "id" -> string!
 const Tochka.JsonRpc.Common.JsonRpcConstants.InternalExceptionCode = -32001 -> int
 const Tochka.JsonRpc.Common.JsonRpcConstants.JsonrpcVersionProperty = "jsonrpc" -> string!
-const Tochka.JsonRpc.Common.JsonRpcConstants.LogStringLimit = 5000 -> int
 const Tochka.JsonRpc.Common.JsonRpcConstants.MethodProperty = "method" -> string!
 const Tochka.JsonRpc.Common.JsonRpcConstants.ParamsProperty = "params" -> string!
 const Tochka.JsonRpc.Common.JsonRpcConstants.ResultProperty = "result" -> string!

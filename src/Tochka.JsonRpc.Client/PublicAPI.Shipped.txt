@@ -33,7 +33,6 @@ Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.BatchCall.get -> System.Collect
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.BatchResponse.get -> System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.Error.get -> Tochka.JsonRpc.Common.Models.Response.Errors.IError?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.ExpectedBatchResponseCount.get -> int
-Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.HttpContentInfo.get -> string?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.HttpResponseInfo.get -> string?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.RequestUrl.get -> string?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.SingleCall.get -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall?
@@ -42,7 +41,6 @@ Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.ToString() -> string!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithBatch(System.Collections.Generic.ICollection<Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!>! batchCall) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithBatchResponse(System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>! batchResponse) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithError(Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse! untypedErrorResponse) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
-Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithHttpContent(System.Net.Http.HttpContent! httpContent, string! httpContentString) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithHttpResponse(System.Net.Http.HttpResponseMessage! httpResponseMessage) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithRequestUrl(string? requestUrl) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithSingle(Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall! singleCall) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
@@ -52,7 +50,6 @@ Tochka.JsonRpc.Client.Models.JsonRpcCallContext.BatchCall.get -> System.Collecti
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.BatchResponse.get -> System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>?
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.Error.get -> Tochka.JsonRpc.Common.Models.Response.Errors.IError?
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.ExpectedBatchResponseCount.get -> int
-Tochka.JsonRpc.Client.Models.JsonRpcCallContext.HttpContentInfo.get -> string?
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.HttpResponseInfo.get -> string?
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.JsonRpcCallContext() -> void
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.RequestUrl.get -> string?
@@ -61,7 +58,6 @@ Tochka.JsonRpc.Client.Models.JsonRpcCallContext.SingleResponse.get -> Tochka.Jso
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithBatch(System.Collections.Generic.ICollection<Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!>! batchCall) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithBatchResponse(System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>! batchResponse) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithError(Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse! untypedErrorResponse) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
-Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithHttpContent(System.Net.Http.HttpContent! httpContent, string! httpContentString) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithHttpResponse(System.Net.Http.HttpResponseMessage! httpResponseMessage) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithRequestUrl(string? requestUrl) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.JsonRpcCallContext.WithSingle(Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall! singleCall) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!

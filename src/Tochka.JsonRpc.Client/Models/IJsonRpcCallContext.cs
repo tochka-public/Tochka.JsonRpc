@@ -39,11 +39,6 @@ public interface IJsonRpcCallContext
     string? HttpResponseInfo { get; }
 
     /// <summary>
-    /// Serialized HttpContent
-    /// </summary>
-    string? HttpContentInfo { get; }
-
-    /// <summary>
     /// Error if response had error
     /// </summary>
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
@@ -78,11 +73,6 @@ public interface IJsonRpcCallContext
     /// Set HttpResponseInfo
     /// </summary>
     IJsonRpcCallContext WithHttpResponse(HttpResponseMessage httpResponseMessage);
-
-    /// <summary>
-    /// Set HttpContentInfo
-    /// </summary>
-    IJsonRpcCallContext WithHttpContent(HttpContent httpContent, string httpContentString);
 
     /// <summary>
     /// Set single response

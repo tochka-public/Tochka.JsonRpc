@@ -32,9 +32,6 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
     public string? HttpResponseInfo { get; private set; }
 
     /// <inheritdoc />
-    public string? HttpContentInfo { get; private set; }
-
-    /// <inheritdoc />
     public IResponse? SingleResponse { get; private set; }
 
     /// <inheritdoc />
@@ -92,24 +89,6 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         if (httpResponseMessage.StatusCode != HttpStatusCode.OK)
         {
             throw new JsonRpcException("Expected HTTP code 200", this);
-        }
-
-        return this;
-    }
-
-    /// <inheritdoc />
-    public IJsonRpcCallContext WithHttpContent(HttpContent httpContent, string httpContentString)
-    {
-        HttpContentInfo = GetStringWithLimit(httpContentString);
-        if (httpContent == null)
-        {
-            throw new JsonRpcException("Response content is null", this);
-        }
-
-        var contentLength = httpContent.Headers.ContentLength;
-        if (contentLength is null or 0)
-        {
-            throw new JsonRpcException($"Bad Content-Length [{contentLength}]", this);
         }
 
         return this;
@@ -245,14 +224,6 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
             emptyOutput = false;
         }
 
-        if (HttpContentInfo != null)
-        {
-            sb.AppendLine();
-            sb.AppendLine("    HTTP response content:");
-            sb.AppendLine(CultureInfo.InvariantCulture, $"        {HttpContentInfo}");
-            emptyOutput = false;
-        }
-
         if (SingleResponse != null)
         {
             sb.AppendLine();
@@ -288,9 +259,4 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
 
         return sb.ToString();
     }
-
-    private static string GetStringWithLimit(string str) =>
-        string.IsNullOrEmpty(str) || str.Length <= JsonRpcConstants.LogStringLimit
-            ? str
-            : str[..JsonRpcConstants.LogStringLimit];
 }
