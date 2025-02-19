@@ -73,11 +73,6 @@ public static class JsonRpcConstants
     public const string ContentType = "application/json";
 
     /// <summary>
-    /// Restriction for logging long texts
-    /// </summary>
-    public const int LogStringLimit = 5000;
-
-    /// <summary>
     /// HttpRequest.Options item, contains jsonrpc requests sent by client. Multiple items for batch requests
     /// </summary>
     public static readonly HttpRequestOptionsKey<IReadOnlyList<IUntypedCall>> JsonRpcClientCallsKey = new("tochka_jsonrpc_client_calls");

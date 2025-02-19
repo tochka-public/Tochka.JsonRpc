@@ -520,7 +520,6 @@ public class JsonRpcClientBaseTests
         contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
         contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
         contextMock.Verify(c => c.WithHttpResponse(response));
-        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
         contextMock.Verify(c => c.WithSingleResponse(singleResponse));
     }
 
@@ -591,7 +590,6 @@ public class JsonRpcClientBaseTests
         contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
         contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
         contextMock.Verify(c => c.WithHttpResponse(response));
-        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
         contextMock.Verify(c => c.WithSingleResponse(singleResponse));
     }
 
@@ -662,7 +660,6 @@ public class JsonRpcClientBaseTests
         contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
         contextMock.Verify(static c => c.WithSingle(It.IsAny<IUntypedCall>()));
         contextMock.Verify(c => c.WithHttpResponse(response));
-        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
         contextMock.Verify(c => c.WithSingleResponse(singleResponse));
     }
 
@@ -772,7 +769,6 @@ public class JsonRpcClientBaseTests
         contextMock.Verify(static c => c.WithRequestUrl(RequestUrl));
         contextMock.Verify(static c => c.WithBatch(It.IsAny<ICollection<IUntypedCall>>()));
         contextMock.Verify(c => c.WithHttpResponse(response));
-        contextMock.Verify(c => c.WithHttpContent(response.Content, ResponseContent));
         contextMock.Verify(c => c.WithBatchResponse(batchResponse));
     }
 

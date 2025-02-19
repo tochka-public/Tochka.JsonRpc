@@ -441,7 +441,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         }
 
         var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
-        context.WithHttpContent(httpResponseMessage.Content, contentString);
         var responseWrapper = ParseBody(contentString);
         switch (responseWrapper)
         {
@@ -484,7 +483,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         }
 
         var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
-        context.WithHttpContent(httpResponseMessage.Content, contentString);
         var responseWrapper = ParseBody(contentString);
         switch (responseWrapper)
         {
@@ -563,7 +561,6 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
         var httpResponseMessage = await Client.SendAsync(requestMessage, cancellationToken);
         context.WithHttpResponse(httpResponseMessage);
         var contentString = await GetContent(httpResponseMessage.Content, cancellationToken);
-        context.WithHttpContent(httpResponseMessage.Content, contentString);
         return (context, contentString);
     }
 
