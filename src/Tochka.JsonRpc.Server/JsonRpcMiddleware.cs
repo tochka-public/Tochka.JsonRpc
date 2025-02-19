@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
@@ -16,7 +15,6 @@ namespace Tochka.JsonRpc.Server;
 /// <summary>
 /// Middleware to process JSON-RPC calls
 /// </summary>
-[PublicAPI]
 public class JsonRpcMiddleware
 {
     private readonly RequestDelegate next;

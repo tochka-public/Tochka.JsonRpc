@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.ApiExplorer;
 
 /// <summary>
 /// All ApiExplorer constants
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public static class ApiExplorerConstants
 {

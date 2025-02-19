@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 /// Wrapper for batch responses
 /// </summary>
 /// <param name="Responses">List of response objects</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record BatchResponseWrapper
 (

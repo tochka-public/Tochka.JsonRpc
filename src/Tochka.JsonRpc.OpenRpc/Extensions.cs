@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Asp.Versioning.ApiExplorer;
-using JetBrains.Annotations;
 using Json.Schema;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -18,7 +17,6 @@ namespace Tochka.JsonRpc.OpenRpc;
 /// <summary>
 /// Extensions to configure using OpenRPC in application
 /// </summary>
-[PublicAPI]
 public static class Extensions
 {
     /// <summary>

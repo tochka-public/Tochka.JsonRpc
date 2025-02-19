@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Server.Exceptions;
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Server.Exceptions;
 /// <summary>
 /// Exception with error that will be converted to JSON-RPC error response if thrown from controller methods
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Error is required")]
 public class JsonRpcErrorException : Exception

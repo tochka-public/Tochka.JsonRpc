@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Server.Exceptions;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Server.Exceptions;
 /// <summary>
 /// Exception thrown by JSON-RPC call processing logic
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public class JsonRpcServerException : Exception
 {

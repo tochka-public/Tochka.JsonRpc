@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Common.Converters;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Common.Converters;
 /// <summary>
 /// Convert id to and from string/number/null for requests and responses
 /// </summary>
-[PublicAPI]
 public class JsonRpcIdConverter : JsonConverter<IRpcId>
 {
     /// <inheritdoc />

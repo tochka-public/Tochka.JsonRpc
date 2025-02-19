@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 
 namespace Tochka.JsonRpc.Server.Serialization;
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Server.Serialization;
 /// <summary>
 /// <see cref="IJsonSerializerOptionsProvider" /> with <see cref="JsonRpcSerializerOptions.SnakeCase" /> options
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public class SnakeCaseJsonSerializerOptionsProvider : IJsonSerializerOptionsProvider
 {

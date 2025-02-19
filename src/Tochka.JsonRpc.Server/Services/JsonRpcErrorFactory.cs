@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -10,7 +9,6 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Services;
 
 /// <inheritdoc />
-[PublicAPI]
 public class JsonRpcErrorFactory : IJsonRpcErrorFactory
 {
     private readonly ILogger<JsonRpcErrorFactory> log;

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Common.Models.Response.Untyped;
 /// <summary>
 /// Error response with error.data as JsonDocument
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record UntypedErrorResponse
 (

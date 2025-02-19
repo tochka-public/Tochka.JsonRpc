@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Tochka.JsonRpc.Common;
 
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Server.Settings;
 /// <summary>
 /// Options to configure JSON-RPC server
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed class JsonRpcServerOptions
 {

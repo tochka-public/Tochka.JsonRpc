@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// Allows referencing an external resource for extended documentation.
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcExternalDocumentation
 (

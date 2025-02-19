@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Request;
@@ -11,7 +10,6 @@ namespace Tochka.JsonRpc.Server.Extensions;
 /// <summary>
 /// Extensions for <see cref="HttpContext" /> to work with JSON Rpc request/response objects in pipeline
 /// </summary>
-[PublicAPI]
 public static class HttpContextExtensions
 {
     /// <summary>

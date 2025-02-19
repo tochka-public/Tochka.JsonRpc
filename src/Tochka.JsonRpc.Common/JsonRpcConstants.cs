@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
 namespace Tochka.JsonRpc.Common;
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Common;
 /// <summary>
 /// All common JSON-RPC constants
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public static class JsonRpcConstants
 {

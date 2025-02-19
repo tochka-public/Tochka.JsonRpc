@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
@@ -14,7 +13,6 @@ namespace Tochka.JsonRpc.Common.Models.Request;
 /// <param name="Method">Name of the method to be invoked</param>
 /// <param name="Params">Parameter values to be used during the invocation of the method</param>
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public record Request<TParams>
 (
@@ -45,7 +43,6 @@ public record Request<TParams>
 /// <param name="Id">Identifier established by the Client</param>
 /// <param name="Method">Name of the method to be invoked</param>
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public record Request
 (

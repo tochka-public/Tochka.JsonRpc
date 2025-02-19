@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace Tochka.JsonRpc.OpenRpc.Models;
+﻿namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// The expected format of the parameters.
 /// </summary>
-[PublicAPI]
 public enum OpenRpcParamStructure
 {
     /// <summary>

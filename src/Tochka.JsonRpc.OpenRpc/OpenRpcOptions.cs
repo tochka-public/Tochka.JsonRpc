@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Tochka.JsonRpc.OpenRpc.Models;
 
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.OpenRpc;
 /// <summary>
 /// Options to configure OpenRPC document generation
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed class OpenRpcOptions
 {

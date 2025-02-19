@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Client.Models.SingleResult;
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Client.Models.SingleResult;
 /// <summary>
 /// Advanced data for complex work with single Result of JSON-RPC request
 /// </summary>
-[PublicAPI]
 public interface ISingleJsonRpcResultAdvanced
 {
     /// <summary>

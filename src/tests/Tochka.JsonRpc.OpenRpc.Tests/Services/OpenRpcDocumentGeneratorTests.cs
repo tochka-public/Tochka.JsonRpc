@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Json.Schema;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -1046,7 +1045,6 @@ internal sealed class OpenRpcDocumentGeneratorTests
     }
 
     [Obsolete]
-    [UsedImplicitly]
     private sealed class ObsoleteType
     {
         public static void ObsoleteTypeMethod()

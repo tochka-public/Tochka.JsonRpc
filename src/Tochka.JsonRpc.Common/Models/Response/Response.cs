@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Common.Models.Response;
@@ -12,7 +11,6 @@ namespace Tochka.JsonRpc.Common.Models.Response;
 /// <param name="Result">Result of the method invoked on the Server</param>
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 /// <typeparam name="TResult">Type of result</typeparam>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public record Response<TResult>
 (

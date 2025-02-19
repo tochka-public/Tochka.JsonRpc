@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
@@ -13,7 +12,6 @@ namespace Tochka.JsonRpc.Common.Models.Response;
 /// <param name="Error">Error returned from server</param>
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 /// <typeparam name="TError">Type of error</typeparam>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public record ErrorResponse<TError>
 (

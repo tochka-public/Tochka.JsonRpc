@@ -1,12 +1,10 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 
 namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <inheritdoc cref="ISingleJsonRpcResult" />
-[PublicAPI]
 public sealed class SingleJsonRpcResult : SingleJsonRpcResult<object>,
     ISingleJsonRpcResult
 {
@@ -24,7 +22,6 @@ public sealed class SingleJsonRpcResult : SingleJsonRpcResult<object>,
 }
 
 /// <inheritdoc />
-[PublicAPI]
 public class SingleJsonRpcResult<TResponse> : ISingleJsonRpcResult<TResponse>
 {
     /// <inheritdoc />

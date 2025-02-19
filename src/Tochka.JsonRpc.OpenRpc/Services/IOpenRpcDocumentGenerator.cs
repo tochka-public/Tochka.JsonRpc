@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Tochka.JsonRpc.OpenRpc.Models;
+﻿using Tochka.JsonRpc.OpenRpc.Models;
 
 namespace Tochka.JsonRpc.OpenRpc.Services;
 
 /// <summary>
 /// Service to encapsulate logic of OpenRPC document generation
 /// </summary>
-[PublicAPI]
 public interface IOpenRpcDocumentGenerator
 {
     /// <summary>

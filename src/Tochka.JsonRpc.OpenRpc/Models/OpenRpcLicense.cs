@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// License information for the exposed API.
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcLicense
 (

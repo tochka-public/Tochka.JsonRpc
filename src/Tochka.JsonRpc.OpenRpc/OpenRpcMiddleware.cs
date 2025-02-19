@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Routing;
@@ -12,7 +11,6 @@ namespace Tochka.JsonRpc.OpenRpc;
 /// <summary>
 /// Middleware to generate OpenRPC document
 /// </summary>
-[PublicAPI]
 public class OpenRpcMiddleware
 {
     private readonly RequestDelegate next;

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// The object provides metadata about the API.
 /// The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcInfo
 (

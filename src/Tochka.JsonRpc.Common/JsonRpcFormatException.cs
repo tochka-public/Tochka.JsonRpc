@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Common;
 /// <summary>
 /// Exception indicating error in format of JSON-RPC object
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public class JsonRpcFormatException : Exception
 {

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
@@ -8,7 +7,6 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
 /// <inheritdoc cref="IBatchJsonRpcResult" />
-[PublicAPI]
 public sealed class BatchJsonRpcResult : BatchJsonRpcResult<object>,
     IBatchJsonRpcResult
 {
@@ -26,7 +24,6 @@ public sealed class BatchJsonRpcResult : BatchJsonRpcResult<object>,
 }
 
 /// <inheritdoc />
-[PublicAPI]
 public class BatchJsonRpcResult<TResponse> : IBatchJsonRpcResult<TResponse>
 {
     /// <inheritdoc />

@@ -2,7 +2,6 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.ApplicationModels;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +21,6 @@ namespace Tochka.JsonRpc.Server.Extensions;
 /// <summary>
 /// Extensions to configure JSON-RPC API
 /// </summary>
-[PublicAPI]
 public static class DependencyInjectionExtensions
 {
     /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Server.Attributes;
 
 namespace Tochka.JsonRpc.Server.Serialization;
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Server.Serialization;
 /// <summary>
 /// Provider for <see cref="JsonSerializerOptions" /> to use by it's type in <see cref="JsonRpcSerializerOptionsAttribute" />
 /// </summary>
-[PublicAPI]
 public interface IJsonSerializerOptionsProvider
 {
     /// <summary>

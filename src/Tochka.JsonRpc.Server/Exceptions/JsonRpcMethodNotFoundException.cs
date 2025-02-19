@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Server.Exceptions;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Server.Exceptions;
 /// <summary>
 /// Exception indicating that there were no JSON-RPC endpoint for given method
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Method is required")]
 public class JsonRpcMethodNotFoundException : Exception

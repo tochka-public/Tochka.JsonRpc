@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
 
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
 /// <summary>
 /// Notification with params as JsonDocument
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record UntypedNotification
 (

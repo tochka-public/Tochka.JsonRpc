@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Server.Serialization;
 
 namespace Tochka.JsonRpc.Server.Attributes;
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Server.Attributes;
 /// <summary>
 /// Attribute to override default data serializer options
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class JsonRpcSerializerOptionsAttribute : Attribute

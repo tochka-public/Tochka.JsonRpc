@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Common.Features;
 /// <summary>
 /// Feature with information for JSON-RPC call processing
 /// </summary>
-[PublicAPI]
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Call is official name")]
 public interface IJsonRpcFeature
 {

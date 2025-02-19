@@ -1,10 +1,8 @@
-﻿using JetBrains.Annotations;
-using Tochka.JsonRpc.Common.Models.Id;
+﻿using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Client.Services;
 
 /// <inheritdoc />
-[PublicAPI]
 public sealed class JsonRpcIdGenerator : IJsonRpcIdGenerator
 {
     /// <inheritdoc />

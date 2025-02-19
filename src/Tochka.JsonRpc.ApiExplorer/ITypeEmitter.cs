@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace Tochka.JsonRpc.ApiExplorer;
+﻿namespace Tochka.JsonRpc.ApiExplorer;
 
 /// <summary>
 /// Service to encapsulate logic of types generation
 /// </summary>
-[PublicAPI]
 public interface ITypeEmitter
 {
     /// <summary>

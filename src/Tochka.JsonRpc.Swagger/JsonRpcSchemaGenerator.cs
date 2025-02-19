@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -16,7 +15,6 @@ namespace Tochka.JsonRpc.Swagger;
 /// <summary>
 /// Schema generator to use data serializer options for models serialization
 /// </summary>
-[PublicAPI]
 public class JsonRpcSchemaGenerator : ISchemaGenerator
 {
     private readonly SchemaGeneratorOptions generatorOptions;

@@ -37,7 +37,6 @@ Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.HttpResponseInfo.get -> string?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.RequestUrl.get -> string?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.SingleCall.get -> Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall?
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.SingleResponse.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
-Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.ToString() -> string!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithBatch(System.Collections.Generic.ICollection<Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!>! batchCall) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithBatchResponse(System.Collections.Generic.List<Tochka.JsonRpc.Common.Models.Response.IResponse!>! batchResponse) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
 Tochka.JsonRpc.Client.Models.IJsonRpcCallContext.WithError(Tochka.JsonRpc.Common.Models.Response.Untyped.UntypedErrorResponse! untypedErrorResponse) -> Tochka.JsonRpc.Client.Models.IJsonRpcCallContext!
