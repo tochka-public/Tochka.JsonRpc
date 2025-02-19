@@ -67,7 +67,7 @@ public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
             .SelectMany(static g => g.Items)
             .Where(d => !openRpcOptions.IgnoreObsoleteActions || !IsObsoleteTransitive(d))
             .Where(static d => d.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
-            .ToArray();
+            .ToList();
 
         List<OpenRpcServer> servers = [];
         foreach (var apiDescription in apiDescriptions)
