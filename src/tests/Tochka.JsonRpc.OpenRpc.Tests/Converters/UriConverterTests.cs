@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Converters;
 
 [TestFixture]
-public class UriConverterTests
+internal sealed class UriConverterTests
 {
     [Test]
     public void Deserialize_Throw()

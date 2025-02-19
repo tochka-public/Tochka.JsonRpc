@@ -14,7 +14,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-public class OpenRpcContentDescriptorGeneratorTests
+internal sealed class OpenRpcContentDescriptorGeneratorTests
 {
     private Mock<IOpenRpcSchemaGenerator> schemaGeneratorMock;
     private OpenRpcContentDescriptorGenerator contentDescriptorGenerator;

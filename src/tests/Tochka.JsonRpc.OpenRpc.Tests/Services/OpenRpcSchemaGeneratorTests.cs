@@ -15,7 +15,7 @@ namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 [TestFixture]
 [SuppressMessage("ReSharper", "UnusedMember.Local", Justification = "For tests")]
 [SuppressMessage("Naming", "CA1712:Do not prefix enum values with type name", Justification = "For tests")]
-public class OpenRpcSchemaGeneratorTests
+internal sealed class OpenRpcSchemaGeneratorTests
 {
     private OpenRpcSchemaGenerator schemaGenerator;
 

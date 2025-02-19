@@ -30,7 +30,7 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.OpenRpc.Tests.Services;
 
 [TestFixture]
-public class OpenRpcDocumentGeneratorTests
+internal sealed class OpenRpcDocumentGeneratorTests
 {
     private Mock<IApiDescriptionGroupCollectionProvider> apiDescriptionsProviderMock;
     private Mock<IOpenRpcSchemaGenerator> schemaGeneratorMock;

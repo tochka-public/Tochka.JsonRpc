@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Tochka.JsonRpc.OpenRpc.Tests;
 
 [TestFixture]
-public class OpenRpcOptionsTests
+internal sealed class OpenRpcOptionsTests
 {
     [Test]
     public void DocumentSelector_GroupNameEqualToDocName_ReturnTrue()
