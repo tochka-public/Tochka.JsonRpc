@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 /// Wrapper for batch requests
 /// </summary>
 /// <param name="Calls">List of calls in batch request</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record BatchRequestWrapper
 (

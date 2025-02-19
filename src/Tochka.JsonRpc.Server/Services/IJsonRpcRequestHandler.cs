@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Server.Services;
 /// <summary>
 /// Service to process JSON-RPC calls in pipeline
 /// </summary>
-[PublicAPI]
 public interface IJsonRpcRequestHandler
 {
     /// <summary>

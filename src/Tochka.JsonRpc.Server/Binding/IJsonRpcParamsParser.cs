@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Metadata;
 
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Server.Binding;
 /// <summary>
 /// Service to parse JSON-RPC parameters
 /// </summary>
-[PublicAPI]
 public interface IJsonRpcParamsParser
 {
     /// <summary>

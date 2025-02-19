@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Asp.Versioning.ApiExplorer;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,6 @@ namespace Tochka.JsonRpc.Swagger;
 /// <summary>
 /// Extensions to configure using Swagger for JSON-RPC in application
 /// </summary>
-[PublicAPI]
 public static class Extensions
 {
     /// <summary>

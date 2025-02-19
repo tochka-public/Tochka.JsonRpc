@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Metadata;
@@ -13,7 +12,6 @@ namespace Tochka.JsonRpc.Server.Metadata;
 /// <param name="IsOptional">Can this parameter be omitted entirely</param>
 /// <param name="OriginalName">Original action argument name</param>
 /// <param name="Type"><see cref="Type" /> of action argument</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record JsonRpcParameterMetadata
 (

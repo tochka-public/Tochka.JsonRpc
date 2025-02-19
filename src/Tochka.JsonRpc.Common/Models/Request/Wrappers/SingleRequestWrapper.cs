@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Common.Models.Request.Wrappers;
 /// Wrapper for single requests
 /// </summary>
 /// <param name="Call">Single call from request</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record SingleRequestWrapper
 (

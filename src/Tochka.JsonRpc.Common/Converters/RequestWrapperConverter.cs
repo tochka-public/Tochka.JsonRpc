@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
 namespace Tochka.JsonRpc.Common.Converters;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Common.Converters;
 /// <summary>
 /// Deserialize request to single or batch from object/array
 /// </summary>
-[PublicAPI]
 public class RequestWrapperConverter : JsonConverter<IRequestWrapper>
 {
     // NOTE: used in server to parse requests, no need for serialization

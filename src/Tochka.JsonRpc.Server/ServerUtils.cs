@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Serialization;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Server;
 /// <summary>
 /// Helpers for JSON-RPC server logic
 /// </summary>
-[PublicAPI]
 public static class ServerUtils
 {
     /// <summary>

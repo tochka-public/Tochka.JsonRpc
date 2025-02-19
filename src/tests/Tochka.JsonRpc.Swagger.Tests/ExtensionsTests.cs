@@ -39,7 +39,7 @@ public class ExtensionsTests
         result.Remove((typeof(ITypeEmitter), typeof(TypeEmitter), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IApiDescriptionProvider), typeof(JsonRpcDescriptionProvider), ServiceLifetime.Transient)).Should().BeTrue();
         // one of services registered by calling AddSwaggerGen
-        result.Remove((typeof(ISwaggerProvider), typeof(SwaggerGenerator), ServiceLifetime.Transient)).Should().BeTrue();
+        result.Remove((typeof(SwaggerGenerator), typeof(SwaggerGenerator), ServiceLifetime.Transient)).Should().BeTrue();
     }
 
     [Test]

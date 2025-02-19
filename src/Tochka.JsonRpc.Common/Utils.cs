@@ -1,12 +1,10 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common;
 
 /// <summary>
 /// Helpers for common JSON-RPC logic
 /// </summary>
-[PublicAPI]
 public static class Utils
 {
     /// <summary>

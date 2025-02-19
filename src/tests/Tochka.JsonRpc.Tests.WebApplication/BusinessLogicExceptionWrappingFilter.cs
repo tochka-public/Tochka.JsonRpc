@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Tochka.JsonRpc.Server.Services;
 
 namespace Tochka.JsonRpc.Tests.WebApplication;
 
-[UsedImplicitly]
 internal class BusinessLogicExceptionWrappingFilter : IExceptionFilter
 {
     private readonly IJsonRpcErrorFactory errorFactory;

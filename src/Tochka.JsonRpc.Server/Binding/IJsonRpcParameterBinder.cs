@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Metadata;
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Server.Binding;
 /// <summary>
 /// Service to bind parameter parse result to actual action arguments
 /// </summary>
-[PublicAPI]
 public interface IJsonRpcParameterBinder
 {
     /// <summary>

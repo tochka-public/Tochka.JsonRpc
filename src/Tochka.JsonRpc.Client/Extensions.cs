@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tochka.JsonRpc.Client.HttpMessageHandlers;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Client;
 /// <summary>
 /// Extensions to register JSON-RPC client in DI container
 /// </summary>
-[PublicAPI]
 public static class Extensions
 {
     /// <summary>

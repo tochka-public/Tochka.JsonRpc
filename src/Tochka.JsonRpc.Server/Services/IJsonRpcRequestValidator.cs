@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Tochka.JsonRpc.Server.Services;
 
 /// <summary>
 /// Service to validate JSON-RPC requests
 /// </summary>
-[PublicAPI]
 public interface IJsonRpcRequestValidator
 {
     /// <summary>

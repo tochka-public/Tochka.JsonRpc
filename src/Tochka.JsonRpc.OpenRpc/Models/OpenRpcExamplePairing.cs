@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.OpenRpc.Models;
 /// The Example Pairing object consists of a set of example params and result.
 /// The result is what you can expect from the JSON-RPC service given the exact params.
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcExamplePairing
 {

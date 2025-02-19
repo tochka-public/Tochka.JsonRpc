@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Settings;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Server.Attributes;
 /// <summary>
 /// Attribute to override default parameter binding behavior
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class FromParamsAttribute : Attribute,

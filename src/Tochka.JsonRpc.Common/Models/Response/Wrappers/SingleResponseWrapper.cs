@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Common.Models.Response.Wrappers;
 /// Wrapper for single responses
 /// </summary>
 /// <param name="Response">Single response object</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record SingleResponseWrapper
 (

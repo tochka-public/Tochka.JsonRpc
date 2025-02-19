@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Server.Exceptions;
 
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Server.Extensions;
 /// <summary>
 /// Extensions for <see cref="IError" />
 /// </summary>
-[PublicAPI]
 public static class ErrorExtensions
 {
     /// <summary>

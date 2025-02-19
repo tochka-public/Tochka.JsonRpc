@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.OpenRpc.Converters;
 
 namespace Tochka.JsonRpc.OpenRpc;
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.OpenRpc;
 /// <summary>
 /// All OpenRPC constants
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public static class OpenRpcConstants
 {

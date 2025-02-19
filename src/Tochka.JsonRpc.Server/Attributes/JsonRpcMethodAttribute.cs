@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Server.Attributes;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Server.Attributes;
 /// <summary>
 /// Attribute to manually set JSON-RPC method name for mapping to action
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class JsonRpcMethodAttribute : Attribute

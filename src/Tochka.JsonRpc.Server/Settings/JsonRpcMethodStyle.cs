@@ -1,11 +1,8 @@
-using JetBrains.Annotations;
-
 namespace Tochka.JsonRpc.Server.Settings;
 
 /// <summary>
 /// Method style representing how to convert action name to JSON-RPC method
 /// </summary>
-[PublicAPI]
 public enum JsonRpcMethodStyle
 {
     /// <summary>

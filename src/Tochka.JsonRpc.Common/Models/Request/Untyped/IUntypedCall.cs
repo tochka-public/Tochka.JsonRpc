@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Common.Models.Request.Untyped;
 /// <summary>
 /// Base interface for calls with params as JsonDocument
 /// </summary>
-[PublicAPI]
 public interface IUntypedCall : ICall<JsonDocument>
 {
 }

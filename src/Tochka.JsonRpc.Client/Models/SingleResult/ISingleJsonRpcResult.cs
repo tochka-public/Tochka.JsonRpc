@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace Tochka.JsonRpc.Client.Models.SingleResult;
+﻿namespace Tochka.JsonRpc.Client.Models.SingleResult;
 
 /// <summary>
 /// Result of single JSON-RPC request
 /// </summary>
-[PublicAPI]
 public interface ISingleJsonRpcResult
 {
     /// <summary>
@@ -38,7 +35,6 @@ public interface ISingleJsonRpcResult
 /// Result of single JSON-RPC request with typed response
 /// <typeparam name="TResponse">Type of response</typeparam>
 /// </summary>
-[PublicAPI]
 public interface ISingleJsonRpcResult<out TResponse>
 {
     /// <summary>

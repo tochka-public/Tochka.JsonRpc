@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Client.Models;
 
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Client.Models;
 /// <summary>
 /// Exception with IJsonRpcCallContext
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Context is required")]
 public class JsonRpcException : Exception

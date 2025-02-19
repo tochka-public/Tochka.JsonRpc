@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Server.Services;
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Server.Services;
 /// <summary>
 /// Creates <see cref="IError" /> by specification rules, wraps exceptions depending on options
 /// </summary>
-[PublicAPI]
 public interface IJsonRpcErrorFactory
 {
     /// <summary>

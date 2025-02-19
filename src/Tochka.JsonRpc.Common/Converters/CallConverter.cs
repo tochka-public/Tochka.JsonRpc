@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
 namespace Tochka.JsonRpc.Common.Converters;
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Common.Converters;
 /// <summary>
 /// Deserialize calls to request or notification based on existing/missing id property
 /// </summary>
-[PublicAPI]
 public class CallConverter : JsonConverter<IUntypedCall>
 {
     // System.Text.Json can't serialize derived types:

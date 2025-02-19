@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Json.Schema;
 
 namespace Tochka.JsonRpc.OpenRpc.Services;
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.OpenRpc.Services;
 /// <summary>
 /// Service to generate JSON schemas for C# Types or reference already generated ones
 /// </summary>
-[PublicAPI]
 public interface IOpenRpcSchemaGenerator
 {
     /// <summary>

@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.OpenRpc.Models;
 
 /// <summary>
 /// An object representing a Server.
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record OpenRpcServer
 (

@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace Tochka.JsonRpc.Common.Models.Response.Errors;
+﻿namespace Tochka.JsonRpc.Common.Models.Response.Errors;
 
 /// <summary>
 /// Base interface for errors
 /// </summary>
-[PublicAPI]
 public interface IError
 {
     /// <summary>

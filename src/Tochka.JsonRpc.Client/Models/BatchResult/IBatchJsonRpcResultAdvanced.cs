@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
@@ -8,7 +7,6 @@ namespace Tochka.JsonRpc.Client.Models.BatchResult;
 /// <summary>
 /// Advanced data for complex work with batch Result of JSON-RPC request
 /// </summary>
-[PublicAPI]
 public interface IBatchJsonRpcResultAdvanced
 {
     /// <summary>

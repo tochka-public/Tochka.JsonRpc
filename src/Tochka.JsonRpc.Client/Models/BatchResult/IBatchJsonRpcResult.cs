@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Tochka.JsonRpc.Common.Models.Id;
+﻿using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Client.Models.BatchResult;
 
 /// <summary>
 /// Result of batch JSON-RPC request
 /// </summary>
-[PublicAPI]
 public interface IBatchJsonRpcResult
 {
     /// <summary>
@@ -43,7 +41,6 @@ public interface IBatchJsonRpcResult
 /// Result of batch JSON-RPC request with typed response
 /// <typeparam name="TResponse">Type of response</typeparam>
 /// </summary>
-[PublicAPI]
 public interface IBatchJsonRpcResult<out TResponse>
 {
     /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Namotion.Reflection;
 using Tochka.JsonRpc.OpenRpc.Models;
 using Tochka.JsonRpc.Server.Metadata;
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.OpenRpc.Services;
 /// <summary>
 /// Service to generate OpenRPC content descriptors from C# types
 /// </summary>
-[PublicAPI]
 public interface IOpenRpcContentDescriptorGenerator
 {
     /// <summary>

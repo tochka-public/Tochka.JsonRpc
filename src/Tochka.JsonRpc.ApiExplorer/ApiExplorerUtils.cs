@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Tochka.JsonRpc.Server.Serialization;
+﻿using Tochka.JsonRpc.Server.Serialization;
 
 namespace Tochka.JsonRpc.ApiExplorer;
 
 /// <summary>
 /// Helpers for ApiExplorer logic
 /// </summary>
-[PublicAPI]
 public static class ApiExplorerUtils
 {
     /// <summary>

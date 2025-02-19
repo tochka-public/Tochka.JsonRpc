@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -8,7 +7,6 @@ using Tochka.JsonRpc.Common.Models.Response;
 namespace Tochka.JsonRpc.ApiExplorer;
 
 /// <inheritdoc />
-[PublicAPI]
 public class TypeEmitter : ITypeEmitter
 {
     private readonly ModuleBuilder moduleBuilder;

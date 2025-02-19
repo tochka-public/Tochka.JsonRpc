@@ -2,7 +2,6 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Converters;
 
 namespace Tochka.JsonRpc.Common;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Common;
 /// <summary>
 /// Predefined <see cref="JsonSerializerOptions" /> for "headers" and data serialization
 /// </summary>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public static class JsonRpcSerializerOptions
 {

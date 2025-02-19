@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -16,7 +15,6 @@ namespace Tochka.JsonRpc.ApiExplorer;
 /// <summary>
 /// ApiDescriptionProvider that overrides default description for JSON-RPC API
 /// </summary>
-[PublicAPI]
 public class JsonRpcDescriptionProvider : IApiDescriptionProvider
 {
     // need to run after DefaultApiDescriptionProvider to override it's result

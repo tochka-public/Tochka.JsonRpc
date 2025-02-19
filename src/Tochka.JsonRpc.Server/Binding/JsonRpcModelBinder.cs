@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -17,7 +16,6 @@ namespace Tochka.JsonRpc.Server.Binding;
 /// <summary>
 /// <see cref="IModelBinder" /> for JSON-RPC parameters
 /// </summary>
-[PublicAPI]
 public class JsonRpcModelBinder : IModelBinder
 {
     private readonly IJsonRpcParamsParser paramsParser;

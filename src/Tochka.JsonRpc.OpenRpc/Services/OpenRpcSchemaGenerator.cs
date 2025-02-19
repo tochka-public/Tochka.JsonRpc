@@ -2,7 +2,6 @@ using System.Collections;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Json.Schema;
 using Json.Schema.Generation;
 using Namotion.Reflection;
@@ -12,7 +11,6 @@ using Tochka.JsonRpc.OpenRpc.Models;
 namespace Tochka.JsonRpc.OpenRpc.Services;
 
 /// <inheritdoc />
-[PublicAPI]
 public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 {
     private readonly Dictionary<string, JsonSchema> registeredSchemas = new();

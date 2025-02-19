@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Tochka.JsonRpc.Client.Models;
 using Tochka.JsonRpc.Client.Models.BatchResult;
@@ -19,7 +18,6 @@ namespace Tochka.JsonRpc.Client;
 /// <summary>
 /// Base class for JSON Rpc clients
 /// </summary>
-[PublicAPI]
 public abstract class JsonRpcClientBase : IJsonRpcClient
 {
     /// <summary>

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Json.Schema;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -21,7 +20,6 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.OpenRpc.Services;
 
 /// <inheritdoc />
-[PublicAPI]
 public class OpenRpcDocumentGenerator : IOpenRpcDocumentGenerator
 {
     private readonly IApiDescriptionGroupCollectionProvider apiDescriptionsProvider;

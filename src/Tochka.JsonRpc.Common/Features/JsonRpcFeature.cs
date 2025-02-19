@@ -1,13 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
 
 namespace Tochka.JsonRpc.Common.Features;
 
 /// <inheritdoc />
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public class JsonRpcFeature : IJsonRpcFeature
 {

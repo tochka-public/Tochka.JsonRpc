@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.ApiExplorer;
 
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.ApiExplorer;
 /// <remarks>
 /// Dont use this attribute manually! It's for autodoc generation only, will not affect anything
 /// </remarks>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class JsonRpcTypeMetadataAttribute : Attribute

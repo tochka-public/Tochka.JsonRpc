@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 
 namespace Tochka.JsonRpc.Common.Models.Request;
@@ -7,7 +6,6 @@ namespace Tochka.JsonRpc.Common.Models.Request;
 /// <summary>
 /// Base interface for all calls
 /// </summary>
-[PublicAPI]
 public interface ICall
 {
     /// <summary>
@@ -31,7 +29,6 @@ public interface ICall
 /// Base interface for calls to access typed params
 /// </summary>
 /// <typeparam name="TParams">Type of params</typeparam>
-[PublicAPI]
 public interface ICall<out TParams> : ICall
     where TParams : class?
 {

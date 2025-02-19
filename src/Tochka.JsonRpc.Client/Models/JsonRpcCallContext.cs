@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Net;
 using System.Text;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -13,7 +12,6 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 namespace Tochka.JsonRpc.Client.Models;
 
 /// <inheritdoc />
-[PublicAPI]
 public sealed class JsonRpcCallContext : IJsonRpcCallContext
 {
     /// <inheritdoc />
@@ -183,7 +181,7 @@ public sealed class JsonRpcCallContext : IJsonRpcCallContext
         return this;
     }
 
-    /// <inheritdoc cref="object.ToString" />
+    /// <inheritdoc />
     [ExcludeFromCodeCoverage]
     public override string ToString()
     {

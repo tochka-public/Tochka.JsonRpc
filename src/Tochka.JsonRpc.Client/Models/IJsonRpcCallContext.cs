@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
 using Tochka.JsonRpc.Common.Models.Response;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
@@ -10,7 +9,6 @@ namespace Tochka.JsonRpc.Client.Models;
 /// <summary>
 /// Context with all information about request and response
 /// </summary>
-[PublicAPI]
 public interface IJsonRpcCallContext
 {
     /// <summary>
@@ -90,8 +88,4 @@ public interface IJsonRpcCallContext
     /// <param name="untypedErrorResponse"></param>
     /// <returns></returns>
     IJsonRpcCallContext WithError(UntypedErrorResponse untypedErrorResponse);
-
-    /// <summary></summary>
-    [UsedImplicitly]
-    string ToString();
 }

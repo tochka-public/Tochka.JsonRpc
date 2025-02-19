@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using JetBrains.Annotations;
 
 namespace Tochka.JsonRpc.Common.Models.Id;
 
@@ -9,7 +8,6 @@ namespace Tochka.JsonRpc.Common.Models.Id;
 /// JSON-RPC id equal to float/double number in JSON
 /// </summary>
 /// <param name="Value">Actual id value</param>
-[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed record FloatNumberRpcId
 (

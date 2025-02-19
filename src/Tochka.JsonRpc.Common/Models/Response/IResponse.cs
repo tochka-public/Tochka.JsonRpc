@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Tochka.JsonRpc.Common.Models.Id;
+﻿using Tochka.JsonRpc.Common.Models.Id;
 
 namespace Tochka.JsonRpc.Common.Models.Response;
 
 /// <summary>
 /// Base interface for responses
 /// </summary>
-[PublicAPI]
 public interface IResponse
 {
     /// <summary>
