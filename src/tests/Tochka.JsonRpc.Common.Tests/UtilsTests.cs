@@ -21,18 +21,6 @@ public class UtilsTests
     }
 
     [Test]
-    public void DeserializeErrorData_DataJsonSerializerOptionsFailedWithJsonException_UseHeadersJsonSerializerOptions()
-    {
-        var dataJsonSerializerOptions = new JsonSerializerOptions();
-        var headersJsonSerializerOptions = new JsonSerializerOptions { Converters = { new ErrorDataConverter() } };
-        var data = JsonDocument.Parse("\"a\"");
-
-        var deserialized = Utils.DeserializeErrorData<ErrorData>(data, headersJsonSerializerOptions, dataJsonSerializerOptions);
-
-        deserialized.Should().BeEquivalentTo(new ErrorData("a"));
-    }
-
-    [Test]
     public void DeserializeErrorData_DataJsonSerializerOptionsFailedWithNotSupportedException_UseHeadersJsonSerializerOptions()
     {
         var dataJsonSerializerOptions = new JsonSerializerOptions();
@@ -42,6 +30,18 @@ public class UtilsTests
         var deserialized = Utils.DeserializeErrorData<IErrorData>(data, headersJsonSerializerOptions, dataJsonSerializerOptions);
 
         deserialized.Should().BeEquivalentTo(new ErrorData("b"));
+    }
+
+    [Test]
+    public void DeserializeErrorData_DataJsonSerializerOptionsFailedWithJsonException_UseHeadersJsonSerializerOptions()
+    {
+        var dataJsonSerializerOptions = new JsonSerializerOptions();
+        var headersJsonSerializerOptions = new JsonSerializerOptions { Converters = { new ErrorDataConverter() } };
+        var data = JsonDocument.Parse("\"a\"");
+
+        var deserialized = Utils.DeserializeErrorData<ErrorData>(data, headersJsonSerializerOptions, dataJsonSerializerOptions);
+
+        deserialized.Should().BeEquivalentTo(new ErrorData("a"));
     }
 
     [Test]
