@@ -11,8 +11,8 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.14.0" />
-    <PackageReference Include="EdjCase.JsonRpc.Client" Version="6.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.13" />
+    <PackageReference Include="EdjCase.JsonRpc.Client" Version="6.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.14" />
     <PackageReference Include="Moq" Version="[4.18.4]" />
     <PackageReference Include="RichardSzalay.MockHttp" Version="7.0.0" />
   </ItemGroup>

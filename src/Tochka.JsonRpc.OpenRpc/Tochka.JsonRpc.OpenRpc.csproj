@@ -33,9 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonSchema.Net" Version="7.3.3" />
+    <PackageReference Include="JsonSchema.Net" Version="7.3.4" />
     <PackageReference Include="JsonSchema.Net.Generation" Version="5.0.0" />
-    <PackageReference Include="Namotion.Reflection" Version="3.2.0" />
+    <PackageReference Include="Namotion.Reflection" Version="3.3.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
