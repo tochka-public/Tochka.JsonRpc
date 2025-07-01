@@ -28,7 +28,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(IEnumerable<string>);
         var jsonSerializerOptions = new JsonSerializerOptions();
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedSchema = new JsonSchemaBuilder()
             .Type(SchemaValueType.Array)
@@ -47,7 +47,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(IEnumerable<CustomSimpleType>);
         var jsonSerializerOptions = new JsonSerializerOptions();
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedSchema = new JsonSchemaBuilder()
             .Type(SchemaValueType.Array)
@@ -66,7 +66,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(IEnumerable<Enum>);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -91,7 +91,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(IEnumerable<TypeWithProperties>);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -133,7 +133,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(Enum);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -155,7 +155,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(Enum?);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -177,7 +177,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(string);
         var jsonSerializerOptions = new JsonSerializerOptions();
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedSchema = new JsonSchemaBuilder()
             .FromType<string>()
@@ -193,7 +193,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(CustomSimpleType);
         var jsonSerializerOptions = new JsonSerializerOptions();
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedSchema = new JsonSchemaBuilder()
             .FromType<CustomSimpleType>()
@@ -209,7 +209,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithProperties);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -248,7 +248,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithSomeNullableProperties);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithSomeNullableProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -287,8 +287,8 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(Enum);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
-        schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
+        schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -310,8 +310,8 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithProperties);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var result = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
-        schemaGenerator.CreateOrRef(typeof(AnotherTypeWithProperties), MethodName, jsonSerializerOptions);
+        var result = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
+        schemaGenerator.CreateOrRef(typeof(AnotherTypeWithProperties), null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -351,8 +351,8 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
         var anotherMethodName = "anotherMethodName";
 
-        var result1 = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
-        var result2 = schemaGenerator.CreateOrRef(type, anotherMethodName, jsonSerializerOptions);
+        var result1 = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
+        var result2 = schemaGenerator.CreateOrRef(type, null, anotherMethodName, jsonSerializerOptions);
 
         var expectedTypeName1 = $"{MethodName} {nameof(AnotherTypeWithProperties)}";
         var expectedTypeName2 = $"{anotherMethodName} {nameof(AnotherTypeWithProperties)}";
@@ -392,7 +392,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(Enum2);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = null };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(Enum2)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -414,7 +414,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithSimpleProperties);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithSimpleProperties)}";
         var expectedSchema = new JsonSchemaBuilder()
@@ -446,7 +446,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithSummaries);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedTypeName = $"{MethodName} {nameof(TypeWithSummaries)}";
         var expectedTypeNameInner = $"{MethodName} {nameof(TypeWithSummariesInner)}";
@@ -543,7 +543,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithGenericProperties);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedParentTypeName = $"{MethodName} {nameof(TypeWithGenericProperties)}";
         var expectedProperty1Name = $"{MethodName} GenericOneType`1[TypeWithGenericPropertiesFirstEnum]";
@@ -607,7 +607,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithSomeNullableGenericProperties);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedParentTypeName = $"{MethodName} {nameof(TypeWithSomeNullableGenericProperties)}";
         var expectedProperty1Name = $"{MethodName} GenericOneType`1[TypeWithGenericPropertiesFirstEnum]";
@@ -671,7 +671,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithGenericTwoTypesProperty);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedParentTypeName = $"{MethodName} {nameof(TypeWithGenericTwoTypesProperty)}";
         var expectedProperty1TypeName = $"{MethodName} GenericTwoType`2[String,Boolean]";
@@ -717,7 +717,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithNullableGenericTwoTypesProperty);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedParentTypeName = $"{MethodName} {nameof(TypeWithNullableGenericTwoTypesProperty)}";
         var expectedProperty1TypeName = $"{MethodName} GenericTwoType`2[String,Boolean]";
@@ -761,7 +761,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithChildGenericTypyProperty);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedParentTypeName = $"{MethodName} {nameof(TypeWithChildGenericTypyProperty)}";
         var expectedProperty1Name = $"{MethodName} GenericTwoType`2[String,GenericOneType`1[Boolean]]";
@@ -819,7 +819,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithNullableChildGenericTypyProperty);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var expectedParentTypeName = $"{MethodName} {nameof(TypeWithNullableChildGenericTypyProperty)}";
         var expectedProperty1Name = $"{MethodName} GenericTwoType`2[String,GenericOneType`1[Boolean]]";
@@ -877,7 +877,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         var type = typeof(TypeWithJsonAttributes);
         var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-        var actualSchema = schemaGenerator.CreateOrRef(type, MethodName, jsonSerializerOptions);
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
 
         var typeName = $"{MethodName} {nameof(TypeWithJsonAttributes)}";
         var typeNameInnerEnum = $"{MethodName} {nameof(TypeWithJsonAttributesEnum)}";

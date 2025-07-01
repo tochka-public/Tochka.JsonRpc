@@ -215,7 +215,7 @@ Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator.GenerateForTy
 Tochka.JsonRpc.OpenRpc.Services.IOpenRpcDocumentGenerator
 Tochka.JsonRpc.OpenRpc.Services.IOpenRpcDocumentGenerator.Generate(Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info, string! documentName, System.Uri! host) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpc!
 Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator
-Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator.CreateOrRef(System.Type! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!
+Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator.CreateOrRef(System.Type! type, System.Reflection.PropertyInfo? property, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!
 Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator.GetAllSchemas() -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>!
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcContentDescriptorGenerator.GenerateForParameter(Namotion.Reflection.ContextualPropertyInfo! propertyInfo, string! methodName, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpcContentDescriptor!
@@ -226,7 +226,6 @@ Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator.Generate(Tochka.JsonRpc.OpenRpc.Models.OpenRpcInfo! info, string! documentName, System.Uri! host) -> Tochka.JsonRpc.OpenRpc.Models.OpenRpc!
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator.OpenRpcDocumentGenerator(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiDescriptionGroupCollectionProvider! apiDescriptionsProvider, Tochka.JsonRpc.OpenRpc.Services.IOpenRpcSchemaGenerator! schemaGenerator, Tochka.JsonRpc.OpenRpc.Services.IOpenRpcContentDescriptorGenerator! contentDescriptorGenerator, System.Collections.Generic.IEnumerable<Tochka.JsonRpc.Server.Serialization.IJsonSerializerOptionsProvider!>! jsonSerializerOptionsProviders, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! serverOptions, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.OpenRpc.OpenRpcOptions!>! openRpcOptions, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.OpenRpc.Services.OpenRpcDocumentGenerator!>! log) -> void
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator
-Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.CreateOrRef(System.Type! type, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!
-Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.GetAllSchemas() -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>!
+Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.CreateOrRef(System.Type! type, System.Reflection.PropertyInfo? property, string! methodName, System.Text.Json.JsonSerializerOptions! jsonSerializerOptions) -> Json.Schema.JsonSchema!Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.GetAllSchemas() -> System.Collections.Generic.Dictionary<string!, Json.Schema.JsonSchema!>!
 Tochka.JsonRpc.OpenRpc.Services.OpenRpcSchemaGenerator.OpenRpcSchemaGenerator() -> void
 static Tochka.JsonRpc.OpenRpc.Extensions.BuildWithoutUri(this Json.Schema.JsonSchemaBuilder! builder) -> Json.Schema.JsonSchema!

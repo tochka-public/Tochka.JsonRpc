@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Schema;
@@ -13,10 +14,11 @@ namespace Tochka.JsonRpc.OpenRpc.Services;
 /// <inheritdoc />
 public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 {
+    private static readonly NullabilityInfoContext nullabilityInfoContext = new();
+    
     private readonly Dictionary<string, JsonSchema> registeredSchemas = new();
     private readonly Dictionary<string, List<string>> requiredPropsForSchemas = new();
     private readonly HashSet<string> registeredSchemaKeys = new();
-    private readonly NullabilityInfoContext nullabilityInfoContext = new();
 
     private readonly Dictionary<Type, Format> defaultStringConvertedSimpleTypes = new()
     {
@@ -28,14 +30,18 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         { typeof(Guid), Formats.Uuid }
     };
 
+    internal static bool IsNotNullNullabilityContext(PropertyInfo property) => 
+        nullabilityInfoContext.Create(property).ReadState is NullabilityState.NotNull;
+    
+    internal static string GetJsonPropertyName(PropertyInfo property, JsonSerializerOptions jsonSerializerOptions) =>
+        property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
+        ?? jsonSerializerOptions.ConvertName(property.Name);
+
     /// <inheritdoc />
     public Dictionary<string, JsonSchema> GetAllSchemas() => new(registeredSchemas);
 
     /// <inheritdoc />
-    public JsonSchema CreateOrRef(Type type, string methodName, JsonSerializerOptions jsonSerializerOptions) =>
-        CreateOrRefInternal(type, methodName, null, jsonSerializerOptions);
-
-    private JsonSchema CreateOrRefInternal(Type type, string methodName, PropertyInfo? property, JsonSerializerOptions jsonSerializerOptions)
+    public JsonSchema CreateOrRef(Type type, PropertyInfo? property, string methodName, JsonSerializerOptions jsonSerializerOptions)
     {
         var clearType = TryUnwrapNullableType(type);
         var clearTypeName = GetClearTypeName(methodName, clearType);
@@ -57,7 +63,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         {
             var collectionScheme = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
-                .Items(CreateOrRefInternal(itemType, methodName, null, jsonSerializerOptions))
+                .Items(CreateOrRef(itemType, property, methodName, jsonSerializerOptions))
                 .AppendXmlDocs(propertyXmlDocs)
                 .BuildWithoutUri();
             // returning schema itself if it's collection
@@ -146,7 +152,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             var jsonPropertyName = GetJsonPropertyName(property, jsonSerializerOptions);
 
             TrySetRequiredState(property, jsonPropertyName, typeName, methodName, jsonSerializerOptions);
-            var schema = CreateOrRefInternal(property.PropertyType, methodName, property, jsonSerializerOptions);
+            var schema = CreateOrRef(property.PropertyType, property, methodName, jsonSerializerOptions);
             schemas.Add(jsonPropertyName, schema);
         }
 
@@ -161,8 +167,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
             var genericPropertiesContext = nullabilityInfoContext.Create(property);
             var clearGenericTypeName = GetClearTypeName(methodName, property.PropertyType);
-            var propsNullabilityInfo = genericPropertiesContext.GenericTypeArguments.Zip(propertiesInGenericType,
-                (nullabilityInfo, propInfo) => new { nullabilityInfo, propInfo });
+            var propsNullabilityInfo = genericPropertiesContext.GenericTypeArguments.Zip(propertiesInGenericType, (nullabilityInfo, propInfo) => new { nullabilityInfo, propInfo });
 
             foreach (var requiredPropState in propsNullabilityInfo.Where(x => x.nullabilityInfo.ReadState is NullabilityState.NotNull))
             {
@@ -171,9 +176,7 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             }
         }
 
-        var propContext = nullabilityInfoContext.Create(property);
-        var required = propContext.ReadState is NullabilityState.NotNull;
-        if (required)
+        if (IsNotNullNullabilityContext(property))
         {
             TryAddRequiredMember(typeName, jsonPropertyName);
         }
@@ -190,10 +193,6 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
         requiredPropsForSchemas.TryAdd(typeName, requiredProperties);
     }
 
-    private static string GetJsonPropertyName(PropertyInfo property, JsonSerializerOptions jsonSerializerOptions) =>
-        property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
-        ?? jsonSerializerOptions.ConvertName(property.Name);
-
     private static JsonSerializerOptions? GetSerializerOptionsByConverterAttribute(PropertyInfo? property)
     {
         var converterAttribute = property?.GetCustomAttribute<JsonConverterAttribute>();
@@ -203,6 +202,8 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
             {
                 var options = new JsonSerializerOptions();
                 options.Converters.Add(converterInstance);
+                // Default encoder converts Cyrillic characters to Unicode symbols
+                options.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
                 return options;
             }
         }

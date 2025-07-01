@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using Json.Schema;
 using Moq;
@@ -50,7 +51,7 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
         var type = typeof(TypeWithXmlDocs).ToContextualType();
         var jsonSerializerOptions = new JsonSerializerOptions();
         var jsonSchema = JsonSchema.Empty;
-        schemaGeneratorMock.Setup(g => g.CreateOrRef(type, MethodName, jsonSerializerOptions))
+        schemaGeneratorMock.Setup(g => g.CreateOrRef(type, null, MethodName, jsonSerializerOptions))
             .Returns(jsonSchema)
             .Verifiable();
 
@@ -65,7 +66,7 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
     {
         var type = typeof(TypeWithXmlDocs).ToContextualType();
         var jsonSerializerOptions = new JsonSerializerOptions();
-        schemaGeneratorMock.Setup(g => g.CreateOrRef(type, MethodName, jsonSerializerOptions))
+        schemaGeneratorMock.Setup(g => g.CreateOrRef(type, null, MethodName, jsonSerializerOptions))
             .Returns(JsonSchema.Empty);
 
         var result = contentDescriptorGenerator.GenerateForType(type, MethodName, jsonSerializerOptions);
@@ -118,7 +119,7 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
         var parameterMetadata = new JsonRpcParameterMetadata("propertyName", 0, BindingStyle.Default, true, "originalName", typeof(string));
         var jsonSerializerOptions = new JsonSerializerOptions();
         var jsonSchema = JsonSchema.Empty;
-        schemaGeneratorMock.Setup(g => g.CreateOrRef(property.PropertyType, MethodName, jsonSerializerOptions))
+        schemaGeneratorMock.Setup(g => g.CreateOrRef(property.PropertyType, null, MethodName, jsonSerializerOptions))
             .Returns(jsonSchema)
             .Verifiable();
 
@@ -184,6 +185,16 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
         result.Name.Should().Be(serializedName);
         propertyNamingPolicyMock.Verify();
     }
+    
+    [Test]
+    public void GenerateForProperty_UseJsonPropertyNameAttributeAsName()
+    {
+        var property = typeof(TypeWithProperties).GetProperty(nameof(TypeWithProperties.JsonPropertyNameAttributed)).ToContextualProperty();
+        var jsonSerializerOptions = new JsonSerializerOptions();
+        var result = contentDescriptorGenerator.GenerateForProperty(property, MethodName, jsonSerializerOptions);
+
+        result.Name.Should().Be("custom_name");
+    }
 
     [Test]
     public void GenerateForProperty_UseGeneratedJsonSchema()
@@ -191,7 +202,7 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
         var property = typeof(TypeWithProperties).GetProperty(nameof(TypeWithProperties.WithDocs)).ToContextualProperty();
         var jsonSerializerOptions = new JsonSerializerOptions();
         var jsonSchema = JsonSchema.Empty;
-        schemaGeneratorMock.Setup(g => g.CreateOrRef(property.PropertyType, MethodName, jsonSerializerOptions))
+        schemaGeneratorMock.Setup(g => g.CreateOrRef(property.PropertyType, property.PropertyInfo, MethodName, jsonSerializerOptions))
             .Returns(jsonSchema)
             .Verifiable();
 
@@ -222,6 +233,28 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
         var result = contentDescriptorGenerator.GenerateForProperty(property, MethodName, jsonSerializerOptions);
 
         result.Required.Should().BeTrue();
+    }
+    
+    [Test]
+    public void GenerateForProperty_PropertyHasNotNullNullabilityContext_MarkAsRequired()
+    {
+        var property = typeof(TypeWithProperties).GetProperty(nameof(TypeWithProperties.JustNotNull)).ToContextualProperty();
+        var jsonSerializerOptions = new JsonSerializerOptions();
+
+        var result = contentDescriptorGenerator.GenerateForProperty(property, MethodName, jsonSerializerOptions);
+
+        result.Required.Should().BeTrue();
+    }
+    
+    [Test]
+    public void GenerateForProperty_PropertyHasNullableNullabilityContext_MarkAsOptional()
+    {
+        var property = typeof(TypeWithProperties).GetProperty(nameof(TypeWithProperties.JustNullable)).ToContextualProperty();
+        var jsonSerializerOptions = new JsonSerializerOptions();
+
+        var result = contentDescriptorGenerator.GenerateForProperty(property, MethodName, jsonSerializerOptions);
+
+        result.Required.Should().BeFalse();
     }
 
     [Test]
@@ -258,5 +291,12 @@ internal sealed class OpenRpcContentDescriptorGeneratorTests
 
         [Obsolete]
         public string Obsolete { get; init; }
+        
+        public string JustNotNull { get; init; }
+        
+        public string? JustNullable { get; init; }
+        
+        [JsonPropertyName("custom_name")]
+        public string JsonPropertyNameAttributed { get; init; }
     }
 }
