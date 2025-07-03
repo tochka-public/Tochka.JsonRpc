@@ -80,6 +80,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
+                .OneOf(new JsonSchemaBuilder().Const("one"), new JsonSchemaBuilder().Const("two"))
                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -144,6 +145,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
+                .OneOf(new JsonSchemaBuilder().Const("one"), new JsonSchemaBuilder().Const("two"))
                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -166,6 +168,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
+                .OneOf(new JsonSchemaBuilder().Const("one"), new JsonSchemaBuilder().Const("two"))
                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -299,6 +302,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("one", "two")
+                .OneOf(new JsonSchemaBuilder().Const("one"), new JsonSchemaBuilder().Const("two"))
                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
@@ -403,9 +407,59 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Enum("Value1", "ValueValue2", "value3", "value_value4")
+                .OneOf(new JsonSchemaBuilder().Const("Value1"), 
+                       new JsonSchemaBuilder().Const("ValueValue2"), 
+                       new JsonSchemaBuilder().Const("value3"), 
+                       new JsonSchemaBuilder().Const("value_value4"))
                 .BuildWithoutUri()
         };
         schemaGenerator.GetAllSchemas().Should().BeEquivalentTo(expectedRegistrations);
+    }
+    
+    [Test]
+    public void CreateOrRef_EnumValueSummaryCollectedAsDescription()
+    {
+        var type = typeof(EnumWithSummary);
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
+        var actualSchema = schemaGenerator.CreateOrRef(type, null, MethodName, jsonSerializerOptions);
+
+        var expectedTypeName = $"{MethodName} {nameof(EnumWithSummary)}";
+        var expectedSchema = new JsonSchemaBuilder()
+                             .Ref($"#/components/schemas/{expectedTypeName}")
+                             .BuildWithoutUri();
+        actualSchema.Should().BeEquivalentTo(expectedSchema);
+
+        var actualSchemas = schemaGenerator.GetAllSchemas();
+        actualSchemas[expectedTypeName].Keywords.Count.Should().Be(2);
+        
+        var keywords = actualSchemas[expectedTypeName].Keywords.ToArray();
+        keywords[0].Should().BeAssignableTo(typeof(EnumKeyword));
+        var enumKeywords = ((EnumKeyword)keywords[0]).Values.Select(static x => x.ToString()).ToArray();
+        enumKeywords.Should().BeEquivalentTo("One", "Two");
+
+        var oneOfKeyword = keywords[1];
+        oneOfKeyword.Should().BeAssignableTo(typeof(OneOfKeyword));
+        var oneOfKeywordSchemas = ((OneOfKeyword)oneOfKeyword).Schemas;
+        oneOfKeywordSchemas.Count.Should().Be(2);
+        
+        var firstEnumValueOneOfKeywordSchemas = oneOfKeywordSchemas[0].Keywords.ToArray();
+        firstEnumValueOneOfKeywordSchemas.Length.Should().Be(2);
+        firstEnumValueOneOfKeywordSchemas[0].Should().BeAssignableTo(typeof(ConstKeyword));
+        ((ConstKeyword)firstEnumValueOneOfKeywordSchemas[0]).Value.ToString().Should().Be("One");
+        firstEnumValueOneOfKeywordSchemas[1].Should().BeAssignableTo(typeof(DescriptionKeyword));
+        ((DescriptionKeyword)firstEnumValueOneOfKeywordSchemas[1]).Value.Should().Be("One Summary");
+        
+        var secondEnumValueOneOfKeywordSchemas = oneOfKeywordSchemas[1].Keywords.ToArray();
+        secondEnumValueOneOfKeywordSchemas.Length.Should().Be(2);
+        secondEnumValueOneOfKeywordSchemas[0].Should().BeAssignableTo(typeof(ConstKeyword));
+        ((ConstKeyword)secondEnumValueOneOfKeywordSchemas[0]).Value.ToString().Should().Be("Two");
+        secondEnumValueOneOfKeywordSchemas[1].Should().BeAssignableTo(typeof(DescriptionKeyword));
+        ((DescriptionKeyword)secondEnumValueOneOfKeywordSchemas[1]).Value.Should().Be("Two Summary");
     }
 
     [Test]
@@ -473,6 +527,7 @@ internal sealed class OpenRpcSchemaGeneratorTests
                 .BuildWithoutUri(),
             [expectedTypeNameInnerEnum] = new JsonSchemaBuilder()
                 .Enum("bla")
+                .OneOf(new JsonSchemaBuilder().Const("bla"))
                 .BuildWithoutUri(),
             [expectedTypeName] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
@@ -561,9 +616,11 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedFirstEnumTypeName] = new JsonSchemaBuilder()
                 .Enum("type_with_generic_properties_first_enum")
+                .OneOf(new JsonSchemaBuilder().Const("type_with_generic_properties_first_enum"))
                 .BuildWithoutUri(),
             [expectedSecondEnumTypeName] = new JsonSchemaBuilder()
                 .Enum("type_with_generic_properties_second_enum")
+                .OneOf(new JsonSchemaBuilder().Const("type_with_generic_properties_second_enum"))
                 .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
@@ -625,9 +682,11 @@ internal sealed class OpenRpcSchemaGeneratorTests
         {
             [expectedFirstEnumTypeName] = new JsonSchemaBuilder()
                 .Enum("type_with_generic_properties_first_enum")
+                .OneOf(new JsonSchemaBuilder().Const("type_with_generic_properties_first_enum"))
                 .BuildWithoutUri(),
             [expectedSecondEnumTypeName] = new JsonSchemaBuilder()
                 .Enum("type_with_generic_properties_second_enum")
+                .OneOf(new JsonSchemaBuilder().Const("type_with_generic_properties_second_enum"))
                 .BuildWithoutUri(),
             [expectedProperty1Name] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
@@ -886,7 +945,10 @@ internal sealed class OpenRpcSchemaGeneratorTests
 
         var expectedSchemas = new Dictionary<string, JsonSchema>
         {
-            [typeNameInnerEnum] = new JsonSchemaBuilder().Enum("MyEnumValue").BuildWithoutUri(),
+            [typeNameInnerEnum] = new JsonSchemaBuilder()
+                                  .Enum("MyEnumValue")                
+                                  .OneOf(new JsonSchemaBuilder().Const("MyEnumValue"))
+                                  .BuildWithoutUri(),
             [typeName] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(new Dictionary<string, JsonSchema>
@@ -917,6 +979,19 @@ internal sealed class OpenRpcSchemaGeneratorTests
         ValueValue2,
         value3,
         value_value4
+    }
+    
+    private enum EnumWithSummary
+    {
+        /// <summary>
+        /// One Summary
+        /// </summary>
+        One,
+        
+        /// <summary>
+        /// Two Summary
+        /// </summary>
+        Two
     }
 
     private enum TypeWithSummariesInnerEnum

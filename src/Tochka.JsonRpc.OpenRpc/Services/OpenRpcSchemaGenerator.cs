@@ -72,15 +72,31 @@ public class OpenRpcSchemaGenerator : IOpenRpcSchemaGenerator
 
         if (type.IsEnum)
         {
-            List<string> enumValues = [];
+            List<string> enumSerializedValues = [];
+            List<JsonSchema> enumOneOfSerializedItems = [];
+
             var enumSerializerOptions = GetSerializerOptionsByConverterAttribute(property) ?? jsonSerializerOptions;
-            foreach (var val in type.GetEnumValues())
+
+            var enumValues = type.GetEnumValues();
+            var enumTypeMembers = type.GetMembers(BindingFlags.Static | BindingFlags.Public);
+
+            for (var i = 0; i < enumValues.Length; i++)
             {
-                enumValues.Add(JsonSerializer.Serialize(val, enumSerializerOptions).Replace("\"", string.Empty));
+                var serializedValue = JsonSerializer.Serialize(enumValues.GetValue(i), enumSerializerOptions).Replace("\"", string.Empty);
+                var summary = enumTypeMembers[i].GetXmlDocsSummary();
+
+                var oneOfItemSchema = new JsonSchemaBuilder()
+                    .Const(serializedValue)
+                    .Description(summary)
+                    .Build();
+
+                enumSerializedValues.Add(serializedValue);
+                enumOneOfSerializedItems.Add(oneOfItemSchema);
             }
 
             var enumSchema = new JsonSchemaBuilder()
-                .Enum(enumValues)
+                .Enum(enumSerializedValues)
+                .OneOf(enumOneOfSerializedItems)
                 .AppendXmlDocs(new XmlDocValuesWrapper(type.GetXmlDocsSummary(), type.GetXmlDocsRemarks()))
                 .BuildWithoutUri();
             RegisterSchema(typeName, enumSchema);
