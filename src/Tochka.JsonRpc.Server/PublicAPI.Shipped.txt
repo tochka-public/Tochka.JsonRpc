@@ -168,3 +168,4 @@ static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.WithJsonRp
 static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.WithJsonRpcResponseErrorLogging(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.LogExceptions.get -> bool
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.LogExceptions.set -> void
+override Tochka.JsonRpc.Server.Exceptions.JsonRpcErrorException.Message.get -> string!

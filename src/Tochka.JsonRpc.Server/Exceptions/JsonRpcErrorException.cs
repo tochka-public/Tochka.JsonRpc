@@ -19,4 +19,7 @@ public class JsonRpcErrorException : Exception
     /// <inheritdoc />
     /// <param name="error">Error to return in response</param>
     public JsonRpcErrorException(IError error) => Error = error;
+
+    /// <inheritdoc />
+    public override string Message => $"{nameof(JsonRpcErrorException)}: [{Error.Code}] [{Error.Message}] [{Error.Data}]";
 }
