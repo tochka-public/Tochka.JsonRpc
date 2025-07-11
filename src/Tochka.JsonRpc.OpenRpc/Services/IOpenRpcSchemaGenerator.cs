@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.Json;
 using Json.Schema;
 
@@ -22,5 +23,6 @@ public interface IOpenRpcSchemaGenerator
     /// <param name="methodName">Name of JSON-RPC method</param>
     /// <param name="jsonSerializerOptions">Data serializer options</param>
     /// <returns>Schema itself if Type is collection or simple type without JSON properties, ref to schema otherwise</returns>
+    [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Property is a property")]
     JsonSchema CreateOrRef(Type type, PropertyInfo? property, string methodName, JsonSerializerOptions jsonSerializerOptions);
 }
