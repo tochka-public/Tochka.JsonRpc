@@ -191,3 +191,4 @@ const Tochka.JsonRpc.Common.JsonRpcErrorCodes.MethodNotFound = -32601 -> int
 const Tochka.JsonRpc.Common.JsonRpcErrorCodes.ParseError = -32700 -> int
 Tochka.JsonRpc.Common.JsonRpcErrorCodes
 static readonly Tochka.JsonRpc.Common.JsonRpcConstants.JsonRpcClientCallsKey -> System.Net.Http.HttpRequestOptionsKey<System.Collections.Generic.IReadOnlyList<Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!>!>
+static readonly Tochka.JsonRpc.Common.JsonRpcConstants.AllowedRequestContentType -> System.Collections.Generic.IReadOnlyCollection<string!>!

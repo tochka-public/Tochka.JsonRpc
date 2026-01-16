@@ -180,8 +180,10 @@ public class JsonRpcDescriptionProviderTests
 
         context.Results.Should().HaveCount(1);
         var description = context.Results.Single();
-        description.SupportedRequestFormats.Should().HaveCount(1);
-        description.SupportedRequestFormats.Single().MediaType.Should().Be(JsonRpcConstants.ContentType);
+        description.SupportedRequestFormats.Should().HaveCount(3);
+        description.SupportedRequestFormats[0].MediaType.Should().Be(JsonRpcConstants.ContentType);
+        description.SupportedRequestFormats[1].MediaType.Should().Be("application/jsonrequest");
+        description.SupportedRequestFormats[2].MediaType.Should().Be("application/json-rpc");
         description.ParameterDescriptions.Should().HaveCount(1);
         description.ParameterDescriptions.Single().Name.Should().Be(JsonRpcConstants.ParamsProperty);
         description.ParameterDescriptions.Single().Source.Should().Be(BindingSource.Body);
@@ -389,8 +391,10 @@ public class JsonRpcDescriptionProviderTests
         var description = context.Results.Single();
         description.SupportedResponseTypes.Should().HaveCount(1);
         description.SupportedResponseTypes.Should().NotContain(initialResponseType);
-        description.SupportedResponseTypes.Single().ApiResponseFormats.Should().HaveCount(1);
-        description.SupportedResponseTypes.Single().ApiResponseFormats.Single().MediaType.Should().Be(JsonRpcConstants.ContentType);
+        description.SupportedResponseTypes.Single().ApiResponseFormats.Should().HaveCount(3);
+        description.SupportedResponseTypes.Single().ApiResponseFormats[0].MediaType.Should().Be(JsonRpcConstants.ContentType);
+        description.SupportedResponseTypes.Single().ApiResponseFormats[1].MediaType.Should().Be("application/jsonrequest");
+        description.SupportedResponseTypes.Single().ApiResponseFormats[2].MediaType.Should().Be("application/json-rpc");
         description.SupportedResponseTypes.Single().IsDefaultResponse.Should().BeFalse();
         description.SupportedResponseTypes.Single().StatusCode.Should().Be(200);
         description.SupportedResponseTypes.Single().Type.Should().Be(responseType);

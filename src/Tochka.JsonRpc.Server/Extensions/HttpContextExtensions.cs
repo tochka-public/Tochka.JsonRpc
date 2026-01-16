@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Request;
 using Tochka.JsonRpc.Common.Models.Response;
@@ -48,7 +49,8 @@ public static class HttpContextExtensions
     /// </summary>
     /// <param name="httpContext">see cref="HttpContext" /> to set response in</param>
     /// <param name="response"><see cref="IResponse" /> to set</param>
-    [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod", Justification = "Need to register it as interface to use it as key")]
+    [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod",
+        Justification = "Need to register it as interface to use it as key")]
     public static void SetJsonRpcResponse(this HttpContext httpContext, IResponse response)
     {
         var feature = httpContext.Features.Get<IJsonRpcFeature>();
@@ -59,5 +61,27 @@ public static class HttpContextExtensions
         }
 
         feature.Response = response;
+    }
+
+    /// <summary>
+    /// Get response MediaType
+    /// </summary>
+    /// <param name="httpContext">see cref="HttpContext" /> to set response in</param>
+    /// <returns>MediaType for response. null, if request not supported </returns>
+    internal static string? GetJsonRpcResponseMediaType(this HttpContext httpContext)
+    {
+        var acceptHeaderValues = httpContext.Request.GetTypedHeaders().Accept;
+        if (acceptHeaderValues.Count is 0)
+            return JsonRpcConstants.ContentType;
+        if (acceptHeaderValues.Any(p => p.MatchesMediaType(JsonRpcConstants.ContentType)))
+            return JsonRpcConstants.ContentType;
+        foreach (var mediaTypeWithQuality in acceptHeaderValues)
+        {
+            if (mediaTypeWithQuality.MediaType.Value is { } mediaTypeValue &&
+                JsonRpcConstants.AllowedRequestContentType.Contains(mediaTypeValue, StringComparer.OrdinalIgnoreCase))
+                return mediaTypeValue;
+        }
+
+        return null;
     }
 }

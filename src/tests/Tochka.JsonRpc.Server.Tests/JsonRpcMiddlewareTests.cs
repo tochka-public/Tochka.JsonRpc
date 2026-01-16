@@ -1,14 +1,15 @@
-﻿using System;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using Moq;
+using NUnit.Framework;
+using System;
 using System.IO;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using Moq;
-using NUnit.Framework;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
@@ -294,6 +295,106 @@ public class JsonRpcMiddlewareTests
         requestHandlerMock.Verify();
         httpContext.Response.Body.Length.Should().Be(0);
     }
+
+    [TestCase(JsonRpcConstants.ContentType, JsonRpcConstants.ContentType)]
+    [TestCase(JsonRpcConstants.ContentType, JsonRpcConstants.ContentType, "application/jsonrequest", "application/json-rpc", MediaTypeNames.Application.Xml)]
+    [TestCase(JsonRpcConstants.ContentType, "application/json-rpc", JsonRpcConstants.ContentType, "application/jsonrequest", MediaTypeNames.Application.Xml)]
+    [TestCase("application/json-rpc", "application/json-rpc", MediaTypeNames.Application.Xml)]
+    [TestCase("application/json-rpc", MediaTypeNames.Application.Xml, "application/json-rpc")]
+    [TestCase(JsonRpcConstants.ContentType)]
+    public async Task InvokeAsync_AcceptSet_Success(string expected, params string?[] accept)
+    {
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
+        var httpContext = new DefaultHttpContext
+        {
+            Request =
+            {
+                Headers =
+                {
+                    ContentType = $"{MediaTypeNames.Application.Json}",
+                    Accept = accept
+                },
+                Body = new MemoryStream(Encoding.UTF8.GetBytes(json))
+            },
+            Response =
+            {
+                Body = new MemoryStream()
+            }
+        };
+        requestValidatorMock.Setup(v => v.IsJsonRpcRequest(httpContext))
+            .Returns(true)
+            .Verifiable();
+        var responseWrapper = new SingleResponseWrapper(new UntypedResponse(new NumberRpcId(Id), null));
+        requestHandlerMock.Setup(h => h.ProcessJsonRpcRequest(It.IsAny<SingleRequestWrapper>(), httpContext, nextMock.Object))
+            .ReturnsAsync(responseWrapper)
+            .Verifiable();
+
+        await middleware.InvokeAsync(httpContext);
+
+        requestValidatorMock.Verify();
+        nextMock.VerifyNoOtherCalls();
+        requestHandlerMock.Verify();
+        exceptionWrapperMock.Verify();
+        httpContext.Response.ContentType.Should().Be($"{expected}; charset=utf-8");
+        httpContext.Response.StatusCode.Should().Be(StatusCodes.Status200OK);
+        httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+        using var reader = new StreamReader(httpContext.Response.Body, Encoding.UTF8);
+        var response = await reader.ReadToEndAsync();
+        response.Should().Be(JsonSerializer.Serialize(responseWrapper, typeof(IResponseWrapper), options.HeadersJsonSerializerOptions));
+    }
+
+
+    [TestCase(MediaTypeNames.Application.Xml)]
+    [TestCase(MediaTypeNames.Text.Plain, MediaTypeNames.Application.Xml)]
+    public async Task InvokeAsync_AcceptSet_Fail(params string?[] accept)
+    {
+        var json =
+            $$"""
+              {
+                  "id": {{Id}},
+                  "method": "{{MethodName}}",
+                  "jsonrpc": "2.0"
+              }
+              """;
+        var httpContext = new DefaultHttpContext
+        {
+            Request =
+            {
+                Headers =
+                {
+                    ContentType = $"{MediaTypeNames.Application.Json}",
+                    Accept = accept
+                },
+                Body = new MemoryStream(Encoding.UTF8.GetBytes(json))
+            },
+            Response =
+            {
+                Body = new MemoryStream()
+            }
+        };
+        
+        requestValidatorMock.Setup(v => v.IsJsonRpcRequest(httpContext))
+            .Returns(true)
+            .Verifiable();
+        requestHandlerMock.Setup(h => h.ProcessJsonRpcRequest(It.IsAny<SingleRequestWrapper>(), httpContext, nextMock.Object))
+            .ReturnsAsync((IResponseWrapper?)null)
+            .Verifiable();
+
+        await middleware.InvokeAsync(httpContext);
+
+        requestValidatorMock.Verify();
+        nextMock.VerifyNoOtherCalls();
+        requestHandlerMock.Verify();
+        httpContext.Response.Body.Length.Should().Be(0);
+    }
+
 
     private const int Id = 123;
     private const string MethodName = "methodName";

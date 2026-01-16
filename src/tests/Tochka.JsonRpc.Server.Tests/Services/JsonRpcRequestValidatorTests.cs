@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using NUnit.Framework;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -217,6 +218,29 @@ public class JsonRpcRequestValidatorTests
 
         result.Should().BeFalse();
     }
+
+    [TestCaseSource(typeof(JsonRpcConstants), nameof(JsonRpcConstants.AllowedRequestContentType))]
+    public void IsJsonRpcRequest_MediaTypeNotJson_ReturnTrue(string contentType)
+    {
+        var httpContext = new DefaultHttpContext
+        {
+            Request =
+            {
+                Path = options.RoutePrefix,
+                Method = "POST",
+                Headers =
+                {
+                    ContentType = contentType
+                }
+            }
+        };
+
+        var result = validator.IsJsonRpcRequest(httpContext);
+
+        result.Should().BeTrue();
+    }
+
+
 
     [TestCase("")]
     [TestCase("/")]

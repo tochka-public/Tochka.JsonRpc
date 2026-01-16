@@ -43,11 +43,10 @@ internal partial class JsonRpcRequestValidator : IJsonRpcRequestValidator
             return false;
         }
 
-        if (!contentType.MediaType.Equals(JsonRpcConstants.ContentType, StringComparison.OrdinalIgnoreCase))
+        if (contentType.MediaType.Value is not { } mediaTypeHeaderValue || !JsonRpcConstants.AllowedRequestContentType.Contains(mediaTypeHeaderValue))
         {
             return false;
         }
-
         return true;
     }
 
