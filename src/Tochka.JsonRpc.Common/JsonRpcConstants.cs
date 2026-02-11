@@ -74,4 +74,9 @@ public static class JsonRpcConstants
     /// HttpRequest.Options item, contains jsonrpc requests sent by client. Multiple items for batch requests
     /// </summary>
     public static readonly HttpRequestOptionsKey<IReadOnlyList<IUntypedCall>> JsonRpcClientCallsKey = new("tochka_jsonrpc_client_calls");
+
+    /// <summary>
+    /// allowed Content-type headers for Request 
+    /// </summary>
+    public static readonly IReadOnlyCollection<string> AllowedRequestContentType = new HashSet<string>([ContentType, "application/jsonrequest", "application/json-rpc"], StringComparer.OrdinalIgnoreCase);
 }

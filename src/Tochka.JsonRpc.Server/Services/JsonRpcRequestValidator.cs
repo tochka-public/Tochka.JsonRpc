@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
+using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Services;
@@ -43,11 +44,15 @@ internal partial class JsonRpcRequestValidator : IJsonRpcRequestValidator
             return false;
         }
 
-        if (!contentType.MediaType.Equals(JsonRpcConstants.ContentType, StringComparison.OrdinalIgnoreCase))
+        if (contentType.MediaType.Value is not { } mediaTypeHeaderValue || !JsonRpcConstants.AllowedRequestContentType.Contains(mediaTypeHeaderValue))
         {
             return false;
         }
 
+        if (httpContext.GetJsonRpcResponseMediaType() is null)
+        {
+            return false;
+        }
         return true;
     }
 

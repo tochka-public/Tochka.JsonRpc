@@ -83,7 +83,10 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     private void WrapRequest(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
     {
         description.SupportedRequestFormats.Clear();
-        description.SupportedRequestFormats.Add(new ApiRequestFormat { MediaType = JsonRpcConstants.ContentType });
+        foreach (var contentType in JsonRpcConstants.AllowedRequestContentType)
+        {
+            description.SupportedRequestFormats.Add(new ApiRequestFormat { MediaType = contentType });
+        }
 
         var parametersMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>() ?? new JsonRpcActionParametersMetadata();
         var parametersToRemove = description.ParameterDescriptions
@@ -139,9 +142,10 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
         var responseType = typeEmitter.CreateResponseType(GetActionFullName(actionDescriptor), methodName, resultType, serializerOptionsProviderType);
 
         description.SupportedResponseTypes.Clear();
+
         description.SupportedResponseTypes.Add(new ApiResponseType
         {
-            ApiResponseFormats = { new ApiResponseFormat { MediaType = JsonRpcConstants.ContentType } },
+            ApiResponseFormats = JsonRpcConstants.AllowedRequestContentType.Select(contentType => new ApiResponseFormat { MediaType = contentType }).ToArray(),
             IsDefaultResponse = false,
             StatusCode = 200,
             ModelMetadata = new JsonRpcModelMetadata(responseType),

@@ -7,6 +7,7 @@ using Microsoft.Net.Http.Headers;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
+using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -47,9 +48,10 @@ public class JsonRpcMiddleware
         if (responseWrapper != null)
         {
             httpContext.Response.StatusCode = StatusCodes.Status200OK;
-            var contentType = new MediaTypeHeaderValue(JsonRpcConstants.ContentType) { Encoding = requestEncoding };
-            httpContext.Response.ContentType = contentType.ToString();
+            var responseContentType = httpContext.GetJsonRpcResponseMediaType() ?? JsonRpcConstants.ContentType;
+            httpContext.Response.GetTypedHeaders().ContentType = new MediaTypeHeaderValue(responseContentType) { Encoding = requestEncoding };
             await SerializeResponseWrapper(responseWrapper, httpContext.Response.Body, requestEncoding);
+
         }
     }
 
