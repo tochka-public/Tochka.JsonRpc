@@ -65,7 +65,7 @@ public static class HttpContextExtensions
     /// <summary>
     /// Get response MediaType
     /// </summary>
-    /// <param name="httpContext">see cref="HttpContext" /> to set response in</param>
+    /// <param name="httpContext">see cref="HttpContext" /> to check Accept header</param>
     /// <returns>MediaType for response. null, if request not supported </returns>
     internal static string? GetJsonRpcResponseMediaType(this HttpContext httpContext)
     {

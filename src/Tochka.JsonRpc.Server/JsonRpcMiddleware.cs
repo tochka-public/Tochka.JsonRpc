@@ -47,16 +47,9 @@ public class JsonRpcMiddleware
         var responseWrapper = await ProcessJsonRpcRequest(httpContext, requestEncoding);
         if (responseWrapper != null)
         {
-            if (httpContext.GetJsonRpcResponseMediaType() is not { } responseMediaType)
-            {
-                await Results
-                    .Text($"Supported only {string.Join(',', JsonRpcConstants.AllowedRequestContentType)} types",
-                        contentEncoding: requestEncoding, statusCode: StatusCodes.Status406NotAcceptable)
-                    .ExecuteAsync(httpContext);
-                return;
-            }
             httpContext.Response.StatusCode = StatusCodes.Status200OK;
-            httpContext.Response.GetTypedHeaders().ContentType = new MediaTypeHeaderValue(responseMediaType) { Encoding = requestEncoding };
+            var responseContentType = httpContext.GetJsonRpcResponseMediaType() ?? JsonRpcConstants.ContentType;
+            httpContext.Response.GetTypedHeaders().ContentType = new MediaTypeHeaderValue(responseContentType) { Encoding = requestEncoding };
             await SerializeResponseWrapper(responseWrapper, httpContext.Response.Body, requestEncoding);
 
         }
