@@ -167,8 +167,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, Request<TParams> request, CancellationToken cancellationToken)
-        where TParams : class
-        where TResponse : class;
+        where TParams : class;
 
     /// <summary>
     /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC typed response
@@ -181,8 +180,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(Request<TParams> request, CancellationToken cancellationToken)
-        where TParams : class
-        where TResponse : class;
+        where TParams : class;
 
     /// <summary>
     /// Send request to given url. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC typed response
@@ -198,8 +196,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
-        where TParams : class
-        where TResponse : class;
+        where TParams : class;
 
     /// <summary>
     /// Send request to BaseUrl. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC typed response
@@ -213,8 +210,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string method, TParams? parameters, CancellationToken cancellationToken)
-        where TParams : class
-        where TResponse : class;
+        where TParams : class;
 
     /// <summary>
     /// Send request to given url. Expects HTTP 200 with JSON-RPC typed response
@@ -231,8 +227,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
-        where TParams : class
-        where TResponse : class;
+        where TParams : class;
 
     /// <summary>
     /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC typed response
@@ -248,8 +243,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
     Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(IRpcId id, string method, TParams? parameters, CancellationToken cancellationToken)
-        where TParams : class
-        where TResponse : class;
+        where TParams : class;
 
     /// <summary>
     /// Send request to given url. Expects HTTP 200 with JSON-RPC Rpc response
@@ -331,8 +325,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
-    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, Request request, CancellationToken cancellationToken)
-        where TResponse : class;
+    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, Request request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC typed response
@@ -343,8 +336,7 @@ public interface IJsonRpcClient
     /// <returns>Result to be inspected for response data or errors</returns>
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
-    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(Request request, CancellationToken cancellationToken)
-        where TResponse : class;
+    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(Request request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Send request to given url. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC typed response
@@ -357,8 +349,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
-    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, string method, CancellationToken cancellationToken)
-        where TResponse : class;
+    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, string method, CancellationToken cancellationToken);
 
     /// <summary>
     /// Send request to BaseUrl. Id is generated with IJsonRpcIdGenerator. Expects HTTP 200 with JSON-RPC typed response
@@ -369,8 +360,7 @@ public interface IJsonRpcClient
     /// <returns>Result to be inspected for response data or errors</returns>
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
-    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string method, CancellationToken cancellationToken)
-        where TResponse : class;
+    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string method, CancellationToken cancellationToken);
 
     /// <summary>
     /// Send request to given url. Expects HTTP 200 with JSON-RPC typed response
@@ -384,8 +374,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
-    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, IRpcId id, string method, CancellationToken cancellationToken)
-        where TResponse : class;
+    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(string requestUrl, IRpcId id, string method, CancellationToken cancellationToken);
 
     /// <summary>
     /// Send request to BaseUrl. Expects HTTP 200 with JSON-RPC typed response
@@ -398,8 +387,7 @@ public interface IJsonRpcClient
     /// <exception cref="JsonRpcException">When HTTP status code is not 200, body is empty or deserialized as batch response</exception>
     /// <exception cref="JsonException">When reading or deserializing JSON from body failed</exception>
     /// <exception cref="System.ArgumentException">When requestUrl starts with '/'</exception>
-    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(IRpcId id, string method, CancellationToken cancellationToken)
-        where TResponse : class;
+    Task<ISingleJsonRpcResult<TResponse>> SendRequest<TResponse>(IRpcId id, string method, CancellationToken cancellationToken);
 
     /// <summary>
     /// Send batch of requests or notifications to given url. Expects HTTP 200 with batch JSON-RPC response if batch contains at least one request
