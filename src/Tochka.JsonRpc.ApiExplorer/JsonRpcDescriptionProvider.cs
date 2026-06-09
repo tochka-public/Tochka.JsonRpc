@@ -19,7 +19,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
 {
     // need to run after DefaultApiDescriptionProvider to override it's result
     /// <inheritdoc />
-    public int Order => int.MaxValue;
+    public int Order => -900;
 
     private readonly ITypeEmitter typeEmitter;
     private readonly ILogger<JsonRpcDescriptionProvider> log;
@@ -34,36 +34,27 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     /// <inheritdoc />
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
+        // default provider includes actions with [ApiController] and [Route]: isVisible && isAttributeRouted
         var existingDescriptions = context.Results
             .Where(static x => x.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
             .ToList();
 
         foreach (var description in existingDescriptions)
         {
+            // sanity checks
             if (description.ActionDescriptor is not ControllerActionDescriptor actionDescriptor)
             {
-                // Should not be possible, sanity check
-                log.LogWarning("Expected descriptor of action [{actionName}] to be ControllerActionDescriptor, but got {descriptorType}", description.ActionDescriptor.DisplayName, description.ActionDescriptor.GetType().Name);
-                context.Results.Remove(description);
-                continue;
+                throw new InvalidOperationException($"Descriptor [{description.ActionDescriptor.DisplayName}] has invalid type");
             }
 
             var methodMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcMethodAttribute>();
             if (methodMetadata == null)
             {
-                // Should not be possible, sanity check
-                log.LogWarning("JsonRpcController action [{actionName}] without JsonRpcMethodAttribute, this shouldn't be possible!", description.ActionDescriptor.DisplayName);
-                context.Results.Remove(description);
-                continue;
+                throw new InvalidOperationException($"Descriptor [{description.ActionDescriptor.DisplayName}] has no JsonRpcMethodAttribute");
             }
 
             var serializerMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
             var serializerOptionsProviderType = serializerMetadata?.ProviderType;
-
-            if (string.IsNullOrWhiteSpace(description.GroupName))
-            {
-                description.GroupName = ApiExplorerUtils.GetDocumentName(ApiExplorerConstants.DefaultDocumentName, serializerOptionsProviderType);
-            }
 
             description.HttpMethod = HttpMethods.Post;
             description.RelativePath += $"#{methodMetadata.Method}";

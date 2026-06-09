@@ -27,14 +27,14 @@ public class TypeEmitter : ITypeEmitter
     {
         lock (lockObject)
         {
-            var requestTypeName = $"{methodName} request ({actionFullName})";
+            var requestTypeName = $"{actionFullName}.Request";
             var definedType = moduleBuilder.GetType(requestTypeName);
             if (definedType != null)
             {
                 return definedType;
             }
 
-            var paramsType = GetParamsType($"{methodName} params ({actionFullName})", baseParamsType, defaultBoundParams);
+            var paramsType = GetParamsType($"{actionFullName}.Params", baseParamsType, defaultBoundParams);
             if (paramsType.IsValueType)
             {
                 log.LogWarning("Params type can't be value type, got {paramsType}, using object instead", paramsType.Name);
@@ -51,7 +51,7 @@ public class TypeEmitter : ITypeEmitter
     {
         lock (lockObject)
         {
-            var responseTypeName = $"{methodName} response ({actionFullName})";
+            var responseTypeName = $"{actionFullName}.Response";
             var definedType = moduleBuilder.GetType(responseTypeName);
             if (definedType != null)
             {
