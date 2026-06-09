@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Server.Extensions;
@@ -21,12 +22,12 @@ internal class JsonRpcExceptionWrapper : IJsonRpcExceptionWrapper
     public UntypedErrorResponse WrapGeneralException(Exception exception, IRpcId? id = null)
     {
         var error = errorFactory.Exception(exception);
-        return new UntypedErrorResponse(id ?? new NullRpcId(), error.AsUntypedError(options.HeadersJsonSerializerOptions));
+        return new UntypedErrorResponse(id ?? new NullRpcId(), error.AsUntypedError(JsonRpcSerializerOptions.Headers));
     }
 
     public UntypedErrorResponse WrapParseException(Exception exception)
     {
         var error = errorFactory.ParseError(exception);
-        return new UntypedErrorResponse(new NullRpcId(), error.AsUntypedError(options.HeadersJsonSerializerOptions));
+        return new UntypedErrorResponse(new NullRpcId(), error.AsUntypedError(JsonRpcSerializerOptions.Headers));
     }
 }

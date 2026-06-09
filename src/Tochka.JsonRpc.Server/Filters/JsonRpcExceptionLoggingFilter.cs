@@ -12,6 +12,7 @@ namespace Tochka.JsonRpc.Server.Filters;
 /// </summary>
 internal class JsonRpcExceptionLoggingFilter : IExceptionFilter
 {
+    // TODO возможно, выпилить. выглядит как очередная костыльная затычка для обработки ошибок
     private readonly JsonRpcServerOptions options;
     private readonly ILogger<JsonRpcExceptionLoggingFilter> log;
 

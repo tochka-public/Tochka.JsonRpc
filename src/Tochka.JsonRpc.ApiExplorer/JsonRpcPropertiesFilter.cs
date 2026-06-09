@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿/*
+using System.Reflection;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -111,3 +112,4 @@ public class JsonRpcPropertiesFilter : ISchemaFilter
         return true;
     }
 }
+*/

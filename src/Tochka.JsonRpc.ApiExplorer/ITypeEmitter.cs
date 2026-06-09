@@ -12,9 +12,8 @@ public interface ITypeEmitter
     /// <param name="methodName">JSON-RPC method name</param>
     /// <param name="baseParamsType">Base Type for params object</param>
     /// <param name="defaultBoundParams">Other params with BindingStyle.Default</param>
-    /// <param name="serializerOptionsProviderType">Type of custom serializer options provider, configured by attribute</param>
     /// <returns>Created Type</returns>
-    Type CreateRequestType(string actionFullName, string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType);
+    public Type CreateRequestType(string actionFullName, string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams);
 
     /// <summary>
     /// Create <see cref="Type" /> for JSON-RPC response object
@@ -22,7 +21,6 @@ public interface ITypeEmitter
     /// <param name="actionFullName">Full name of C# action</param>
     /// <param name="methodName">JSON-RPC method name</param>
     /// <param name="resultType">Base Type for result object</param>
-    /// <param name="serializerOptionsProviderType">Type of custom serializer options provider, configured by attribute</param>
     /// <returns></returns>
-    Type CreateResponseType(string actionFullName, string methodName, Type resultType, Type? serializerOptionsProviderType);
+    public Type CreateResponseType(string actionFullName, string methodName, Type resultType);
 }

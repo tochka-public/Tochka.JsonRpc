@@ -83,7 +83,7 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
         IUntypedCall? call = null;
         try
         {
-            call = rawCall.Deserialize<IUntypedCall>(options.HeadersJsonSerializerOptions)!;
+            call = rawCall.Deserialize<IUntypedCall>(JsonRpcSerializerOptions.Headers)!;
             ValidateCall(call);
             callHttpContext.Features.Set<IJsonRpcFeature>(new JsonRpcFeature
             {

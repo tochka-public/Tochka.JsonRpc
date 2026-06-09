@@ -76,22 +76,22 @@ public class JsonRpcMiddleware
     {
         if (requestEncoding.CodePage == Encoding.UTF8.CodePage)
         {
-            return await JsonSerializer.DeserializeAsync<IRequestWrapper>(requestBody, options.HeadersJsonSerializerOptions);
+            return await JsonSerializer.DeserializeAsync<IRequestWrapper>(requestBody, JsonRpcSerializerOptions.Headers);
         }
 
         await using var transcodingStream = Encoding.CreateTranscodingStream(requestBody, requestEncoding, Encoding.UTF8, true);
-        return await JsonSerializer.DeserializeAsync<IRequestWrapper>(transcodingStream, options.HeadersJsonSerializerOptions);
+        return await JsonSerializer.DeserializeAsync<IRequestWrapper>(transcodingStream, JsonRpcSerializerOptions.Headers);
     }
 
     private async Task SerializeResponseWrapper(IResponseWrapper responseWrapper, Stream responseBody, Encoding responseEncoding)
     {
         if (responseEncoding.CodePage == Encoding.UTF8.CodePage)
         {
-            await JsonSerializer.SerializeAsync(responseBody, responseWrapper, options.HeadersJsonSerializerOptions);
+            await JsonSerializer.SerializeAsync(responseBody, responseWrapper, JsonRpcSerializerOptions.Headers);
             return;
         }
 
         await using var transcodingStream = Encoding.CreateTranscodingStream(responseBody, responseEncoding, Encoding.UTF8, true);
-        await JsonSerializer.SerializeAsync(transcodingStream, responseWrapper, options.HeadersJsonSerializerOptions);
+        await JsonSerializer.SerializeAsync(transcodingStream, responseWrapper, JsonRpcSerializerOptions.Headers);
     }
 }

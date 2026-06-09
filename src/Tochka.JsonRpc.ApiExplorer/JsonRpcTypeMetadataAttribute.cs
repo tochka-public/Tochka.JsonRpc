@@ -14,11 +14,6 @@ namespace Tochka.JsonRpc.ApiExplorer;
 public sealed class JsonRpcTypeMetadataAttribute : Attribute
 {
     /// <summary>
-    /// Type of data serializer options provider
-    /// </summary>
-    public Type? SerializerOptionsProviderType { get; }
-
-    /// <summary>
     /// JSON-RPC method name
     /// </summary>
     public string MethodName { get; }
@@ -26,9 +21,8 @@ public sealed class JsonRpcTypeMetadataAttribute : Attribute
     /// <inheritdoc />
     /// <param name="serializerOptionsProviderType">Type of data serializer options provider</param>
     /// <param name="methodName">JSON-RPC method name</param>
-    public JsonRpcTypeMetadataAttribute(Type? serializerOptionsProviderType, string methodName)
+    public JsonRpcTypeMetadataAttribute(string methodName)
     {
-        SerializerOptionsProviderType = serializerOptionsProviderType;
         MethodName = methodName;
     }
 }

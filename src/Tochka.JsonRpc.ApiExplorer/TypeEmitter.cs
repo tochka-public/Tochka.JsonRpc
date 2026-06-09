@@ -23,7 +23,7 @@ public class TypeEmitter : ITypeEmitter
     }
 
     /// <inheritdoc />
-    public Type CreateRequestType(string actionFullName, string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType)
+    public Type CreateRequestType(string actionFullName, string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams)
     {
         lock (lockObject)
         {
@@ -42,12 +42,12 @@ public class TypeEmitter : ITypeEmitter
             }
 
             var responseType = typeof(Request<>).MakeGenericType(paramsType);
-            return GenerateTypeWithInfoAttribute(requestTypeName, responseType, paramsType, serializerOptionsProviderType, methodName);
+            return GenerateTypeWithInfoAttribute(requestTypeName, responseType, paramsType, methodName);
         }
     }
 
     /// <inheritdoc />
-    public Type CreateResponseType(string actionFullName, string methodName, Type resultType, Type? serializerOptionsProviderType)
+    public Type CreateResponseType(string actionFullName, string methodName, Type resultType)
     {
         lock (lockObject)
         {
@@ -64,7 +64,7 @@ public class TypeEmitter : ITypeEmitter
             }
 
             var responseType = typeof(Response<>).MakeGenericType(resultType);
-            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, resultType, serializerOptionsProviderType, methodName);
+            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, resultType, methodName);
         }
     }
 
@@ -106,7 +106,7 @@ public class TypeEmitter : ITypeEmitter
     /// <summary>
     /// Create new type with JsonRpcTypeMetadataAttribute
     /// </summary>
-    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type innerType, Type? serializerOptionsProviderType, string methodName)
+    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type innerType, string methodName)
     {
         if (!innerType.IsPublic || innerType.IsNested)
         {
@@ -118,7 +118,7 @@ public class TypeEmitter : ITypeEmitter
 
         var attrType = typeof(JsonRpcTypeMetadataAttribute);
         var attrConstructor = attrType.GetConstructor(new[] { typeof(Type), typeof(string) })!;
-        var attrParams = new object?[] { serializerOptionsProviderType, methodName };
+        var attrParams = new object?[] { methodName };
         var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams);
         typeBuilder.SetCustomAttribute(attrBuilder);
 

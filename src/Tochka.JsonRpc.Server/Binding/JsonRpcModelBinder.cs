@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
@@ -7,7 +9,6 @@ using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Metadata;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Binding;
@@ -20,15 +21,13 @@ public class JsonRpcModelBinder : IModelBinder
 {
     private readonly IJsonRpcParamsParser paramsParser;
     private readonly IJsonRpcParameterBinder parameterBinder;
-    private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
-    private readonly JsonRpcServerOptions options;
+    private readonly JsonOptions options;
 
     /// <summary></summary>
-    public JsonRpcModelBinder(IJsonRpcParamsParser paramsParser, IJsonRpcParameterBinder parameterBinder, IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options)
+    public JsonRpcModelBinder(IJsonRpcParamsParser paramsParser, IJsonRpcParameterBinder parameterBinder, IOptions<JsonOptions> options)
     {
         this.paramsParser = paramsParser;
         this.parameterBinder = parameterBinder;
-        this.serializerOptionsProviders = serializerOptionsProviders;
         this.options = options.Value;
     }
 
@@ -79,9 +78,7 @@ public class JsonRpcModelBinder : IModelBinder
     // internal for tests, protected for customization
     protected internal virtual Task SetResult(IParseResult parseResult, ModelBindingContext bindingContext, JsonRpcParameterMetadata parameterMetadata)
     {
-        var endpointMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata;
-        var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(endpointMetadata, options, serializerOptionsProviders);
-        parameterBinder.SetResult(bindingContext, parameterMetadata, parseResult, jsonSerializerOptions);
+        parameterBinder.SetResult(bindingContext, parameterMetadata, parseResult, options.JsonSerializerOptions);
         return Task.CompletedTask;
     }
 }
