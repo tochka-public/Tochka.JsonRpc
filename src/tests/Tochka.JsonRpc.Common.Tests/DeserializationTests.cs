@@ -90,7 +90,8 @@ public class DeserializationTests
         deserialized.Should().BeOfType<SingleRequestWrapper>();
         var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
         var expected = new UntypedNotification(method, null);
-        notification.Should().BeEquivalentTo(expected);
+        notification.Should().BeEquivalentTo(expected, static o => o.Excluding(static x => x.Params));
+        notification.Params.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]
@@ -186,28 +187,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Notification_PlainCamelCaseObjectParams()
-    {
-        var method = "method";
-        var json =
-            $$"""
-              {
-                  "method": "{{method}}",
-                  "params": {{TestData.PlainRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        notification.Method.Should().Be(method);
-        var deserializedParams = notification.Params.Deserialize<TestData>(camelCaseSerializerOptions);
-        deserializedParams.Should().BeEquivalentTo(TestData.Plain);
-    }
-
-    [Test]
     public void Notification_PlainSnakeCaseArrayParams()
     {
         var method = "method";
@@ -235,33 +214,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Notification_PlainCamelCaseArrayParams()
-    {
-        var method = "method";
-        var json =
-            $$"""
-              {
-                  "method": "{{method}}",
-                  "params": [
-                      {{TestData.PlainRequiredCamelCaseJson}}
-                  ],
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        notification.Method.Should().Be(method);
-        var expectedResult = TestData.Plain;
-        var deserializedArray = notification.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
-        var deserializedList = notification.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
-    }
-
-    [Test]
     public void Notification_NestedSnakeCaseObjectParams()
     {
         var method = "method";
@@ -280,28 +232,6 @@ public class DeserializationTests
         var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
         notification.Method.Should().Be(method);
         var deserializedParams = notification.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
-        deserializedParams.Should().BeEquivalentTo(TestData.Nested);
-    }
-
-    [Test]
-    public void Notification_NestedCamelCaseObjectParams()
-    {
-        var method = "method";
-        var json =
-            $$"""
-              {
-                  "method": "{{method}}",
-                  "params": {{TestData.NestedRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        notification.Method.Should().Be(method);
-        var deserializedParams = notification.Params.Deserialize<TestData>(camelCaseSerializerOptions);
         deserializedParams.Should().BeEquivalentTo(TestData.Nested);
     }
 
@@ -329,33 +259,6 @@ public class DeserializationTests
         var deserializedArray = notification.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
         deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
         var deserializedList = notification.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
-    }
-
-    [Test]
-    public void Notification_NestedCamelCaseArrayParams()
-    {
-        var method = "method";
-        var json =
-            $$"""
-              {
-                  "method": "{{method}}",
-                  "params": [
-                      {{TestData.NestedRequiredCamelCaseJson}}
-                  ],
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var notification = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        notification.Method.Should().Be(method);
-        var expectedResult = TestData.Nested;
-        var deserializedArray = notification.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
-        var deserializedList = notification.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
         deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
@@ -435,7 +338,8 @@ public class DeserializationTests
         deserialized.Should().BeOfType<SingleRequestWrapper>();
         var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
         var expected = new UntypedRequest(new StringRpcId(id), method, null);
-        request.Should().BeEquivalentTo(expected);
+        request.Should().BeEquivalentTo(expected, static o => o.Excluding(static x => x.Params));
+        request.Params.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]
@@ -630,31 +534,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Request_PlainCamelCaseObjectParams()
-    {
-        var method = "method";
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "method": "{{method}}",
-                  "params": {{TestData.PlainRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
-        request.Should().BeEquivalentTo(expected, AssertionOptions);
-        var deserializedParams = request.Params.Deserialize<TestData>(camelCaseSerializerOptions);
-        deserializedParams.Should().BeEquivalentTo(TestData.Plain);
-    }
-
-    [Test]
     public void Request_PlainSnakeCaseArrayParams()
     {
         var method = "method";
@@ -685,36 +564,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void Request_PlainCamelCaseArrayParams()
-    {
-        var method = "method";
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "method": "{{method}}",
-                  "params": [
-                      {{TestData.PlainRequiredCamelCaseJson}}
-                  ],
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
-        request.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedResult = TestData.Plain;
-        var deserializedArray = request.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
-        var deserializedList = request.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
-    }
-
-    [Test]
     public void Request_NestedSnakeCaseObjectParams()
     {
         var method = "method";
@@ -736,31 +585,6 @@ public class DeserializationTests
         var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
         request.Should().BeEquivalentTo(expected, AssertionOptions);
         var deserializedParams = request.Params.Deserialize<TestData>(snakeCaseSerializerOptions);
-        deserializedParams.Should().BeEquivalentTo(TestData.Nested);
-    }
-
-    [Test]
-    public void Request_NestedCamelCaseObjectParams()
-    {
-        var method = "method";
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "method": "{{method}}",
-                  "params": {{TestData.NestedRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
-        request.Should().BeEquivalentTo(expected, AssertionOptions);
-        var deserializedParams = request.Params.Deserialize<TestData>(camelCaseSerializerOptions);
         deserializedParams.Should().BeEquivalentTo(TestData.Nested);
     }
 
@@ -791,36 +615,6 @@ public class DeserializationTests
         var deserializedArray = request.Params.Deserialize<TestData[]>(snakeCaseSerializerOptions);
         deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
         var deserializedList = request.Params.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
-    }
-
-    [Test]
-    public void Request_NestedCamelCaseArrayParams()
-    {
-        var method = "method";
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "method": "{{method}}",
-                  "params": [
-                      {{TestData.NestedRequiredCamelCaseJson}}
-                  ],
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IRequestWrapper>(json, headersJsonSerializerOptions);
-
-        deserialized.Should().BeOfType<SingleRequestWrapper>();
-        var request = ((SingleRequestWrapper) deserialized).Call.Deserialize<IUntypedCall>(headersJsonSerializerOptions);
-        var expected = new UntypedRequest(new StringRpcId(id), method, AnyJsonDocument);
-        request.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedResult = TestData.Nested;
-        var deserializedArray = request.Params.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
-        var deserializedList = request.Params.Deserialize<List<TestData>>(camelCaseSerializerOptions);
         deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
@@ -1067,29 +861,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_PlainCamelCaseObjectResult()
-    {
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "result": {{TestData.PlainRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expected = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), AnyJsonDocument));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedResult = TestData.Plain;
-        var response = (UntypedResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedResult = response.Result.Deserialize<TestData>(camelCaseSerializerOptions);
-        deserializedResult.Should().BeEquivalentTo(expectedResult);
-    }
-
-    [Test]
     public void RequestResponse_PlainSnakeCaseArrayResult()
     {
         var id = "123";
@@ -1117,33 +888,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_PlainCamelCaseArrayResult()
-    {
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "result": [
-                      {{TestData.PlainRequiredCamelCaseJson}}
-                  ],
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expected = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), AnyJsonDocument));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedResult = TestData.Plain;
-        var response = (UntypedResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedArray = response.Result.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
-        var deserializedList = response.Result.Deserialize<List<TestData>>(camelCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
-    }
-
-    [Test]
     public void RequestResponse_NestedSnakeCaseObjectResult()
     {
         var id = "123";
@@ -1163,29 +907,6 @@ public class DeserializationTests
         var expectedResult = TestData.Nested;
         var response = (UntypedResponse) ((SingleResponseWrapper) deserialized).Response;
         var deserializedResult = response.Result.Deserialize<TestData>(snakeCaseSerializerOptions);
-        deserializedResult.Should().BeEquivalentTo(expectedResult);
-    }
-
-    [Test]
-    public void RequestResponse_NestedCamelCaseObjectResult()
-    {
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "result": {{TestData.NestedRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expected = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), AnyJsonDocument));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedResult = TestData.Nested;
-        var response = (UntypedResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedResult = response.Result.Deserialize<TestData>(camelCaseSerializerOptions);
         deserializedResult.Should().BeEquivalentTo(expectedResult);
     }
 
@@ -1213,33 +934,6 @@ public class DeserializationTests
         var deserializedArray = response.Result.Deserialize<TestData[]>(snakeCaseSerializerOptions);
         deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
         var deserializedList = response.Result.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
-    }
-
-    [Test]
-    public void RequestResponse_NestedCamelCaseArrayResult()
-    {
-        var id = "123";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "result": [
-                      {{TestData.NestedRequiredCamelCaseJson}}
-                  ],
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expected = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(id), AnyJsonDocument));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedResult = TestData.Nested;
-        var response = (UntypedResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedArray = response.Result.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedResult });
-        var deserializedList = response.Result.Deserialize<List<TestData>>(camelCaseSerializerOptions);
         deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedResult });
     }
 
@@ -1328,7 +1022,7 @@ public class DeserializationTests
         var expected = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(id), expectedError));
         deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
         var response = (UntypedErrorResponse) ((SingleResponseWrapper) deserialized).Response;
-        response.Error.Data.Should().BeNull();
+        response.Error.Data.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]
@@ -1486,36 +1180,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_PlainCamelCaseObjectErrorData()
-    {
-        var id = "123";
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "error": {
-                      "code": {{errorCode}},
-                      "message": "{{errorMessage}}",
-                      "data": {{TestData.PlainRequiredCamelCaseJson}}
-                  },
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expectedError = new Error<JsonDocument>(errorCode, errorMessage, AnyJsonDocument);
-        var expected = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(id), expectedError));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedErrorData = TestData.Plain;
-        var response = (UntypedErrorResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedErrorData = response.Error.Data.Deserialize<TestData>(camelCaseSerializerOptions);
-        deserializedErrorData.Should().BeEquivalentTo(expectedErrorData);
-    }
-
-    [Test]
     public void RequestResponse_PlainSnakeCaseArrayErrorData()
     {
         var id = "123";
@@ -1550,40 +1214,6 @@ public class DeserializationTests
     }
 
     [Test]
-    public void RequestResponse_PlainCamelCaseArrayErrorData()
-    {
-        var id = "123";
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "error": {
-                      "code": {{errorCode}},
-                      "message": "{{errorMessage}}",
-                      "data": [
-                          {{TestData.PlainRequiredCamelCaseJson}}
-                      ]
-                  },
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expectedError = new Error<JsonDocument>(errorCode, errorMessage, AnyJsonDocument);
-        var expected = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(id), expectedError));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedErrorData = TestData.Plain;
-        var response = (UntypedErrorResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedArray = response.Error.Data.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedErrorData });
-        var deserializedList = response.Error.Data.Deserialize<List<TestData>>(camelCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedErrorData });
-    }
-
-    [Test]
     public void RequestResponse_NestedSnakeCaseObjectErrorData()
     {
         var id = "123";
@@ -1610,36 +1240,6 @@ public class DeserializationTests
         var expectedErrorData = TestData.Nested;
         var response = (UntypedErrorResponse) ((SingleResponseWrapper) deserialized).Response;
         var deserializedErrorData = response.Error.Data.Deserialize<TestData>(snakeCaseSerializerOptions);
-        deserializedErrorData.Should().BeEquivalentTo(expectedErrorData);
-    }
-
-    [Test]
-    public void RequestResponse_NestedCamelCaseObjectErrorData()
-    {
-        var id = "123";
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "error": {
-                      "code": {{errorCode}},
-                      "message": "{{errorMessage}}",
-                      "data": {{TestData.NestedRequiredCamelCaseJson}}
-                  },
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expectedError = new Error<JsonDocument>(errorCode, errorMessage, AnyJsonDocument);
-        var expected = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(id), expectedError));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedErrorData = TestData.Nested;
-        var response = (UntypedErrorResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedErrorData = response.Error.Data.Deserialize<TestData>(camelCaseSerializerOptions);
         deserializedErrorData.Should().BeEquivalentTo(expectedErrorData);
     }
 
@@ -1674,40 +1274,6 @@ public class DeserializationTests
         var deserializedArray = response.Error.Data.Deserialize<TestData[]>(snakeCaseSerializerOptions);
         deserializedArray.Should().BeEquivalentTo(new[] { expectedErrorData });
         var deserializedList = response.Error.Data.Deserialize<List<TestData>>(snakeCaseSerializerOptions);
-        deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedErrorData });
-    }
-
-    [Test]
-    public void RequestResponse_NestedCamelCaseArrayErrorData()
-    {
-        var id = "123";
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var json =
-            $$"""
-              {
-                  "id": "{{id}}",
-                  "error": {
-                      "code": {{errorCode}},
-                      "message": "{{errorMessage}}",
-                      "data": [
-                          {{TestData.NestedRequiredCamelCaseJson}}
-                      ]
-                  },
-                  "jsonrpc": "2.0"
-              }
-              """;
-
-        var deserialized = JsonSerializer.Deserialize<IResponseWrapper>(json, headersJsonSerializerOptions);
-
-        var expectedError = new Error<JsonDocument>(errorCode, errorMessage, AnyJsonDocument);
-        var expected = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(id), expectedError));
-        deserialized.Should().BeEquivalentTo(expected, AssertionOptions);
-        var expectedErrorData = TestData.Nested;
-        var response = (UntypedErrorResponse) ((SingleResponseWrapper) deserialized).Response;
-        var deserializedArray = response.Error.Data.Deserialize<TestData[]>(camelCaseSerializerOptions);
-        deserializedArray.Should().BeEquivalentTo(new[] { expectedErrorData });
-        var deserializedList = response.Error.Data.Deserialize<List<TestData>>(camelCaseSerializerOptions);
         deserializedList.Should().BeEquivalentTo(new List<TestData> { expectedErrorData });
     }
 

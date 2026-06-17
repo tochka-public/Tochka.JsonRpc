@@ -8,9 +8,15 @@
     <IsPackable>false</IsPackable>
     <Description>description for tests</Description>
   </PropertyGroup>
-
   <PropertyGroup>
     <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!--
+      error CS9137: The 'interceptors' feature is not enabled in this namespace
+      https://dev.to/lauraneto/umbraco-18-and-openapi-a-heads-up-for-extension-developers-1k7
+    -->
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,16 +45,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Tochka.JsonRpc.OpenRpc\Tochka.JsonRpc.OpenRpc.csproj" />
+    <ProjectReference Include="..\..\Tochka.JsonRpc.ApiExplorer\Tochka.JsonRpc.ApiExplorer.csproj" />
     <ProjectReference Include="..\..\Tochka.JsonRpc.Server\Tochka.JsonRpc.Server.csproj" />
-    <ProjectReference Include="..\..\Tochka.JsonRpc.Swagger\Tochka.JsonRpc.Swagger.csproj" />
     <ProjectReference Include="..\Tochka.JsonRpc.TestUtils.Integration\Tochka.JsonRpc.TestUtils.Integration.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.1" />
   </ItemGroup>
 
 </Project>

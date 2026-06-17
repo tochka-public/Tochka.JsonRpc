@@ -77,7 +77,8 @@ public class CallConverterTests
 
         var deserialized = JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
 
-        deserialized.Should().BeOfType<UntypedRequest>().And.BeEquivalentTo(new UntypedRequest(new StringRpcId(id), method, null));
+        deserialized.Should().BeOfType<UntypedRequest>().And.BeEquivalentTo(new UntypedRequest(new StringRpcId(id), method, null), static o => o.Excluding(static x => x.Params));
+        deserialized.Params.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]
@@ -95,7 +96,8 @@ public class CallConverterTests
 
         var deserialized = JsonSerializer.Deserialize<IUntypedCall>(request, JsonRpcSerializerOptions.Headers);
 
-        deserialized.Should().BeOfType<UntypedNotification>().And.BeEquivalentTo(new UntypedNotification(method, null));
+        deserialized.Should().BeOfType<UntypedNotification>().And.BeEquivalentTo(new UntypedNotification(method, null), static o => o.Excluding(static x => x.Params));
+        deserialized.Params.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]

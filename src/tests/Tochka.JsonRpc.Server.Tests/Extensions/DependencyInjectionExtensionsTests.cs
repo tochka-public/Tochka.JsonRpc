@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using Asp.Versioning.ApplicationModels;
-using Asp.Versioning.Conventions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -46,18 +42,7 @@ public class DependencyInjectionExtensionsTests
         result.Remove((typeof(IJsonRpcExceptionWrapper), typeof(JsonRpcExceptionWrapper), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcRequestValidator), typeof(JsonRpcRequestValidator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcErrorFactory), typeof(JsonRpcErrorFactory), ServiceLifetime.Singleton)).Should().BeTrue();
-        result.Remove((typeof(IApiControllerSpecification), typeof(JsonRpcControllerSpecification), ServiceLifetime.Singleton)).Should().BeTrue();
-        result.Remove((typeof(IApiVersionDescriptionProvider), typeof(DefaultApiVersionDescriptionProvider), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
-        // one of services registered by calling AddApiVersioning
-        result.Remove((typeof(IApiVersionSelector), null, ServiceLifetime.Singleton)).Should().BeTrue();
-        // one of services registered by calling AddApiVersioning.AddMvc
-        result.Remove((typeof(IControllerNameConvention), typeof(DefaultControllerNameConvention), ServiceLifetime.Singleton)).Should().BeTrue();
-        // one of services registered by calling AddApiVersioning.AddApiExplorer
-        var x = result.Single(x => x.ServiceType == typeof(IApiVersionDescriptionProviderFactory));
-        x.ImplementationType.Should().NotBeNull("can't check type directly because it is internal");
-        x.Lifetime.Should().Be(ServiceLifetime.Transient);
-        result.Remove(x).Should().BeTrue();
     }
 
     [Test]
@@ -123,35 +108,6 @@ public class DependencyInjectionExtensionsTests
         _ = services.BuildServiceProvider().GetRequiredService<IOptions<JsonRpcServerOptions>>().Value;
 
         configureOptionsMock.Verify(static x => x(It.IsAny<JsonRpcServerOptions>()));
-    }
-
-    [Test]
-    public void AddJsonRpcServer_ConfigureApiVersioning()
-    {
-        var services = new ServiceCollection();
-        var configureOptions = Mock.Of<Action<JsonRpcServerOptions>>();
-
-        services.AddJsonRpcServer(configureOptions);
-        var apiVersioningOptions = services.BuildServiceProvider().GetRequiredService<IOptions<ApiVersioningOptions>>().Value;
-
-        apiVersioningOptions.DefaultApiVersion.Should().BeEquivalentTo(new ApiVersion(1, 0));
-        apiVersioningOptions.AssumeDefaultVersionWhenUnspecified.Should().BeTrue();
-    }
-
-    [Test]
-    public void AddJsonRpcServer_ConfigureApiVersioningExplorer()
-    {
-        var services = new ServiceCollection();
-        var configureOptions = Mock.Of<Action<JsonRpcServerOptions>>();
-
-        services.AddJsonRpcServer(configureOptions);
-        var apiExplorerOptions = services.BuildServiceProvider().GetRequiredService<IOptions<ApiExplorerOptions>>().Value;
-
-        apiExplorerOptions.SubstituteApiVersionInUrl.Should().BeTrue();
-        apiExplorerOptions.GroupNameFormat.Should().Be("'v'VVV");
-        var name = "name";
-        var version = "version";
-        apiExplorerOptions.FormatGroupName(name, version).Should().Be($"{name}_{version}");
     }
 
     [Test]

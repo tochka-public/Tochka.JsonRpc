@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
@@ -19,7 +20,7 @@ using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Filters;
-using Tochka.JsonRpc.Server.Serialization;
+
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -28,19 +29,19 @@ namespace Tochka.JsonRpc.Server.Tests.Filters;
 [TestFixture]
 public class JsonRpcResultFilterTests
 {
-    private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
-    private JsonRpcServerOptions options;
+    private JsonOptions options;
+    private JsonRpcServerOptions serverOptions;
     private Mock<IJsonRpcErrorFactory> errorFactoryMock;
     private JsonRpcResultFilter resultFilter;
 
     [SetUp]
     public void Setup()
     {
-        serializerOptionsProviders = new List<IJsonSerializerOptionsProvider>();
-        options = new JsonRpcServerOptions();
+        options = new JsonOptions();
+        serverOptions = new JsonRpcServerOptions();
         errorFactoryMock = new Mock<IJsonRpcErrorFactory>();
 
-        resultFilter = new JsonRpcResultFilter(serializerOptionsProviders, Options.Create(options), errorFactoryMock.Object);
+        resultFilter = new JsonRpcResultFilter(Options.Create(options), Options.Create(serverOptions), errorFactoryMock.Object);
     }
 
     [Test]
@@ -82,7 +83,7 @@ public class JsonRpcResultFilterTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
         var result = Mock.Of<IActionResult>();
         var context = new ResultExecutingContext(actionContext, new List<IFilterMetadata>(), result, new object());
-        options.AllowRawResponses = false;
+        serverOptions.AllowRawResponses = false;
 
         var action = () => resultFilter.OnResultExecuting(context);
 
@@ -102,7 +103,7 @@ public class JsonRpcResultFilterTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
         var result = Mock.Of<IActionResult>();
         var context = new ResultExecutingContext(actionContext, new List<IFilterMetadata>(), result, new object());
-        options.AllowRawResponses = true;
+        serverOptions.AllowRawResponses = true;
 
         var action = () => resultFilter.OnResultExecuting(context);
 
@@ -118,7 +119,7 @@ public class JsonRpcResultFilterTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
         var result = Mock.Of<IActionResult>();
         var context = new ResultExecutingContext(actionContext, new List<IFilterMetadata>(), result, new object());
-        options.AllowRawResponses = true;
+        serverOptions.AllowRawResponses = true;
 
         resultFilter.OnResultExecuting(context);
 
@@ -143,7 +144,7 @@ public class JsonRpcResultFilterTests
         resultFilter.OnResultExecuting(context);
 
         var expectedResult = new StatusCodeResult(StatusCodes.Status200OK);
-        var expectedResponse = new UntypedErrorResponse(id, error.AsUntypedError(options.DefaultDataJsonSerializerOptions));
+        var expectedResponse = new UntypedErrorResponse(id, error.AsUntypedError(JsonRpcSerializerOptions.Headers));
         context.Result.Should().BeEquivalentTo(expectedResult);
         jsonRpcFeature.Response.Should().BeEquivalentTo(expectedResponse);
     }
@@ -169,7 +170,7 @@ public class JsonRpcResultFilterTests
         resultFilter.OnResultExecuting(context);
 
         var expectedResult = new StatusCodeResult(StatusCodes.Status200OK);
-        var expectedResponse = new UntypedErrorResponse(id, error.AsUntypedError(options.DefaultDataJsonSerializerOptions));
+        var expectedResponse = new UntypedErrorResponse(id, error.AsUntypedError(JsonRpcSerializerOptions.Headers));
         context.Result.Should().BeEquivalentTo(expectedResult);
         jsonRpcFeature.Response.Should().BeEquivalentTo(expectedResponse);
         errorFactoryMock.Verify();
@@ -209,7 +210,7 @@ public class JsonRpcResultFilterTests
         resultFilter.OnResultExecuting(context);
 
         var expectedResult = new StatusCodeResult(StatusCodes.Status200OK);
-        var expectedResponse = new UntypedResponse(id, JsonSerializer.SerializeToDocument(responseData, options.DefaultDataJsonSerializerOptions));
+        var expectedResponse = new UntypedResponse(id, JsonSerializer.SerializeToDocument(responseData, JsonRpcSerializerOptions.Headers));
         context.Result.Should().BeEquivalentTo(expectedResult);
         jsonRpcFeature.Response.Should().BeEquivalentTo(expectedResponse, static options => options.Using(JsonElementEqualityComparer.Instance));
     }
@@ -234,7 +235,7 @@ public class JsonRpcResultFilterTests
         resultFilter.OnResultExecuting(context);
 
         var expectedResult = new StatusCodeResult(StatusCodes.Status200OK);
-        var expectedResponse = new UntypedErrorResponse(id, error.AsUntypedError(options.DefaultDataJsonSerializerOptions));
+        var expectedResponse = new UntypedErrorResponse(id, error.AsUntypedError(JsonRpcSerializerOptions.Headers));
         context.Result.Should().BeEquivalentTo(expectedResult);
         jsonRpcFeature.Response.Should().BeEquivalentTo(expectedResponse);
         errorFactoryMock.Verify();
@@ -271,7 +272,7 @@ public class JsonRpcResultFilterTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());
         var result = new StatusCodeResult(statusCode);
         var context = new ResultExecutingContext(actionContext, new List<IFilterMetadata>(), result, new object());
-        options.AllowRawResponses = false;
+        serverOptions.AllowRawResponses = false;
 
         var action = () => resultFilter.OnResultExecuting(context);
 

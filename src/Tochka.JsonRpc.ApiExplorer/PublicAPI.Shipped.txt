@@ -22,3 +22,6 @@ Tochka.JsonRpc.ApiExplorer.JsonRpcTypeMetadataAttribute.JsonRpcTypeMetadataAttri
 Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateRequestType(string! actionFullName, string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams) -> System.Type!
 Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateResponseType(string! actionFullName, string! methodName, System.Type! resultType) -> System.Type!
 Tochka.JsonRpc.ApiExplorer.JsonRpcDescriptionProvider.JsonRpcDescriptionProvider(Tochka.JsonRpc.ApiExplorer.ITypeEmitter! typeEmitter, Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider! modelMetadataProvider) -> void
+Tochka.JsonRpc.ApiExplorer.JsonRpcSchemaTransformer
+Tochka.JsonRpc.ApiExplorer.JsonRpcSchemaTransformer.JsonRpcSchemaTransformer(Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.ApiExplorer.JsonRpcSchemaTransformer!>! log) -> void
+Tochka.JsonRpc.ApiExplorer.JsonRpcSchemaTransformer.TransformAsync(Microsoft.OpenApi.OpenApiSchema! schema, Microsoft.AspNetCore.OpenApi.OpenApiSchemaTransformerContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!

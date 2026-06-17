@@ -22,7 +22,7 @@ internal class JsonRpcParamsParser : IJsonRpcParamsParser
         {
             JsonValueKind.Object => ParseObject(parameters!.RootElement, parameterMetadata.PropertyName, bindingStyle),
             JsonValueKind.Array => ParseArray(parameters!.RootElement, parameterMetadata.Position, bindingStyle),
-            null => ParseNull(bindingStyle),
+            null or JsonValueKind.Null => ParseNull(bindingStyle),
             _ => new ErrorParseResult($"Unsupported root JSON value kind: [{jsonValueKind}]", string.Empty)
         };
     }

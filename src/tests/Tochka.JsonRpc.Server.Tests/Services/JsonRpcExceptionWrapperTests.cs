@@ -88,7 +88,6 @@ public class JsonRpcExceptionWrapperTests
         errorFactoryMock.Setup(f => f.Exception(exception))
             .Returns(error)
             .Verifiable();
-        options.HeadersJsonSerializerOptions = JsonRpcSerializerOptions.SnakeCase;
 
         var result = exceptionWrapper.WrapGeneralException(exception);
 
@@ -127,7 +126,6 @@ public class JsonRpcExceptionWrapperTests
         errorFactoryMock.Setup(f => f.ParseError(exception))
             .Returns(error)
             .Verifiable();
-        options.HeadersJsonSerializerOptions = JsonRpcSerializerOptions.SnakeCase;
 
         var result = exceptionWrapper.WrapParseException(exception);
 

@@ -10,14 +10,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Features;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
-using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Metadata;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Tests.Binding;
@@ -27,8 +26,7 @@ public class JsonRpcModelBinderTests
 {
     private Mock<IJsonRpcParamsParser> paramsParserMock;
     private Mock<IJsonRpcParameterBinder> parameterBinderMock;
-    private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
-    private JsonRpcServerOptions options;
+    private JsonOptions options;
     private Mock<JsonRpcModelBinder> modelBinderMock;
 
     [SetUp]
@@ -36,9 +34,8 @@ public class JsonRpcModelBinderTests
     {
         paramsParserMock = new Mock<IJsonRpcParamsParser>();
         parameterBinderMock = new Mock<IJsonRpcParameterBinder>();
-        serializerOptionsProviders = new List<IJsonSerializerOptionsProvider>();
-        options = new JsonRpcServerOptions();
-        modelBinderMock = new Mock<JsonRpcModelBinder>(paramsParserMock.Object, parameterBinderMock.Object, serializerOptionsProviders, Options.Create(options))
+        options = new JsonOptions();
+        modelBinderMock = new Mock<JsonRpcModelBinder>(paramsParserMock.Object, parameterBinderMock.Object, Options.Create(options))
         {
             CallBase = true
         };
@@ -192,81 +189,6 @@ public class JsonRpcModelBinderTests
 
         result.Should().Be(parseResult);
         paramsParserMock.Verify();
-    }
-
-    [Test]
-    public async Task SetResult_NoCustomSerializer_UseDefaultDataJsonSerializerOptions()
-    {
-        var parseResult = Mock.Of<IParseResult>();
-        var parameterMetadata = new JsonRpcParameterMetadata("propertyName", 0, BindingStyle.Default, false, "originalName", typeof(string));
-        var bindingContext = new DefaultModelBindingContext
-        {
-            ActionContext = new ActionContext
-            {
-                ActionDescriptor = new ControllerActionDescriptor
-                {
-                    EndpointMetadata = new List<object>()
-                }
-            }
-        };
-        parameterBinderMock.Setup(b => b.SetResult(bindingContext, parameterMetadata, parseResult, options.DefaultDataJsonSerializerOptions))
-            .Verifiable();
-
-        await modelBinderMock.Object.SetResult(parseResult, bindingContext, parameterMetadata);
-
-        paramsParserMock.Verify();
-    }
-
-    [Test]
-    public async Task SetResult_CustomSerializerNotRegistered_Throw()
-    {
-        var parseResult = Mock.Of<IParseResult>();
-        var parameterMetadata = new JsonRpcParameterMetadata("propertyName", 0, BindingStyle.Default, false, "originalName", typeof(string));
-        var bindingContext = new DefaultModelBindingContext
-        {
-            ActionContext = new ActionContext
-            {
-                ActionDescriptor = new ControllerActionDescriptor
-                {
-                    EndpointMetadata = new List<object>
-                    {
-                        new JsonRpcSerializerOptionsAttribute(typeof(SnakeCaseJsonSerializerOptionsProvider))
-                    }
-                }
-            }
-        };
-
-        var action = () => modelBinderMock.Object.SetResult(parseResult, bindingContext, parameterMetadata);
-
-        await action.Should().ThrowAsync<ArgumentException>();
-    }
-
-    [Test]
-    public async Task SetResult_CustomSerializer_UseCustomSerializerOptions()
-    {
-        var parseResult = Mock.Of<IParseResult>();
-        var parameterMetadata = new JsonRpcParameterMetadata("propertyName", 0, BindingStyle.Default, false, "originalName", typeof(string));
-        var bindingContext = new DefaultModelBindingContext
-        {
-            ActionContext = new ActionContext
-            {
-                ActionDescriptor = new ControllerActionDescriptor
-                {
-                    EndpointMetadata = new List<object>
-                    {
-                        new JsonRpcSerializerOptionsAttribute(typeof(SnakeCaseJsonSerializerOptionsProvider))
-                    }
-                }
-            }
-        };
-        var serializerOptionsProvider = new SnakeCaseJsonSerializerOptionsProvider();
-        serializerOptionsProviders.Add(serializerOptionsProvider);
-        parameterBinderMock.Setup(b => b.SetResult(bindingContext, parameterMetadata, parseResult, serializerOptionsProvider.Options))
-            .Verifiable();
-
-        await modelBinderMock.Object.SetResult(parseResult, bindingContext, parameterMetadata);
-
-        parameterBinderMock.Verify();
     }
 
     private const string FieldName = "fieldName";
