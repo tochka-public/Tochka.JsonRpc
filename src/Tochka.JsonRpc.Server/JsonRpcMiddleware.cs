@@ -72,7 +72,7 @@ public class JsonRpcMiddleware
         }
     }
 
-    private async Task<IRequestWrapper?> DeserializeRequestWrapper(Stream requestBody, Encoding requestEncoding)
+    private static async Task<IRequestWrapper?> DeserializeRequestWrapper(Stream requestBody, Encoding requestEncoding)
     {
         if (requestEncoding.CodePage == Encoding.UTF8.CodePage)
         {
@@ -83,7 +83,7 @@ public class JsonRpcMiddleware
         return await JsonSerializer.DeserializeAsync<IRequestWrapper>(transcodingStream, JsonRpcSerializerOptions.Headers);
     }
 
-    private async Task SerializeResponseWrapper(IResponseWrapper responseWrapper, Stream responseBody, Encoding responseEncoding)
+    private static async Task SerializeResponseWrapper(IResponseWrapper responseWrapper, Stream responseBody, Encoding responseEncoding)
     {
         if (responseEncoding.CodePage == Encoding.UTF8.CodePage)
         {

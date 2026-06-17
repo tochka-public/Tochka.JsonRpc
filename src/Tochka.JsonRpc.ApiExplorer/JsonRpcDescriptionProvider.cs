@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
@@ -15,21 +17,15 @@ namespace Tochka.JsonRpc.ApiExplorer;
 /// <summary>
 /// ApiDescriptionProvider that overrides default description for JSON-RPC API
 /// </summary>
-public class JsonRpcDescriptionProvider : IApiDescriptionProvider
+public class JsonRpcDescriptionProvider
+(
+    ITypeEmitter typeEmitter,
+    IModelMetadataProvider modelMetadataProvider
+) : IApiDescriptionProvider
 {
     // need to run after DefaultApiDescriptionProvider to override it's result
     /// <inheritdoc />
     public int Order => -900;
-
-    private readonly ITypeEmitter typeEmitter;
-    private readonly ILogger<JsonRpcDescriptionProvider> log;
-
-    /// <summary></summary>
-    public JsonRpcDescriptionProvider(ITypeEmitter typeEmitter, ILogger<JsonRpcDescriptionProvider> log)
-    {
-        this.typeEmitter = typeEmitter;
-        this.log = log;
-    }
 
     /// <inheritdoc />
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
@@ -91,7 +87,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             Name = JsonRpcConstants.ParamsProperty,
             Source = BindingSource.Body,
             IsRequired = true,
-            ModelMetadata = new JsonRpcModelMetadata(requestType),
+            ModelMetadata = modelMetadataProvider.GetMetadataForType(requestType),
             Type = requestType
         });
     }
@@ -136,7 +132,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             ApiResponseFormats = JsonRpcConstants.AllowedRequestContentType.Select(contentType => new ApiResponseFormat { MediaType = contentType }).ToArray(),
             IsDefaultResponse = false,
             StatusCode = 200,
-            ModelMetadata = new JsonRpcModelMetadata(responseType),
+            ModelMetadata = modelMetadataProvider.GetMetadataForType(responseType),
             Type = responseType
         });
     }

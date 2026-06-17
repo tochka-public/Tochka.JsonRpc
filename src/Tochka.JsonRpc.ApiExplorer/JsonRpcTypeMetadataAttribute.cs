@@ -19,7 +19,6 @@ public sealed class JsonRpcTypeMetadataAttribute : Attribute
     public string MethodName { get; }
 
     /// <inheritdoc />
-    /// <param name="serializerOptionsProviderType">Type of data serializer options provider</param>
     /// <param name="methodName">JSON-RPC method name</param>
     public JsonRpcTypeMetadataAttribute(string methodName)
     {

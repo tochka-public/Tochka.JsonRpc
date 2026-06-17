@@ -41,8 +41,8 @@ public class TypeEmitter : ITypeEmitter
                 paramsType = typeof(object);
             }
 
-            var responseType = typeof(Request<>).MakeGenericType(paramsType);
-            return GenerateTypeWithInfoAttribute(requestTypeName, responseType, paramsType, methodName);
+            var requestType = typeof(Request<>).MakeGenericType(paramsType);
+            return GenerateTypeWithInfoAttribute(requestTypeName, requestType, paramsType, methodName);
         }
     }
 
@@ -117,7 +117,7 @@ public class TypeEmitter : ITypeEmitter
         var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseType);
 
         var attrType = typeof(JsonRpcTypeMetadataAttribute);
-        var attrConstructor = attrType.GetConstructor(new[] { typeof(Type), typeof(string) })!;
+        var attrConstructor = attrType.GetConstructor([typeof(string)])!;
         var attrParams = new object?[] { methodName };
         var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams);
         typeBuilder.SetCustomAttribute(attrBuilder);
