@@ -23,35 +23,35 @@ public class TypeEmitter : ITypeEmitter
     }
 
     /// <inheritdoc />
-    public Type CreateRequestType(string actionFullName, string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams, Type? serializerOptionsProviderType)
+    public Type CreateRequestType(string actionFullName, string methodName, Type baseParamsType, IReadOnlyDictionary<string, Type> defaultBoundParams)
     {
         lock (lockObject)
         {
-            var requestTypeName = $"{methodName} request ({actionFullName})";
+            var requestTypeName = $"{actionFullName}.Request";
             var definedType = moduleBuilder.GetType(requestTypeName);
             if (definedType != null)
             {
                 return definedType;
             }
 
-            var paramsType = GetParamsType($"{methodName} params ({actionFullName})", baseParamsType, defaultBoundParams);
+            var paramsType = GetParamsType($"{actionFullName}.Params", baseParamsType, defaultBoundParams);
             if (paramsType.IsValueType)
             {
                 log.LogWarning("Params type can't be value type, got {paramsType}, using object instead", paramsType.Name);
                 paramsType = typeof(object);
             }
 
-            var responseType = typeof(Request<>).MakeGenericType(paramsType);
-            return GenerateTypeWithInfoAttribute(requestTypeName, responseType, paramsType, serializerOptionsProviderType, methodName);
+            var requestType = typeof(Request<>).MakeGenericType(paramsType);
+            return GenerateTypeWithInfoAttribute(requestTypeName, requestType, paramsType, methodName);
         }
     }
 
     /// <inheritdoc />
-    public Type CreateResponseType(string actionFullName, string methodName, Type resultType, Type? serializerOptionsProviderType)
+    public Type CreateResponseType(string actionFullName, string methodName, Type resultType)
     {
         lock (lockObject)
         {
-            var responseTypeName = $"{methodName} response ({actionFullName})";
+            var responseTypeName = $"{actionFullName}.Response";
             var definedType = moduleBuilder.GetType(responseTypeName);
             if (definedType != null)
             {
@@ -64,7 +64,7 @@ public class TypeEmitter : ITypeEmitter
             }
 
             var responseType = typeof(Response<>).MakeGenericType(resultType);
-            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, resultType, serializerOptionsProviderType, methodName);
+            return GenerateTypeWithInfoAttribute(responseTypeName, responseType, resultType, methodName);
         }
     }
 
@@ -106,7 +106,7 @@ public class TypeEmitter : ITypeEmitter
     /// <summary>
     /// Create new type with JsonRpcTypeMetadataAttribute
     /// </summary>
-    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type innerType, Type? serializerOptionsProviderType, string methodName)
+    private Type GenerateTypeWithInfoAttribute(string name, Type baseType, Type innerType, string methodName)
     {
         if (!innerType.IsPublic || innerType.IsNested)
         {
@@ -117,8 +117,8 @@ public class TypeEmitter : ITypeEmitter
         var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public, baseType);
 
         var attrType = typeof(JsonRpcTypeMetadataAttribute);
-        var attrConstructor = attrType.GetConstructor(new[] { typeof(Type), typeof(string) })!;
-        var attrParams = new object?[] { serializerOptionsProviderType, methodName };
+        var attrConstructor = attrType.GetConstructor([typeof(string)])!;
+        var attrParams = new object?[] { methodName };
         var attrBuilder = new CustomAttributeBuilder(attrConstructor, attrParams);
         typeBuilder.SetCustomAttribute(attrBuilder);
 

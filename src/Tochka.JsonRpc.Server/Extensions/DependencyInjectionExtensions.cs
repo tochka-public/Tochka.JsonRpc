@@ -1,7 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using Asp.Versioning.ApplicationModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -49,23 +46,6 @@ public static class DependencyInjectionExtensions
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
         services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
-        services.AddApiVersioning(static options =>
-            {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-            })
-            .AddMvc()
-            .AddApiExplorer(static options =>
-            {
-                options.SubstituteApiVersionInUrl = true;
-                options.GroupNameFormat = "'v'VVV";
-                options.FormatGroupName = static (name, version) => $"{name}_{version}";
-            });
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiControllerSpecification, JsonRpcControllerSpecification>());
-
-        // required for correct autodocs document names if ApiExplorerSettingsAttribute with custom GroupName is used
-        services.Replace(ServiceDescriptor.Singleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>());
-
         services.AddSingleton<JsonRpcMarkerService>();
         return services;
     }

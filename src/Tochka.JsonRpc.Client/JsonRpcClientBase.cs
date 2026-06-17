@@ -160,7 +160,7 @@ public abstract class JsonRpcClientBase : IJsonRpcClient
 
     /// <inheritdoc />
     public async Task<ISingleJsonRpcResult<TResponse>> SendRequest<TParams, TResponse>(string requestUrl, string method, TParams? parameters, CancellationToken cancellationToken)
-        where TParams : class 
+        where TParams : class
     {
         var id = RpcIdGenerator.GenerateId();
         Log.LogTrace("Generated request id [{requestId}]", id);

@@ -82,7 +82,8 @@ public class ResponseConverterTests
         var deserialized = JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
         var expected = new UntypedResponse(new StringRpcId(id), null);
-        deserialized.Should().BeOfType<UntypedResponse>().And.BeEquivalentTo(expected);
+        deserialized.Should().BeOfType<UntypedResponse>().And.BeEquivalentTo(expected, static o => o.Excluding(static x => x.Result));
+        (deserialized as UntypedResponse).Result.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]
@@ -107,7 +108,8 @@ public class ResponseConverterTests
         var deserialized = JsonSerializer.Deserialize<IResponse>(request, JsonRpcSerializerOptions.Headers);
 
         var expected = new UntypedErrorResponse(new StringRpcId(id), new Error<JsonDocument>(errorCode, errorMessage, null));
-        deserialized.Should().BeOfType<UntypedErrorResponse>().And.BeEquivalentTo(expected);
+        deserialized.Should().BeOfType<UntypedErrorResponse>().And.BeEquivalentTo(expected, static o => o.Excluding(static x => x.Error.Data));
+        (deserialized as UntypedErrorResponse).Error.Data.RootElement.ValueKind.Should().Be(JsonValueKind.Null);
     }
 
     [Test]

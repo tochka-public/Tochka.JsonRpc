@@ -30,8 +30,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
     private Mock<IResponseProvider> responseProviderMock;
     private Mock<IRequestValidator> requestValidatorMock;
     private AsyncServiceScope scope;
-    private IJsonRpcClient snakeCaseJsonRpcClient;
-    private IJsonRpcClient camelCaseJsonRpcClient;
+    private IJsonRpcClient client;
 
     protected override void SetupServices(IServiceCollection services)
     {
@@ -39,8 +38,6 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         services.AddTransient(_ => responseProviderMock.Object);
         services.AddTransient(_ => requestValidatorMock.Object);
         services.AddJsonRpcClient<SnakeCaseJsonRpcClient>(); // <- client configured in ctor
-        services.AddJsonRpcClient<CamelCaseJsonRpcClient>() // <- client configured using ConfigureHttpClient
-            .ConfigureHttpClient(static c => c.BaseAddress = new Uri("https://localhost/"));
     }
 
     [OneTimeTearDown]
@@ -68,36 +65,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                 actualContentType = request.ContentType;
             });
 
-        await camelCaseJsonRpcClient.SendNotification<object>(NotificationUrl, Method, null, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestJson.Should().Be(expectedRequestJson);
-    }
-
-    [Test]
-    public async Task SendNotification_SendRequestWithPlainDataCamelCase_SerializeSuccessfully()
-    {
-        var requestData = TestData.Plain;
-        var expectedRequestJson =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": {{TestData.PlainFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-
-        string actualContentType = null;
-        string actualRequestJson = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
-            .Callback<HttpRequest>(request =>
-            {
-                using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
-                actualContentType = request.ContentType;
-            });
-
-        await camelCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
+        await client.SendNotification<object>(NotificationUrl, Method, null, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -126,36 +94,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                 actualContentType = request.ContentType;
             });
 
-        await snakeCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestJson.Should().Be(expectedRequestJson);
-    }
-
-    [Test]
-    public async Task SendNotification_SendRequestWithNestedDataCamelCase_SerializeSuccessfully()
-    {
-        var requestData = TestData.Nested;
-        var expectedRequestJson =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": {{TestData.NestedFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-
-        string actualContentType = null;
-        string actualRequestJson = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
-            .Callback<HttpRequest>(request =>
-            {
-                using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
-                actualContentType = request.ContentType;
-            });
-
-        await camelCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
+        await client.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -184,7 +123,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                 actualContentType = request.ContentType;
             });
 
-        await snakeCaseJsonRpcClient.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
+        await client.SendNotification(NotificationUrl, Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -223,7 +162,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -263,53 +202,11 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
-    }
-
-    [Test]
-    public async Task SendRequest_SendRequestWithoutParams_WithPlainDataCamelCase_SerializeSuccessfully()
-    {
-        var id = Guid.NewGuid().ToString();
-        var expectedRequestJson =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": null,
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        var responseBody = JsonDocument.Parse($$"""
-                                                {
-                                                    "id": "{{id}}",
-                                                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                                                    "jsonrpc": "2.0"
-                                                }
-                                                """);
-        var expectedResponseData = TestData.Plain;
-
-        string actualContentType = null;
-        string actualRequestJson = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
-            .Callback<HttpRequest>(request =>
-            {
-                using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
-                actualContentType = request.ContentType;
-            });
-        responseProviderMock.Setup(static p => p.GetResponse())
-            .Returns(responseBody);
-
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestJson.Should().Be(expectedRequestJson);
-        response.HasError().Should().BeFalse();
-        response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
 
     [Test]
@@ -345,7 +242,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new NumberRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new NumberRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -385,7 +282,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new FloatNumberRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new FloatNumberRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -424,7 +321,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new NullRpcId(), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new NullRpcId(), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -464,55 +361,12 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest<object>(RequestUrl, new StringRpcId(id), Method, null, CancellationToken.None);
+        var response = await client.SendRequest<object>(RequestUrl, new StringRpcId(id), Method, null, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<object?>().Should().BeNull();
-    }
-
-    [Test]
-    public async Task SendRequest_SendRequestWithPlainDataCamelCase_SerializeSuccessfully()
-    {
-        var id = Guid.NewGuid().ToString();
-        var requestData = TestData.Plain;
-        var expectedRequestJson =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": {{TestData.PlainFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        var responseBody = JsonDocument.Parse($$"""
-                                                {
-                                                    "id": "{{id}}",
-                                                    "result": {{TestData.PlainRequiredCamelCaseJson}},
-                                                    "jsonrpc": "2.0"
-                                                }
-                                                """);
-        var expectedResponseData = TestData.Plain;
-
-        string actualContentType = null;
-        string actualRequestJson = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
-            .Callback<HttpRequest>(request =>
-            {
-                using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
-                actualContentType = request.ContentType;
-            });
-        responseProviderMock.Setup(static p => p.GetResponse())
-            .Returns(responseBody);
-
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestJson.Should().Be(expectedRequestJson);
-        response.HasError().Should().BeFalse();
-        response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
     }
 
     [Test]
@@ -550,50 +404,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestJson.Should().Be(expectedRequestJson);
-        response.HasError().Should().BeFalse();
-        response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
-    }
-
-    [Test]
-    public async Task SendRequest_SendRequestWithNestedDataCamelCase_SerializeSuccessfully()
-    {
-        var id = Guid.NewGuid().ToString();
-        var requestData = TestData.Nested;
-        var expectedRequestJson =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": {{TestData.NestedFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        var responseBody = JsonDocument.Parse($$"""
-                                                {
-                                                    "id": "{{id}}",
-                                                    "result": {{TestData.NestedRequiredCamelCaseJson}},
-                                                    "jsonrpc": "2.0"
-                                                }
-                                                """);
-        var expectedResponseData = TestData.Nested;
-
-        string actualContentType = null;
-        string actualRequestJson = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
-            .Callback<HttpRequest>(request =>
-            {
-                using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
-                actualContentType = request.ContentType;
-            });
-        responseProviderMock.Setup(static p => p.GetResponse())
-            .Returns(responseBody);
-
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -636,60 +447,12 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, requestData, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
         response.HasError().Should().BeFalse();
         response.GetResponseOrThrow<TestData>().Should().BeEquivalentTo(expectedResponseData);
-    }
-
-    [Test]
-    public async Task SendRequest_GetErrorWithCamelCaseData_DeserializeSuccessfully()
-    {
-        var id = Guid.NewGuid().ToString();
-        var expectedRequestJson =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": {},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var responseBody = JsonDocument.Parse($$"""
-                                                {
-                                                    "id": "{{id}}",
-                                                    "error": {
-                                                        "code": {{errorCode}},
-                                                        "message": "{{errorMessage}}",
-                                                        "data": {{TestData.PlainRequiredCamelCaseJson}}
-                                                    },
-                                                    "jsonrpc": "2.0"
-                                                }
-                                                """);
-        var expectedError = new Error<TestData>(errorCode, errorMessage, TestData.Plain);
-
-        string actualContentType = null;
-        string actualRequestJson = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<HttpRequest>()))
-            .Callback<HttpRequest>(request =>
-            {
-                using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
-                actualContentType = request.ContentType;
-            });
-        responseProviderMock.Setup(static p => p.GetResponse())
-            .Returns(responseBody);
-
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
-
-        actualContentType.Should().Contain("application/json");
-        actualRequestJson.Should().Be(expectedRequestJson);
-        response.HasError().Should().BeTrue();
-        response.Advanced.AsTypedError<TestData>().Should().BeEquivalentTo(expectedError);
     }
 
     [Test]
@@ -732,7 +495,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -779,7 +542,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await snakeCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -824,7 +587,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -875,7 +638,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -922,7 +685,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var response = await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var response = await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -962,7 +725,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var act = async () => await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcFormatException>();
         actualContentType.Should().Contain("application/json");
@@ -1001,7 +764,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var act = async () => await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcFormatException>();
         actualContentType.Should().Contain("application/json");
@@ -1047,7 +810,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var act = async () => await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcFormatException>();
         actualContentType.Should().Contain("application/json");
@@ -1080,7 +843,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Throws<ArgumentOutOfRangeException>();
 
-        var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var act = async () => await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
@@ -1120,7 +883,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var act = async () => await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
@@ -1160,7 +923,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         responseProviderMock.Setup(static p => p.GetResponse())
             .Returns(responseBody);
 
-        var act = async () => await camelCaseJsonRpcClient.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
+        var act = async () => await client.SendRequest(RequestUrl, new StringRpcId(id), Method, new { }, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
@@ -1208,7 +971,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<object>(new StringRpcId(id), Method, new { })
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1256,7 +1019,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<object>(new NumberRpcId(id), Method, new { })
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1303,7 +1066,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<object>(new NullRpcId(), Method, new { })
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1321,7 +1084,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1330,7 +1093,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                 [
                                                     {
                                                         "id": "{{id}}",
-                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "result": {{TestData.PlainRequiredSnakeCaseJson}},
                                                         "jsonrpc": "2.0"
                                                     }
                                                 ]
@@ -1353,7 +1116,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1373,13 +1136,13 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id1}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       },
                       {
                           "id": "{{id2}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1388,12 +1151,12 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                 [
                                                     {
                                                         "id": "{{id1}}",
-                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "result": {{TestData.PlainRequiredSnakeCaseJson}},
                                                         "jsonrpc": "2.0"
                                                     },
                                                     {
                                                         "id": "{{id2}}",
-                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "result": {{TestData.PlainRequiredSnakeCaseJson}},
                                                         "jsonrpc": "2.0"
                                                     }
                                                 ]
@@ -1417,7 +1180,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             new Request<TestData>(new StringRpcId(id1), Method, requestData),
             new Request<TestData>(new StringRpcId(id2), Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1436,7 +1199,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                   [
                       {
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1458,7 +1221,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Notification<TestData>(Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1474,12 +1237,12 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                   [
                       {
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       },
                       {
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1500,7 +1263,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             new Notification<TestData>(Method, requestData),
             new Notification<TestData>(Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1518,12 +1281,12 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       },
                       {
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1532,7 +1295,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                 [
                                                     {
                                                         "id": "{{id}}",
-                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "result": {{TestData.PlainRequiredSnakeCaseJson}},
                                                         "jsonrpc": "2.0"
                                                     }
                                                 ]
@@ -1556,7 +1319,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             new Request<TestData>(new StringRpcId(id), Method, requestData),
             new Notification<TestData>(Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1575,7 +1338,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1589,7 +1352,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                         "error": {
                                                             "code": {{errorCode}},
                                                             "message": "{{errorMessage}}",
-                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                            "data": {{TestData.PlainRequiredSnakeCaseJson}}
                                                         },
                                                         "jsonrpc": "2.0"
                                                     }
@@ -1613,7 +1376,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1633,13 +1396,13 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id1}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       },
                       {
                           "id": "{{id2}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1653,7 +1416,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                         "error": {
                                                             "code": {{errorCode}},
                                                             "message": "{{errorMessage}}",
-                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                            "data": {{TestData.PlainRequiredSnakeCaseJson}}
                                                         },
                                                         "jsonrpc": "2.0"
                                                     },
@@ -1662,7 +1425,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                         "error": {
                                                             "code": {{errorCode}},
                                                             "message": "{{errorMessage}}",
-                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                            "data": {{TestData.PlainRequiredSnakeCaseJson}}
                                                         },
                                                         "jsonrpc": "2.0"
                                                     }
@@ -1687,7 +1450,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             new Request<TestData>(new StringRpcId(id1), Method, requestData),
             new Request<TestData>(new StringRpcId(id2), Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1709,13 +1472,13 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id1}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       },
                       {
                           "id": "{{id2}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1729,13 +1492,13 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                         "error": {
                                                             "code": {{errorCode}},
                                                             "message": "{{errorMessage}}",
-                                                            "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                            "data": {{TestData.PlainRequiredSnakeCaseJson}}
                                                         },
                                                         "jsonrpc": "2.0"
                                                     },
                                                     {
                                                         "id": "{{id2}}",
-                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "result": {{TestData.PlainRequiredSnakeCaseJson}},
                                                         "jsonrpc": "2.0"
                                                     }
                                                 ]
@@ -1760,7 +1523,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             new Request<TestData>(new StringRpcId(id1), Method, requestData),
             new Request<TestData>(new StringRpcId(id2), Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1781,7 +1544,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1794,7 +1557,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                     "error": {
                                                         "code": {{errorCode}},
                                                         "message": "{{errorMessage}}",
-                                                        "data": {{TestData.PlainRequiredCamelCaseJson}}
+                                                        "data": {{TestData.PlainRequiredSnakeCaseJson}}
                                                     },
                                                     "jsonrpc": "2.0"
                                                 }
@@ -1816,7 +1579,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
-        var act = async () => await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var act = async () => await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         await act.Should().ThrowAsync<JsonRpcException>();
         actualContentType.Should().Contain("application/json");
@@ -1834,7 +1597,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                       {
                           "id": "{{id}}",
                           "method": "{{Method}}",
-                          "params": {{TestData.PlainFullCamelCaseJson}},
+                          "params": {{TestData.PlainFullSnakeCaseJson}},
                           "jsonrpc": "2.0"
                       }
                   ]
@@ -1843,7 +1606,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                                                 [
                                                     {
                                                         "id": "{{Guid.NewGuid().ToString()}}",
-                                                        "result": {{TestData.PlainRequiredCamelCaseJson}},
+                                                        "result": {{TestData.PlainRequiredSnakeCaseJson}},
                                                         "jsonrpc": "2.0"
                                                     }
                                                 ]
@@ -1865,7 +1628,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         {
             new Request<TestData>(new StringRpcId(id), Method, requestData)
         };
-        var response = await camelCaseJsonRpcClient.SendBatch(BatchUrl, calls, CancellationToken.None);
+        var response = await client.SendBatch(BatchUrl, calls, CancellationToken.None);
 
         actualContentType.Should().Contain("application/json");
         actualRequestJson.Should().Be(expectedRequestJson);
@@ -1881,11 +1644,10 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         scope = ApplicationFactory.Services.CreateAsyncScope();
         var idGenerator = scope.ServiceProvider.GetRequiredService<IJsonRpcIdGenerator>();
 
-        snakeCaseJsonRpcClient = new SnakeCaseJsonRpcClient(ApiClient, idGenerator);
-        camelCaseJsonRpcClient = new CamelCaseJsonRpcClient(ApiClient, idGenerator);
+        client = new SnakeCaseJsonRpcClient(ApiClient, idGenerator);
     }
 
-    private const string Method = "some-method";
+    private const string Method = "some_method";
     private const string NotificationUrl = "notification";
     private const string RequestUrl = "request";
     private const string BatchUrl = "batch";

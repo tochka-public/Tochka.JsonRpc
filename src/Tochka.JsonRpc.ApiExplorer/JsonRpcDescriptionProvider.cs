@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
@@ -15,62 +17,44 @@ namespace Tochka.JsonRpc.ApiExplorer;
 /// <summary>
 /// ApiDescriptionProvider that overrides default description for JSON-RPC API
 /// </summary>
-public class JsonRpcDescriptionProvider : IApiDescriptionProvider
+public class JsonRpcDescriptionProvider
+(
+    ITypeEmitter typeEmitter,
+    IModelMetadataProvider modelMetadataProvider
+) : IApiDescriptionProvider
 {
     // need to run after DefaultApiDescriptionProvider to override it's result
     /// <inheritdoc />
-    public int Order => int.MaxValue;
-
-    private readonly ITypeEmitter typeEmitter;
-    private readonly ILogger<JsonRpcDescriptionProvider> log;
-
-    /// <summary></summary>
-    public JsonRpcDescriptionProvider(ITypeEmitter typeEmitter, ILogger<JsonRpcDescriptionProvider> log)
-    {
-        this.typeEmitter = typeEmitter;
-        this.log = log;
-    }
+    public int Order => -900;
 
     /// <inheritdoc />
     public void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
+        // default provider includes actions with [ApiController] and [Route]: isVisible && isAttributeRouted
         var existingDescriptions = context.Results
             .Where(static x => x.ActionDescriptor.EndpointMetadata.Any(static m => m is JsonRpcControllerAttribute))
             .ToList();
 
         foreach (var description in existingDescriptions)
         {
+            // sanity checks
             if (description.ActionDescriptor is not ControllerActionDescriptor actionDescriptor)
             {
-                // Should not be possible, sanity check
-                log.LogWarning("Expected descriptor of action [{actionName}] to be ControllerActionDescriptor, but got {descriptorType}", description.ActionDescriptor.DisplayName, description.ActionDescriptor.GetType().Name);
-                context.Results.Remove(description);
-                continue;
+                throw new InvalidOperationException($"Descriptor [{description.ActionDescriptor.DisplayName}] has invalid type");
             }
 
             var methodMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcMethodAttribute>();
             if (methodMetadata == null)
             {
-                // Should not be possible, sanity check
-                log.LogWarning("JsonRpcController action [{actionName}] without JsonRpcMethodAttribute, this shouldn't be possible!", description.ActionDescriptor.DisplayName);
-                context.Results.Remove(description);
-                continue;
-            }
-
-            var serializerMetadata = actionDescriptor.EndpointMetadata.Get<JsonRpcSerializerOptionsAttribute>();
-            var serializerOptionsProviderType = serializerMetadata?.ProviderType;
-
-            if (string.IsNullOrWhiteSpace(description.GroupName))
-            {
-                description.GroupName = ApiExplorerUtils.GetDocumentName(ApiExplorerConstants.DefaultDocumentName, serializerOptionsProviderType);
+                throw new InvalidOperationException($"Descriptor [{description.ActionDescriptor.DisplayName}] has no JsonRpcMethodAttribute");
             }
 
             description.HttpMethod = HttpMethods.Post;
             description.RelativePath += $"#{methodMetadata.Method}";
             description.Properties[ApiExplorerConstants.MethodNameProperty] = methodMetadata.Method;
 
-            WrapRequest(description, actionDescriptor, methodMetadata.Method, serializerOptionsProviderType);
-            WrapResponse(description, actionDescriptor, methodMetadata.Method, serializerOptionsProviderType);
+            WrapRequest(description, actionDescriptor, methodMetadata.Method);
+            WrapResponse(description, actionDescriptor, methodMetadata.Method);
         }
     }
 
@@ -80,7 +64,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
     {
     }
 
-    private void WrapRequest(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
+    private void WrapRequest(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName)
     {
         description.SupportedRequestFormats.Clear();
         foreach (var contentType in JsonRpcConstants.AllowedRequestContentType)
@@ -97,18 +81,18 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             description.ParameterDescriptions.Remove(parameterDescription);
         }
 
-        var requestType = GetRequestType(actionDescriptor, parametersMetadata, methodName, serializerOptionsProviderType);
+        var requestType = GetRequestType(actionDescriptor, parametersMetadata, methodName);
         description.ParameterDescriptions.Add(new ApiParameterDescription
         {
             Name = JsonRpcConstants.ParamsProperty,
             Source = BindingSource.Body,
             IsRequired = true,
-            ModelMetadata = new JsonRpcModelMetadata(requestType),
+            ModelMetadata = modelMetadataProvider.GetMetadataForType(requestType),
             Type = requestType
         });
     }
 
-    private Type GetRequestType(ControllerActionDescriptor actionDescriptor, JsonRpcActionParametersMetadata parametersMetadata, string methodName, Type? serializerOptionsProviderType)
+    private Type GetRequestType(ControllerActionDescriptor actionDescriptor, JsonRpcActionParametersMetadata parametersMetadata, string methodName)
     {
         var parameters = parametersMetadata.Parameters.Values;
         var parameterBoundAsObject = parameters.FirstOrDefault(static x => x.BindingStyle == BindingStyle.Object);
@@ -133,13 +117,13 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             baseParamsType = parameterBoundAsObject.Type;
         }
 
-        return typeEmitter.CreateRequestType(GetActionFullName(actionDescriptor), methodName, baseParamsType, parametersBoundByDefault, serializerOptionsProviderType);
+        return typeEmitter.CreateRequestType(GetActionFullName(actionDescriptor), methodName, baseParamsType, parametersBoundByDefault);
     }
 
-    private void WrapResponse(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName, Type? serializerOptionsProviderType)
+    private void WrapResponse(ApiDescription description, ControllerActionDescriptor actionDescriptor, string methodName)
     {
         var resultType = description.SupportedResponseTypes.FirstOrDefault()?.Type ?? typeof(object);
-        var responseType = typeEmitter.CreateResponseType(GetActionFullName(actionDescriptor), methodName, resultType, serializerOptionsProviderType);
+        var responseType = typeEmitter.CreateResponseType(GetActionFullName(actionDescriptor), methodName, resultType);
 
         description.SupportedResponseTypes.Clear();
 
@@ -148,7 +132,7 @@ public class JsonRpcDescriptionProvider : IApiDescriptionProvider
             ApiResponseFormats = JsonRpcConstants.AllowedRequestContentType.Select(contentType => new ApiResponseFormat { MediaType = contentType }).ToArray(),
             IsDefaultResponse = false,
             StatusCode = 200,
-            ModelMetadata = new JsonRpcModelMetadata(responseType),
+            ModelMetadata = modelMetadataProvider.GetMetadataForType(responseType),
             Type = responseType
         });
     }

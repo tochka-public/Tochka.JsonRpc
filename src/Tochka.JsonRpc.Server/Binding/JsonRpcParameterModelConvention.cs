@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Metadata;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Binding;
@@ -15,12 +16,10 @@ namespace Tochka.JsonRpc.Server.Binding;
 /// </summary>
 internal class JsonRpcParameterModelConvention : IParameterModelConvention
 {
-    private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
-    private readonly JsonRpcServerOptions options;
+    private readonly JsonOptions options;
 
-    public JsonRpcParameterModelConvention(IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options)
+    public JsonRpcParameterModelConvention(IOptions<JsonOptions> options)
     {
-        this.serializerOptionsProviders = serializerOptionsProviders;
         this.options = options.Value;
     }
 
@@ -43,8 +42,7 @@ internal class JsonRpcParameterModelConvention : IParameterModelConvention
         var isOptional = parameter.ParameterInfo.IsOptional;
         foreach (var actionSelector in parameter.Action.Selectors)
         {
-            var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(actionSelector.EndpointMetadata, options, serializerOptionsProviders);
-            var propertyName = jsonSerializerOptions.ConvertName(parameter.ParameterName);
+            var propertyName = options.JsonSerializerOptions.ConvertName(parameter.ParameterName);
             var parametersMetadata = actionSelector.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
             if (parametersMetadata == null)
             {

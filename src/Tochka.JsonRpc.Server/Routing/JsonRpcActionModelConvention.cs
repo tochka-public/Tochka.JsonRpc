@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Routing;
@@ -14,13 +14,13 @@ namespace Tochka.JsonRpc.Server.Routing;
 /// </summary>
 internal class JsonRpcActionModelConvention : IActionModelConvention
 {
-    private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
-    private readonly JsonRpcServerOptions options;
+    private readonly JsonOptions options;
+    private readonly JsonRpcServerOptions serverOptions;
 
-    public JsonRpcActionModelConvention(IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options)
+    public JsonRpcActionModelConvention(IOptions<JsonOptions> options, IOptions<JsonRpcServerOptions> serverOptions)
     {
-        this.serializerOptionsProviders = serializerOptionsProviders;
         this.options = options.Value;
+        this.serverOptions = serverOptions.Value;
     }
 
     public void Apply(ActionModel action)
@@ -49,10 +49,11 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
 
     private IEnumerable<SelectorModel> CombineRoutes(SelectorModel actionSelector, ControllerModel controller)
     {
+        var routePrefix = serverOptions.RoutePrefix;
         var routeModels = controller.Selectors
             .Select(controllerSelector =>
                 AttributeRouteModel.CombineAttributeRouteModel(controllerSelector.AttributeRouteModel, actionSelector.AttributeRouteModel)
-                ?? new AttributeRouteModel { Template = options.RoutePrefix.Value })
+                ?? new AttributeRouteModel { Template = routePrefix.Value })
             .Select(static m => m.Template!.StartsWith('/')
                 ? m
                 : new AttributeRouteModel(m) { Template = $"/{m.Template}" });
@@ -60,9 +61,9 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
         foreach (var combinedRouteModel in routeModels)
         {
             var path = new PathString(combinedRouteModel.Template);
-            if (!path.StartsWithSegments(options.RoutePrefix))
+            if (!path.StartsWithSegments(routePrefix))
             {
-                combinedRouteModel.Template = options.RoutePrefix.Add(path).Value;
+                combinedRouteModel.Template = routePrefix.Add(path).Value;
             }
 
             yield return new SelectorModel(actionSelector) { AttributeRouteModel = combinedRouteModel };
@@ -71,9 +72,9 @@ internal class JsonRpcActionModelConvention : IActionModelConvention
 
     private string GetMethodName(ActionModel action, SelectorModel selector)
     {
-        var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(selector.EndpointMetadata, options, serializerOptionsProviders);
+        var jsonSerializerOptions = options.JsonSerializerOptions;
         var methodStyleAttribute = selector.EndpointMetadata.Get<JsonRpcMethodStyleAttribute>();
-        var methodStyle = methodStyleAttribute?.MethodStyle ?? options.DefaultMethodStyle;
+        var methodStyle = methodStyleAttribute?.MethodStyle ?? serverOptions.DefaultMethodStyle;
 
         var controllerName = jsonSerializerOptions.ConvertName(action.Controller.ControllerName);
         var actionName = jsonSerializerOptions.ConvertName(action.ActionName);

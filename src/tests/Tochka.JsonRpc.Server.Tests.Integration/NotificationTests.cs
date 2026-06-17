@@ -934,54 +934,6 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
     }
 
     [Test]
-    public async Task SnakeCaseParams_DeserializeSuccessfully()
-    {
-        const string requestJson =
-            $$"""
-              {
-                  "method": "snake_case_params",
-                  "params": {{TestData.PlainRequiredSnakeCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-        var expectedRequestData = TestData.Plain;
-
-        TestData actualRequestData = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
-            .Callback<TestData>(requestData => actualRequestData = requestData);
-
-        using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcUrl, request);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        actualRequestData.Should().BeEquivalentTo(expectedRequestData);
-    }
-
-    [Test]
-    public async Task CamelCaseParams_DeserializeSuccessfully()
-    {
-        const string requestJson =
-            $$"""
-              {
-                  "method": "camelCaseParams",
-                  "params": {{TestData.PlainRequiredCamelCaseJson}},
-                  "jsonrpc": "2.0"
-              }
-              """;
-        var expectedRequestData = TestData.Plain;
-
-        TestData actualRequestData = null;
-        requestValidatorMock.Setup(static v => v.Validate(It.IsAny<TestData>()))
-            .Callback<TestData>(requestData => actualRequestData = requestData);
-
-        using var request = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcUrl, request);
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        actualRequestData.Should().BeEquivalentTo(expectedRequestData);
-    }
-
-    [Test]
     public async Task CustomActionRoute_DeserializeSuccessfully()
     {
         const string requestJson =

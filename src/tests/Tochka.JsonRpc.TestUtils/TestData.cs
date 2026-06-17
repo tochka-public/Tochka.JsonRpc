@@ -142,42 +142,6 @@ public record TestData
         }
         """;
 
-    public const string PlainRequiredCamelCaseJson =
-        """
-        {
-            "boolField": true,
-            "stringField": "123",
-            "intField": 123,
-            "doubleField": 1.23,
-            "enumField": "two",
-            "arrayField": [
-                1,
-                2,
-                3
-            ],
-            "nullableField": null
-        }
-        """;
-
-    public const string PlainFullCamelCaseJson =
-        """
-        {
-            "boolField": true,
-            "stringField": "123",
-            "intField": 123,
-            "doubleField": 1.23,
-            "enumField": "two",
-            "arrayField": [
-                1,
-                2,
-                3
-            ],
-            "nullableField": null,
-            "notRequiredField": null,
-            "nestedField": null
-        }
-        """;
-
     #endregion
 
     #region Nested
@@ -256,69 +220,6 @@ public record TestData
                 "nullable_field": null,
                 "not_required_field": null,
                 "nested_field": null
-            }
-        }
-        """;
-
-    public const string NestedRequiredCamelCaseJson =
-        """
-        {
-            "boolField": true,
-            "stringField": "123",
-            "intField": 123,
-            "doubleField": 1.23,
-            "enumField": "two",
-            "arrayField": [
-                1,
-                2,
-                3
-            ],
-            "nullableField": null,
-            "nestedField": {
-                "boolField": true,
-                "stringField": "456",
-                "intField": 456,
-                "doubleField": 4.56,
-                "enumField": "two",
-                "arrayField": [
-                    4,
-                    5,
-                    6
-                ],
-                "nullableField": null
-            }
-        }
-        """;
-
-    public const string NestedFullCamelCaseJson =
-        """
-        {
-            "boolField": true,
-            "stringField": "123",
-            "intField": 123,
-            "doubleField": 1.23,
-            "enumField": "two",
-            "arrayField": [
-                1,
-                2,
-                3
-            ],
-            "nullableField": null,
-            "notRequiredField": null,
-            "nestedField": {
-                "boolField": true,
-                "stringField": "456",
-                "intField": 456,
-                "doubleField": 4.56,
-                "enumField": "two",
-                "arrayField": [
-                    4,
-                    5,
-                    6
-                ],
-                "nullableField": null,
-                "notRequiredField": null,
-                "nestedField": null
             }
         }
         """;

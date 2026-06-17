@@ -21,23 +21,6 @@ public sealed class JsonRpcServerOptions
     public PathString RoutePrefix { get; set; } = JsonRpcConstants.DefaultRoutePrefix;
 
     /// <summary>
-    /// <see cref="JsonSerializerOptions" /> for serialization/deserialization of JSON Rpc "headers": `id`, `jsonrpc`, etc.
-    /// </summary>
-    /// <remarks>
-    /// Changing this not recommended, because request/response "header" object format is fixed and does not imply any changes
-    /// </remarks>
-    public JsonSerializerOptions HeadersJsonSerializerOptions { get; set; } = JsonRpcSerializerOptions.Headers;
-
-    /// <summary>
-    /// <see cref="JsonSerializerOptions" /> for serialization of `params` and `method`
-    /// and deserialization of `result` or `error.data`
-    /// </summary>
-    /// <remarks>
-    /// <see cref="JsonRpcSerializerOptions.SnakeCase" /> by default
-    /// </remarks>
-    public JsonSerializerOptions DefaultDataJsonSerializerOptions { get; set; } = JsonRpcSerializerOptions.SnakeCase;
-
-    /// <summary>
     /// Default <see cref="JsonRpcMethodStyle" /> for all actions
     /// </summary>
     /// <remarks>

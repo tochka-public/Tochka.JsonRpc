@@ -9,7 +9,6 @@ using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Common.Models.Response.Untyped;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 
@@ -21,14 +20,14 @@ namespace Tochka.JsonRpc.Server.Filters;
 /// </summary>
 internal class JsonRpcResultFilter : IAlwaysRunResultFilter
 {
-    private readonly IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders;
+    private readonly JsonOptions options;
     private readonly JsonRpcServerOptions serverOptions;
     private readonly IJsonRpcErrorFactory errorFactory;
 
-    public JsonRpcResultFilter(IEnumerable<IJsonSerializerOptionsProvider> serializerOptionsProviders, IOptions<JsonRpcServerOptions> options, IJsonRpcErrorFactory errorFactory)
+    public JsonRpcResultFilter(IOptions<JsonOptions> options, IOptions<JsonRpcServerOptions> serverOptions, IJsonRpcErrorFactory errorFactory)
     {
-        this.serializerOptionsProviders = serializerOptionsProviders;
-        serverOptions = options.Value;
+        this.options = options.Value;
+        this.serverOptions = serverOptions.Value;
         this.errorFactory = errorFactory;
     }
 
@@ -47,7 +46,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
             return;
         }
 
-        var jsonSerializerOptions = ServerUtils.GetDataJsonSerializerOptions(context.ActionDescriptor.EndpointMetadata, serverOptions, serializerOptionsProviders);
+        var jsonSerializerOptions = options.JsonSerializerOptions;
         var response = GetResult(context.Result);
         if (response is IActionResult)
         {

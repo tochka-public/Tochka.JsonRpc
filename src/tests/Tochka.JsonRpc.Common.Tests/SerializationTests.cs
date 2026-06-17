@@ -19,7 +19,6 @@ public class SerializationTests
 {
     private readonly JsonSerializerOptions headersJsonSerializerOptions = JsonRpcSerializerOptions.Headers;
     private readonly JsonSerializerOptions snakeCaseSerializerOptions = JsonRpcSerializerOptions.SnakeCase;
-    private readonly JsonSerializerOptions camelCaseSerializerOptions = JsonRpcSerializerOptions.CamelCase;
 
     #region Notification
 
@@ -166,26 +165,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void Notification_PlainCamelCaseObjectParams()
-    {
-        var data = TestData.Plain;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedNotification(Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": {{TestData.PlainFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void Notification_PlainSnakeCaseArrayParams()
     {
         var data = new[] { TestData.Plain };
@@ -200,28 +179,6 @@ public class SerializationTests
                       "method": "{{Method}}",
                       "params": [
                           {{TestData.PlainFullSnakeCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void Notification_PlainCamelCaseArrayParams()
-    {
-        var data = new[] { TestData.Plain };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedNotification(Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.PlainFullCamelCaseJson}}
                       ],
                       "jsonrpc": "2.0"
                   }
@@ -252,28 +209,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void Notification_PlainCamelCaseListParams()
-    {
-        var data = new List<TestData> { TestData.Plain };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedNotification(Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.PlainFullCamelCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void Notification_NestedSnakeCaseObjectParams()
     {
         var data = TestData.Nested;
@@ -287,26 +222,6 @@ public class SerializationTests
                   {
                       "method": "{{Method}}",
                       "params": {{TestData.NestedFullSnakeCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void Notification_NestedCamelCaseObjectParams()
-    {
-        var data = TestData.Nested;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedNotification(Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": {{TestData.NestedFullCamelCaseJson}},
                       "jsonrpc": "2.0"
                   }
                   """.TrimAllLines();
@@ -336,28 +251,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void Notification_NestedCamelCaseArrayParams()
-    {
-        var data = new[] { TestData.Nested };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedNotification(Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.NestedFullCamelCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void Notification_NestedSnakeCaseListParams()
     {
         var data = new List<TestData> { TestData.Nested };
@@ -372,28 +265,6 @@ public class SerializationTests
                       "method": "{{Method}}",
                       "params": [
                           {{TestData.NestedFullSnakeCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void Notification_NestedCamelCaseListParams()
-    {
-        var data = new List<TestData> { TestData.Nested };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedNotification(Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.NestedFullCamelCaseJson}}
                       ],
                       "jsonrpc": "2.0"
                   }
@@ -621,28 +492,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void Request_PlainCamelCaseObjectParams()
-    {
-        var id = "123";
-        var data = TestData.Plain;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedRequest(new StringRpcId(id), Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": {{TestData.PlainFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void Request_PlainSnakeCaseArrayParams()
     {
         var id = "123";
@@ -659,30 +508,6 @@ public class SerializationTests
                       "method": "{{Method}}",
                       "params": [
                           {{TestData.PlainFullSnakeCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void Request_PlainCamelCaseArrayParams()
-    {
-        var id = "123";
-        var data = new[] { TestData.Plain };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedRequest(new StringRpcId(id), Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.PlainFullCamelCaseJson}}
                       ],
                       "jsonrpc": "2.0"
                   }
@@ -715,30 +540,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void Request_PlainCamelCaseListParams()
-    {
-        var id = "123";
-        var data = new List<TestData> { TestData.Plain };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedRequest(new StringRpcId(id), Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.PlainFullCamelCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void Request_NestedSnakeCaseObjectParams()
     {
         var id = "123";
@@ -754,28 +555,6 @@ public class SerializationTests
                       "id": "{{id}}",
                       "method": "{{Method}}",
                       "params": {{TestData.NestedFullSnakeCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void Request_NestedCamelCaseObjectParams()
-    {
-        var id = "123";
-        var data = TestData.Nested;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedRequest(new StringRpcId(id), Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": {{TestData.NestedFullCamelCaseJson}},
                       "jsonrpc": "2.0"
                   }
                   """.TrimAllLines();
@@ -807,30 +586,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void Request_NestedCamelCaseArrayParams()
-    {
-        var id = "123";
-        var data = new[] { TestData.Nested };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedRequest(new StringRpcId(id), Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.NestedFullCamelCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void Request_NestedSnakeCaseListParams()
     {
         var id = "123";
@@ -847,30 +602,6 @@ public class SerializationTests
                       "method": "{{Method}}",
                       "params": [
                           {{TestData.NestedFullSnakeCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void Request_NestedCamelCaseListParams()
-    {
-        var id = "123";
-        var data = new List<TestData> { TestData.Nested };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var notification = new UntypedRequest(new StringRpcId(id), Method, jsonData);
-
-        var serialized = JsonSerializer.Serialize(notification, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{id}}",
-                      "method": "{{Method}}",
-                      "params": [
-                          {{TestData.NestedFullCamelCaseJson}}
                       ],
                       "jsonrpc": "2.0"
                   }
@@ -1087,26 +818,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void RequestResponse_PlainCamelCaseObjectResult()
-    {
-        var data = TestData.Plain;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(Id), jsonData));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "result": {{TestData.PlainFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void RequestResponse_PlainSnakeCaseArrayResult()
     {
         var data = new[] { TestData.Plain };
@@ -1121,28 +832,6 @@ public class SerializationTests
                       "id": "{{Id}}",
                       "result": [
                           {{TestData.PlainFullSnakeCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void RequestResponse_PlainCamelCaseArrayResult()
-    {
-        var data = new[] { TestData.Plain };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(Id), jsonData));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "result": [
-                          {{TestData.PlainFullCamelCaseJson}}
                       ],
                       "jsonrpc": "2.0"
                   }
@@ -1171,26 +860,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void RequestResponse_NestedCamelCaseObjectResult()
-    {
-        var data = TestData.Nested;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(Id), jsonData));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "result": {{TestData.NestedFullCamelCaseJson}},
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void RequestResponse_NestedSnakeCaseArrayResult()
     {
         var data = new[] { TestData.Nested };
@@ -1205,28 +874,6 @@ public class SerializationTests
                       "id": "{{Id}}",
                       "result": [
                           {{TestData.NestedFullSnakeCaseJson}}
-                      ],
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void RequestResponse_NestedCamelCaseArrayResult()
-    {
-        var data = new[] { TestData.Nested };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedResponse(new StringRpcId(Id), jsonData));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "result": [
-                          {{TestData.NestedFullCamelCaseJson}}
                       ],
                       "jsonrpc": "2.0"
                   }
@@ -1427,33 +1074,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void RequestResponse_PlainCamelCaseObjectErrorData()
-    {
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var data = TestData.Plain;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var error = new Error<JsonDocument>(errorCode, errorMessage, jsonData);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(Id), error));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "error": {
-                          "code": {{errorCode}},
-                          "message": "{{errorMessage}}",
-                          "data": {{TestData.PlainFullCamelCaseJson}}
-                      },
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void RequestResponse_PlainSnakeCaseArrayErrorData()
     {
         var errorCode = 123;
@@ -1474,35 +1094,6 @@ public class SerializationTests
                           "message": "{{errorMessage}}",
                           "data": [
                               {{TestData.PlainFullSnakeCaseJson}}
-                          ]
-                      },
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void RequestResponse_PlainCamelCaseArrayErrorData()
-    {
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var data = new[] { TestData.Plain };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var error = new Error<JsonDocument>(errorCode, errorMessage, jsonData);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(Id), error));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "error": {
-                          "code": {{errorCode}},
-                          "message": "{{errorMessage}}",
-                          "data": [
-                              {{TestData.PlainFullCamelCaseJson}}
                           ]
                       },
                       "jsonrpc": "2.0"
@@ -1539,33 +1130,6 @@ public class SerializationTests
     }
 
     [Test]
-    public void RequestResponse_NestedCamelCaseObjectErrorData()
-    {
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var data = TestData.Nested;
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var error = new Error<JsonDocument>(errorCode, errorMessage, jsonData);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(Id), error));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "error": {
-                          "code": {{errorCode}},
-                          "message": "{{errorMessage}}",
-                          "data": {{TestData.NestedFullCamelCaseJson}}
-                      },
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
     public void RequestResponse_NestedSnakeCaseArrayErrorData()
     {
         var errorCode = 123;
@@ -1586,35 +1150,6 @@ public class SerializationTests
                           "message": "{{errorMessage}}",
                           "data": [
                               {{TestData.NestedFullSnakeCaseJson}}
-                          ]
-                      },
-                      "jsonrpc": "2.0"
-                  }
-                  """.TrimAllLines();
-        serialized.Should().Be(expected);
-    }
-
-    [Test]
-    public void RequestResponse_NestedCamelCaseArrayErrorData()
-    {
-        var errorCode = 123;
-        var errorMessage = "errorMessage";
-        var data = new[] { TestData.Nested };
-        var jsonData = JsonSerializer.SerializeToDocument(data, camelCaseSerializerOptions);
-        var error = new Error<JsonDocument>(errorCode, errorMessage, jsonData);
-        IResponseWrapper response = new SingleResponseWrapper(new UntypedErrorResponse(new StringRpcId(Id), error));
-
-        var serialized = JsonSerializer.Serialize(response, headersJsonSerializerOptions).TrimAllLines();
-
-        var expected =
-            $$"""
-                  {
-                      "id": "{{Id}}",
-                      "error": {
-                          "code": {{errorCode}},
-                          "message": "{{errorMessage}}",
-                          "data": [
-                              {{TestData.NestedFullCamelCaseJson}}
                           ]
                       },
                       "jsonrpc": "2.0"

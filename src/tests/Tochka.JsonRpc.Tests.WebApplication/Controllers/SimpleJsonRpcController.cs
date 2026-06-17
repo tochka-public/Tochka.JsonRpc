@@ -3,7 +3,6 @@ using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Server;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Extensions;
-using Tochka.JsonRpc.Server.Serialization;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
 using Tochka.JsonRpc.TestUtils;
@@ -98,15 +97,6 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
     }
 
     public TestData NoParams() => responseProvider.GetJsonRpcResponse();
-
-    [JsonRpcSerializerOptions(typeof(SnakeCaseJsonSerializerOptionsProvider))]
-    public TestData SnakeCaseParams([FromParams(BindingStyle.Object)] TestData data) => Process(data);
-
-    [JsonRpcSerializerOptions(typeof(CamelCaseJsonSerializerOptionsProvider))]
-    public TestData CamelCaseParams([FromParams(BindingStyle.Object)] TestData data) => Process(data);
-
-    [JsonRpcSerializerOptions(typeof(KebabCaseUpperJsonSerializerOptionsProvider))]
-    public TestData KebabCaseUpperCaseParams([FromParams(BindingStyle.Object)] TestData data) => Process(data);
 
     [Route("/custom/action")]
     public TestData CustomActionRoute([FromParams(BindingStyle.Object)] TestData data) => Process(data);

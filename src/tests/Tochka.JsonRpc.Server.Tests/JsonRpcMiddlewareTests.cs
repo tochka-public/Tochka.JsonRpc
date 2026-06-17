@@ -100,7 +100,7 @@ public class JsonRpcMiddlewareTests
         httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(httpContext.Response.Body, Encoding.UTF8);
         var response = await reader.ReadToEndAsync();
-        response.Should().Be(JsonSerializer.Serialize(responseWrapper, typeof(IResponseWrapper), options.HeadersJsonSerializerOptions));
+        response.Should().Be(JsonSerializer.Serialize<IResponseWrapper>(responseWrapper, JsonRpcSerializerOptions.Headers));
     }
 
     [Test]
@@ -148,7 +148,7 @@ public class JsonRpcMiddlewareTests
         httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(httpContext.Response.Body, Encoding.GetEncoding(encoding));
         var response = await reader.ReadToEndAsync();
-        response.Should().Be(JsonSerializer.Serialize(responseWrapper, typeof(IResponseWrapper), options.HeadersJsonSerializerOptions));
+        response.Should().Be(JsonSerializer.Serialize<IResponseWrapper>(responseWrapper, JsonRpcSerializerOptions.Headers));
     }
 
     [Test]
@@ -200,7 +200,7 @@ public class JsonRpcMiddlewareTests
         httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(httpContext.Response.Body, Encoding.UTF8);
         var response = await reader.ReadToEndAsync();
-        response.Should().Be(JsonSerializer.Serialize(new SingleResponseWrapper(errorResponse), typeof(IResponseWrapper), options.HeadersJsonSerializerOptions));
+        response.Should().Be(JsonSerializer.Serialize<IResponseWrapper>(new SingleResponseWrapper(errorResponse), JsonRpcSerializerOptions.Headers));
     }
 
     [Test]
@@ -252,7 +252,7 @@ public class JsonRpcMiddlewareTests
         httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(httpContext.Response.Body, Encoding.UTF8);
         var response = await reader.ReadToEndAsync();
-        response.Should().Be(JsonSerializer.Serialize(new SingleResponseWrapper(errorResponse), typeof(IResponseWrapper), options.HeadersJsonSerializerOptions));
+        response.Should().Be(JsonSerializer.Serialize<IResponseWrapper>(new SingleResponseWrapper(errorResponse), JsonRpcSerializerOptions.Headers));
     }
 
     [Test]
@@ -347,7 +347,7 @@ public class JsonRpcMiddlewareTests
         httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(httpContext.Response.Body, Encoding.UTF8);
         var response = await reader.ReadToEndAsync();
-        response.Should().Be(JsonSerializer.Serialize(responseWrapper, typeof(IResponseWrapper), options.HeadersJsonSerializerOptions));
+        response.Should().Be(JsonSerializer.Serialize<IResponseWrapper>(responseWrapper, JsonRpcSerializerOptions.Headers));
     }
 
 
@@ -379,7 +379,7 @@ public class JsonRpcMiddlewareTests
                 Body = new MemoryStream()
             }
         };
-        
+
         requestValidatorMock.Setup(v => v.IsJsonRpcRequest(httpContext))
             .Returns(true)
             .Verifiable();

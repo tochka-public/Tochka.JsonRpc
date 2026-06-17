@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -10,7 +12,7 @@ using NUnit.Framework;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Server.Attributes;
 using Tochka.JsonRpc.Server.Routing;
-using Tochka.JsonRpc.Server.Serialization;
+
 using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server.Tests.Routing;
@@ -18,17 +20,23 @@ namespace Tochka.JsonRpc.Server.Tests.Routing;
 [TestFixture]
 public class JsonRpcActionModelConventionTests
 {
-    private List<IJsonSerializerOptionsProvider> serializerOptionsProviders;
-    private JsonRpcServerOptions options;
+    private JsonOptions options;
+    private JsonRpcServerOptions serverOptions;
     private JsonRpcActionModelConvention actionModelConvention;
 
     [SetUp]
     public void Setup()
     {
-        serializerOptionsProviders = new List<IJsonSerializerOptionsProvider>();
-        options = new JsonRpcServerOptions();
+        options = new JsonOptions
+        {
+            JsonSerializerOptions =
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+            }
+        };
+        serverOptions = new JsonRpcServerOptions();
 
-        actionModelConvention = new JsonRpcActionModelConvention(serializerOptionsProviders, Options.Create(options));
+        actionModelConvention = new JsonRpcActionModelConvention(Options.Create(options), Options.Create(serverOptions));
     }
 
     [Test]
@@ -102,7 +110,7 @@ public class JsonRpcActionModelConventionTests
             ActionName = ActionName
         };
         var prefix = "/prefix/route";
-        options.RoutePrefix = prefix;
+        serverOptions.RoutePrefix = prefix;
 
         actionModelConvention.Apply(actionModel);
 
@@ -268,83 +276,6 @@ public class JsonRpcActionModelConventionTests
     }
 
     [Test]
-    public void Apply_NoCustomSerializer_UseDefaultDataSerializerOptions()
-    {
-        var controllerAttributes = new List<object> { new JsonRpcControllerAttribute() };
-        var controllerSelector = new SelectorModel();
-        var actionSelector = new SelectorModel();
-        var actionModel = new ActionModel(Mock.Of<MethodInfo>(), new List<object>())
-        {
-            Controller = new ControllerModel(Mock.Of<TypeInfo>(), controllerAttributes)
-            {
-                Selectors = { controllerSelector },
-                ControllerName = ControllerName
-            },
-            Selectors = { actionSelector },
-            ActionName = ActionName
-        };
-
-        actionModelConvention.Apply(actionModel);
-
-        var expected = new JsonRpcMethodAttribute($"controller_name{JsonRpcConstants.ControllerMethodSeparator}action_name");
-        actionModel.Selectors.Should().HaveCount(1);
-        actionModel.Selectors.Single().EndpointMetadata.Should().ContainEquivalentOf(expected);
-    }
-
-    [Test]
-    public void Apply_CustomSerializerNotRegistered_Throw()
-    {
-        var controllerAttributes = new List<object> { new JsonRpcControllerAttribute() };
-        var controllerSelector = new SelectorModel();
-        var actionSelector = new SelectorModel
-        {
-            EndpointMetadata = { new JsonRpcSerializerOptionsAttribute(typeof(SnakeCaseJsonSerializerOptionsProvider)) }
-        };
-        var actionModel = new ActionModel(Mock.Of<MethodInfo>(), new List<object>())
-        {
-            Controller = new ControllerModel(Mock.Of<TypeInfo>(), controllerAttributes)
-            {
-                Selectors = { controllerSelector },
-                ControllerName = ControllerName
-            },
-            Selectors = { actionSelector },
-            ActionName = ActionName
-        };
-
-        var action = () => actionModelConvention.Apply(actionModel);
-
-        action.Should().Throw<ArgumentException>();
-    }
-
-    [Test]
-    public void Apply_HasCustomSerializer_UseCustomSerializer()
-    {
-        var controllerAttributes = new List<object> { new JsonRpcControllerAttribute() };
-        var controllerSelector = new SelectorModel();
-        var actionSelector = new SelectorModel
-        {
-            EndpointMetadata = { new JsonRpcSerializerOptionsAttribute(typeof(CamelCaseJsonSerializerOptionsProvider)) }
-        };
-        var actionModel = new ActionModel(Mock.Of<MethodInfo>(), new List<object>())
-        {
-            Controller = new ControllerModel(Mock.Of<TypeInfo>(), controllerAttributes)
-            {
-                Selectors = { controllerSelector },
-                ControllerName = ControllerName
-            },
-            Selectors = { actionSelector },
-            ActionName = ActionName
-        };
-        serializerOptionsProviders.Add(new CamelCaseJsonSerializerOptionsProvider());
-
-        actionModelConvention.Apply(actionModel);
-
-        var expected = new JsonRpcMethodAttribute($"controllerName{JsonRpcConstants.ControllerMethodSeparator}actionName");
-        actionModel.Selectors.Should().HaveCount(1);
-        actionModel.Selectors.Single().EndpointMetadata.Should().ContainEquivalentOf(expected);
-    }
-
-    [Test]
     public void Apply_DontHaveMethodStyleAttribute_UseDefaultMethodStyle()
     {
         var controllerAttributes = new List<object> { new JsonRpcControllerAttribute() };
@@ -360,7 +291,7 @@ public class JsonRpcActionModelConventionTests
             Selectors = { actionSelector },
             ActionName = ActionName
         };
-        options.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
+        serverOptions.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
 
         actionModelConvention.Apply(actionModel);
 
@@ -389,7 +320,7 @@ public class JsonRpcActionModelConventionTests
             Selectors = { actionSelector },
             ActionName = ActionName
         };
-        options.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
+        serverOptions.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
 
         actionModelConvention.Apply(actionModel);
 
@@ -417,7 +348,7 @@ public class JsonRpcActionModelConventionTests
             Selectors = { actionSelector },
             ActionName = ActionName
         };
-        options.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
+        serverOptions.DefaultMethodStyle = JsonRpcMethodStyle.ControllerAndAction;
 
         var action = () => actionModelConvention.Apply(actionModel);
 
