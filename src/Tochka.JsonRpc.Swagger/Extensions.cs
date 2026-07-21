@@ -172,10 +172,28 @@ public static class Extensions
     }
 
     // internal for tests
-    internal static string SchemaIdSelector(Type type) =>
-        type.Assembly.FullName?.StartsWith(ApiExplorerConstants.GeneratedModelsAssemblyName, StringComparison.Ordinal) == true
-            ? type.FullName!
-            : type.Name;
+    internal static string SchemaIdSelector(Type type)
+    {
+        if (type.Assembly.FullName?.StartsWith(
+                ApiExplorerConstants.GeneratedModelsAssemblyName,
+                StringComparison.Ordinal) == true)
+        {
+            return type.FullName!;
+        }
+
+        if (type.IsGenericType)
+        {
+            var genericTypeName = type.Name.Split('`')[0];
+
+            var genericArgs = string.Join(
+                "_",
+                type.GetGenericArguments().Select(x => x.Name));
+
+            return $"{genericTypeName}_{genericArgs}";
+        }
+
+        return type.Name;
+    }
 
     [ExcludeFromCodeCoverage]
     private static string GetSwaggerDocumentUrl(string docName) => $"/swagger/{docName}/swagger.json";
