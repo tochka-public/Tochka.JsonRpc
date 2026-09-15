@@ -1,14 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Tochka.JsonRpc.Server.ApplicationModel;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
-using Tochka.JsonRpc.Server.Middlewares;
+using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Routing;
 using Tochka.JsonRpc.Server.Services;
 using Tochka.JsonRpc.Server.Settings;
@@ -30,8 +32,7 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddJsonRpcServer(this IServiceCollection services, Action<JsonRpcServerOptions> configureOptions)
     {
         services.Configure(configureOptions);
-        services.TryAddConvention<JsonRpcActionModelConvention>();
-        services.TryAddConvention<JsonRpcParameterModelConvention>();
+        services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, JsonRpcApplicationModelProvider>());
         services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, JsonRpcMatcherPolicy>());
         services.AddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
         services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
@@ -41,7 +42,6 @@ public static class DependencyInjectionExtensions
         services.Configure<MvcOptions>(static options =>
         {
             options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
-            options.Filters.Add<JsonRpcExceptionLoggingFilter>(int.MinValue); // should fire first to log exceptions even if they are handled with custom filter
             options.Filters.Add<JsonRpcExceptionWrappingFilter>(int.MaxValue); // should fire last so users can handle specific exceptions with custom filters
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
@@ -70,30 +70,6 @@ public static class DependencyInjectionExtensions
         EnsureRequiredServicesRegistered(app.ApplicationServices);
         // Unfortunately there is no good way to check if UseRouting was called before it
         return app.UseMiddleware<JsonRpcMiddleware>();
-    }
-
-    /// <summary>
-    /// Log requests. Call it after UseJsonRpc()
-    /// </summary>
-    /// <param name="app"></param>
-    /// <returns></returns>
-    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
-    public static IApplicationBuilder WithJsonRpcRequestLogging(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcRequestLoggingMiddleware>();
-
-    /// <summary>
-    /// Log error responses. Includes batch responses. Call it after UseJsonRpc()
-    /// </summary>
-    /// <param name="app"></param>
-    /// <returns></returns>
-    [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
-    public static IApplicationBuilder WithJsonRpcResponseErrorLogging(this IApplicationBuilder app) => app.UseMiddleware<JsonRpcErrorLoggingMiddleware>();
-
-    private static IServiceCollection TryAddConvention<T>(this IServiceCollection serviceCollection)
-        where T : class
-    {
-        serviceCollection.TryAddSingleton<T>();
-        serviceCollection.TryAddEnumerable(new ServiceDescriptor(typeof(IConfigureOptions<MvcOptions>), typeof(ModelConventionConfigurator<T>), ServiceLifetime.Singleton));
-        return serviceCollection;
     }
 
     private static void EnsureRequiredServicesRegistered(IServiceProvider services)

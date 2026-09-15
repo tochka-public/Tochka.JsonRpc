@@ -3,11 +3,13 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using Tochka.JsonRpc.Server.ApplicationModel;
 using Tochka.JsonRpc.Server.Binding;
 using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Extensions;
@@ -31,10 +33,6 @@ public class DependencyInjectionExtensionsTests
 
         var result = services.Select(static x => (x.ServiceType, x.ImplementationType, x.Lifetime)).ToList();
         // services defined in library
-        result.Remove((typeof(JsonRpcActionModelConvention), typeof(JsonRpcActionModelConvention), ServiceLifetime.Singleton)).Should().BeTrue();
-        result.Remove((typeof(IConfigureOptions<MvcOptions>), typeof(ModelConventionConfigurator<JsonRpcActionModelConvention>), ServiceLifetime.Singleton)).Should().BeTrue();
-        result.Remove((typeof(JsonRpcParameterModelConvention), typeof(JsonRpcParameterModelConvention), ServiceLifetime.Singleton)).Should().BeTrue();
-        result.Remove((typeof(IConfigureOptions<MvcOptions>), typeof(ModelConventionConfigurator<JsonRpcParameterModelConvention>), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(MatcherPolicy), typeof(JsonRpcMatcherPolicy), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcParamsParser), typeof(JsonRpcParamsParser), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcParameterBinder), typeof(JsonRpcParameterBinder), ServiceLifetime.Singleton)).Should().BeTrue();
@@ -43,6 +41,8 @@ public class DependencyInjectionExtensionsTests
         result.Remove((typeof(IJsonRpcRequestValidator), typeof(JsonRpcRequestValidator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcErrorFactory), typeof(JsonRpcErrorFactory), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
+
+        result.Remove((typeof(IApplicationModelProvider), typeof(JsonRpcApplicationModelProvider), ServiceLifetime.Transient)).Should().BeTrue();
     }
 
     [Test]
@@ -85,17 +85,11 @@ public class DependencyInjectionExtensionsTests
     {
         var services = new ServiceCollection();
         var configureOptions = Mock.Of<Action<JsonRpcServerOptions>>();
-        services.AddSingleton<JsonRpcActionModelConvention>();
-        services.AddSingleton<IConfigureOptions<MvcOptions>, ModelConventionConfigurator<JsonRpcActionModelConvention>>();
-        services.AddSingleton<JsonRpcParameterModelConvention>();
-        services.AddSingleton<IConfigureOptions<MvcOptions>, ModelConventionConfigurator<JsonRpcParameterModelConvention>>();
+        services.AddSingleton<IApplicationModelProvider, JsonRpcApplicationModelProvider>();
 
         services.AddJsonRpcServer(configureOptions);
 
-        services.Where(static s => s.ImplementationType == typeof(JsonRpcActionModelConvention)).Should().HaveCount(1);
-        services.Where(static s => s.ImplementationType == typeof(ModelConventionConfigurator<JsonRpcActionModelConvention>)).Should().HaveCount(1);
-        services.Where(static s => s.ImplementationType == typeof(JsonRpcParameterModelConvention)).Should().HaveCount(1);
-        services.Where(static s => s.ImplementationType == typeof(ModelConventionConfigurator<JsonRpcParameterModelConvention>)).Should().HaveCount(1);
+        services.Where(static s => s.ImplementationType == typeof(JsonRpcApplicationModelProvider)).Should().HaveCount(1);
     }
 
     [Test]
@@ -120,7 +114,6 @@ public class DependencyInjectionExtensionsTests
         var options = services.BuildServiceProvider().GetRequiredService<IOptions<MvcOptions>>().Value;
 
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcActionFilter)) { Order = int.MaxValue });
-        options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcExceptionLoggingFilter)) { Order = int.MinValue });
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcExceptionWrappingFilter)) { Order = int.MaxValue });
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcResultFilter)) { Order = int.MaxValue });
     }

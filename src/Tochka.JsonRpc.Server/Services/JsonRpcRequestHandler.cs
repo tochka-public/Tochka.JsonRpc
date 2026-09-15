@@ -15,17 +15,8 @@ using Tochka.JsonRpc.Server.Settings;
 namespace Tochka.JsonRpc.Server.Services;
 
 /// <inheritdoc />
-internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
+internal class JsonRpcRequestHandler(IJsonRpcExceptionWrapper exceptionWrapper) : IJsonRpcRequestHandler
 {
-    private readonly IJsonRpcExceptionWrapper exceptionWrapper;
-    private readonly JsonRpcServerOptions options;
-
-    public JsonRpcRequestHandler(IJsonRpcExceptionWrapper exceptionWrapper, IOptions<JsonRpcServerOptions> options)
-    {
-        this.exceptionWrapper = exceptionWrapper;
-        this.options = options.Value;
-    }
-
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected exceptions in json rpc response")]
     public async Task<IResponseWrapper?> ProcessJsonRpcRequest(IRequestWrapper? requestWrapper, HttpContext httpContext, RequestDelegate next)
     {
@@ -55,7 +46,7 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
         var responses = new List<IResponse>();
         foreach (var call in batchRequestWrapper.Calls)
         {
-            var response = await ProcessCallSafe(httpContext, call, true, next);
+            var response = await ProcessCallSafe(httpContext, call, batchRequestWrapper.Calls.Count, next);
             if (response != null)
             {
                 responses.Add(response);
@@ -71,14 +62,14 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
 
     private async Task<IResponseWrapper?> ProcessSingleRequest(HttpContext httpContext, SingleRequestWrapper singleRequestWrapper, RequestDelegate next)
     {
-        var response = await ProcessCallSafe(httpContext, singleRequestWrapper.Call, false, next);
+        var response = await ProcessCallSafe(httpContext, singleRequestWrapper.Call, null, next);
         return response == null
             ? null
             : new SingleResponseWrapper(response);
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected exceptions in json rpc response")]
-    private async Task<IResponse?> ProcessCallSafe(HttpContext callHttpContext, JsonDocument rawCall, bool isBatch, RequestDelegate next)
+    private async Task<IResponse?> ProcessCallSafe(HttpContext callHttpContext, JsonDocument rawCall, int? batchSize, RequestDelegate next)
     {
         IUntypedCall? call = null;
         try
@@ -89,7 +80,7 @@ internal class JsonRpcRequestHandler : IJsonRpcRequestHandler
             {
                 RawCall = rawCall,
                 Call = call,
-                IsBatch = isBatch
+                BatchSize = batchSize
             });
 
             await next(callHttpContext);

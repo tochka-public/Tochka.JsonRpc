@@ -27,13 +27,12 @@ internal class JsonRpcMatcherPolicy : MatcherPolicy,
         var call = httpContext.GetJsonRpcCall();
         if (call == null)
         {
-            // If we got not json rpc request
+            // If we got no jsonrpc request
             RejectAllCandidates(candidates);
             return Task.CompletedTask;
         }
 
-        var validCandidatesExist = ValidateCandidates(candidates, call);
-        if (!validCandidatesExist)
+        if (!KeepOnlyValidCandidates(candidates, call))
         {
             // hack to distinguish between unknown route (== 404 Not Found) and unknown method (== json rpc error with code -32601)
             throw new JsonRpcMethodNotFoundException(call.Method);
@@ -54,7 +53,7 @@ internal class JsonRpcMatcherPolicy : MatcherPolicy,
         }
     }
 
-    private static bool ValidateCandidates(CandidateSet candidates, ICall call)
+    private static bool KeepOnlyValidCandidates(CandidateSet candidates, ICall call)
     {
         var validCandidatesExist = false;
         for (var i = 0; i < candidates.Count; i++)
@@ -62,10 +61,14 @@ internal class JsonRpcMatcherPolicy : MatcherPolicy,
             var candidate = candidates[i];
             var jsonRpcMetadata = candidate.Endpoint.Metadata.GetMetadata<JsonRpcMethodAttribute>();
             var methodMatches = call.Method == jsonRpcMetadata?.Method;
-            candidates.SetValidity(i, methodMatches);
             if (methodMatches)
             {
                 validCandidatesExist = true;
+            }
+            else
+            {
+                // never set true, it will break framework assumptions
+                candidates.SetValidity(i, false);
             }
         }
 

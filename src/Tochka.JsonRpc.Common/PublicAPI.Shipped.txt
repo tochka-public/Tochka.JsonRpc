@@ -1,7 +1,6 @@
 #nullable enable
 const Tochka.JsonRpc.Common.JsonRpcConstants.ContentType = "application/json" -> string!
 const Tochka.JsonRpc.Common.JsonRpcConstants.ControllerMethodSeparator = "." -> string!
-const Tochka.JsonRpc.Common.JsonRpcConstants.DefaultRoutePrefix = "/api/jsonrpc" -> string!
 const Tochka.JsonRpc.Common.JsonRpcConstants.ErrorProperty = "error" -> string!
 const Tochka.JsonRpc.Common.JsonRpcConstants.ExceptionCode = -32000 -> int
 const Tochka.JsonRpc.Common.JsonRpcConstants.IdProperty = "id" -> string!
@@ -168,8 +167,6 @@ Tochka.JsonRpc.Common.Utils
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Call.set -> void
-Tochka.JsonRpc.Common.Features.IJsonRpcFeature.IsBatch.get -> bool
-Tochka.JsonRpc.Common.Features.IJsonRpcFeature.IsBatch.set -> void
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature.RawCall.set -> void
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Response.get -> Tochka.JsonRpc.Common.Models.Response.IResponse?
@@ -177,8 +174,6 @@ Tochka.JsonRpc.Common.Features.IJsonRpcFeature.Response.set -> void
 Tochka.JsonRpc.Common.Features.JsonRpcFeature
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.Call.get -> Tochka.JsonRpc.Common.Models.Request.ICall?
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.Call.set -> void
-Tochka.JsonRpc.Common.Features.JsonRpcFeature.IsBatch.get -> bool
-Tochka.JsonRpc.Common.Features.JsonRpcFeature.IsBatch.set -> void
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.JsonRpcFeature() -> void
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.get -> System.Text.Json.JsonDocument?
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.RawCall.set -> void
@@ -192,3 +187,7 @@ const Tochka.JsonRpc.Common.JsonRpcErrorCodes.ParseError = -32700 -> int
 Tochka.JsonRpc.Common.JsonRpcErrorCodes
 static readonly Tochka.JsonRpc.Common.JsonRpcConstants.JsonRpcClientCallsKey -> System.Net.Http.HttpRequestOptionsKey<System.Collections.Generic.IReadOnlyList<Tochka.JsonRpc.Common.Models.Request.Untyped.IUntypedCall!>!>
 static readonly Tochka.JsonRpc.Common.JsonRpcConstants.AllowedRequestContentType -> System.Collections.Generic.IReadOnlyCollection<string!>!
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.BatchSize.get -> int?
+Tochka.JsonRpc.Common.Features.IJsonRpcFeature.BatchSize.set -> void
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.BatchSize.get -> int?
+Tochka.JsonRpc.Common.Features.JsonRpcFeature.BatchSize.set -> void

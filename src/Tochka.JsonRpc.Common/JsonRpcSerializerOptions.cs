@@ -32,7 +32,9 @@ public static class JsonRpcSerializerOptions
             new ResponseConverter()
         },
         WriteIndented = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip
     };
 
     /// <summary>
@@ -47,7 +49,9 @@ public static class JsonRpcSerializerOptions
          */
         Converters = { new JsonStringEnumMemberConverter(JsonNamingPolicy.SnakeCaseLower) },
         WriteIndented = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip
     };
 
     /// <summary>
@@ -62,6 +66,8 @@ public static class JsonRpcSerializerOptions
          */
         Converters = { new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase) },
         WriteIndented = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip
     };
 }

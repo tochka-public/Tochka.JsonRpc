@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OpenApi;
 using Tochka.JsonRpc.ApiExplorer;
 using Tochka.JsonRpc.Server.Extensions;
@@ -12,19 +14,24 @@ using Tochka.JsonRpc.Tests.WebApplication.Auth;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(static options =>
-{
-    options.Filters.Add<BusinessLogicExceptionWrappingFilter>();
-    options.Filters.Add<BusinessLogicExceptionHandlingFilter>();
-});
+    {
+        options.Filters.Add<BusinessLogicExceptionWrappingFilter>();
+        options.Filters.Add<BusinessLogicExceptionHandlingFilter>();
+    })
+    .ConfigureApiBehaviorOptions(static o =>
+    {
+        o.SuppressModelStateInvalidFilter = true; // controllers with [ApiController] wrap errors with RFC 7807 ProblemDetails, we skip that for tests
+    })
+    ;
 
 static void JsonSetup(JsonSerializerOptions o)
 {
     var naming = JsonNamingPolicy.SnakeCaseLower;
     o.PropertyNamingPolicy = naming;
-    o.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter(naming));
+    o.Converters.Add(new JsonStringEnumConverter(naming));
 }
 
-builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(static o => JsonSetup(o.JsonSerializerOptions));
+builder.Services.Configure<JsonOptions>(static o => JsonSetup(o.JsonSerializerOptions));
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(static o => JsonSetup(o.SerializerOptions));
 
 builder.Services.AddJsonRpcServer(static options => options.DefaultMethodStyle = JsonRpcMethodStyle.ActionOnly);

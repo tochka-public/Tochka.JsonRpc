@@ -981,5 +981,5 @@ internal sealed class NotificationTests : IntegrationTestsBase<Program>
         actualRequestData.Should().BeEquivalentTo(expectedRequestData);
     }
 
-    private const string JsonRpcUrl = "/api/jsonrpc";
+    private const string JsonRpcUrl = "/jsonrpc";
 }

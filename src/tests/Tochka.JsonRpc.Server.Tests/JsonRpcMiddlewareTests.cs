@@ -39,7 +39,7 @@ public class JsonRpcMiddlewareTests
         requestValidatorMock = new Mock<IJsonRpcRequestValidator>();
         options = new JsonRpcServerOptions();
 
-        middleware = new JsonRpcMiddleware(nextMock.Object, requestHandlerMock.Object, exceptionWrapperMock.Object, requestValidatorMock.Object, Options.Create(options));
+        middleware = new JsonRpcMiddleware(nextMock.Object, requestHandlerMock.Object, exceptionWrapperMock.Object, requestValidatorMock.Object);
     }
 
     [Test]

@@ -6,7 +6,8 @@ using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
-[Route("/custom/controller")]
+[ApiController]
+[Route("jsonrpc/custom/controller")]
 public class CustomRouteJsonRpcController : JsonRpcControllerBase
 {
     private readonly IResponseProvider responseProvider;

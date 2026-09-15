@@ -97,7 +97,7 @@ public class JsonRpcResultFilterTests
         var jsonRpcFeature = new JsonRpcFeature
         {
             Call = new UntypedRequest(new NullRpcId(), "method", null),
-            IsBatch = true
+            BatchSize = 1234
         };
         httpContext.Features.Set<IJsonRpcFeature>(jsonRpcFeature);
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor(), new ModelStateDictionary());

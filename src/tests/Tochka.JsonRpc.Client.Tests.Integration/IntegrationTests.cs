@@ -61,7 +61,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
 
@@ -90,7 +90,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
 
@@ -119,7 +119,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
 
@@ -156,7 +156,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -196,7 +196,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -236,7 +236,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -276,7 +276,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -315,7 +315,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -355,7 +355,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -398,7 +398,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -441,7 +441,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -489,7 +489,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -536,7 +536,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -581,7 +581,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -632,7 +632,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -679,7 +679,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -719,7 +719,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -758,7 +758,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -804,7 +804,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -837,7 +837,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -877,7 +877,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -917,7 +917,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -961,7 +961,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1009,7 +1009,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1056,7 +1056,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1106,7 +1106,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1169,7 +1169,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1254,7 +1254,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
 
@@ -1308,7 +1308,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1366,7 +1366,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1439,7 +1439,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1512,7 +1512,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1569,7 +1569,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())
@@ -1618,7 +1618,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Callback<HttpRequest>(request =>
             {
                 using var streamReader = new StreamReader(request.Body);
-                actualRequestJson = actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
+                actualRequestJson = streamReader.ReadToEndAsync().Result.TrimAllLines();
                 actualContentType = request.ContentType;
             });
         responseProviderMock.Setup(static p => p.GetResponse())

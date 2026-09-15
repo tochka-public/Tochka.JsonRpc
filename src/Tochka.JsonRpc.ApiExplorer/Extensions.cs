@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning.ApplicationModels;
+using Asp.Versioning.OpenApi;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,13 +14,13 @@ public static class Extensions
 {
     public static IServiceCollection AddJsonRpcOpenApiIntegration(this IServiceCollection services)
     {
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiControllerSpecification, JsonRpcControllerSpecification>());
         services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, JsonRpcDescriptionProvider>());
         services.TryAddSingleton<ITypeEmitter, TypeEmitter>();
 
-        // same as AddOpenApi, it adds default document name internally. does not conflict with AddApiVersioning.
-        services.Configure<OpenApiOptions>("v1",
-            static o => o.AddSchemaTransformer<JsonRpcSchemaTransformer>());
+        // same as AddOpenApi, it adds default document name internally. does not conflict with AddApiVersioning
+        services.Configure<OpenApiOptions>("v1", static o => o.AddSchemaTransformer<JsonRpcSchemaTransformer>());
+        // AddApiVersioning uses other settings type, for all documents
+        services.Configure<VersionedOpenApiOptions>(static o => o.Document.AddSchemaTransformer<JsonRpcSchemaTransformer>());
         return services;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
+[ApiController]
 public class SimpleController : ControllerBase
 {
     private readonly IResponseProvider responseProvider;

@@ -9,6 +9,7 @@ namespace Tochka.JsonRpc.Server.Filters;
 /// <summary>
 /// Filter for JSON-RPC actions to return <see cref="BadRequestObjectResult" /> if model binding failed
 /// </summary>
+/// <remarks>ModelStateInvalidFilter fires earlier if ApiControllerAttribute is present, so we receive ObjectResult with ProblemDetails</remarks>
 internal class JsonRpcActionFilter : IActionFilter
 {
     // if model binding failed

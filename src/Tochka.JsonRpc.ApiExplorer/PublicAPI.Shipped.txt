@@ -15,9 +15,6 @@ static Tochka.JsonRpc.ApiExplorer.Extensions.AddJsonRpcOpenApiIntegration(this M
 Tochka.JsonRpc.ApiExplorer.Extensions
 Tochka.JsonRpc.ApiExplorer.ITypeEmitter.CreateRequestType(string! actionFullName, string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams) -> System.Type!
 Tochka.JsonRpc.ApiExplorer.ITypeEmitter.CreateResponseType(string! actionFullName, string! methodName, System.Type! resultType) -> System.Type!
-Tochka.JsonRpc.ApiExplorer.JsonRpcControllerSpecification
-Tochka.JsonRpc.ApiExplorer.JsonRpcControllerSpecification.IsSatisfiedBy(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel! controller) -> bool
-Tochka.JsonRpc.ApiExplorer.JsonRpcControllerSpecification.JsonRpcControllerSpecification() -> void
 Tochka.JsonRpc.ApiExplorer.JsonRpcTypeMetadataAttribute.JsonRpcTypeMetadataAttribute(string! methodName) -> void
 Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateRequestType(string! actionFullName, string! methodName, System.Type! baseParamsType, System.Collections.Generic.IReadOnlyDictionary<string!, System.Type!>! defaultBoundParams) -> System.Type!
 Tochka.JsonRpc.ApiExplorer.TypeEmitter.CreateResponseType(string! actionFullName, string! methodName, System.Type! resultType) -> System.Type!

@@ -2,14 +2,12 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 using Tochka.JsonRpc.Common.Models.Response.Wrappers;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Services;
-using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Server;
 
@@ -17,24 +15,15 @@ namespace Tochka.JsonRpc.Server;
 /// Middleware to process JSON-RPC calls
 /// </summary>
 public class JsonRpcMiddleware
+(
+    RequestDelegate next,
+    IJsonRpcRequestHandler requestHandler,
+    IJsonRpcExceptionWrapper exceptionWrapper,
+    IJsonRpcRequestValidator requestValidator
+)
 {
-    private readonly RequestDelegate next;
-    private readonly IJsonRpcRequestHandler requestHandler;
-    private readonly IJsonRpcExceptionWrapper exceptionWrapper;
-    private readonly IJsonRpcRequestValidator requestValidator;
-    private readonly JsonRpcServerOptions options;
-
-    /// <summary></summary>
-    public JsonRpcMiddleware(RequestDelegate next, IJsonRpcRequestHandler requestHandler, IJsonRpcExceptionWrapper exceptionWrapper, IJsonRpcRequestValidator requestValidator, IOptions<JsonRpcServerOptions> options)
-    {
-        this.next = next;
-        this.requestHandler = requestHandler;
-        this.exceptionWrapper = exceptionWrapper;
-        this.requestValidator = requestValidator;
-        this.options = options.Value;
-    }
-
-    /// <summary></summary>
+    /// <summary>
+    /// </summary>
     public async Task InvokeAsync(HttpContext httpContext)
     {
         if (!requestValidator.IsJsonRpcRequest(httpContext))
@@ -51,7 +40,6 @@ public class JsonRpcMiddleware
             var responseContentType = httpContext.GetJsonRpcResponseMediaType() ?? JsonRpcConstants.ContentType;
             httpContext.Response.GetTypedHeaders().ContentType = new MediaTypeHeaderValue(responseContentType) { Encoding = requestEncoding };
             await SerializeResponseWrapper(responseWrapper, httpContext.Response.Body, requestEncoding);
-
         }
     }
 

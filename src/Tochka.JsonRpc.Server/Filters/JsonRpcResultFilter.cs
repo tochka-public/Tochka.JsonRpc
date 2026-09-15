@@ -52,7 +52,7 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
         {
             if (!serverOptions.AllowRawResponses)
             {
-                throw new JsonRpcServerException($"Raw responses are not allowed by default. If you want to use them, set {nameof(JsonRpcServerOptions.AllowRawResponses)} = true in configuration");
+                throw new JsonRpcServerException($"Raw responses are not allowed by default. If you want to use them, set {nameof(JsonRpcServerOptions)}.{nameof(JsonRpcServerOptions.AllowRawResponses)} = true");
             }
 
             if (context.HttpContext.JsonRpcRequestIsBatch())
@@ -76,6 +76,10 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
     {
     }
 
+    /// <summary>
+    /// </summary>
+    /// <param name="actionResult"></param>
+    /// <remarks>StatusCodeResult can be intercepted with ClientErrorResultFilter if ApiControllerAttribute is present, so we receive ObjectResult with ProblemDetails</remarks>
     private object? GetResult(IActionResult actionResult) => actionResult switch
     {
         ObjectResult { Value: IError error } => error,

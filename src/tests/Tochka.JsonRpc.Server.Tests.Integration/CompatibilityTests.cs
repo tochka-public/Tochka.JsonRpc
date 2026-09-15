@@ -27,7 +27,7 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
                              """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -44,7 +44,7 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
                              """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse = """
                                {
@@ -71,7 +71,7 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
         request.Headers.Add(AuthConstants.Header, AuthConstants.Key);
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse = """
                                {
@@ -100,7 +100,7 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
                              """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse =
             $$"""
@@ -138,7 +138,7 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
                              """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse =
             $$"""
@@ -178,7 +178,7 @@ internal sealed class CompatibilityTests : IntegrationTestsBase<Program>
               """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse =
             $$"""

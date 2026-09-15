@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
         const string requestContent = "Hello World!";
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "text/plain");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -61,7 +62,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
             .Verifiable();
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse =
             $$"""
@@ -93,7 +94,7 @@ internal sealed class IntegrationTests : IntegrationTestsBase<Program>
                              """;
 
         using var request = new StringContent(requestContent, Encoding.UTF8, "application/json");
-        var response = await ApiClient.PostAsync(JsonRpcConstants.DefaultRoutePrefix, request);
+        var response = await ApiClient.PostAsync("/jsonrpc", request);
 
         var expectedResponse = """
                                {

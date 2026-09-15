@@ -128,17 +128,18 @@ public class HttpContextExtensionsTests
         result.Should().BeFalse();
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    public void JsonRpcRequestIsBatch_HasFeature_ReturnIsBatch(bool isBatch)
+    [TestCase(1234)]
+    [TestCase(null)]
+    public void JsonRpcRequestIsBatch_HasFeature_ReturnIsBatch(int? batchSize)
     {
         var httpContext = new DefaultHttpContext();
-        var feature = new JsonRpcFeature { IsBatch = isBatch };
+        var feature = new JsonRpcFeature { BatchSize = batchSize};
         httpContext.Features.Set<IJsonRpcFeature>(feature);
 
         var result = httpContext.JsonRpcRequestIsBatch();
 
-        result.Should().Be(isBatch);
+        var expected = batchSize != null;
+        result.Should().Be(expected);
     }
 
     [Test]

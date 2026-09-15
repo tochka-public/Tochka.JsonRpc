@@ -126,8 +126,6 @@ Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DefaultMethodStyle.set -> vo
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DetailedResponseExceptions.get -> bool
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.DetailedResponseExceptions.set -> void
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.JsonRpcServerOptions() -> void
-Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.RoutePrefix.get -> Microsoft.AspNetCore.Http.PathString
-Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.RoutePrefix.set -> void
 virtual Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.Parse(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext! bindingContext, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata) -> System.Threading.Tasks.Task<Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult!>!
 virtual Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.SetResult(Tochka.JsonRpc.Server.Binding.ParseResults.IParseResult! parseResult, Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext! bindingContext, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata! parameterMetadata) -> System.Threading.Tasks.Task!
 virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.Error(int code, string! message, object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
@@ -136,18 +134,14 @@ virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.HttpError(int httpCod
 virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.NotFound(object? errorData) -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
 virtual Tochka.JsonRpc.Server.Services.JsonRpcErrorFactory.WrapExceptions(object? errorData) -> object?
 static Tochka.JsonRpc.Server.Extensions.ErrorExtensions.AsException(this Tochka.JsonRpc.Common.Models.Response.Errors.IError! error) -> Tochka.JsonRpc.Server.Exceptions.JsonRpcErrorException!
-Tochka.JsonRpc.Server.JsonRpcMiddleware.JsonRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler! requestHandler, Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper! exceptionWrapper, Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator! requestValidator, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! options) -> void
-Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator
-Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator.IsJsonRpcRequest(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> bool
-Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware
-Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext! context) -> System.Threading.Tasks.Task!
-Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware.JsonRpcRequestLoggingMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Server.Middlewares.JsonRpcRequestLoggingMiddleware!>! log) -> void
-Tochka.JsonRpc.Server.Middlewares.JsonRpcErrorLoggingMiddleware
-Tochka.JsonRpc.Server.Middlewares.JsonRpcErrorLoggingMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Threading.Tasks.Task!
-Tochka.JsonRpc.Server.Middlewares.JsonRpcErrorLoggingMiddleware.JsonRpcErrorLoggingMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Microsoft.Extensions.Logging.ILogger<Tochka.JsonRpc.Server.Middlewares.JsonRpcErrorLoggingMiddleware!>! logger) -> void
-static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.WithJsonRpcRequestLogging(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
-static Tochka.JsonRpc.Server.Extensions.DependencyInjectionExtensions.WithJsonRpcResponseErrorLogging(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.LogExceptions.get -> bool
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.LogExceptions.set -> void
 override Tochka.JsonRpc.Server.Exceptions.JsonRpcErrorException.Message.get -> string!
 Tochka.JsonRpc.Server.Binding.JsonRpcModelBinder.JsonRpcModelBinder(Tochka.JsonRpc.Server.Binding.IJsonRpcParamsParser! paramsParser, Tochka.JsonRpc.Server.Binding.IJsonRpcParameterBinder! parameterBinder, Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Mvc.JsonOptions!>! options) -> void
+static Tochka.JsonRpc.Server.Extensions.ErrorExtensions.AsActionResult(this Tochka.JsonRpc.Common.Models.Response.Errors.IError! error) -> Microsoft.AspNetCore.Mvc.ActionResult!
+Tochka.JsonRpc.Server.JsonRpcControllerBase.JsonRpcErrors.get -> Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory!
+Tochka.JsonRpc.Server.JsonRpcMiddleware.JsonRpcMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Tochka.JsonRpc.Server.Services.IJsonRpcRequestHandler! requestHandler, Tochka.JsonRpc.Server.Services.IJsonRpcExceptionWrapper! exceptionWrapper, Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator! requestValidator) -> void
+Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator
+Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator.IsJsonRpcRequest(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> bool
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.UrlMarkerSegment.get -> string!
+Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.UrlMarkerSegment.set -> void

@@ -42,7 +42,7 @@ public static class HttpContextExtensions
     /// </summary>
     /// <param name="httpContext"><see cref="HttpContext" /> to get batch info from</param>
     public static bool JsonRpcRequestIsBatch(this HttpContext httpContext) =>
-        httpContext.Features.Get<IJsonRpcFeature>()?.IsBatch ?? false;
+        httpContext.Features.Get<IJsonRpcFeature>()?.BatchSize != null;
 
     /// <summary>
     /// Manually set JSON-RPC response in <see cref="HttpContext.Features" />

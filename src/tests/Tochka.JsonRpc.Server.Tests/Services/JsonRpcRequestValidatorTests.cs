@@ -14,140 +14,13 @@ namespace Tochka.JsonRpc.Server.Tests.Services;
 [TestFixture]
 public class JsonRpcRequestValidatorTests
 {
-    private JsonRpcServerOptions options;
     private JsonRpcRequestValidator validator;
 
     [SetUp]
     public void Setup()
     {
-        options = new JsonRpcServerOptions();
-
-        validator = new JsonRpcRequestValidator(Options.Create(options));
-    }
-
-    [TestCase(null)]
-    [TestCase("")]
-    public void Ctor_RoutePrefixEmpty_Throw(string? routePrefix)
-    {
-        options.RoutePrefix = routePrefix;
-
-        var action = () => new JsonRpcRequestValidator(Options.Create(options));
-
-        action.Should().Throw<ArgumentNullException>();
-    }
-
-    [TestCase("/{*all}")]
-    [TestCase("/{*all}/")]
-    [TestCase("/smth/{*all}")]
-    [TestCase("/smth/{*all}/")]
-    [TestCase("/smth/{arg}/{*all}")]
-    [TestCase("/smth/{arg}/{*all}/")]
-    [TestCase("/{arg}/smth/{*all}")]
-    [TestCase("/{arg}/smth/{*all}/")]
-    public void RouteWithWildcardSuffixRegex_RoutePrefixEndsWithWildcard_Match(string routePrefix)
-    {
-        var result = JsonRpcRequestValidator.RouteWithWildcardSuffixRegex.IsMatch(routePrefix);
-
-        result.Should().BeTrue();
-    }
-
-    [TestCase("/")]
-    [TestCase("/smth")]
-    [TestCase("/smth/")]
-    [TestCase("/smth/{arg}")]
-    [TestCase("/smth/{arg}/")]
-    [TestCase("/{arg}/smth")]
-    [TestCase("/{arg}/smth/")]
-    public void RouteWithWildcardSuffixRegex_RoutePrefixDoesntEndWithWildcard_DontMatch(string routePrefix)
-    {
-        var result = JsonRpcRequestValidator.RouteWithWildcardSuffixRegex.IsMatch(routePrefix);
-
-        result.Should().BeFalse();
-    }
-
-    [TestCase("/{*all}")]
-    [TestCase("/{*all}/")]
-    [TestCase("/smth/{*all}")]
-    [TestCase("/smth/{*all}/")]
-    [TestCase("/smth/{arg}/{*all}")]
-    [TestCase("/smth/{arg}/{*all}/")]
-    [TestCase("/{arg}/smth/{*all}")]
-    [TestCase("/{arg}/smth/{*all}/")]
-    public void BuildRouteTemplate_RoutePrefixEndsWithWildcard_DontAddWildcardSuffix(string routePrefix)
-    {
-        var result = JsonRpcRequestValidator.BuildRouteTemplate(routePrefix);
-
-        result.Should().Be(routePrefix);
-    }
-
-    [TestCase("/", "/{*suffix}")]
-    [TestCase("/smth", "/smth/{*suffix}")]
-    [TestCase("/smth/", "/smth/{*suffix}")]
-    [TestCase("/smth/{arg}", "/smth/{arg}/{*suffix}")]
-    [TestCase("/smth/{arg}/", "/smth/{arg}/{*suffix}")]
-    [TestCase("/{arg}/smth", "/{arg}/smth/{*suffix}")]
-    [TestCase("/{arg}/smth/", "/{arg}/smth/{*suffix}")]
-    public void BuildRouteTemplate_RoutePrefixDoesntEndWithWildcard_AddWildcardSuffix(string routePrefix, string expected)
-    {
-        var result = JsonRpcRequestValidator.BuildRouteTemplate(routePrefix);
-
-        result.Should().Be(expected);
-    }
-
-    [TestCase("/[controller]", "/{controller}/{*suffix}")]
-    [TestCase("/[action]", "/{action}/{*suffix}")]
-    [TestCase("/[area]", "/{area}/{*suffix}")]
-    [TestCase("/[controller]/", "/{controller}/{*suffix}")]
-    [TestCase("/[action]/", "/{action}/{*suffix}")]
-    [TestCase("/[area]/", "/{area}/{*suffix}")]
-    [TestCase("/smth/[controller]", "/smth/{controller}/{*suffix}")]
-    [TestCase("/smth/[action]", "/smth/{action}/{*suffix}")]
-    [TestCase("/smth/[area]", "/smth/{area}/{*suffix}")]
-    [TestCase("/smth/[controller]/", "/smth/{controller}/{*suffix}")]
-    [TestCase("/smth/[action]/", "/smth/{action}/{*suffix}")]
-    [TestCase("/smth/[area]/", "/smth/{area}/{*suffix}")]
-    [TestCase("/[controller]/smth", "/{controller}/smth/{*suffix}")]
-    [TestCase("/[action]/smth", "/{action}/smth/{*suffix}")]
-    [TestCase("/[area]/smth", "/{area}/smth/{*suffix}")]
-    [TestCase("/smth[controller]", "/smth{controller}/{*suffix}")]
-    [TestCase("/smth[action]", "/smth{action}/{*suffix}")]
-    [TestCase("/smth[area]", "/smth{area}/{*suffix}")]
-    [TestCase("/smth[controller]/", "/smth{controller}/{*suffix}")]
-    [TestCase("/smth[action]/", "/smth{action}/{*suffix}")]
-    [TestCase("/smth[area]/", "/smth{area}/{*suffix}")]
-    [TestCase("/[controller]smth", "/{controller}smth/{*suffix}")]
-    [TestCase("/[action]smth", "/{action}smth/{*suffix}")]
-    [TestCase("/[area]smth", "/{area}smth/{*suffix}")]
-    [TestCase("/[controller]smth/", "/{controller}smth/{*suffix}")]
-    [TestCase("/[action]smth/", "/{action}smth/{*suffix}")]
-    [TestCase("/[area]smth/", "/{area}smth/{*suffix}")]
-    [TestCase("/smth[controller]smth/", "/smth{controller}smth/{*suffix}")]
-    [TestCase("/smth[action]smth/", "/smth{action}smth/{*suffix}")]
-    [TestCase("/smth[area]smth/", "/smth{area}smth/{*suffix}")]
-    public void BuildRouteTemplate_RoutePrefixContainsSquareBracketsParams_ReplaceWithCurlyBrackets(string routePrefix, string expected)
-    {
-        var result = JsonRpcRequestValidator.BuildRouteTemplate(routePrefix);
-
-        result.Should().Be(expected);
-    }
-
-    [TestCase("/some/path")]
-    [TestCase("/smth/{arg}")]
-    [TestCase("/[controller]/[action]/[area]")]
-    [TestCase("/smth/{*all}")]
-    public void IsJsonRpcRequest_PathDoesntStartWithPrefix_ReturnFalse(string path)
-    {
-        var httpContext = new DefaultHttpContext
-        {
-            Request =
-            {
-                Path = path
-            }
-        };
-
-        var result = validator.IsJsonRpcRequest(httpContext);
-
-        result.Should().BeFalse();
+        var options = Options.Create(new JsonRpcServerOptions(){UrlMarkerSegment = "test"});
+        validator = new JsonRpcRequestValidator(options);
     }
 
     [TestCase("GET")]
@@ -163,7 +36,7 @@ public class JsonRpcRequestValidatorTests
         {
             Request =
             {
-                Path = options.RoutePrefix,
+                Path = "/test",
                 Method = method
             }
         };
@@ -180,7 +53,7 @@ public class JsonRpcRequestValidatorTests
         {
             Request =
             {
-                Path = options.RoutePrefix,
+                Path = "/test",
                 Method = "POST",
                 Headers =
                 {
@@ -205,7 +78,7 @@ public class JsonRpcRequestValidatorTests
         {
             Request =
             {
-                Path = options.RoutePrefix,
+                Path = "/test",
                 Method = "POST",
                 Headers =
                 {
@@ -226,7 +99,7 @@ public class JsonRpcRequestValidatorTests
         {
             Request =
             {
-                Path = options.RoutePrefix,
+                Path = "/test",
                 Method = "POST",
                 Headers =
                 {
@@ -258,7 +131,7 @@ public class JsonRpcRequestValidatorTests
         {
             Request =
             {
-                Path = $"{options.RoutePrefix}{pathSuffix}",
+                Path = $"/test{pathSuffix}",
                 Method = "POST",
                 Headers =
                 {

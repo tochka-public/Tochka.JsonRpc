@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Common;
 using Tochka.JsonRpc.Common.Models.Request.Untyped;
+using Tochka.JsonRpc.Server.ApplicationModel;
 using Tochka.JsonRpc.Server.Binding.ParseResults;
 using Tochka.JsonRpc.Server.Exceptions;
 using Tochka.JsonRpc.Server.Extensions;
@@ -37,12 +38,12 @@ public class JsonRpcModelBinder : IModelBinder
         var actionParametersMetadata = bindingContext.ActionContext.ActionDescriptor.EndpointMetadata.Get<JsonRpcActionParametersMetadata>();
         if (actionParametersMetadata == null)
         {
-            throw new JsonRpcServerException($"{nameof(JsonRpcActionParametersMetadata)} not found in endpoint metadata, it should've been populated in {nameof(JsonRpcParameterModelConvention)} on application start");
+            throw new JsonRpcServerException($"{nameof(JsonRpcActionParametersMetadata)} not found in endpoint metadata, it should've been populated in {nameof(JsonRpcApplicationModelProvider)} on application start");
         }
 
         if (!actionParametersMetadata.Parameters.TryGetValue(bindingContext.FieldName, out var parameterMetadata))
         {
-            throw new JsonRpcServerException($"Not found metadata for parameter [{bindingContext.FieldName}], it should've been populated in {nameof(JsonRpcParameterModelConvention)} on application start");
+            throw new JsonRpcServerException($"Not found metadata for parameter [{bindingContext.FieldName}], it should've been populated in {nameof(JsonRpcApplicationModelProvider)} on application start");
         }
 
         var parseResult = await Parse(bindingContext, parameterMetadata);

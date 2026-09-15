@@ -7,6 +7,8 @@ using Tochka.JsonRpc.Server.Settings;
 
 namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
+[ApiController]
+[Route("/jsonrpc")]
 public class FluentValidationJsonRpcController : JsonRpcControllerBase
 {
     private readonly IValidator<string> strValidator;

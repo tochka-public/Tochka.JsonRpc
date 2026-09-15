@@ -2309,5 +2309,5 @@ internal sealed class RequestTests : IntegrationTestsBase<Program>
         actualResponseJson.Should().Be(expectedResponseJson);
     }
 
-    private const string JsonRpcUrl = "/api/jsonrpc";
+    private const string JsonRpcUrl = "/jsonrpc";
 }

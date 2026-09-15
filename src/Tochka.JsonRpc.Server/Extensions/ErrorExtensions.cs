@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 using Tochka.JsonRpc.Server.Exceptions;
 
@@ -23,6 +24,12 @@ public static class ErrorExtensions
     /// </summary>
     /// <param name="error">Error to return in response</param>
     public static JsonRpcErrorException AsException(this IError error) => new(error);
+
+    /// <summary>
+    /// Converts JsonRpc error as action-friendly return type
+    /// </summary>
+    /// <remarks>Return type is ActionResult, not IActionResult: this way it supports <a href="https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-10.0#actionresult-vs-iactionresult">implicit conversion into ActionResult`UserDto</a></remarks>
+    public static ActionResult AsActionResult(this IError error) => new ObjectResult(error);
 
     /// <summary>
     /// Serialize error.data

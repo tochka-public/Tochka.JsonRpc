@@ -9,6 +9,8 @@ using Tochka.JsonRpc.TestUtils;
 
 namespace Tochka.JsonRpc.Tests.WebApplication.Controllers;
 
+[ApiController]
+[Route("/jsonrpc")]
 public class SimpleJsonRpcController : JsonRpcControllerBase
 {
     private readonly IResponseProvider responseProvider;
@@ -98,7 +100,7 @@ public class SimpleJsonRpcController : JsonRpcControllerBase
 
     public TestData NoParams() => responseProvider.GetJsonRpcResponse();
 
-    [Route("/custom/action")]
+    [Route("custom/action")]
     public TestData CustomActionRoute([FromParams(BindingStyle.Object)] TestData data) => Process(data);
 
     public TestData ThrowException() => throw new ArgumentException();

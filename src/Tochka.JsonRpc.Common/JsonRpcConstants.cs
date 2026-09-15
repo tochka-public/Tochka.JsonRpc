@@ -61,11 +61,6 @@ public static class JsonRpcConstants
     public const int InternalExceptionCode = -32001;
 
     /// <summary>
-    /// "api/jsonrpc" Default route prefix for JSON Rpc actions
-    /// </summary>
-    public const string DefaultRoutePrefix = "/api/jsonrpc";
-
-    /// <summary>
     /// "application/json" Default content-type expected in JSON Rpc HTTP requests
     /// </summary>
     public const string ContentType = "application/json";
@@ -76,7 +71,7 @@ public static class JsonRpcConstants
     public static readonly HttpRequestOptionsKey<IReadOnlyList<IUntypedCall>> JsonRpcClientCallsKey = new("tochka_jsonrpc_client_calls");
 
     /// <summary>
-    /// allowed Content-type headers for Request 
+    /// allowed Content-type headers for Request
     /// </summary>
     public static readonly IReadOnlyCollection<string> AllowedRequestContentType = new HashSet<string>([ContentType, "application/jsonrequest", "application/json-rpc"], StringComparer.OrdinalIgnoreCase);
 }

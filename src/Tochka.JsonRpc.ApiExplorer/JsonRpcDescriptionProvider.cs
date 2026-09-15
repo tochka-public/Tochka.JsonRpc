@@ -23,7 +23,7 @@ public class JsonRpcDescriptionProvider
     IModelMetadataProvider modelMetadataProvider
 ) : IApiDescriptionProvider
 {
-    // need to run after DefaultApiDescriptionProvider to override it's result
+    // need to run after DefaultApiDescriptionProvider to override its result
     /// <inheritdoc />
     public int Order => -900;
 

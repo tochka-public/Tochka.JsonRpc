@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text;
+using Microsoft.AspNetCore.Http;
+using Tochka.JsonRpc.Common.Models.Request.Wrappers;
 
 namespace Tochka.JsonRpc.Server.Services;
 
@@ -11,5 +13,5 @@ public interface IJsonRpcRequestValidator
     /// Check if HttpRequest should be processed by JSON-RPC pipeline
     /// </summary>
     /// <param name="httpContext">Request <see cref="HttpContext" /></param>
-    bool IsJsonRpcRequest(HttpContext httpContext);
+    public bool IsJsonRpcRequest(HttpContext httpContext);
 }

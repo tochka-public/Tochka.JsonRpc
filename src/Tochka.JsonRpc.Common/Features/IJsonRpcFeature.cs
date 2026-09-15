@@ -27,7 +27,7 @@ public interface IJsonRpcFeature
     IResponse? Response { get; set; }
 
     /// <summary>
-    /// True if this call is part of batch request
+    /// Number of requests in batch, null when not batch
     /// </summary>
-    bool IsBatch { get; set; }
+    int? BatchSize { get; set; }
 }

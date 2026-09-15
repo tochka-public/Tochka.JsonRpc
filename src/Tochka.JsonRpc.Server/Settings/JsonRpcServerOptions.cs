@@ -12,15 +12,6 @@ namespace Tochka.JsonRpc.Server.Settings;
 public sealed class JsonRpcServerOptions
 {
     /// <summary>
-    /// Route prefix for all JSON-RPC requests. Required for correct routing.
-    /// </summary>
-    /// <remarks>
-    /// <see cref="JsonRpcConstants.DefaultRoutePrefix" /> by default.<br />
-    /// Can be set to `"/"` to get rid of it.
-    /// </remarks>
-    public PathString RoutePrefix { get; set; } = JsonRpcConstants.DefaultRoutePrefix;
-
-    /// <summary>
     /// Default <see cref="JsonRpcMethodStyle" /> for all actions
     /// </summary>
     /// <remarks>
@@ -44,6 +35,12 @@ public sealed class JsonRpcServerOptions
     /// Batches will break if this option is enabled and one of requests returns non-json data!
     /// </remarks>
     public bool AllowRawResponses { get; set; }
+
+    /// <summary>
+    /// Request path should contain this segment to be considered JSON-RPC
+    /// </summary>
+    /// <example>"jsonrpc" will match requests like /api/v1/jsonrpc or /api/jsonrpc/v2/controller</example>
+    public string UrlMarkerSegment { get; set; } = "jsonrpc";
 
     /// <summary>
     /// If `true`, all exceptions during JSON-RPC call processing will be logged with Error log level

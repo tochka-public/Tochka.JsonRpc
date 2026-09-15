@@ -37,7 +37,7 @@ public class JsonRpcRequestHandlerTests
         exceptionWrapperMock = new Mock<IJsonRpcExceptionWrapper>();
         options = new JsonRpcServerOptions();
 
-        requestHandler = new JsonRpcRequestHandler(exceptionWrapperMock.Object, Options.Create(options));
+        requestHandler = new JsonRpcRequestHandler(exceptionWrapperMock.Object);
     }
 
     [TestCase("\"\"")]

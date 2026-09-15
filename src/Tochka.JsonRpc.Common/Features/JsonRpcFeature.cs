@@ -19,5 +19,5 @@ public class JsonRpcFeature : IJsonRpcFeature
     public IResponse? Response { get; set; }
 
     /// <inheritdoc />
-    public bool IsBatch { get; set; }
+    public int? BatchSize { get; set; }
 }
