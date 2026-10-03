@@ -18,20 +18,17 @@ namespace Tochka.JsonRpc.Server.Filters;
 /// <summary>
 /// Filter for JSON-RPC actions to to convert <see cref="IActionResult" /> to JSON-RPC responses
 /// </summary>
-internal class JsonRpcResultFilter : IAlwaysRunResultFilter
+public class JsonRpcResultFilter
+(
+    IOptions<JsonOptions> options,
+    IOptions<JsonRpcServerOptions> serverOptions,
+    IJsonRpcErrorFactory errorFactory
+)
+    : IAlwaysRunResultFilter
 {
-    private readonly JsonOptions options;
-    private readonly JsonRpcServerOptions serverOptions;
-    private readonly IJsonRpcErrorFactory errorFactory;
-
-    public JsonRpcResultFilter(IOptions<JsonOptions> options, IOptions<JsonRpcServerOptions> serverOptions, IJsonRpcErrorFactory errorFactory)
-    {
-        this.options = options.Value;
-        this.serverOptions = serverOptions.Value;
-        this.errorFactory = errorFactory;
-    }
-
-    // wrap action results in json rpc response
+    /// <summary>
+    /// Convert ActionResult to JsonRpc response
+    /// </summary>
     public void OnResultExecuting(ResultExecutingContext context)
     {
         var call = context.HttpContext.GetJsonRpcCall();
@@ -46,11 +43,11 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
             return;
         }
 
-        var jsonSerializerOptions = options.JsonSerializerOptions;
-        var response = GetResult(context.Result);
+        var jsonSerializerOptions = options.Value.JsonSerializerOptions;
+        var response = ConvertActionResult(context.Result);
         if (response is IActionResult)
         {
-            if (!serverOptions.AllowRawResponses)
+            if (!serverOptions.Value.AllowRawResponses)
             {
                 throw new JsonRpcServerException($"Raw responses are not allowed by default. If you want to use them, set {nameof(JsonRpcServerOptions)}.{nameof(JsonRpcServerOptions.AllowRawResponses)} = true");
             }
@@ -71,16 +68,19 @@ internal class JsonRpcResultFilter : IAlwaysRunResultFilter
         context.Result = new StatusCodeResult(StatusCodes.Status200OK);
     }
 
+    /// <summary>
+    /// No-op
+    /// </summary>
     [ExcludeFromCodeCoverage]
     public void OnResultExecuted(ResultExecutedContext context)
     {
     }
 
     /// <summary>
+    /// Unwrap response data from known ActionResult types
     /// </summary>
-    /// <param name="actionResult"></param>
     /// <remarks>StatusCodeResult can be intercepted with ClientErrorResultFilter if ApiControllerAttribute is present, so we receive ObjectResult with ProblemDetails</remarks>
-    private object? GetResult(IActionResult actionResult) => actionResult switch
+    protected object? ConvertActionResult(IActionResult actionResult) => actionResult switch
     {
         ObjectResult { Value: IError error } => error,
         ObjectResult { StatusCode: >= 400 } result => errorFactory.HttpError(result.StatusCode.Value, result.Value),
