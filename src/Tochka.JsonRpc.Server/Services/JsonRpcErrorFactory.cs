@@ -23,49 +23,49 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
 
     /// <inheritdoc />
     public IError ParseError(object? errorData) =>
-        new Error<object>(JsonRpcErrorCodes.ParseError, "Parse error", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.ParseError, "Parse error", FilterErrorData(errorData));
 
     /// <inheritdoc />
     public IError InvalidRequest(object? errorData) =>
-        new Error<object>(JsonRpcErrorCodes.InvalidRequest, "Invalid Request", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InvalidRequest, "Invalid Request", FilterErrorData(errorData));
 
     /// <inheritdoc />
     public IError MethodNotFound(object? errorData) =>
-        new Error<object>(JsonRpcErrorCodes.MethodNotFound, "Method not found", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.MethodNotFound, "Method not found", FilterErrorData(errorData));
 
     /// <inheritdoc />
     public IError InvalidParams(object? errorData) =>
-        new Error<object>(JsonRpcErrorCodes.InvalidParams, "Invalid params", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InvalidParams, "Invalid params", FilterErrorData(errorData));
 
     /// <inheritdoc />
     public IError InternalError(object? errorData) =>
-        new Error<object>(JsonRpcErrorCodes.InternalError, "Internal error", WrapExceptions(errorData));
+        new Error<object>(JsonRpcErrorCodes.InternalError, "Internal error", FilterErrorData(errorData));
 
     /// <inheritdoc />
     public IError ServerError(int code, object? errorData) =>
         !IsServer(code)
             ? throw new ArgumentOutOfRangeException(nameof(code), code, $"Expected code in server range [{-32099}, {-32000}]")
-            : new Error<object>(code, "Server error", WrapExceptions(errorData));
+            : new Error<object>(code, "Server error", FilterErrorData(errorData));
 
     /// <inheritdoc />
     public virtual IError NotFound(object? errorData) =>
-        new Error<object>(-32004, "Not found", WrapExceptions(errorData));
+        new Error<object>(-32004, "Not found", FilterErrorData(errorData));
 
     /// <inheritdoc />
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Error is official name")]
     public virtual IError Error(int code, string message, object? errorData) =>
         IsReserved(code)
             ? throw new ArgumentOutOfRangeException(nameof(code), code, "This code is in reserved range [-32768, -32000], use another")
-            : new Error<object>(code, message, WrapExceptions(errorData));
+            : new Error<object>(code, message, FilterErrorData(errorData));
 
     /// <inheritdoc />
     public virtual IError Exception(Exception e) => e switch
     {
-        JsonRpcServerException => ServerError(JsonRpcConstants.InternalExceptionCode, WrapExceptions(e)),
+        JsonRpcServerException => ServerError(JsonRpcConstants.InternalExceptionCode, FilterErrorData(e)),
         JsonRpcMethodNotFoundException methodException => MethodNotFound(new { methodException.Method }),
         JsonRpcErrorException errorException => errorException.Error,
-        JsonRpcFormatException => InvalidRequest(WrapExceptions(e)),
-        _ => ServerError(JsonRpcConstants.ExceptionCode, WrapExceptions(e))
+        JsonRpcFormatException => InvalidRequest(FilterErrorData(e)),
+        _ => ServerError(JsonRpcConstants.ExceptionCode, FilterErrorData(e))
     };
 
     /// <inheritdoc />
@@ -80,11 +80,12 @@ public class JsonRpcErrorFactory : IJsonRpcErrorFactory
     };
 
     /// <summary>
-    /// Hide stack trace if detailed response disabled, avoid serializing exceptions directly
+    /// By default, hides exception stack trace when detailed response disabled, to avoid serializing exceptions directly
     /// </summary>
-    /// <param name="errorData">error.data that could be exception</param>
-    // internal for tests, protected for customization
-    protected internal virtual object? WrapExceptions(object? errorData)
+    /// <param name="errorData">Arbitrary object with error details, for example exception or model state</param>
+    /// <returns>Object to be passed into response as error.data</returns>
+    /// <remarks>Override this to control how error.data gets serialized</remarks>
+    protected internal virtual object? FilterErrorData(object? errorData)
     {
         if (errorData is not Exception e)
         {

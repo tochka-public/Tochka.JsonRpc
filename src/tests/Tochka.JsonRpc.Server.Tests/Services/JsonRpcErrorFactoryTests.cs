@@ -34,7 +34,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -50,7 +50,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -66,7 +66,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -82,7 +82,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -98,7 +98,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -130,7 +130,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -146,7 +146,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -180,7 +180,7 @@ public class JsonRpcErrorFactoryTests
         var errorData = 123;
         var wrappedData = 456;
         var errorMessage = "errorMessage";
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -196,7 +196,7 @@ public class JsonRpcErrorFactoryTests
     {
         var exception = new JsonRpcServerException();
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(exception))
+        errorFactoryMock.Setup(f => f.FilterErrorData(exception))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -235,7 +235,7 @@ public class JsonRpcErrorFactoryTests
     {
         var exception = new JsonRpcFormatException();
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(exception))
+        errorFactoryMock.Setup(f => f.FilterErrorData(exception))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -251,7 +251,7 @@ public class JsonRpcErrorFactoryTests
     {
         var exception = new ArgumentException();
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(exception))
+        errorFactoryMock.Setup(f => f.FilterErrorData(exception))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -268,7 +268,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -285,7 +285,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -301,7 +301,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -317,7 +317,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -333,7 +333,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -353,7 +353,7 @@ public class JsonRpcErrorFactoryTests
     {
         var errorData = 123;
         var wrappedData = 456;
-        errorFactoryMock.Setup(f => f.WrapExceptions(errorData))
+        errorFactoryMock.Setup(f => f.FilterErrorData(errorData))
             .Returns(wrappedData)
             .Verifiable();
 
@@ -369,34 +369,34 @@ public class JsonRpcErrorFactoryTests
     [TestCase(true)]
     [TestCase(1.23)]
     [TestCase(null)]
-    public void WrapExceptions_ErrorDataNotException_ReturnDataItself(object? errorData)
+    public void FilterErrorData_ErrorDataNotException_ReturnDataItself(object? errorData)
     {
-        var result = errorFactoryMock.Object.WrapExceptions(errorData);
+        var result = errorFactoryMock.Object.FilterErrorData(errorData);
 
         result.Should().Be(errorData);
     }
 
     [Test]
-    public void WrapExceptions_DetailedResponseExceptionsEnabledInOptions_ReturnErrorWithDetails()
+    public void FilterErrorData_DetailedResponseExceptionsEnabledInOptions_ReturnErrorWithDetails()
     {
         var exceptionMessage = "exceptionMessage";
         var exception = new ArgumentException(exceptionMessage);
         options.DetailedResponseExceptions = true;
 
-        var result = errorFactoryMock.Object.WrapExceptions(exception);
+        var result = errorFactoryMock.Object.FilterErrorData(exception);
 
         var expected = new ExceptionInfo(typeof(ArgumentException).FullName, exceptionMessage, exception.ToString());
         result.Should().BeEquivalentTo(expected);
     }
 
     [Test]
-    public void WrapExceptions_DetailedResponseExceptionsDisabledInOptions_ReturnErrorWithoutDetails()
+    public void FilterErrorData_DetailedResponseExceptionsDisabledInOptions_ReturnErrorWithoutDetails()
     {
         var exceptionMessage = "exceptionMessage";
         var exception = new ArgumentException(exceptionMessage);
         options.DetailedResponseExceptions = false;
 
-        var result = errorFactoryMock.Object.WrapExceptions(exception);
+        var result = errorFactoryMock.Object.FilterErrorData(exception);
 
         var expected = new ExceptionInfo(typeof(ArgumentException).FullName, exceptionMessage, null);
         result.Should().BeEquivalentTo(expected);
