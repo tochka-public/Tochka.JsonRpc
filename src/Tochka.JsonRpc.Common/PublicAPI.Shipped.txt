@@ -191,3 +191,6 @@ Tochka.JsonRpc.Common.Features.IJsonRpcFeature.BatchSize.get -> int?
 Tochka.JsonRpc.Common.Features.IJsonRpcFeature.BatchSize.set -> void
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.BatchSize.get -> int?
 Tochka.JsonRpc.Common.Features.JsonRpcFeature.BatchSize.set -> void
+Tochka.JsonRpc.Common.Models.Response.ErrorResponse<TError>.GetError() -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!
+Tochka.JsonRpc.Common.Models.Response.IErrorResponse
+Tochka.JsonRpc.Common.Models.Response.IErrorResponse.GetError() -> Tochka.JsonRpc.Common.Models.Response.Errors.IError!

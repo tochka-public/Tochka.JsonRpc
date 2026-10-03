@@ -1,4 +1,5 @@
 ﻿using Tochka.JsonRpc.Common.Models.Id;
+using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Common.Models.Response;
 
@@ -16,4 +17,9 @@ public interface IResponse
     /// Version of the JSON-RPC protocol
     /// </summary>
     string Jsonrpc { get; }
+}
+
+public interface IErrorResponse : IResponse
+{
+    public IError GetError();
 }

@@ -13,9 +13,13 @@ namespace Tochka.JsonRpc.Common.Models.Response;
 /// <param name="Jsonrpc">Version of the JSON-RPC protocol</param>
 /// <typeparam name="TError">Type of error</typeparam>
 [ExcludeFromCodeCoverage]
+[SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Hack around generics")]
 public record ErrorResponse<TError>
 (
     IRpcId Id,
     Error<TError> Error,
     string Jsonrpc = JsonRpcConstants.Version
-) : IResponse;
+) : IErrorResponse
+{
+    public IError GetError() => Error;
+};
