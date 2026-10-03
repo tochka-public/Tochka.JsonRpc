@@ -146,7 +146,7 @@ Tochka.JsonRpc.Server.Services.IJsonRpcRequestValidator.IsJsonRpcRequest(Microso
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.UrlMarkerSegment.get -> string!
 Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions.UrlMarkerSegment.set -> void
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter
-Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.ConvertActionResult(Microsoft.AspNetCore.Mvc.IActionResult! actionResult) -> object?
+virtual Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.ConvertActionResult(Microsoft.AspNetCore.Mvc.IActionResult! actionResult) -> object?
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.JsonRpcResultFilter(Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Mvc.JsonOptions!>! options, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! serverOptions, Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory! errorFactory) -> void
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext! context) -> void
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext! context) -> void

@@ -80,7 +80,7 @@ public class JsonRpcResultFilter
     /// Unwrap response data from known ActionResult types
     /// </summary>
     /// <remarks>StatusCodeResult can be intercepted with ClientErrorResultFilter if ApiControllerAttribute is present, so we receive ObjectResult with ProblemDetails</remarks>
-    protected object? ConvertActionResult(IActionResult actionResult) => actionResult switch
+    protected virtual object? ConvertActionResult(IActionResult actionResult) => actionResult switch
     {
         ObjectResult { Value: IError error } => error,
         ObjectResult { StatusCode: >= 400 } result => errorFactory.HttpError(result.StatusCode.Value, result.Value),
