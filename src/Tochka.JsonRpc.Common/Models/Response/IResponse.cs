@@ -1,4 +1,5 @@
-﻿using Tochka.JsonRpc.Common.Models.Id;
+﻿using System.Diagnostics.CodeAnalysis;
+using Tochka.JsonRpc.Common.Models.Id;
 using Tochka.JsonRpc.Common.Models.Response.Errors;
 
 namespace Tochka.JsonRpc.Common.Models.Response;
@@ -21,5 +22,6 @@ public interface IResponse
 
 public interface IErrorResponse : IResponse
 {
-    public IError GetError();
+    [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+    public IError Error { get; }
 }

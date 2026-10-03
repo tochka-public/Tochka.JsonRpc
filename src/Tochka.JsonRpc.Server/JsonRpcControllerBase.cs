@@ -16,7 +16,5 @@ namespace Tochka.JsonRpc.Server;
 [JsonRpcController]
 public abstract class JsonRpcControllerBase : ControllerBase
 {
-    public IJsonRpcErrorFactory JsonRpcErrors => jsonRpcErrors ??= HttpContext.RequestServices.GetRequiredService<IJsonRpcErrorFactory>();
-
-    private IJsonRpcErrorFactory? jsonRpcErrors;
+    public IJsonRpcErrorFactory JsonRpcErrors => field ??= HttpContext.RequestServices.GetRequiredService<IJsonRpcErrorFactory>();
 }

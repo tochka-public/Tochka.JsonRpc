@@ -21,5 +21,5 @@ public record ErrorResponse<TError>
     string Jsonrpc = JsonRpcConstants.Version
 ) : IErrorResponse
 {
-    public IError GetError() => Error;
+    IError IErrorResponse.Error => Error;
 };
