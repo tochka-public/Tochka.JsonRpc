@@ -24,7 +24,7 @@ public class JsonRpcMiddleware
 {
     /// <summary>
     /// </summary>
-    public async Task InvokeAsync(HttpContext httpContext)
+    public virtual async Task InvokeAsync(HttpContext httpContext)
     {
         if (!requestValidator.IsJsonRpcRequest(httpContext))
         {
