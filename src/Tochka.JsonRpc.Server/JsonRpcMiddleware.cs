@@ -36,12 +36,14 @@ public class JsonRpcMiddleware
         var responseWrapper = await ProcessJsonRpcRequest(httpContext, requestEncoding);
         if (responseWrapper != null)
         {
-            httpContext.Response.StatusCode = StatusCodes.Status200OK;
+            httpContext.Response.StatusCode = GetStatusCode(responseWrapper);
             var responseContentType = httpContext.GetJsonRpcResponseMediaType() ?? JsonRpcConstants.ContentType;
             httpContext.Response.GetTypedHeaders().ContentType = new MediaTypeHeaderValue(responseContentType) { Encoding = requestEncoding };
             await SerializeResponseWrapper(responseWrapper, httpContext.Response.Body, requestEncoding);
         }
     }
+
+    protected virtual int GetStatusCode(IResponseWrapper responseWrapper) => StatusCodes.Status200OK;
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Need to wrap all unexpected parsing exceptions in json rpc response")]
     private async Task<IResponseWrapper?> ProcessJsonRpcRequest(HttpContext httpContext, Encoding requestEncoding)
