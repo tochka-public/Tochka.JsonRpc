@@ -11,7 +11,6 @@ using Moq;
 using NUnit.Framework;
 using Tochka.JsonRpc.Server.ApplicationModel;
 using Tochka.JsonRpc.Server.Binding;
-using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Extensions;
 using Tochka.JsonRpc.Server.Filters;
 using Tochka.JsonRpc.Server.Routing;
@@ -40,7 +39,6 @@ public class DependencyInjectionExtensionsTests
         result.Remove((typeof(IJsonRpcExceptionWrapper), typeof(JsonRpcExceptionWrapper), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcRequestValidator), typeof(JsonRpcRequestValidator), ServiceLifetime.Singleton)).Should().BeTrue();
         result.Remove((typeof(IJsonRpcErrorFactory), typeof(JsonRpcErrorFactory), ServiceLifetime.Singleton)).Should().BeTrue();
-        result.Remove((typeof(JsonRpcMarkerService), typeof(JsonRpcMarkerService), ServiceLifetime.Singleton)).Should().BeTrue();
 
         result.Remove((typeof(IApplicationModelProvider), typeof(JsonRpcApplicationModelProvider), ServiceLifetime.Transient)).Should().BeTrue();
     }

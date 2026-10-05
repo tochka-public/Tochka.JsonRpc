@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Tochka.JsonRpc.Server.ApplicationModel;
 using Tochka.JsonRpc.Server.Binding;
-using Tochka.JsonRpc.Server.DependencyInjection;
 using Tochka.JsonRpc.Server.Filters;
 using Tochka.JsonRpc.Server.Metadata;
 using Tochka.JsonRpc.Server.Routing;
@@ -34,19 +33,18 @@ public static class DependencyInjectionExtensions
         services.Configure(configureOptions);
         services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, JsonRpcApplicationModelProvider>());
         services.TryAddEnumerable(ServiceDescriptor.Singleton<MatcherPolicy, JsonRpcMatcherPolicy>());
-        services.AddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
-        services.AddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
-        services.AddSingleton<IJsonRpcRequestHandler, JsonRpcRequestHandler>();
-        services.AddSingleton<IJsonRpcExceptionWrapper, JsonRpcExceptionWrapper>();
-        services.AddSingleton<IJsonRpcRequestValidator, JsonRpcRequestValidator>();
+        services.TryAddSingleton<IJsonRpcParamsParser, JsonRpcParamsParser>();
+        services.TryAddSingleton<IJsonRpcParameterBinder, JsonRpcParameterBinder>();
+        services.TryAddSingleton<IJsonRpcRequestHandler, JsonRpcRequestHandler>();
+        services.TryAddSingleton<IJsonRpcExceptionWrapper, JsonRpcExceptionWrapper>();
+        services.TryAddSingleton<IJsonRpcRequestValidator, JsonRpcRequestValidator>();
         services.Configure<MvcOptions>(static options =>
         {
             options.Filters.Add<JsonRpcActionFilter>(int.MaxValue);
             options.Filters.Add<JsonRpcExceptionWrappingFilter>(int.MaxValue); // should fire last so users can handle specific exceptions with custom filters
             options.Filters.Add<JsonRpcResultFilter>(int.MaxValue);
         });
-        services.AddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
-        services.AddSingleton<JsonRpcMarkerService>();
+        services.TryAddSingleton<IJsonRpcErrorFactory, JsonRpcErrorFactory>();
         return services;
     }
 
@@ -67,16 +65,7 @@ public static class DependencyInjectionExtensions
     [ExcludeFromCodeCoverage(Justification = "it's almost impossible to test UseMiddleware")]
     public static IApplicationBuilder UseJsonRpc(this IApplicationBuilder app)
     {
-        EnsureRequiredServicesRegistered(app.ApplicationServices);
         // Unfortunately there is no good way to check if UseRouting was called before it
         return app.UseMiddleware<JsonRpcMiddleware>();
-    }
-
-    private static void EnsureRequiredServicesRegistered(IServiceProvider services)
-    {
-        if (services.GetService<JsonRpcMarkerService>() == null)
-        {
-            throw new InvalidOperationException($"Unable to find the required services. Please add all the required services by calling '{nameof(IServiceCollection)}.{nameof(AddJsonRpcServer)}' in the application startup code.");
-        }
     }
 }
