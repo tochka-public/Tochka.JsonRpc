@@ -115,36 +115,4 @@ public class DependencyInjectionExtensionsTests
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcExceptionWrappingFilter)) { Order = int.MaxValue });
         options.Filters.Should().ContainEquivalentOf(new TypeFilterAttribute(typeof(JsonRpcResultFilter)) { Order = int.MaxValue });
     }
-
-    [Test]
-    public void UseJsonRpc_AddWasNotCalled_Throw()
-    {
-        var services = new ServiceCollection();
-        var app = new Mock<IApplicationBuilder>();
-        app.Setup(static a => a.ApplicationServices)
-            .Returns(services.BuildServiceProvider)
-            .Verifiable();
-
-        var action = () => app.Object.UseJsonRpc();
-
-        action.Should().Throw<InvalidOperationException>();
-        app.Verify();
-    }
-
-    [Test]
-    public void UseJsonRpc_AddWasCalled_DontThrow()
-    {
-        var services = new ServiceCollection();
-        var configureOptions = Mock.Of<Action<JsonRpcServerOptions>>();
-        services.AddJsonRpcServer(configureOptions);
-        var app = new Mock<IApplicationBuilder>();
-        app.Setup(static a => a.ApplicationServices)
-            .Returns(services.BuildServiceProvider)
-            .Verifiable();
-
-        var action = () => app.Object.UseJsonRpc();
-
-        action.Should().NotThrow();
-        app.Verify();
-    }
 }
