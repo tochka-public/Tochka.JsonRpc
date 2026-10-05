@@ -69,6 +69,7 @@ Tochka.JsonRpc.Server.Extensions.HttpContextExtensions
 Tochka.JsonRpc.Server.JsonRpcControllerBase
 Tochka.JsonRpc.Server.JsonRpcControllerBase.JsonRpcControllerBase() -> void
 Tochka.JsonRpc.Server.JsonRpcMiddleware
+Tochka.JsonRpc.Server.JsonRpcMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Threading.Tasks.Task!
 Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata
 Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata.JsonRpcActionParametersMetadata() -> void
 Tochka.JsonRpc.Server.Metadata.JsonRpcActionParametersMetadata.Parameters.get -> System.Collections.Generic.Dictionary<string!, Tochka.JsonRpc.Server.Metadata.JsonRpcParameterMetadata!>!
@@ -150,4 +151,3 @@ Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.JsonRpcResultFilter(Microsoft.
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext! context) -> void
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext! context) -> void
 virtual Tochka.JsonRpc.Server.JsonRpcMiddleware.GetStatusCode(Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper! responseWrapper) -> int
-virtual Tochka.JsonRpc.Server.JsonRpcMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! httpContext) -> System.Threading.Tasks.Task!
