@@ -150,4 +150,4 @@ virtual Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.ConvertActionResult(Mi
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.JsonRpcResultFilter(Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Mvc.JsonOptions!>! options, Microsoft.Extensions.Options.IOptions<Tochka.JsonRpc.Server.Settings.JsonRpcServerOptions!>! serverOptions, Tochka.JsonRpc.Server.Services.IJsonRpcErrorFactory! errorFactory) -> void
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext! context) -> void
 Tochka.JsonRpc.Server.Filters.JsonRpcResultFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext! context) -> void
-virtual Tochka.JsonRpc.Server.JsonRpcMiddleware.GetStatusCode(Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper! responseWrapper) -> int?
+virtual Tochka.JsonRpc.Server.JsonRpcMiddleware.GetStatusCode(Tochka.JsonRpc.Common.Models.Response.Wrappers.IResponseWrapper! responseWrapper) -> int
